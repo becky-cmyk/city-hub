@@ -1,0 +1,39 @@
+PROMPT 1 — CITYCOREHUB / CLT CONNECTS (REPLIT AI)
+
+TASK: Fix SEO diagnostic self-fetch in Replit dev by using the correct base URL, without changing production behavior.
+
+CONTEXT (LOCKED):
+- The token-protected public endpoint already exists and works:
+  - GET /api/seo-diagnostic?token=... returns 403 if missing/wrong token; returns full JSON if correct token.
+  - The server prints the token URL at boot.
+- The “fetch failed” errors in dev are because the diagnostic tries to fetch pages from itself using HTTPS on localhost.
+  - Replit dev environment does not resolve https://localhost:5000.
+  - Diagnostic logic is correct; only the base URL selection must be dev-safe.
+- When deployed with APP_PUBLIC_URL set, the fetches will succeed.
+- Keep admin-only /api/admin/seo-diagnostic behavior intact.
+
+REQUIREMENTS:
+1) Update the diagnostic code so that when APP_PUBLIC_URL is NOT set (dev), it uses an HTTP base URL that works in Replit:
+   - Prefer: process.env.REPLIT_DEV_DOMAIN (or REPL_SLUG/REPL_OWNER) if available, to build https://<repl-domain>
+   - Otherwise: use http://127.0.0.1:<PORT> (or http://localhost:<PORT>) NOT https.
+   - PORT should come from process.env.PORT with fallback 5000.
+2) When APP_PUBLIC_URL IS set (prod), use it exactly as-is (no changes).
+3) Ensure the diagnostic prints in its JSON which base URL it used (e.g., baseUrlUsed field), to make this transparent.
+4) Do NOT expose ugly URLs to end users (this is admin/diagnostic only; JSON output is fine).
+5) Do NOT change token validation logic, token names, or endpoint paths.
+6) Ensure there are no “fetch failed” results in Replit dev purely due to self-fetch base URL choice.
+
+ACCEPTANCE TEST (IN REPLIT DEV):
+- Visiting /api/seo-diagnostic?token=<current token> returns JSON where:
+  - baseUrlUsed is http://127.0.0.1:<PORT> (or correct repl domain), and
+  - Sample page fetches return 200 instead of “fetch failed” (unless the page genuinely errors).
+- No impact to deployed behavior with APP_PUBLIC_URL set.
+
+IMPLEMENTATION NOTES:
+- Centralize base URL resolution in one helper (e.g., resolvePublicBaseUrl()) used by both:
+  - /api/admin/seo-diagnostic
+  - /api/seo-diagnostic
+- Make minimal, surgical changes only.
+
+DELIVERABLE:
+- Implement the change, run/typecheck/lint if present, and confirm by pasting the updated JSON output from one successful dev run (with baseUrlUsed shown and no self-fetch “fetch failed” due to https localhost).

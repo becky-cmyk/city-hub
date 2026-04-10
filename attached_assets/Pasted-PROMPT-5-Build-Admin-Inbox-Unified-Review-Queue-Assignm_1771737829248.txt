@@ -1,0 +1,219 @@
+PROMPT 5 — Build Admin “Inbox” (Unified Review Queue) + Assignments + SLA + Living History
+
+AUTHORITY
+Implement exactly. Do not delete anything. All items are append-only with full history. This Inbox is admin/backend only.
+
+GOAL
+Create a single Admin Inbox that aggregates EVERY item requiring review/action across the app:
+- Public submissions (business, org, event, article pitch, press release, shout-out, media mention)
+- Presence claim confirmations / transfers
+- “Verified by Charlotte” review items (if any manual step exists)
+- CMS editorial review (draft -> in_review approvals)
+- Vendor/event items needing approval
+- Billing/payment issues (past due, founder grace expiring)
+- Underwriter/supporter eligibility changes (org supporters drop below 3, grace started/ending)
+- Email system issues (bounces/complaints needing attention)
+The Inbox must support assignment, due dates, priority, status, notes, and audit history.
+
+--------------------------------------------
+1) DATABASE — UNIFIED INBOX TABLES
+--------------------------------------------
+
+1A) admin_inbox_items (single source of truth)
+Fields:
+- id (uuid)
+- item_type enum (minimum):
+  - "submission_business"
+  - "submission_organization"
+  - "submission_event"
+  - "submission_article_pitch"
+  - "submission_press_release"
+  - "submission_shoutout"
+  - "submission_media_mention"
+  - "presence_claim_confirm"
+  - "presence_transfer_request"
+  - "presence_review_charlotte_verification"
+  - "cms_content_review"
+  - "vendor_review"
+  - "event_review"
+  - "billing_past_due"
+  - "billing_founder_grace_expiring"
+  - "org_supporter_grace_started"
+  - "org_supporter_grace_expiring"
+  - "email_bounce_attention"
+  - "email_complaint_attention"
+- related_table text
+- related_id uuid
+- title text (human readable)
+- summary text nullable
+- priority enum: "low" | "med" | "high" | "urgent" (default med)
+- status enum: "open" | "in_progress" | "waiting" | "resolved" | "closed" (default open)
+- assigned_to_user_id nullable
+- created_by_user_id nullable (null for system)
+- created_at
+- due_at nullable
+- resolved_at nullable
+- tags text[] nullable (e.g., ["CLT","CMS","Billing","Org"])
+- visibility enum: "admin_only" | "sales_ok" | "editor_ok" (default admin_only)
+
+1B) admin_inbox_comments (notes thread)
+- id
+- inbox_item_id
+- actor_user_id
+- comment_text
+- created_at
+
+1C) admin_inbox_history (field-level old->new, append-only)
+- id
+- inbox_item_id
+- actor_type enum: "admin" | "sales" | "editor" | "system"
+- actor_user_id nullable
+- field_name
+- old_value
+- new_value
+- reason nullable
+- created_at
+RULE: Any update to admin_inbox_items writes history rows for changed fields.
+
+1D) admin_inbox_links (optional helper for multiple related objects)
+- id
+- inbox_item_id
+- label
+- url_or_route
+- created_at
+
+--------------------------------------------
+2) ITEM CREATION RULES (AUTO-GENERATION)
+--------------------------------------------
+
+Create inbox items automatically (system actor) when:
+
+2A) Public submissions created
+- For each submission form record, create an admin_inbox_item with item_type matching submission.
+- Title format examples:
+  - "New Business Submission: {name}"
+  - "New Organization Submission: {name}"
+  - "New Event Submission: {name}"
+- Link route to the existing Submissions review screen.
+
+2B) Presence claim confirm / transfer
+- When claim confirmation initiated or transfer request created, create items:
+  - presence_claim_confirm
+  - presence_transfer_request
+- Link to the admin presence record and transfer screen.
+
+2C) CMS review queue
+- When cms_content_items.status changes to "in_review", create:
+  - cms_content_review
+- Resolve automatically when published/archived OR when returned to draft.
+
+2D) Vendors / Events needing approval
+- If you have an approval gate (status draft->active), create:
+  - vendor_review / event_review
+- Only if status requires admin action.
+
+2E) Billing alerts
+- When a presence subscription becomes "past_due", create:
+  - billing_past_due
+- When founder grace window is within 7 days of expiry, create:
+  - billing_founder_grace_expiring
+Include due_at set to grace_end_at.
+
+2F) Org supporter grace
+- When supporter_grace_started_at is set, create:
+  - org_supporter_grace_started
+- When supporter_grace_end_at is within 7 days, create:
+  - org_supporter_grace_expiring
+
+2G) Email deliverability issues
+- On Resend webhook:
+  - bounce => create email_bounce_attention (unless already exists open for that email)
+  - complaint => create email_complaint_attention (unless already exists open for that email)
+
+Deduplication:
+- For the same related_table+related_id+item_type, do not create duplicates if an OPEN item already exists.
+- Instead, add a comment or update summary and log history.
+
+--------------------------------------------
+3) ADMIN INBOX UI (NEW ADMIN SECTION: “Inbox”)
+--------------------------------------------
+
+3A) Inbox List View
+Columns:
+- Priority
+- Type
+- Title
+- Status
+- Assigned To
+- Due
+- Created
+Filters:
+- Status (open/in_progress/waiting/resolved/closed)
+- Priority
+- Type
+- Assigned to me
+- Overdue
+- Tag
+Quick actions:
+- Assign to me
+- Change status
+- Set due date
+- Priority up/down
+
+3B) Inbox Detail View
+Show:
+- Title, type, summary
+- Related object links (open in new tab)
+- Assignment + status controls
+- Due date
+- Notes/comments thread
+- History timeline (field-level changes)
+
+3C) “My Queue” shortcut
+Default view showing:
+- Assigned to me AND status in (open,in_progress,waiting)
+Sorted by:
+- urgent/high first
+- then due_at
+- then created_at
+
+--------------------------------------------
+4) PERMISSIONS
+--------------------------------------------
+
+- Admin: full access to all inbox items
+- Sales: can view items where visibility in ("sales_ok") or assigned_to_user_id = self
+- Editors: can view CMS review items and items assigned to them (visibility "editor_ok")
+
+Default: admin_only unless explicitly set.
+
+--------------------------------------------
+5) WORKFLOW HELPERS
+--------------------------------------------
+
+5A) “Resolve” behavior
+- Setting status to resolved sets resolved_at = now
+- Keep record; do not delete.
+
+5B) Linking to existing systems
+- Add “Open related” button that routes to:
+  - submission review page
+  - presence detail
+  - CMS editor
+  - billing/subscription detail
+  - vendor/event detail
+  - email campaign/recipient detail
+
+--------------------------------------------
+6) ACCEPTANCE CHECKLIST
+--------------------------------------------
+
+- All public submissions create inbox items automatically.
+- CMS “in_review” creates a review inbox item.
+- Billing past due and grace alerts create inbox items.
+- Org supporter grace events create inbox items.
+- Email bounces/complaints create inbox items.
+- Inbox supports assign/due/priority/status + comments + history.
+- No duplicates for same object/type when already open.
+
+IMPLEMENT NOW.

@@ -1,0 +1,251 @@
+PROMPT 16 — PHASE 7A: BACKGROUND TASK SYSTEM + LIGHT MEMORY (OPERATOR MODE V1)
+
+You are implementing ONLY Phase 7A.
+
+Prerequisite:
+- Command Center exists
+- Capture system exists
+- Inbox exists
+- Orchestrator + proposal engine exists
+
+DO NOT implement:
+- full AI learning system
+- complex agent orchestration
+- external job queue services (keep simple, in-app)
+- full notification system (keep lightweight)
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Make Charlotte behave like an OPERATOR:
+
+- can run tasks in the background
+- continues working when UI is closed
+- reports results when done
+- remembers recent work and context
+
+This fixes:
+"Charlotte disappears when I close the box"
+
+--------------------------------------------------
+PART 1 — TASK SYSTEM (CORE)
+--------------------------------------------------
+
+Create a lightweight task system.
+
+TABLE: tasks
+
+Fields:
+- id
+- type (capture_process, outreach, proposal, followup, etc.)
+- title
+- payload (JSON)
+- status:
+  - pending
+  - running
+  - completed
+  - failed
+- progress (0–100, optional)
+- result (JSON)
+- error (optional)
+- created_at
+- updated_at
+- completed_at
+- source ("charlotte", "user", "system")
+
+--------------------------------------------------
+PART 2 — BACKGROUND EXECUTION
+--------------------------------------------------
+
+Implement a simple worker loop inside the app:
+
+- picks up pending tasks
+- marks as running
+- executes logic
+- updates progress if possible
+- marks completed or failed
+
+Keep it simple:
+- interval-based worker (e.g., every few seconds)
+- no external queues required
+
+IMPORTANT:
+Tasks must continue even if UI is closed.
+
+--------------------------------------------------
+PART 3 — CHARLOTTE TASK CREATION
+--------------------------------------------------
+
+When Charlotte receives a request like:
+
+- "create stories for these"
+- "follow up with these leads"
+- "process captures"
+- "generate proposals"
+
+Instead of doing everything inline:
+
+→ create a task
+
+Return immediately:
+- task created
+- status = pending/running
+
+--------------------------------------------------
+PART 4 — TASK TYPES (INITIAL)
+--------------------------------------------------
+
+Support at least:
+
+- capture_processing_task
+- followup_generation_task
+- proposal_generation_task
+- story_generation_task
+
+Reuse existing logic:
+DO NOT rewrite engines.
+
+--------------------------------------------------
+PART 5 — TASK STATUS UI (LIGHT)
+--------------------------------------------------
+
+Expose tasks in:
+
+1) Command Center (small section)
+2) OR a simple page:
+   /admin/tasks
+
+Show:
+- title
+- status
+- progress
+- last update
+- result summary (if done)
+
+--------------------------------------------------
+PART 6 — CHARLOTTE RESPONSE CHANGE
+--------------------------------------------------
+
+When a task is created:
+
+Charlotte should respond like:
+
+"Got it. I’m working on that now.
+You can close this — I’ll update you when it’s done."
+
+Do NOT block waiting for completion.
+
+--------------------------------------------------
+PART 7 — COMPLETION FEEDBACK
+--------------------------------------------------
+
+When task completes:
+
+- store result in task.result
+- make it visible in:
+  - Command Center → Recent Activity
+  - Task list
+
+Optional (light):
+- badge/indicator in UI
+
+DO NOT build full notification system yet.
+
+--------------------------------------------------
+PART 8 — LIGHT MEMORY LAYER (IMPORTANT)
+--------------------------------------------------
+
+Create a simple memory table:
+
+TABLE: charlotte_memory
+
+Fields:
+- id
+- type:
+  - recent_task
+  - user_preference
+  - context_note
+- content (JSON or text)
+- reference_id (task_id, entity_id, etc.)
+- created_at
+
+--------------------------------------------------
+PART 9 — WHAT TO STORE (LIGHT MEMORY ONLY)
+--------------------------------------------------
+
+Store:
+
+1) Recent tasks
+- what Becky asked
+- what Charlotte did
+
+2) Context notes (short-term)
+- "working on expo leads"
+- "processing networking contacts"
+
+3) Basic preferences (if obvious)
+- e.g., prefers fast capture, etc. (only if already clear)
+
+DO NOT:
+- store full conversations
+- build vector DB
+- over-engineer memory
+
+--------------------------------------------------
+PART 10 — USE MEMORY (MINIMAL)
+--------------------------------------------------
+
+Charlotte should be able to:
+
+- reference recent tasks
+Example:
+"You asked me earlier to process those leads — that’s still running."
+
+- show last completed items
+
+--------------------------------------------------
+PART 11 — INTEGRATION POINTS
+--------------------------------------------------
+
+Ensure tasks connect to:
+
+- Command Center (activity + visibility)
+- Capture system (processing tasks)
+- Proposal engine
+- Follow-up system
+
+--------------------------------------------------
+PART 12 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1) Create task → shows as pending → runs → completes
+2) Close UI → task still completes
+3) Reopen → task result visible
+4) Multiple tasks can queue
+5) Failed task logs error
+6) Charlotte references recent task correctly
+
+--------------------------------------------------
+PART 13 — OUTPUT REQUIRED
+--------------------------------------------------
+
+OUTPUT A — TASK SYSTEM (table + worker)
+OUTPUT B — TASK TYPES IMPLEMENTED
+OUTPUT C — HOW BACKGROUND EXECUTION WORKS
+OUTPUT D — MEMORY TABLE + WHAT IS STORED
+OUTPUT E — UI SURFACES (tasks + activity)
+OUTPUT F — LIMITATIONS (what is NOT included yet)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after background tasks + light memory are working.
+
+Do NOT:
+- build advanced AI learning
+- build notification system
+- build scheduling engine

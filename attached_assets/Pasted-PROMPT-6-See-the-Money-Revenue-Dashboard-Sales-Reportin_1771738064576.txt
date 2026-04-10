@@ -1,0 +1,163 @@
+PROMPT 6 — “See the Money” Revenue Dashboard + Sales Reporting (Admin/Sales)
+
+AUTHORITY
+Implement exactly. Do not delete data. Use existing billing/tiers/subscriptions tables where present; otherwise use presence_subscriptions + deals tables created in prior prompts. All numbers must be source-traceable (click-through to underlying records).
+
+GOAL
+Add a Money section in the admin backend that shows revenue, sales performance, renewals, and pipeline value across:
+- Charter Microsite subscriptions (founder $99 / standard $499)
+- Enhanced Microsite subscriptions (founder $299 / standard $699)
+- Organization supporters ($199 each) funding Enhanced eligibility
+- Event revenue (vendors + hub event partners) if tracked
+- Ads/placements if tracked
+Include filters by date range, Region, Hub/County/ZIP, and Sales Rep.
+
+--------------------------------------------
+1) DATA SOURCES (USE WHAT EXISTS)
+--------------------------------------------
+
+1A) Recognize these money objects:
+A) Subscriptions:
+- presence_subscriptions (plan, price_tier, amount, status, start_at, end_at, grace_end_at)
+B) Supporters:
+- org_supporters (amount_cents=19900, status, start_at, end_at)
+C) Event Vendors:
+- event_vendors (amount_due_cents, amount_paid_cents, status)
+D) Event Partners / Sponsorships:
+- event_sponsorships or equivalent (amount_cents, status)
+E) Ads:
+- ads table (amount, status) if present
+F) CRM Deals (optional):
+- crm_deals if present
+
+If multiple sources overlap, do NOT double-count. Prefer “paid amount” when available; otherwise “amount_due” for projected pipeline.
+
+--------------------------------------------
+2) NORMALIZED LEDGER VIEW (NON-DESTRUCTIVE)
+--------------------------------------------
+
+Create a server-side “ledger” query/view that unions revenue events into a consistent schema (can be a SQL view or query function):
+
+ledger_entry fields:
+- id (composite)
+- source_type enum:
+  - "subscription"
+  - "supporter"
+  - "event_vendor"
+  - "event_partner"
+  - "ad"
+  - "crm_deal"
+- source_id
+- presence_id nullable
+- org_presence_id nullable
+- crm_event_id nullable
+- vendor_id nullable
+- region_id nullable (derive from presence primary region where possible)
+- sales_owner_user_id nullable (derive from presence owner where possible)
+- amount_cents
+- currency "USD"
+- entry_kind enum: "paid" | "due" | "refund" (Phase 1: paid + due)
+- occurred_at timestamp (use payment date if available; else start_at; else created_at)
+- label text (e.g., “Charter (Founder)”, “Enhanced (Standard)”, “Org Supporter”, “Vendor Booth Fee”)
+- status (paid/past_due/active/etc.)
+- click_route (admin route to drill into original record)
+
+--------------------------------------------
+3) ADMIN UI — MONEY SECTION
+--------------------------------------------
+
+Add Admin nav item: “Money”
+
+3A) Money Dashboard (top-level)
+Show cards:
+- MTD Revenue (paid)
+- QTD Revenue (paid)
+- YTD Revenue (paid)
+- Active Subscriptions count (Charter / Enhanced split)
+- Past Due count + total at risk
+- Renewals Due (next 30 days) count + value
+- Founder Grace Expiring (next 7 days) count + value
+- Supporters Active count (org supporters) + monthly/annualized value (if annual, show totals)
+
+Charts (simple, no fancy):
+- Revenue over time (daily/weekly bars) for selected range
+- Revenue by product (Charter vs Enhanced vs Supporters vs Events vs Ads)
+
+3B) Sales Performance
+Table by Sales Rep:
+- Paid revenue (range)
+- New subscriptions (range)
+- Renewals closed (range)
+- Past due count
+- Pipeline due value (if using due entries)
+- Top Regions by revenue (clickable)
+
+3C) Revenue Ledger (drilldown)
+Filterable table:
+- Date
+- Label
+- Amount
+- Source type
+- Region
+- Owner
+- Status
+- “Open” link (click_route)
+
+3D) Renewals & Risk
+Two lists:
+- Renewals due in 30/60/90 (with presence name, plan, end_at, amount, owner, region)
+- Founder grace expiring in 7/14/30 (end_at, grace_end_at, will_convert_to_standard=true)
+Include quick actions:
+- Assign task to owner
+- Create email campaign (renewal reminder)
+- Open presence record
+
+3E) Supporters Monitor (Org)
+List orgs:
+- active supporter count
+- supporter grace status (if <3)
+- grace_end_at
+- current tier (charter/enhanced)
+- actions (notify, open org, add supporter)
+
+3F) Event Money (if events module in use)
+Per event:
+- total paid vendors
+- total due vendors
+- total partner revenue
+- outstanding balances
+- vendor list drilldown
+
+--------------------------------------------
+4) FILTERS (GLOBAL)
+--------------------------------------------
+
+On all Money pages provide:
+- Date range picker (default last 30 days)
+- Region filter (metro/hub/county/zip)
+- Sales rep filter
+- Product filter (charter/enhanced/supporters/events/ads)
+- Status filter (paid/due/past_due/active)
+
+--------------------------------------------
+5) INTEGRATION WITH INBOX (OPTIONAL BUT IMPORTANT)
+--------------------------------------------
+
+Auto-create Inbox items when:
+- Past due appears
+- Founder grace expiring within 7 days
+- Renewal due within 14 days
+Link to Money -> Renewals page and presence.
+
+--------------------------------------------
+6) ACCEPTANCE CHECKLIST
+--------------------------------------------
+
+- Money dashboard shows totals that match underlying records.
+- You can drill into any number and see the exact source rows.
+- Renewals due and founder grace expiring are clearly visible and actionable.
+- Sales rep performance report works with ownership assignments.
+- Supporters monitor correctly shows 3-supporter rule and grace windows.
+- No double counting across sources.
+
+IMPLEMENT NOW.

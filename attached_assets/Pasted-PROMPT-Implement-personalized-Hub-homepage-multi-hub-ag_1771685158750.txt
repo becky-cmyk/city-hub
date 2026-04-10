@@ -1,0 +1,133 @@
+PROMPT: Implement personalized “Hub” homepage + multi-hub + age gate + expanded account recovery + password UX.
+
+CONTEXT / NON-NEGOTIABLE LANGUAGE
+- Do NOT call this a “business directory.”
+- Use language like: “Local Hub”, “Local Commerce”, “Local Spots”, “Events”, “Stories”.
+- Logged-in homepage title uses possessive: “{FirstName}’s Hub” (example: “Becky’s Hub”).
+- Anonymous users see: “{City} Hub” (example: “Monroe Hub”).
+
+GOAL A — HYBRID LOCATION PERSONALIZATION (anonymous + logged in)
+1) First-visit experience:
+   - If we can approximate location (IP/geo), show a subtle banner:
+     “We’re showing content near {City}. Change location.”
+   - Always provide a simple “Set your Hub” flow:
+     - Input: ZIP code OR City OR Neighborhood (no creepy wording)
+     - Optional: selector “Home / Work / Play” (default Home)
+   - Save selection for anonymous users in localStorage (key examples):
+     - hub_active = { home|work|play }
+     - hub_home = { city, zip, neighborhood, radiusMiles }
+     - hub_work = { ... }
+     - hub_play = { ... }
+
+2) Homepage feed:
+   - Anonymous:
+     - Header: “{City} Hub”
+     - Subline: “Your local hub”
+     - Content sections are filtered to that location.
+   - Logged in:
+     - Header: “{FirstName}’s Hub”
+     - Subline: “{City}, {State}” + (Home/Work/Play indicator)
+     - Same sections, filtered by the active hub.
+
+3) Hub switcher UI (top nav dropdown):
+   - “Home — {City}”
+   - “Work — {City}”
+   - “Play — {City}”
+   - Switching should instantly re-filter homepage content.
+
+GOAL B — MULTI-HUB ACCOUNT SUPPORT (max 3 hubs)
+1) User can have up to 3 hubs:
+   - Home hub (required)
+   - Work hub (optional)
+   - Play hub (optional)
+
+2) Logged-in storage:
+   - Add DB model to store hubs per user (or equivalent in your stack):
+     - user_id
+     - hub_type enum: home|work|play
+     - city (string)
+     - zip (string)
+     - neighborhood (string, optional)
+     - radius_miles (int default 15–20)
+     - created_at / updated_at
+   - Add field on user profile:
+     - active_hub_type (home|work|play)
+
+3) On account creation:
+   - After signup success, route to “Set Your Home Hub” onboarding step.
+   - Offer “Add Work Hub?” and “Add Play Hub?” (optional).
+
+GOAL C — AGE GATE AT SIGNUP (DOB)
+1) Add “Date of birth” to signup (MM/DD/YYYY) with helper text:
+   - “Used to keep experiences age-appropriate. We don’t show your birthdate publicly.”
+2) Validation:
+   - If user is under 13: block account creation with a friendly message.
+   - If 13–17: allow account but apply safe defaults (see Goal D).
+   - If 18+: normal.
+3) Storage (privacy-minimal):
+   - Prefer storing either DOB OR (better) birth_year + derived flags:
+     - is_under_18 boolean
+     - is_under_21 boolean
+   - Never show DOB publicly.
+
+GOAL D — AGE-AWARE CONTENT FILTERING (minimal implementation)
+1) Add content rating fields for items surfaced on hub feeds (events/articles/venues/etc.):
+   - rating: all_ages | teen | 21_plus | adult_themes
+2) Default filters:
+   - Under 18: hide 21_plus and adult_themes items from feeds/search.
+   - Under 21: hide 21_plus items.
+3) If the content system doesn’t exist yet, implement the rating field and filtering in the homepage query layer only (minimal viable).
+
+GOAL E — AUTH + RECOVERY OPTIONS + PASSWORD UX
+Implement multiple account access/recovery methods. Use whatever auth stack is already in this app (DO NOT replace the entire auth system). Integrate with existing provider if present.
+
+1) Login page:
+   - Email + Password login (baseline)
+   - “Forgot password?”
+   - “Send me a sign-in link” (magic link email)
+   - “Text me a code” (SMS OTP) — only if phone is on file + verified, OR after the user enters email and we confirm eligibility.
+
+2) Forgot password flows:
+   - Email reset link flow
+   - Magic link flow
+   - SMS OTP flow (if eligible)
+
+3) Profile → Security page:
+   - Change password (current password + new password + confirm)
+   - Add/verify phone number (for SMS login/recovery)
+   - Add/verify recovery email
+   - Manage sign-in methods (show which are enabled)
+   - (Optional) Sign out of all devices
+
+4) Visible password toggles:
+   - Add “eye” toggle on password fields for:
+     - signup
+     - login
+     - reset password
+     - change password
+   - Keep behavior consistent for password + confirm password fields.
+
+5) Guardrails:
+   - Rate-limit requests for magic links and SMS codes.
+   - Tokens/OTPs must expire and be one-time use.
+
+IMPLEMENTATION STEPS (DO THIS IN ORDER)
+1) Identify current stack:
+   - Framework (Next.js/React/etc.)
+   - Auth provider (Supabase/Clerk/Auth0/NextAuth/custom)
+   - DB access layer (Prisma/etc.)
+2) Implement the Hub model + localStorage behavior + hub switcher UI + homepage filtering.
+3) Add DOB field to signup + validation + safe flags stored.
+4) Add minimal content rating field and enforce feed filtering by age flags.
+5) Add recovery methods and profile security controls using the existing auth provider capabilities.
+6) Add password visibility toggles everywhere.
+7) Add clear UI copy (non-directory language).
+
+ACCEPTANCE CHECKLIST
+- Anonymous can set “Monroe Hub” and homepage updates immediately.
+- Logged in shows “{Name}’s Hub” + can switch Home/Work/Play hubs.
+- Signup requires DOB; under 13 cannot create account.
+- Under-18 users don’t see 21+ / adult-themed content in feeds.
+- Login supports password + magic link; SMS recovery works when phone verified.
+- Profile includes Change Password + add phone + add recovery email.
+- Eye toggle works across all password inputs.

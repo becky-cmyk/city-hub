@@ -1,0 +1,473 @@
+We already prepared:
+- the workforce schema foundation
+- applicant public/private profile system
+- employer workforce profile/back-office layer
+
+Now build the next layer:
+the Job Listings system and Employer Hiring Dashboard.
+
+Important:
+This is part of the hub platform. Do NOT build a separate login system.
+The jobs/workforce module must plug into:
+- existing user accounts
+- existing business profiles
+- existing hub location hierarchy
+- Charlotte AI assistant
+
+The job system must be local-first and integrity-first.
+We are intentionally NOT building a spammy national-style job board.
+
+GOAL
+Build the employer-side jobs layer with:
+- structured job listing creation
+- listing management dashboard
+- listing integrity rules
+- anti-duplicate / anti-ghost-job logic
+- applicant tracking placeholders
+- pricing / plan slot logic placeholders
+
+Do not build the full advanced employer-applicant messaging system yet unless needed as a placeholder.
+
+--------------------------------------------------
+1. JOB LISTING MODEL
+--------------------------------------------------
+
+Create/expand the JobListings schema so each active listing represents:
+
+- one specific job title
+- one specific job description
+- one location / hub assignment
+- one compensation structure
+- one employment type
+- one positionsAvailable count
+
+Required fields:
+- id
+- businessId
+- hubLocationId
+- jobTitle
+- normalizedJobTitle
+- jobCategory
+- industryCategory
+- employmentType
+  - full-time
+  - part-time
+  - temporary
+  - temp-to-hire
+  - contract
+  - gig / short-term
+  - internship
+- employerType
+  - direct employer
+  - staffing agency
+- listingType
+  - job
+  - contract
+  - temporary staffing
+  - gig
+  - business opportunity
+  - volunteer / community opportunity
+- workplaceType
+  - onsite
+  - hybrid
+  - remote-local-only
+- compensationType
+  - hourly
+  - salary
+  - contract rate
+  - commission only
+  - hourly + commission
+  - salary + bonus
+- compensationMin
+- compensationMax
+- compensationDisplay
+- positionsAvailable
+- urgencyLevel
+  - hiring now
+  - hiring soon
+  - ongoing hiring
+- experienceLevel
+- educationRequirement
+- jobSummary
+- responsibilities
+- qualifications
+- requiredSkills
+- preferredSkills
+- requiredCredentials
+- preferredCredentials
+- scheduleInfo
+- benefitsSummary
+- applicationMethod
+  - apply in platform
+  - external employer link
+- externalApplyUrl
+- status
+  - draft
+  - pending review
+  - active
+  - interviewing
+  - offer made
+  - paused
+  - filled
+  - expired
+  - removed
+- postedAt
+- expiresAt
+- renewedAt
+- closedAt
+- applicantsCount
+- reviewedCount
+- interviewCount
+- hiresCount
+- renewalCount
+- originalListingId (nullable if the listing is not a re-opened listing chain)
+- metadataJson for future flexibility
+
+Rules:
+- one listing = one role/title/description
+- one listing may have multiple positionsAvailable
+- no mixed-role listings
+
+--------------------------------------------------
+2. ENFORCE ROLE-SPECIFIC LISTINGS
+--------------------------------------------------
+
+Build validation rules so employers cannot create broad catch-all listings.
+
+Examples that should be blocked or flagged:
+- “Servers / Bartenders / Hosts”
+- “Hiring All Positions”
+- “Now Hiring 100 People”
+- “Office / Sales / Customer Support”
+
+System should require:
+- one title per listing
+- one role category per listing
+- positionsAvailable can be more than 1, but only for the same role
+
+If the title appears to contain multiple roles:
+- warn the employer
+- require correction before publishing
+
+Create a helper function/service to detect likely mixed-role titles.
+
+--------------------------------------------------
+3. DUPLICATE LISTING PREVENTION
+--------------------------------------------------
+
+Implement duplicate-prevention logic.
+
+A business should generally have only one active listing per:
+- normalizedJobTitle
+- same location
+- same employmentType
+- same employerType
+
+If a likely duplicate exists:
+show warning:
+“You already have a similar active listing. Update the existing listing instead of creating a duplicate.”
+
+Actions:
+- open existing listing
+- edit existing listing
+- continue with explanation (admin review flag)
+
+Duplicate detection should consider:
+- same business
+- same normalized title
+- same location
+- same category
+- high description similarity
+
+Do NOT allow job-feed inflation by reposting the same listing as a new listing.
+
+--------------------------------------------------
+4. LISTING RENEWAL LOGIC
+--------------------------------------------------
+
+Renewals must update the existing listing history, not create fake duplicates in the feed.
+
+Create a renewal workflow with required employer explanation.
+
+Renewal reason options:
+- we hired someone and need to hire another person
+- we are expanding the team
+- we are still trying to fill the same opening
+- we did not find a qualified candidate
+- hiring timeline changed
+
+Logic:
+A. If employer says:
+- we hired someone and need to hire another person
+- we are expanding the team
+
+Then:
+- renewal pricing stage stays at base level
+- renewal penalty counter resets or does not escalate
+- hiresCount can be incremented
+- listing remains valid
+
+B. If employer says:
+- still trying to fill the same opening
+- did not find a qualified candidate
+
+Then:
+- renewalCount increments
+- escalating renewal pricing stage applies later
+- listing integrity score should be impacted
+
+Track:
+- number of hires made from this listing
+- positions originally requested
+- positions still open
+
+--------------------------------------------------
+5. GHOST JOB / INTEGRITY SIGNALS
+--------------------------------------------------
+
+Add internal fields and services to support ghost-job detection later.
+
+Create internal integrity signals such as:
+- hasEmployerViewedApplicants
+- daysSinceLastApplicantReview
+- applicationsReceivedWithoutReview
+- renewalCount
+- positionsFilledCount
+- reportCount
+- duplicateAttemptCount
+- suspiciousListingScore
+- integrityStatus
+  - normal
+  - monitor
+  - flagged
+  - under review
+  - restricted
+
+Do not automatically remove listings yet.
+Just build the data structure and admin hooks.
+
+Ghost-job indicators should later be based on multiple signals, not one signal alone.
+
+--------------------------------------------------
+6. EMPLOYER HIRING DASHBOARD
+--------------------------------------------------
+
+Build the employer/private dashboard for managing listings.
+
+Dashboard should show:
+- active listings
+- draft listings
+- pending review listings
+- paused listings
+- filled listings
+- expired listings
+
+Each listing row/card should display:
+- job title
+- location / hub
+- positionsAvailable
+- applicantsCount
+- reviewedCount
+- interviewCount
+- hiresCount
+- status
+- expiration date
+- renewal stage
+
+Actions:
+- create listing
+- edit listing
+- pause listing
+- close listing
+- mark hires
+- renew listing
+- duplicate to draft only (not directly republish)
+- view applicants placeholder
+- export applicants placeholder
+- view listing public preview
+
+Need clean table/card UX and mobile responsiveness.
+
+--------------------------------------------------
+7. EMPLOYER PLAN / SLOT LOGIC
+--------------------------------------------------
+
+Do not build billing yet, but build the plan logic structure.
+
+We are positioning jobs as a major subscription driver.
+Businesses get a Hub Presence and a hiring capacity based on plan.
+
+Create placeholder structures for:
+EmployerHiringPlan
+- businessId
+- planName
+- monthlyPrice
+- activeListingSlots
+- featuredListingCredits
+- maxPositionsPerListing
+- staffingAgencyMode (boolean)
+- isEnterprise (boolean)
+
+Logic:
+- each active listing consumes one listing slot
+- one listing can have multiple positionsAvailable for the same role
+- active listing count should be enforceable
+- allow future add-on listing slots
+
+Build the enforcement service:
+- canCreateNewListing()
+- canRenewListing()
+- canFeatureListing()
+
+No payment integration yet, only architecture and placeholder logic.
+
+--------------------------------------------------
+8. STAFFING AGENCY SUPPORT
+--------------------------------------------------
+
+Support staffing agencies without allowing spam behavior.
+
+If employerType = staffing agency:
+allow fields for:
+- placementType
+  - temporary assignment
+  - temp-to-hire
+  - long-term contract
+  - project-based
+- clientDisclosureType
+  - client shown
+  - confidential client
+- assignmentDuration
+
+Rules:
+- still no duplicate flooding
+- use positionsAvailable rather than duplicate role postings
+- listing should visibly indicate staffing agency origin on public view later
+
+--------------------------------------------------
+9. BUSINESS OPPORTUNITY SEPARATION
+--------------------------------------------------
+
+Do NOT allow business opportunities to appear as normal jobs.
+
+If listingType = business opportunity:
+require additional fields:
+- startupFeeRequired (boolean)
+- licensingRequired (boolean)
+- trainingRequired (boolean)
+- commissionOnly (boolean)
+- disclosureText
+
+System should clearly flag this type as:
+“This is a business opportunity, not traditional employment.”
+
+Keep architecture ready so business opportunities can appear in a separate section later.
+
+--------------------------------------------------
+10. APPLICATION SETTINGS PLACEHOLDERS
+--------------------------------------------------
+
+Do not build the full application workflow yet, but add listing-level settings for later.
+
+Fields/settings:
+- allowQuickApply
+- requireResume
+- allowMultipleResumeSelection
+- requireCoverNote
+- applicationLimitThreshold
+- internalScreeningQuestionsJson
+
+These should be placeholders for future Prompt 4.
+
+--------------------------------------------------
+11. PUBLIC LISTING PREVIEW
+--------------------------------------------------
+
+Build a public-facing listing preview page/template using current listing data.
+
+Public view should show:
+- business name
+- hub location
+- job title
+- compensation
+- employment type
+- positionsAvailable
+- workplace type
+- summary
+- responsibilities
+- qualifications
+- required skills
+- preferred skills
+- credentials
+- hiring status
+- posted date
+
+Must be clean, SEO-friendly, and structured for future public launch.
+
+But do NOT build the full public jobs marketplace/search directory yet.
+
+--------------------------------------------------
+12. ADMIN / MODERATION PLACEHOLDERS
+--------------------------------------------------
+
+Add internal moderation hooks and pages/placeholders for:
+- flagged listings
+- duplicate warnings
+- ghost-job watchlist
+- reported listings
+- removed listings
+
+Admin actions placeholder:
+- approve
+- reject
+- pause
+- request correction
+- mark under review
+
+No full admin polish needed yet; just prepare the foundation.
+
+--------------------------------------------------
+13. CHARLOTTE AI HOOKS
+--------------------------------------------------
+
+Prepare hooks so Charlotte can later help employers:
+- improve unclear job titles
+- detect unrealistic requirements
+- suggest cleaner role descriptions
+- recommend skills from taxonomy
+- point out low compensation vs market later
+
+Do not build full AI yet.
+Add service placeholders/interfaces and data access points.
+
+--------------------------------------------------
+14. ROUTES / UI / COMPONENTS
+--------------------------------------------------
+
+Provide:
+- route/page structure
+- dashboard component structure
+- create/edit listing form structure
+- public preview structure
+- service layer overview
+- validation layer overview
+
+Keep design modular so:
+- this can remain inside the hub now
+- but could become its own dedicated jobs app later without rebuilding the data model
+
+--------------------------------------------------
+15. OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+1. updated schema definitions
+2. validation rules
+3. service logic overview
+4. dashboard route/page structure
+5. component structure
+6. integrity-rule implementation notes
+7. notes on what Prompt 4 should build next
+
+Do not skip the integrity logic.
+The purpose of this phase is to make the system credible and structurally clean before opening it publicly.

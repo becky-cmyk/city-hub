@@ -1,0 +1,239 @@
+Work inside the existing City Hub codebase.
+
+This is Prompt 6.
+Focus on DATA INTEGRITY, ROUTING CONSISTENCY, and BACKFILL — not UI.
+
+Do NOT rebuild:
+- Pulse scoring
+- Editorial UI
+- CMS structure
+
+You are fixing and strengthening how content is classified and routed.
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+
+Ensure every piece of content (especially RSS + AI-generated content) has:
+
+1. Correct category + subcategory
+2. Valid geo assignment (primary + secondary)
+3. Deterministic routing to all surfaces
+
+Eliminate:
+- orphaned content
+- miscategorized content
+- geo-less content breaking hub/category views
+- inconsistent routing behavior
+
+--------------------------------------------------
+PART 1 — CATEGORY NORMALIZATION + BACKFILL
+--------------------------------------------------
+
+Problem:
+Content may have:
+- missing category
+- inconsistent category naming
+- no subcategory
+
+Build:
+
+1. Define canonical category system (must match existing system)
+   - core_category (required)
+   - subcategory (optional but structured)
+
+2. Create normalization layer:
+   - map incoming RSS categories → system categories
+   - map AI-generated categories → system categories
+
+3. Backfill script:
+   - find all content where category is null or invalid
+   - assign best-fit category using:
+     - source tags
+     - title keywords
+     - existing AI classification (if present)
+
+4. Flag low-confidence mappings for review queue
+
+DO NOT create new categories automatically.
+Only map into existing system.
+
+--------------------------------------------------
+PART 2 — GEO ASSIGNMENT BACKFILL
+--------------------------------------------------
+
+Problem:
+Content may be:
+- missing geo_primary
+- missing geo_secondary
+- incorrectly assigned
+
+Build:
+
+1. Geo validation rules:
+   - geo_primary REQUIRED for hub/category placement
+   - geo_secondary OPTIONAL but preferred
+
+2. Backfill logic:
+   For each item:
+   - attempt extraction from:
+     - RSS metadata
+     - content text (city, neighborhood references)
+     - linked venue/business
+   - fallback:
+     - assign METRO level (Charlotte) if no precision found
+
+3. Precision hierarchy:
+   MICRO_HUB > NEIGHBORHOOD > DISTRICT > METRO
+
+4. Flag:
+   - items with only METRO as "LOW_GEO_PRECISION"
+   - items with no geo as "REVIEW_REQUIRED"
+
+--------------------------------------------------
+PART 3 — ROUTING CONSISTENCY ENGINE
+--------------------------------------------------
+
+Problem:
+Routing decisions may be inconsistent across surfaces.
+
+Build a shared routing evaluator function used everywhere:
+
+evaluateContentRouting(item)
+
+Returns:
+
+{
+  pulse: { allowed: true/false, reason },
+  hub: { allowed: true/false, reason },
+  category: { allowed: true/false, reason },
+  map: { allowed: true/false, reason },
+  search: { allowed: true/false, reason }
+}
+
+Rules:
+
+PULSE:
+- allowed if:
+  - not suppressed
+  - publish_status = published
+  - within active window
+
+HUB:
+- requires geo_primary match
+
+CATEGORY:
+- requires valid core_category
+
+MAP:
+- requires valid location (lat/lng OR strong geo mapping)
+
+SEARCH:
+- always allowed unless suppressed
+
+This function must be reused:
+- editorial layer
+- ingestion pipeline
+- Pulse assembly (reference only, not scoring)
+
+--------------------------------------------------
+PART 4 — INGESTION PIPELINE ENFORCEMENT
+--------------------------------------------------
+
+Problem:
+Bad data enters system from RSS/AI.
+
+Update ingestion flow:
+
+For every new item:
+
+1. Normalize category
+2. Assign geo
+3. Run routing evaluator
+4. Assign flags:
+   - REVIEW_REQUIRED
+   - LOW_GEO_PRECISION
+   - ROUTING_ISSUE
+
+Do NOT block ingestion.
+But ensure visibility in editorial queue.
+
+--------------------------------------------------
+PART 5 — DATA CLEANUP SCRIPT
+--------------------------------------------------
+
+Create one-time + reusable script:
+
+runContentIntegrityPass()
+
+Steps:
+
+1. scan all content
+2. fix:
+   - missing category
+   - missing geo
+3. apply routing evaluator
+4. assign flags
+5. log summary:
+   - total scanned
+   - fixed categories
+   - fixed geo
+   - flagged for review
+
+This must be safe to run multiple times.
+
+--------------------------------------------------
+PART 6 — CATEGORY + GEO LOCKING RULES
+--------------------------------------------------
+
+After this pass:
+
+1. Category rules:
+   - must always have core_category
+   - subcategory must belong to parent
+
+2. Geo rules:
+   - geo_primary required before publish
+   - fallback = METRO (only if unavoidable)
+
+3. Prevent:
+   - publishing content with NULL category
+   - publishing content with NULL geo_primary
+
+(Soft enforcement first — flag + queue, not hard block)
+
+--------------------------------------------------
+PART 7 — NO UI BLOAT
+--------------------------------------------------
+
+Do NOT:
+- build dashboards
+- build new admin pages
+- redesign editorial UI
+
+Only:
+- expose flags into existing editorial queue filters
+
+--------------------------------------------------
+PART 8 — DO NOT TOUCH
+--------------------------------------------------
+
+Do NOT modify:
+- geo scoring math (already correct)
+- Pulse ranking logic
+- front-end rendering
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+
+1. what normalization logic was added
+2. how category mapping works
+3. how geo backfill works
+4. routing evaluator structure
+5. ingestion updates
+6. cleanup script summary
+7. what % of content was fixed vs flagged
+8. what remains for Prompt 7

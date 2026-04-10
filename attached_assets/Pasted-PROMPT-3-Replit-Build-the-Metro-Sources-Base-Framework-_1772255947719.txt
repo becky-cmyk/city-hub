@@ -1,0 +1,208 @@
+PROMPT 3 (Replit) — Build the “Metro Sources” Base Framework (multi-metro connector registry + job runner) for City Core Hub Intelligence
+
+GOAL
+Implement a reusable, multi-metro “Metro Sources” framework that lets us configure data sources per metro (Charlotte, Indianapolis, etc.) while using ONE shared connector codebase (Socrata, ArcGIS, Census, BLS). This is the base spine for Metro Intelligence and licensing.
+
+SCOPE (Build Now)
+A) DB schema for metros + source registry
+B) Connector adapter interfaces (no heavy ETL yet)
+C) Job runner that loops enabled sources and pulls/stores raw normalized rows
+D) Minimal internal admin UI to manage metro sources (private only)
+E) Seed Charlotte + Indianapolis source placeholders (not full dataset mapping yet)
+
+NON-NEGOTIABLES
+- No public UI changes.
+- No scraping consumer sites.
+- Must support multiple metros with per-metro config rows.
+- Store raw pulls + minimal normalized metadata now; detailed canonical normalization can come later.
+- Every record must be traceable to a source (source_type, base_url, dataset_id/layer_url, external_id).
+- Add rate limiting + pagination handling in connectors.
+
+DATABASE (Drizzle schema + migrations)
+Create tables (names exact):
+
+1) metros
+- id (pk)
+- name (string)                 // "Charlotte", "Indianapolis"
+- state_code (string)           // "NC", "IN"
+- country_code (string default "US")
+- is_active (boolean default true)
+- created_at, updated_at
+
+2) metro_zips (optional if not already in system; if already exists, reuse)
+- id (pk)
+- metro_id (fk)
+- zip_code (string)
+- neighborhood_name (nullable)
+- is_active (boolean default true)
+- created_at, updated_at
+(If you already have zips table, do NOT duplicate—extend existing.)
+
+3) metro_sources  (THE CORE REGISTRY)
+- id (pk)
+- metro_id (fk)
+- name (string)                 // "Charlotte Open Data - Permits"
+- source_type (enum)            // "SOCRATA" | "ARCGIS" | "CENSUS" | "BLS" | "DOT"
+- base_url (string)             // e.g. "https://data.charlottenc.gov"
+- dataset_id (string nullable)  // Socrata resource id OR BLS series id OR Census dataset code
+- layer_url (string nullable)   // ArcGIS FeatureServer layer URL (full)
+- params_json (json)            // query config: field mapping, filters, date column, geography settings
+- pull_frequency (enum)         // "HOURLY" | "DAILY" | "WEEKLY" | "MONTHLY" (default "DAILY")
+- enabled (boolean default false)
+- last_pulled_at (datetime nullable)
+- last_cursor (string nullable) // for pagination or incremental pulls
+- status (enum)                 // "OK" | "ERROR" | "DISABLED" | "NEVER_RUN" (default "NEVER_RUN")
+- last_error (text nullable)
+- created_at, updated_at
+
+4) source_pull_runs (audit log)
+- id (pk)
+- metro_source_id (fk)
+- started_at (datetime)
+- finished_at (datetime nullable)
+- status (enum)                 // "SUCCESS" | "FAILED" | "SKIPPED"
+- rows_fetched (int default 0)
+- rows_inserted (int default 0)
+- rows_updated (int default 0)
+- next_cursor (string nullable)
+- error_message (text nullable)
+
+5) source_raw_rows (raw storage; minimal normalization)
+- id (pk)
+- metro_id (fk)
+- metro_source_id (fk)
+- external_id (string nullable) // record id from source if present
+- record_timestamp (datetime nullable) // parsed from source date field if available
+- zip_code (string nullable)    // extracted if available
+- lat (float nullable)
+- lng (float nullable)
+- payload_json (json)           // entire raw record
+- hash (string)                 // stable hash of payload for dedupe
+- created_at, updated_at
+Unique constraint: (metro_source_id, external_id) WHERE external_id is not null
+Fallback dedupe: (metro_source_id, hash)
+
+CONNECTOR LAYER (Code)
+Create folder:
+  /server/intelligence/connectors/
+
+Add:
+1) connectorTypes.ts
+- enums: SourceType, PullFrequency, PullStatus
+- interfaces:
+  - PullResult { rows: any[]; nextCursor?: string; meta?: {...} }
+  - Connector { pull(config, cursor): Promise<PullResult> }
+
+2) socrataConnector.ts
+- Inputs: base_url, dataset_id, params_json
+- Implements:
+  - pagination ($limit/$offset)
+  - optional incremental filter if params_json includes { "dateField": "...", "since": "last_pulled_at" }
+  - rate limiting (simple sleep between pages)
+- Returns rows + nextCursor
+
+3) arcgisConnector.ts
+- Inputs: layer_url, params_json
+- Uses ArcGIS REST query endpoint:
+  - where
+  - outFields
+  - resultOffset/resultRecordCount pagination
+  - f=json
+- Supports geometry extraction lat/lng if present
+
+4) censusConnector.ts (stub + minimal working)
+- Use Census API for 1–2 endpoints only:
+  - ACS 5-year (demographics + language) as proof
+- params_json includes:
+  - dataset (e.g., "acs/acs5")
+  - year
+  - get fields array
+  - for geography (zip or county)
+- Store results in source_raw_rows with a computed external_id
+
+5) blsConnector.ts (stub + minimal working)
+- Use BLS public API v2 for 1 series per source (proof)
+- params_json includes:
+  - seriesId
+  - startYear, endYear
+- Store results in source_raw_rows
+
+JOB RUNNER
+Create:
+  /server/intelligence/jobRunner.ts
+
+Behavior:
+- Fetch enabled metro_sources
+- For each:
+  - create source_pull_runs row started
+  - call correct connector
+  - for each returned row:
+    - compute external_id if present else null
+    - compute record_timestamp (using params_json dateField mapping if configured)
+    - extract zip_code (if field mapping provided)
+    - extract lat/lng (if mapping provided)
+    - compute hash for dedupe
+    - upsert into source_raw_rows
+  - update metro_sources.last_cursor, last_pulled_at, status
+  - complete source_pull_runs with counts + nextCursor
+- On error:
+  - set metro_sources.status="ERROR", last_error
+  - source_pull_runs.status="FAILED"
+
+Triggering:
+- Expose an admin-only endpoint:
+  POST /api/admin/intelligence/run-pulls
+  body optional: { metroId?, sourceType?, sourceId? }
+- Also create a CLI script:
+  /scripts/run-intelligence-pulls.ts
+
+ADMIN UI (Private)
+Create:
+  /admin/intelligence/sources
+
+Features:
+- List metros
+- For a selected metro:
+  - list metro_sources
+  - enable/disable toggle
+  - edit name, base_url, dataset_id/layer_url, pull_frequency
+  - edit params_json in a JSON editor textarea
+  - button: “Run Now” (calls /api/admin/intelligence/run-pulls with sourceId)
+  - show last run status, last_pulled_at, last_error
+- Admin auth:
+  - Use existing auth if present; otherwise require ADMIN_SECRET header/cookie as gate (same as prior prompt).
+
+SEED CONFIG (Placeholders)
+Create seed script:
+  /scripts/seed-metro-sources-charlotte-indy.ts
+
+Insert:
+Metro: Charlotte (NC)
+- Socrata base_url: https://data.charlottenc.gov (enabled=false) dataset_id TBD
+- ArcGIS layer_url placeholder for Mecklenburg GIS (enabled=false)
+- Census ACS 5-year for zip demographics (enabled=true, minimal)
+- BLS series placeholder (enabled=false)
+
+Metro: Indianapolis (IN)
+- Socrata base_url: https://data.indy.gov (enabled=false) dataset_id TBD
+- ArcGIS layer_url placeholder for Marion County GIS (enabled=false)
+- Census ACS 5-year for zip demographics (enabled=true, minimal)
+- BLS series placeholder (enabled=false)
+
+NOTE: We will fill dataset_id/layer_url values later via admin UI; do not hardcode dataset ids now.
+
+ACCEPTANCE CRITERIA
+1) Migrations run cleanly; tables created exactly.
+2) Admin UI loads and can create/edit metro_sources.
+3) Running pulls via admin endpoint successfully pulls Census sample and stores rows in source_raw_rows.
+4) Socrata + ArcGIS connectors compile and are callable (even if dataset ids are placeholders).
+5) All raw rows are deduped with external_id or hash.
+6) Everything is scoped by metro_id and ready for licensing expansion.
+
+DELIVERABLES
+- Schema + migrations
+- Connector adapter code
+- Job runner + admin route
+- Admin UI for source registry
+- Seed script for Charlotte + Indianapolis placeholders
+- No public UX changes

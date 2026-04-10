@@ -1,0 +1,230 @@
+You are working INSIDE the existing Charlotte / City Hub app codebase.
+
+This is Prompt 4.
+
+The entitlement framework, operational gating logic, and package mapping are already being added.
+Now connect that system to actual account activation, upgrades, add-ons, credits, admin controls, and future billing logic so the app can be managed in the real world.
+
+IMPORTANT:
+Do NOT build a separate billing app.
+Do NOT rebuild existing checkout/billing if it already exists.
+Do NOT scatter pricing activation logic across random components.
+This step is about making the package system operational and manageable.
+
+GOAL:
+Create the management and activation layer so package rules are not just theoretical.
+The app must know:
+- how a user/account gets assigned a tier
+- how add-ons become active/inactive
+- how credits are granted and tracked
+- how admin/operator can override or assist
+- how upgrade paths connect to activation logic
+- how billing/checkouts can map into the entitlement system cleanly
+
+==================================================
+PRIMARY OBJECTIVE
+==================================================
+
+Build the control layer that connects:
+1. tier/package assignment
+2. add-on activation
+3. credit allocation
+4. upgrade flows
+5. checkout/billing events if present
+6. admin override tools
+7. account/business level management
+
+This should work with the current app architecture and preserve anything already built.
+
+==================================================
+PART 1 — PACKAGE ACTIVATION MODEL
+==================================================
+
+Create a clean activation model for plans/packages.
+
+The system should support:
+- assigning a tier to a user/account/business
+- changing tiers
+- scheduled activation dates if needed
+- active/inactive/suspended/cancelled status
+- grandfathered/manual assignment if needed later
+- account-level or entity-level assignment depending on current app structure
+
+If the current app already has subscription or plan records, extend them rather than duplicating them.
+
+==================================================
+PART 2 — ADD-ON ACTIVATION MODEL
+==================================================
+
+Create the structure for add-ons to be activated independently of the main plan.
+
+Support:
+- add-on status
+- start/end dates
+- scoped add-ons if needed
+- multiple add-ons per account/entity
+- cancellation/deactivation
+- manual admin assignment
+- future billing mapping
+
+Examples:
+- event host active
+- job board active
+- marketplace storefront active
+- premium placement active
+- video/podcast channel active
+- multi-hub presence active
+
+==================================================
+PART 3 — CREDIT ALLOCATION MODEL
+==================================================
+
+Implement the practical management layer for credits.
+
+The system should support:
+- monthly included credits from tier
+- purchased credits later
+- promotional/manual credits
+- admin-awarded credits
+- separate ledger/history
+- balance calculation
+- expiration rules optional if not yet needed
+- safe deduction after success only
+
+Need a clear distinction between:
+- entitlement rights
+- credit inventory
+- credit transaction history
+
+==================================================
+PART 4 — BILLING / CHECKOUT CONNECTION POINTS
+==================================================
+
+If the app already has Stripe or other payment logic, connect entitlement activation to it cleanly.
+
+Need a structure where checkout success can trigger:
+- assign tier
+- activate add-on
+- add credits
+- update renewal status
+- mark upgrade path complete
+
+If billing is not fully built yet, create the integration points and placeholder service boundaries now so it can be connected later without rewiring the app.
+
+Examples:
+- onPlanPurchaseSuccess(...)
+- onAddOnPurchaseSuccess(...)
+- onCreditPurchaseSuccess(...)
+- onSubscriptionCancelled(...)
+- onPaymentFailure(...)
+- onAdminManualActivation(...)
+
+Do not fully invent fake billing flows if not present.
+Just make the entitlement side ready and connected where appropriate.
+
+==================================================
+PART 5 — ADMIN CONTROL SURFACE
+==================================================
+
+Create or extend an admin/operator control layer so authorized users can manage package state without code edits.
+
+At minimum support admin/operator actions such as:
+- view current tier
+- change tier
+- activate/deactivate add-ons
+- grant/remove credits
+- view credit ledger/history
+- view why an action is blocked
+- manually override access if appropriate
+- see upgrade path mappings
+- inspect resolved entitlements for an account/business
+
+If full UI is too much for this pass, build the admin services and lightweight internal screens or tools where the current admin structure already exists.
+
+==================================================
+PART 6 — UPGRADE FLOW CONNECTIONS
+==================================================
+
+Connect blocked actions to real upgrade actions.
+
+When a user hits a gated area, the system should be able to return:
+- what is required
+- whether it is unlocked by plan, add-on, or credit
+- where the user should go next
+- what checkout/activation path to open
+
+Examples:
+- upgrade to Verified
+- upgrade to Charter
+- add Event Host
+- use 1 credit now
+- contact operator/admin
+- enterprise inquiry only
+
+Need a centralized upgrade resolver that can power buttons, locked cards, and upgrade CTAs.
+
+==================================================
+PART 7 — ENTITY / SCOPE RULES
+==================================================
+
+Make sure the system can handle scope correctly.
+
+Examples of scope:
+- user-level access
+- business/entity-level access
+- hub-level add-on
+- operator scope
+- multi-location / multi-hub support later
+
+Do not overcomplicate.
+But do not hardcode everything as if one user equals one business forever.
+
+==================================================
+PART 8 — OPERATOR / MANUAL WORKFLOW SUPPORT
+==================================================
+
+Support real-world exceptions.
+
+Need ability for admins/operators to handle things like:
+- sponsored upgrades
+- founder/manual placements
+- promo periods
+- complimentary credits
+- temporary access grants
+- approval-required actions
+- enterprise manual setup
+
+These should be structured as managed exceptions, not random hacks.
+
+==================================================
+PART 9 — AUDITABILITY
+==================================================
+
+Make sure major package state changes are inspectable.
+
+Need basic traceability for:
+- tier changes
+- add-on changes
+- credit grants/deductions
+- manual overrides
+- admin/operator actions affecting access
+
+This does not need a giant enterprise audit system, but it should not be opaque.
+
+==================================================
+PART 10 — DELIVERABLES
+==================================================
+
+Implement and return:
+
+1. package activation structure
+2. add-on activation structure
+3. credit allocation/management structure
+4. billing integration points or connection hooks
+5. admin/operator management capabilities
+6. upgrade flow resolver connections
+7. scope handling notes
+8. files/services/components changed
+9. any assumptions needing business confirmation
+
+Build this as the operational control layer that turns package logic into something usable day to day inside the existing City Hub app.

@@ -1,0 +1,301 @@
+PROMPT 1 — FULL CHARLOTTE AI SYSTEM AUDIT (FRONT END + BACK END + DATA + WORKFLOWS)
+
+You are auditing the existing codebase to identify, trace, and document EVERYTHING related to Charlotte AI across the app.
+
+This is an audit and mapping task first.
+Do not redesign first.
+Do not replace first.
+Do not simplify by assumption.
+Inspect what actually exists in code, routes, UI, services, tables, prompts, jobs, and workflows.
+
+GOAL
+
+Produce a complete current-state map of how Charlotte AI is set up right now across the entire platform, including:
+
+1. front-end presence
+2. admin presence
+3. APIs and server routes
+4. database tables and relationships
+5. AI prompts and system instructions
+6. automation jobs and ingestion flows
+7. content generation behavior
+8. enrichment behavior
+9. routing / recommendation behavior
+10. onboarding / story / listing / event / RSS / Places / intake involvement
+11. missing connections
+12. dead code / partial code / placeholder code
+13. where Charlotte is real vs where Charlotte is only implied in UI
+
+CONTEXT RULES
+
+This platform follows:
+Hub Presence → Objects → Discovery Surfaces
+
+Charlotte AI is intended to function as an operational assistant inside the ecosystem, helping with intake, routing, content, affiliate logic, and discovery support, not as a disconnected chatbot. The platform also already has source rules that Charlotte may assist with RSS ingestion, affiliate attachment, content creation, and routing into the correct discovery surfaces. Preserve those principles while auditing.  [oai_citation:0‡Core Architecture Principles.txt](sediment://file_00000000a2c871fdafa274c5e892729a)  [oai_citation:1‡Additional source Rules.txt](sediment://file_00000000851471f8a4f141db80cac0ae)
+
+Charlotte is also part of the broader content/marketing engine direction, where capture → spark → story → deliverables → distribution → archive/intelligence is the intended long-term flow. Audit current implementation against that reality, not generic chatbot assumptions.  [oai_citation:2‡Crown Program.txt](sediment://file_00000000656c722fb97efb4954c0c8fd)
+
+IMPORTANT
+
+Do NOT make architecture changes yet unless necessary to understand the current system.
+First produce a forensic current-state audit.
+
+TASKS
+
+PHASE 1 — FIND ALL CHARLOTTE TOUCHPOINTS
+
+Search the entire codebase for all Charlotte-related references, including but not limited to:
+- "Charlotte"
+- "charlotte"
+- "charlotte ai"
+- AI assistant labels
+- concierge/help/guide/operator wording
+- prompt files
+- system prompt strings
+- OpenAI calls
+- LLM wrappers
+- AI service utilities
+- cron jobs / workers / background jobs
+- RSS rewrite logic
+- content generation logic
+- Places enrichment logic
+- admin actions that invoke AI
+- inbox/intake/story/event workflows that call AI
+- recommendation/routing logic that mentions Charlotte
+- onboarding helpers
+- event/listing/article generation
+- translation helpers
+- tagging helpers
+- search/query interpretation
+- map/help overlays if any
+- hidden feature flags
+- env vars tied to AI providers/models
+
+Return a master inventory grouped by:
+A. front-end UI surfaces
+B. server/backend logic
+C. data layer
+D. jobs/automation
+E. prompts/config
+F. dead/partial/unwired code
+
+PHASE 2 — MAP FRONT-END CHARLOTTE
+
+Identify every place Charlotte appears or is supposed to appear in UI.
+
+For each occurrence, document:
+- page/route
+- component name
+- who can see it (public, reader, verified participant, admin, metro admin, platform admin, etc.)
+- what Charlotte is presented as there
+- what actions user can take
+- what actually happens after interaction
+- whether response is real, mocked, partial, or broken
+- whether it writes to DB
+- whether it triggers backend workflows
+- whether it connects to an inbox or object system
+- screenshots not needed unless helpful, but file/component references are required
+
+Include both:
+- public side
+- admin/back office side
+
+PHASE 3 — MAP BACK-END CHARLOTTE
+
+Trace all backend logic tied to Charlotte.
+
+For each backend touchpoint, document:
+- route name / endpoint
+- service / controller / utility name
+- input payload
+- output payload
+- model/provider used
+- prompt source
+- DB writes
+- downstream effects
+- guards/permissions
+- error handling
+- whether production-ready or partial
+
+Specifically inspect whether Charlotte currently performs any of the following:
+- RSS ingestion / interpretation
+- event preparation
+- listing preparation
+- story generation
+- Pulse content support
+- categorization / tagging
+- geo routing
+- affiliate category detection
+- default affiliate attachment
+- claim/onboarding assistance
+- source intake interpretation
+- author/creator support
+- editorial support
+- translation / bilingual support
+- marketing/content deliverables support
+
+PHASE 4 — DATABASE + STATE MAP
+
+Identify all tables, fields, enums, json columns, logs, and relationships tied to Charlotte AI behavior.
+
+Document:
+- direct Charlotte tables if any
+- content draft tables
+- intake/source/spark-related tables
+- article/story generation tables
+- inbox/admin routing tables
+- knowledge/logging/history tables
+- prompt/config storage
+- event/listing AI support fields
+- generated content status fields
+- audit/history tables
+
+Also identify where Charlotte SHOULD connect based on current schema but does not yet.
+
+PHASE 5 — PROMPT + MODEL AUDIT
+
+Locate every prompt, instruction block, message template, and model call currently used by Charlotte-related logic.
+
+For each:
+- file location
+- purpose
+- trigger point
+- model used
+- temperature/options if present
+- expected output format
+- actual downstream consumer
+- whether prompt is duplicated elsewhere
+- whether prompt is hardcoded or centralized
+- whether prompt conflicts with platform doctrine
+
+Group prompts by functional purpose:
+- assistant/chat
+- content generation
+- RSS rewrite
+- event/listing/story prep
+- onboarding/interview
+- tagging/classification
+- marketing/deliverables
+- translation
+- anything else
+
+PHASE 6 — WORKFLOW TRACE
+
+Build an end-to-end workflow map for Charlotte where it exists today.
+
+Trace real flows such as:
+1. capture / source comes in
+2. Charlotte processes it
+3. classification/routing happens
+4. object or draft gets created
+5. admin sees result
+6. content gets surfaced or approved
+7. downstream discovery surfaces use it
+
+If a workflow breaks midway, document exactly where.
+
+Pay special attention to these ecosystem areas because they have already been discussed as intended Charlotte/AI territory:
+- content sources + intake
+- editorial/calendar linkage
+- RSS ingestion
+- Pulse/story assistance
+- event support
+- discovery routing
+- intake to inbox behavior
+- operational assistant behavior
+- content engine / deliverables layer  [oai_citation:3‡Admin Audit.txt](sediment://file_00000000a9fc722fbe11a19469efe1c6)  [oai_citation:4‡Crown Program.txt](sediment://file_00000000656c722fb97efb4954c0c8fd)
+
+PHASE 7 — FRONT VS BACK GAP ANALYSIS
+
+For every Charlotte-related UI, classify it as one of:
+- Fully working
+- Working but limited
+- Wired to partial backend
+- UI shell only
+- Dead code
+- Duplicate implementation
+- Conflicting implementation
+- Hidden but functional
+- Functional but not exposed in UI
+
+This section must be blunt and practical.
+
+PHASE 8 — ADMIN / OPERATOR ROLE ANALYSIS
+
+Determine how Charlotte currently functions for:
+- platform admin
+- metro admin
+- micro/local admin if any
+- contributor/editor if any
+- public users if any
+
+Also inspect whether Charlotte is currently acting more like:
+- chatbot
+- content helper
+- ingestion processor
+- editorial assistant
+- routing engine
+- operational assistant
+- placeholder brand name with scattered functions
+
+PHASE 9 — OUTPUT DELIVERABLES
+
+Create these outputs in one audit report:
+
+OUTPUT A — EXECUTIVE SUMMARY
+A short summary of what Charlotte is today in the codebase.
+
+OUTPUT B — FULL INVENTORY TABLE
+Columns:
+- Area
+- File / Route / Table
+- Type
+- Purpose
+- Trigger
+- Current Status
+- Notes
+
+OUTPUT C — CURRENT WORKFLOW MAP
+Bullet or step-based map of all real workflows.
+
+OUTPUT D — FRONT-END MAP
+All UI surfaces and what they actually do.
+
+OUTPUT E — BACK-END MAP
+All routes/services/jobs/prompts and what they actually do.
+
+OUTPUT F — DATA MAP
+All related tables/fields/logs.
+
+OUTPUT G — PROMPT/MODEL MAP
+All prompt locations and model usage.
+
+OUTPUT H — GAPS / BROKEN LINKS / DUPLICATES
+What is incomplete, fake, disconnected, repeated, or misleading.
+
+OUTPUT I — RECOMMENDED CONSOLIDATION ZONES
+Do NOT redesign the whole system yet.
+Just identify where Charlotte logic is fragmented and should later be consolidated.
+
+OUTPUT J — SAFE NEXT BUILD ORDER
+After the audit, propose the best sequence for improving Charlotte without breaking current architecture.
+This should be sequence only, not implementation yet.
+
+AUDIT RULES
+
+- Do not assume a feature works because UI exists.
+- Do not assume a backend is active because a file exists.
+- Verify by tracing actual imports, calls, writes, and route usage.
+- Mark anything uncertain as uncertain.
+- Call out dead code clearly.
+- Call out duplicate logic clearly.
+- Distinguish “customer-facing Charlotte” from “internal/operator Charlotte.”
+- Preserve the single-source ecosystem architecture in analysis.  [oai_citation:5‡Core Architecture Principles.txt](sediment://file_00000000a2c871fdafa274c5e892729a)
+- Preserve the principle that capture should be frictionless and classification can occur later in admin/inbox flows.  [oai_citation:6‡Field capture.txt](sediment://file_00000000f92871f8bb71198d4d3fe06d)
+
+FINAL INSTRUCTION
+
+Do the audit first.
+Do not begin rebuilding.
+Do not collapse this into generic advice.
+Inspect the actual codebase and return a forensic current-state report with exact file references, exact routes, exact tables, and exact workflow notes.

@@ -1,0 +1,302 @@
+Work inside the existing City Hub codebase.
+
+Goal:
+Build the foundation pass for the unified RSS/imported content routing system.
+
+This is NOT a Pulse rebuild.
+This is NOT a UI redesign.
+This is NOT a flattened tag cleanup.
+
+This task exists to make sure RSS/imported content supports true multi-layer category + geo routing so the ecosystem can distribute content correctly later.
+
+CRITICAL GUARDRAIL — DO NOT FLATTEN THIS:
+
+The system we are building is explicitly MULTI-CATEGORY and MULTI-GEO.
+
+Do NOT reduce this to:
+- one category per item
+- one generic tag bucket
+- one flat location field
+- one simplified “news” fallback
+
+That would recreate the current problem.
+
+We are intentionally building a richer routing structure because the platform depends on:
+- core categories
+- subcategories
+- micro-category readiness
+- primary geography
+- secondary geography
+- hub / county / metro relationships
+
+If this is flattened, the platform loses the exact behavior it is supposed to support.
+
+--------------------------------------------------
+CORE ARCHITECTURE RULES
+--------------------------------------------------
+
+Follow these rules:
+- Single source, multiple discovery surfaces
+- Objects are created once and surfaced across Pulse, hub pages, category pages, search, map, and profiles
+- Pulse is a discovery surface, not a separate content system
+- Imported RSS content must remain single-source and become better-routed standard ecosystem content
+- Do not create duplicate records just to support different surfaces
+- For now, keep RSS/imported content in rss_items and enrich it there rather than duplicating into native tables
+
+--------------------------------------------------
+TASK A PURPOSE
+--------------------------------------------------
+
+This prompt is the FOUNDATION PASS only.
+
+Build the data/routing foundation so imported content can later:
+- route correctly into Pulse
+- route correctly into category pages
+- route correctly into hub/location pages
+- support local-first discovery
+- support admin correction later
+
+This prompt should focus on:
+1. missing taxonomy records
+2. richer rss_items routing fields
+3. separation of category from geography
+4. better processing metadata
+5. better Pulse projection inputs
+6. no flattening
+
+Do NOT build the full editorial UI yet.
+Do NOT build the routing confirmation panel yet.
+Do NOT rebuild all surfaces yet.
+
+--------------------------------------------------
+PART 1 — AUDIT + PRESERVE CURRENT MODEL
+--------------------------------------------------
+
+Before changing behavior, inspect the current rss_items schema, tag model, and projection logic.
+
+Document in your summary:
+- what fields already exist
+- which fields are missing
+- where category and geography are currently conflated
+- where projectRssItem() or equivalent feed projection is hardcoding weak defaults
+- what current tag slugs/code mappings already exist in code but are missing in the database
+
+Do not remove existing working logic unless replacing it with something clearly richer and safer.
+
+--------------------------------------------------
+PART 2 — CREATE / COMPLETE MISSING TAXONOMY RECORDS
+--------------------------------------------------
+
+The audit already showed that code mappings expect many more category/tag slugs than currently exist in the database.
+
+Create the missing tag/category records the code already expects so that existing mappings can actually resolve.
+
+Important:
+Do NOT just create a flat pile of generic tags.
+
+Support a category structure that preserves:
+- core category
+- subcategory / one level deeper
+- future micro-category readiness
+
+At minimum, structure the system so imported content can store:
+- category_core
+- category_sub
+
+If existing tag tables support parent/child or hierarchical relationships, use that rather than inventing a parallel flat system.
+
+If the current schema is too flat, minimally extend it so the hierarchy can be represented without breaking current usage.
+
+Goal:
+The system must be richer than “one tag per item.”
+
+--------------------------------------------------
+PART 3 — MULTI-LAYER CATEGORY FIELDS ON RSS/IMPORTED CONTENT
+--------------------------------------------------
+
+Enhance rss_items (or the appropriate imported-content source table) so each item can support multiple category dimensions.
+
+At minimum add/support fields for:
+- content_type
+- category_core
+- category_sub
+- source_type
+
+Optional future micro-categories can come later, but do NOT block for that now.
+
+Important rules:
+- category_core and category_sub are not the same thing
+- these are routing fields, not just display labels
+- do not collapse them into a single “primaryTag”
+- do not rely only on one generic category slug
+
+If existing tag relationships are many-to-many, preserve that capability.
+If the source object needs both direct fields and tag relations, that is acceptable.
+
+--------------------------------------------------
+PART 4 — MULTI-LAYER GEO FIELDS ON RSS/IMPORTED CONTENT
+--------------------------------------------------
+
+Enhance rss_items (or the appropriate imported-content source table) so each item can support multiple geography dimensions.
+
+At minimum support:
+- geo_primary
+- geo_secondary
+- county
+- metro
+- hub / micro hub if resolvable
+- raw location/venue signal if available
+
+Rules:
+- geography is NOT a category
+- do not stuff location into category tags
+- do not flatten geography into one generic zone string
+- do not leave location null when broader geography can be inferred
+
+Geo fallback model:
+1. exact/hub/micro-hub if resolvable
+2. county
+3. metro
+
+Every imported item should end with enough geo structure to support local-first distribution later.
+
+Also preserve the possibility that one item may relate to more than one geography:
+- primary geography = where it belongs first
+- secondary geography = where else it is relevant
+
+This is required. Do not flatten to single-location only.
+
+--------------------------------------------------
+PART 5 — SIMPLE PROCESSING METADATA (NOT OVERBUILT)
+--------------------------------------------------
+
+Do NOT create an over-engineered 11-status state machine.
+
+Instead support two cleaner concepts:
+
+A. publish_status
+Examples:
+- DRAFT
+- REVIEW_NEEDED
+- APPROVED
+- PUBLISHED
+- SUPPRESSED
+- ARCHIVED
+
+B. processing_stage
+Examples:
+- INGESTED
+- REWRITTEN
+- CLASSIFIED
+- GEO_ASSIGNED
+- ROUTED
+
+This allows us to track pipeline progress without making admin control unmanageable.
+
+If a JSON checkpoint/log is more appropriate than a giant enum, that is acceptable.
+
+--------------------------------------------------
+PART 6 — FIX PROJECTION / FEED PREPARATION LOGIC
+--------------------------------------------------
+
+Update the RSS projection layer (for example projectRssItem() or equivalent) so it uses actual available routing data instead of weak hardcoded defaults.
+
+Specifically:
+- do NOT hardcode every RSS item to generic “news” if richer category exists
+- do NOT return empty location tags if actual geo/category data exists
+- do NOT ignore zone/tag/category fields that are already present on the item
+
+Projection should use:
+- category_core
+- category_sub
+- geo_primary
+- geo_secondary
+- hub/county/metro relationships if available
+- content_type if available
+
+Goal:
+Imported content should project into the discovery system using real routing intelligence, not generic fallback placeholders.
+
+--------------------------------------------------
+PART 7 — POLICY STATUS SUPPORT (FOUNDATION ONLY)
+--------------------------------------------------
+
+Add/support a simple policy layer on imported content.
+
+At minimum:
+- ALLOW
+- REVIEW_NEEDED
+- SUPPRESS
+
+This is not the full moderation UI yet.
+This is just the field/model support so we stop treating all imported content as binary approved/skipped only.
+
+Do not overbuild this in Task A.
+
+--------------------------------------------------
+PART 8 — DO NOT DUPLICATE RECORDS
+--------------------------------------------------
+
+Important:
+Do NOT duplicate RSS/imported items into native articles/events/jobs tables in this task.
+
+For Task A:
+- keep imported content in rss_items
+- enrich it with stronger routing/classification metadata
+- allow discovery surfaces to read richer metadata
+
+We are deliberately avoiding synchronization problems and platform drift at this stage.
+
+--------------------------------------------------
+PART 9 — REQUIRED OUTPUT FOCUS
+--------------------------------------------------
+
+By the end of this task, imported content should be materially better prepared for future routing because it now supports:
+
+- multi-layer category
+- multi-layer geography
+- category/geo separation
+- simpler publish status
+- simpler processing stage
+- better projection inputs
+- no flattening
+
+This task is successful if:
+- missing taxonomy records are fixed
+- rss_items can store richer routing structure
+- projection stops collapsing items into generic “news/no location”
+- the system is now ready for Task B (classification + geo assignment improvements)
+
+--------------------------------------------------
+PART 10 — SAFETY / GUARDRAILS
+--------------------------------------------------
+
+Do NOT:
+- flatten category + geo into one tag model
+- simplify everything into one category field
+- simplify everything into one location field
+- replace hierarchy with a flat list
+- create duplicate records for different surfaces
+- rebuild Pulse UI
+- rebuild all discovery surfaces
+- build the full editorial panel yet
+
+DO:
+- preserve multi-layer architecture
+- preserve future micro-category readiness
+- preserve hub/county/metro logic
+- keep RSS/imported content single-source
+- make the routing structure richer than what exists now
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary of changes
+2. schema/migration changes
+3. missing taxonomy/tag records created
+4. new/updated rss_items routing fields
+5. how category and geo are now kept separate
+6. how projection logic was improved
+7. what remains for Task B

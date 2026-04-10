@@ -1,0 +1,310 @@
+You are continuing work INSIDE the existing City Hub / Charlotte Hub application.
+
+DO NOT build a separate event platform.
+DO NOT create a new SaaS.
+DO NOT rebuild the architecture.
+
+You are extending the existing event capability so venues and recurring organizers can run their events more efficiently inside the hub.
+
+This prompt assumes Prompt 1 and Prompt 2 already exist:
+- event model
+- event micro-sites
+- invitations / RSVP
+- event discovery
+- calendar / tonight / weekend views
+
+Now build the **Venue Event Engine** so the hub can support the high-frequency venues that will power the event ecosystem.
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Allow event venues and recurring organizers to:
+
+1. create recurring event series
+2. generate date-based occurrences automatically
+3. manage events from their Presence
+4. accept outside event submissions
+5. keep a clean public-facing venue events section
+6. preserve event history
+7. support both venue-hosted and organizer-hosted events tied to a venue
+
+This should make bars, breweries, music venues, comedy venues, and recurring organizers easy to manage inside the hub.
+
+==================================================
+PHASE 1 — EVENT SERIES MODEL
+==================================================
+
+Add a parent structure for recurring and branded events.
+
+Create:
+
+EventSeries
+- id
+- title
+- slug
+- description
+- host_presence_id
+- venue_presence_id (nullable)
+- hub_id
+- category_id (nullable)
+- visibility_default
+    public
+    unlisted
+    private
+- recurrence_type
+    none
+    weekly
+    monthly
+    custom
+- recurrence_rule_json (nullable)
+- default_start_time
+- default_end_time
+- default_location_name
+- default_location_address
+- status
+    draft
+    active
+    paused
+    archived
+- created_by_user_id
+- created_at
+- updated_at
+
+This is the parent record.
+
+Each dated event occurrence should still exist as an Event record tied back to EventSeries.
+
+Add to Event:
+- event_series_id (nullable)
+
+==================================================
+PHASE 2 — OCCURRENCE GENERATION
+==================================================
+
+Build logic so a venue or organizer can create an Event Series and generate occurrences automatically.
+
+Examples:
+- every Thursday at 7pm
+- first Tuesday of each month
+- every Friday and Saturday at 8pm
+- custom selected dates
+
+Requirements:
+- allow future occurrences to be generated in batches
+- allow individual occurrences to be edited without breaking the full series
+- allow skipping a date
+- allow cancelling a single occurrence
+- allow changing one occurrence to special hours/details
+
+Do NOT overbuild calendar logic.
+Keep it practical and manageable.
+
+==================================================
+PHASE 3 — VENUE EVENTS SECTION ON PRESENCE
+==================================================
+
+Every venue Presence should have a strong Events section.
+
+Show:
+- Upcoming Events
+- Recurring Series
+- Special One-Time Events
+- Past Events
+
+For recurring series, show the parent Event Series card first, then next upcoming date(s).
+
+Examples:
+- Trivia Night
+- Live Music Fridays
+- Open Mic Wednesdays
+- Monthly Networking Mixer
+
+This should make the venue Presence feel like its own event hub.
+
+==================================================
+PHASE 4 — ORGANIZER + VENUE RELATIONSHIPS
+==================================================
+
+Support two connected but distinct concepts:
+
+1. Host / Organizer Presence
+2. Venue Presence
+
+One event may be:
+- created by the venue itself
+- created by an outside organizer at the venue
+
+EventSeries and Event should support both relationships.
+
+Examples:
+- brewery hosts trivia night directly
+- promoter hosts comedy night at a bar
+- networking group hosts a private mixer at a venue
+
+Do NOT duplicate records.
+Use one event / one series with relationship fields.
+
+==================================================
+PHASE 5 — EVENT SUBMISSION TO VENUES
+==================================================
+
+Allow outside organizers to submit event requests to a venue.
+
+Create a lightweight submission flow.
+
+VenueEventSubmission
+- id
+- venue_presence_id
+- organizer_presence_id (nullable)
+- organizer_name
+- organizer_email
+- title
+- description
+- proposed_start_datetime
+- proposed_end_datetime
+- notes
+- status
+    pending
+    approved
+    rejected
+    converted
+- created_at
+- updated_at
+
+Venue admins should be able to:
+- review submissions
+- approve/reject
+- convert approved submissions into Event or EventSeries
+- optionally attach organizer Presence
+
+This helps venues keep calendars full.
+
+==================================================
+PHASE 6 — SERIES PAGES
+==================================================
+
+Create a page for Event Series.
+
+Example route:
+/events/series/{series-slug}
+
+This page should include:
+- series title
+- description
+- host presence
+- venue presence
+- next upcoming date
+- all upcoming occurrences
+- past occurrences archive
+- RSVP / event links for the next dates
+- share link
+- invite link when appropriate
+
+This page becomes the durable authority page for recurring events.
+
+==================================================
+PHASE 7 — EVENT HISTORY / ARCHIVE
+==================================================
+
+Past occurrences should not disappear.
+
+Rules:
+- individual past occurrences move into archive
+- Event Series keeps a visible history section
+- Presence pages show past event highlights
+- archived items remain searchable internally
+
+This helps:
+- credibility
+- SEO / AEO
+- recurring event authority
+- long-term content reuse
+
+==================================================
+PHASE 8 — VENUE MANAGEMENT DASHBOARD
+==================================================
+
+Extend the organizer dashboard for venues.
+
+Route example:
+/dashboard/events
+or
+/dashboard/venue-events
+
+Venue admins should be able to:
+- create Event Series
+- generate occurrences
+- edit individual occurrences
+- pause or archive a series
+- manage venue submissions
+- review upcoming calendar
+- copy event links
+- generate QR links
+
+Keep the UI consistent with existing dashboard/admin patterns.
+
+==================================================
+PHASE 9 — PULSE INTEGRATION FOR RECURRING EVENTS
+==================================================
+
+Integrate recurring events with Pulse without spamming the feed.
+
+Rules:
+- Event Series can generate an initial Pulse announcement
+- individual occurrences may optionally generate reminder-style Pulse items
+- admin can choose which occurrences should surface in Pulse
+- use existing visibility credit logic when applicable
+
+Do NOT auto-post every recurrence blindly.
+
+==================================================
+PHASE 10 — DISCOVERY INTEGRATION
+==================================================
+
+Recurring occurrences must feed the discovery system from Prompt 2.
+
+Public upcoming occurrences should appear in:
+- /events
+- /events/tonight
+- /events/weekend
+- calendar view
+- category views
+- map view when location exists
+
+Series pages should also be discoverable through venue Presence pages.
+
+==================================================
+PHASE 11 — GUARDRAILS
+==================================================
+
+DO NOT:
+- build a separate booking engine
+- build ticketing infrastructure
+- build complex enterprise event operations
+- create a separate venue SaaS
+- rebuild the existing event system
+
+DO:
+- extend the current event models cleanly
+- reuse current Presence logic
+- support recurring high-frequency venue events
+- support organizer + venue relationship mapping
+- preserve history
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+A venue or recurring organizer can:
+
+1. create an Event Series
+2. auto-generate occurrences
+3. edit one occurrence without breaking the series
+4. show recurring and one-time events on the Presence page
+5. accept outside event submissions
+6. convert submissions into real events
+7. preserve event history
+8. feed discovery and Pulse appropriately
+
+After this prompt, the hub should be able to handle the real operational needs of bars, breweries, music venues, comedy venues, and recurring local organizers.

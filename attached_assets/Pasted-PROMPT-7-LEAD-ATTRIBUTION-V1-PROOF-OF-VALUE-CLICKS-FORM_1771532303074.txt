@@ -1,0 +1,174 @@
+PROMPT 7 — LEAD ATTRIBUTION V1 (PROOF-OF-VALUE) — CLICKS + FORM, CITY-SCOPED, NO CALL TRACKING
+
+OBJECTIVE:
+Implement baseline lead attribution so businesses can see “this came from CLT/CityCoreHub”.
+This is V1: track click events + add a simple lead form submission path.
+NO call tracking numbers yet.
+Must be multi-tenant (cityId scoped).
+Must not expose ugly URLs to end users.
+
+CONSTRAINTS:
+- No schema drift outside adding NEW attribution tables only (allowed).
+- Do not change existing business, event, article schemas.
+- No service workers.
+- No new external vendors.
+- Keep it lightweight and revenue-first.
+
+------------------------------------------------------------
+STEP 1 — ADD 2 NEW TABLES (CITY-SCOPED)
+------------------------------------------------------------
+
+A) lead_events
+Fields:
+- id (uuid pk)
+- city_id (uuid, not null, indexed)
+- business_id (uuid, not null, indexed)
+- event_type (text enum-like): 'CLICK_WEBSITE' | 'CLICK_DIRECTIONS' | 'CLICK_CALL' | 'CLICK_BOOKING'
+- occurred_at (timestamp default now)
+- page_path (text)  // where the click happened (clean path, no long params)
+- referrer_path (text nullable)
+- user_agent (text nullable)
+- ip_hash (text nullable) // sha256(ip + salt) - do NOT store raw IP
+- session_id (text nullable) // lightweight session token from client
+
+Unique/anti-spam:
+- optional: de-dupe identical event_type+business_id+session_id within 60 seconds (server-side)
+
+B) lead_submissions
+Fields:
+- id (uuid pk)
+- city_id (uuid, not null, indexed)
+- business_id (uuid, not null, indexed)
+- name (text)
+- email (text)
+- phone (text nullable)
+- message (text)
+- occurred_at (timestamp default now)
+- source (text default 'CITYCOREHUB')
+- page_path (text)
+- session_id (text nullable)
+- user_agent (text nullable)
+- ip_hash (text nullable)
+
+NOTE:
+- Use existing Drizzle patterns + migrations approach already in project.
+- Ensure city_id is always enforced from citySlug -> cityId lookup.
+
+------------------------------------------------------------
+STEP 2 — BACKEND API ROUTES (PUBLIC, CITY-SCOPED)
+------------------------------------------------------------
+
+A) POST /api/cities/:citySlug/business/:businessSlug/lead-event
+Body:
+{
+  eventType: 'CLICK_WEBSITE' | 'CLICK_DIRECTIONS' | 'CLICK_CALL' | 'CLICK_BOOKING',
+  pagePath: '/cities/...',      // client sends current path only
+  referrerPath: '/cities/...'   // optional
+  sessionId: '...'              // optional
+}
+
+Server:
+- resolve cityId by citySlug
+- resolve business by slug + cityId
+- hash IP (req.ip) with a server salt env var (LEAD_IP_SALT). If missing, still work but hash with a default warning in logs.
+- insert into lead_events
+- respond 201 { ok:true }
+
+B) POST /api/cities/:citySlug/business/:businessSlug/lead
+Body:
+{
+  name, email, phone?, message,
+  pagePath,
+  sessionId?
+}
+
+Server:
+- validate required fields
+- insert into lead_submissions with same hashing rules
+- OPTIONAL (if Resend already configured):
+  email the business owner ONLY if claimed + has owner email; otherwise store only (no email send)
+- respond 201 { ok:true }
+
+------------------------------------------------------------
+STEP 3 — FRONTEND (PUBLIC) — TRACK CLICKS SILENTLY
+------------------------------------------------------------
+
+On Business Detail page buttons/links:
+- Website button/link
+- Directions button/link (Google maps)
+- Call button/link (tel:)
+- Booking link if exists
+
+Add an onClick handler that:
+1) calls lead-event endpoint (fire-and-forget; do not block navigation)
+2) then proceeds with the normal action
+
+Implementation detail:
+- Use navigator.sendBeacon if available
+- fallback to fetch with keepalive:true
+- Never show a query string to user
+- Store a simple sessionId in localStorage (e.g., cch_session_id) generated once (uuid)
+
+------------------------------------------------------------
+STEP 4 — FRONTEND (PUBLIC) — SIMPLE “CONTACT THIS BUSINESS” FORM (V1)
+------------------------------------------------------------
+
+Add a small, clean form on business detail page:
+Fields: Name, Email, Phone (optional), Message
+Button: “Send”
+On submit:
+- POST to /api/cities/:citySlug/business/:businessSlug/lead
+- Show success toast: “Sent. This business will respond if available.”
+- Clear form
+
+No spammy marketing language.
+
+------------------------------------------------------------
+STEP 5 — BUSINESS-FACING PROOF VIEW (OWNER DASHBOARD)
+------------------------------------------------------------
+
+On Owner Dashboard (claimed businesses), add a “Leads” panel:
+- Last 7 days counts:
+  - Website clicks
+  - Directions clicks
+  - Calls clicks
+  - Booking clicks
+  - Messages submitted
+- List of last 10 submissions (name + email + message preview + date)
+
+This must be gated:
+- Only claimed owner (same auth rules used for owner dashboard)
+- City scoped
+
+Add backend routes (owner-protected):
+- GET /api/cities/:citySlug/owner/:slug/leads/summary?days=7
+- GET /api/cities/:citySlug/owner/:slug/leads/submissions?limit=10
+
+------------------------------------------------------------
+STEP 6 — DIAGNOSTIC / QA
+------------------------------------------------------------
+
+Add a minimal admin-only debug route (admin-protected, not public):
+- GET /api/admin/leads/recent?limit=20
+Returns recent lead_events + lead_submissions with city/business names.
+(Used for testing quickly.)
+
+------------------------------------------------------------
+ACCEPTANCE TEST
+------------------------------------------------------------
+
+1) Click Website/Directions/Call on a business page:
+- lead_events increments for that business
+
+2) Submit the contact form:
+- lead_submissions row created
+- Owner dashboard shows count + submission list
+
+3) Non-owner cannot access owner leads endpoints (403)
+
+DELIVERABLE:
+Implement all the above, run through one manual test, and paste:
+- the JSON from the owner leads summary endpoint
+- one sample row from admin recent leads endpoint
+
+END PROMPT

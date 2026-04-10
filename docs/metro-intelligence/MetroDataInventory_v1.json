@@ -1,0 +1,537 @@
+{
+  "version": "1.0",
+  "title": "Metro Data Inventory — Silent Aggregation Mode",
+  "philosophy": "Collect, normalize, and store first; monetize later. Never sell raw personal data. Only anonymized, aggregated patterns.",
+  "scoping": {
+    "primary_key": "cityId (references cities.id)",
+    "secondary_key": "zoneId (references zones.id, nullable)",
+    "required_fields": ["id", "cityId", "source", "createdAt"]
+  },
+  "streams": {
+    "A_demand_intent": [
+      {
+        "id": "search_queries",
+        "name": "Search / Ask Queries",
+        "fields": ["queryText", "zipCode", "language", "categoryInferred", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "language_usage_log",
+        "monetization": ["zip_demand_heat_index", "category_momentum_report"]
+      },
+      {
+        "id": "filter_usage",
+        "name": "Filter Usage",
+        "fields": ["filterType", "zipCode", "language", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "language_usage_log",
+        "monetization": ["retail_opportunity_gaps"]
+      },
+      {
+        "id": "neighborhood_exploration",
+        "name": "Neighborhood Exploration",
+        "fields": ["fromZip", "toZip", "pageType", "sessionId", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "language_usage_log",
+        "monetization": ["emerging_neighborhood_index"]
+      },
+      {
+        "id": "saves_follows",
+        "name": "Saves / Follows",
+        "fields": ["itemType", "itemId", "zipCode", "language", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "device_saved_items",
+        "monetization": ["zip_demand_heat_index"]
+      },
+      {
+        "id": "no_result_events",
+        "name": "No Result Found Events",
+        "fields": ["queryText", "zipCode", "language", "categoryAttempted", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "language_usage_log",
+        "monetization": ["retail_opportunity_gaps"]
+      },
+      {
+        "id": "repeat_queries",
+        "name": "Repeat Query Patterns",
+        "fields": ["queryText", "frequency", "zipCode", "language", "timeWindow"],
+        "sources": ["derived"],
+        "cadence": "weekly",
+        "storage": "derived",
+        "monetization": ["category_momentum_report"]
+      },
+      {
+        "id": "language_overlay",
+        "name": "English vs Spanish Usage",
+        "fields": ["language", "pageType", "zipCode", "eventType", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "language_usage_log",
+        "monetization": ["hispanic_market_demand_map"]
+      }
+    ],
+    "B_supply_behavior": [
+      {
+        "id": "listing_engagement",
+        "name": "Listing Engagement",
+        "fields": ["businessId", "eventType", "zipCode", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "engagement_events",
+        "monetization": ["lead_quality_index"]
+      },
+      {
+        "id": "listing_updates",
+        "name": "Listing Updates Frequency",
+        "fields": ["businessId", "fieldChanged", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_update",
+        "storage": "businesses",
+        "monetization": null
+      },
+      {
+        "id": "event_engagement",
+        "name": "Event Creation & Engagement",
+        "fields": ["eventId", "creatorBusinessId", "attendeeCount", "zipCode", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "events",
+        "monetization": ["category_momentum_report"]
+      },
+      {
+        "id": "drop_participation",
+        "name": "Drop/Offer Participation",
+        "fields": ["offerId", "businessId", "participationType", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_event",
+        "storage": "future:drops_log",
+        "monetization": ["b2b_vendor_demand_index"]
+      },
+      {
+        "id": "referral_activity",
+        "name": "Referral Network Activity",
+        "fields": ["referrerId", "referredId", "status", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_event",
+        "storage": "referral_tables",
+        "monetization": ["b2b_vendor_demand_index"]
+      },
+      {
+        "id": "cross_promo",
+        "name": "Cross-Promotion Partnerships",
+        "fields": ["businessIdA", "businessIdB", "promoType", "startDate", "endDate"],
+        "sources": ["internal_log"],
+        "cadence": "manual",
+        "storage": "future:cross_promo_log",
+        "monetization": ["b2b_vendor_demand_index"]
+      }
+    ],
+    "C_lead_gateway": [
+      {
+        "id": "lead_submissions",
+        "name": "Lead Form Submissions",
+        "fields": ["category", "zipCode", "timeline", "budgetRange", "languagePreference", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "lead_submissions",
+        "monetization": ["lead_quality_index"]
+      },
+      {
+        "id": "lead_funnel",
+        "name": "Lead Funnel Metrics",
+        "fields": ["funnelStep", "category", "zipCode", "timestamp"],
+        "sources": ["derived"],
+        "cadence": "daily",
+        "storage": "derived",
+        "monetization": ["lead_quality_index"]
+      },
+      {
+        "id": "response_time",
+        "name": "Response Time Tracking",
+        "fields": ["leadId", "businessId", "responseTimeMinutes", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_response",
+        "storage": "leads",
+        "monetization": ["lead_quality_index"]
+      },
+      {
+        "id": "outcome_tracking",
+        "name": "Outcome Tracking",
+        "fields": ["leadId", "outcome", "revenue", "timestamp"],
+        "sources": ["crm_integration", "manual"],
+        "cadence": "manual",
+        "storage": "leads",
+        "monetization": ["lead_quality_index"]
+      },
+      {
+        "id": "demand_supply_gap",
+        "name": "Demand-to-Supply Gap Metrics",
+        "fields": ["category", "zipCode", "demandScore", "supplyCount", "gapScore"],
+        "sources": ["derived"],
+        "cadence": "weekly",
+        "storage": "derived",
+        "monetization": ["retail_opportunity_gaps"]
+      }
+    ],
+    "D_real_estate_development": [
+      {
+        "id": "building_permits",
+        "name": "Building Permits",
+        "fields": ["permitNumber", "permitType", "value", "address", "zipCode", "contractor", "issueDate", "source", "sourceUrl"],
+        "sources": ["public_record"],
+        "cadence": "weekly",
+        "storage": "future:permits_log",
+        "monetization": ["development_pressure_score"]
+      },
+      {
+        "id": "zoning_petitions",
+        "name": "Zoning / Rezoning Petitions",
+        "fields": ["petitionId", "petitionType", "address", "hearingDate", "outcome", "source", "sourceUrl"],
+        "sources": ["public_record"],
+        "cadence": "weekly",
+        "storage": "future:zoning_log",
+        "monetization": ["development_pressure_score"]
+      },
+      {
+        "id": "dev_approvals",
+        "name": "Development Approvals",
+        "fields": ["projectName", "unitCount", "commercialSqFt", "address", "approvalDate", "source"],
+        "sources": ["public_record"],
+        "cadence": "monthly",
+        "storage": "future:dev_approvals_log",
+        "monetization": ["development_pressure_score", "emerging_neighborhood_index"]
+      },
+      {
+        "id": "infra_projects",
+        "name": "Infrastructure Projects",
+        "fields": ["projectName", "type", "location", "startDate", "completionDate", "budget"],
+        "sources": ["public_record"],
+        "cadence": "monthly",
+        "storage": "future:infra_log",
+        "monetization": ["emerging_neighborhood_index"]
+      },
+      {
+        "id": "school_changes",
+        "name": "School Boundary Changes",
+        "fields": ["district", "changeType", "affectedZips", "effectiveDate"],
+        "sources": ["public_record"],
+        "cadence": "manual",
+        "storage": "future:schools_log",
+        "monetization": ["emerging_neighborhood_index"]
+      },
+      {
+        "id": "crime_trends",
+        "name": "Crime Trend Aggregates",
+        "fields": ["zipCode", "crimeCategory", "count", "period", "trendDirection"],
+        "sources": ["public_record"],
+        "cadence": "monthly",
+        "storage": "future:crime_trends",
+        "monetization": ["emerging_neighborhood_index"]
+      },
+      {
+        "id": "retail_vacancy",
+        "name": "Retail/Commercial Vacancy",
+        "fields": ["propertyType", "address", "sqft", "askingRent", "timeOnMarket", "source", "sourceUrl"],
+        "sources": ["licensed_feed", "public_record"],
+        "cadence": "weekly",
+        "storage": "future:vacancy_snapshot",
+        "monetization": ["retail_opportunity_gaps", "business_launch_radar"]
+      },
+      {
+        "id": "multifamily_inventory",
+        "name": "Multifamily/Apartment Inventory",
+        "fields": ["propertyName", "address", "unitCount", "developer", "managementCompany", "completionDate", "leaseUpStatus", "rentLow", "rentHigh", "website", "phone", "source"],
+        "sources": ["manual", "csv_import", "licensed_feed"],
+        "cadence": "weekly",
+        "storage": "multifamily_log",
+        "monetization": ["apartment_lease_up_signals"]
+      },
+      {
+        "id": "residential_moving",
+        "name": "Residential Moving Signals",
+        "fields": ["fromZip", "toZip", "moveType", "timestamp"],
+        "sources": ["derived"],
+        "cadence": "monthly",
+        "storage": "future:moving_signals",
+        "monetization": ["apartment_lease_up_signals"]
+      }
+    ],
+    "E_business_formation": [
+      {
+        "id": "business_filings",
+        "name": "New Business Filings",
+        "fields": ["filingExternalId", "businessName", "filingDate", "status", "industryCode", "organizerName", "registeredAgent", "registeredAddress", "mailingAddress", "stateCode", "source"],
+        "sources": ["state_registry", "manual", "csv_import"],
+        "cadence": "daily_or_weekly",
+        "storage": "business_filings_log",
+        "monetization": ["business_launch_radar"]
+      },
+      {
+        "id": "business_closures",
+        "name": "Business Closures/Dissolutions",
+        "fields": ["filingExternalId", "businessName", "dissolutionDate", "reason", "source"],
+        "sources": ["state_registry"],
+        "cadence": "weekly",
+        "storage": "business_filings_log",
+        "monetization": ["business_launch_radar", "retail_opportunity_gaps"]
+      },
+      {
+        "id": "liquor_licenses",
+        "name": "Liquor License Filings",
+        "fields": ["licenseNumber", "businessName", "address", "licenseType", "issueDate", "source"],
+        "sources": ["public_record"],
+        "cadence": "monthly",
+        "storage": "future:liquor_licenses_log",
+        "monetization": ["business_launch_radar"],
+        "optional": true
+      },
+      {
+        "id": "health_inspections",
+        "name": "Health Inspection Scores",
+        "fields": ["businessName", "address", "inspectionDate", "score", "violations", "source"],
+        "sources": ["public_record"],
+        "cadence": "monthly",
+        "storage": "future:inspections_log",
+        "monetization": null,
+        "optional": true
+      }
+    ],
+    "F_opportunity_board": [
+      {
+        "id": "vendor_requests",
+        "name": "Vendor Requests / Service Needs",
+        "fields": ["requestorBusinessId", "serviceCategory", "description", "budget", "zipCode", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_submission",
+        "storage": "future:vendor_requests",
+        "monetization": ["b2b_vendor_demand_index"]
+      },
+      {
+        "id": "space_available",
+        "name": "Space Available / Retail Vacancy Leads",
+        "fields": ["address", "sqft", "askingRent", "propertyType", "contactInfo", "postedBy", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_submission",
+        "storage": "future:space_listings",
+        "monetization": ["retail_opportunity_gaps"]
+      },
+      {
+        "id": "community_partnerships",
+        "name": "Community Partnership Requests",
+        "fields": ["organizationId", "partnershipType", "description", "targetAudience", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_submission",
+        "storage": "future:partnership_requests",
+        "monetization": ["b2b_vendor_demand_index"]
+      },
+      {
+        "id": "event_vendor_calls",
+        "name": "Event Vendor Calls",
+        "fields": ["eventId", "vendorCategory", "description", "deadline", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "on_submission",
+        "storage": "future:event_vendor_calls",
+        "monetization": ["b2b_vendor_demand_index"]
+      }
+    ],
+    "G_physical_digital_network": [
+      {
+        "id": "qr_scan_logs",
+        "name": "QR Scan Logs",
+        "fields": ["locationNodeId", "scannedAt", "deviceType", "resultUrl", "timestamp"],
+        "sources": ["internal_log"],
+        "cadence": "realtime",
+        "storage": "future:qr_scan_log",
+        "monetization": ["host_performance_index"]
+      },
+      {
+        "id": "onprem_conversion",
+        "name": "On-Prem Conversion Path",
+        "fields": ["scanId", "viewedPage", "leadGenerated", "savedItem", "conversionStep", "timestamp"],
+        "sources": ["derived"],
+        "cadence": "realtime",
+        "storage": "derived",
+        "monetization": ["host_performance_index"]
+      },
+      {
+        "id": "host_performance",
+        "name": "Host Location Performance Index",
+        "fields": ["locationNodeId", "totalScans", "conversions", "revenueAttributed", "period"],
+        "sources": ["derived"],
+        "cadence": "weekly",
+        "storage": "derived",
+        "monetization": ["host_performance_index"]
+      }
+    ]
+  },
+  "future_products": [
+    {
+      "id": "zip_demand_heat_index",
+      "name": "Zip Demand Heat Index",
+      "description": "Per-ZIP demand score by category and language",
+      "input_streams": ["search_queries", "filter_usage", "saves_follows", "language_overlay"],
+      "audience": ["developers", "retailers", "brokers", "franchises"],
+      "cadence": "weekly"
+    },
+    {
+      "id": "category_momentum_report",
+      "name": "Category Momentum Report",
+      "description": "Trending and declining categories by ZIP over time",
+      "input_streams": ["search_queries", "repeat_queries", "event_engagement", "listing_engagement"],
+      "audience": ["chambers_of_commerce", "economic_development_orgs"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "development_pressure_score",
+      "name": "Development Pressure Score",
+      "description": "Composite score indicating development activity intensity per ZIP",
+      "input_streams": ["building_permits", "zoning_petitions", "dev_approvals", "infra_projects"],
+      "audience": ["real_estate_investors", "developers"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "emerging_neighborhood_index",
+      "name": "Emerging Neighborhood Index",
+      "description": "Multi-factor index scoring neighborhood trajectory",
+      "input_streams": ["building_permits", "zoning_petitions", "dev_approvals", "infra_projects", "school_changes", "crime_trends", "neighborhood_exploration", "listing_engagement"],
+      "audience": ["real_estate_investors", "retailers"],
+      "cadence": "quarterly"
+    },
+    {
+      "id": "retail_opportunity_gaps",
+      "name": "Retail Opportunity Gaps",
+      "description": "Categories with high demand but low supply per ZIP",
+      "input_streams": ["search_queries", "no_result_events", "demand_supply_gap", "retail_vacancy", "business_closures"],
+      "audience": ["franchises", "retail_chains", "entrepreneurs"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "apartment_lease_up_signals",
+      "name": "Apartment Lease-Up & Population Inflow Signals",
+      "description": "New multifamily completions correlated with demand signals",
+      "input_streams": ["multifamily_inventory", "residential_moving"],
+      "audience": ["property_managers", "retailers", "service_providers"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "hispanic_market_demand_map",
+      "name": "Hispanic Market Demand Map",
+      "description": "Spanish-language demand density by ZIP and category",
+      "input_streams": ["language_overlay", "search_queries", "lead_submissions"],
+      "audience": ["bilingual_businesses", "franchises_targeting_hispanic_market"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "business_launch_radar",
+      "name": "Business Launch Radar",
+      "description": "New business formations + vacancy data = launch signals",
+      "input_streams": ["business_filings", "business_closures", "liquor_licenses", "retail_vacancy"],
+      "audience": ["b2b_service_providers", "commercial_landlords"],
+      "cadence": "weekly"
+    },
+    {
+      "id": "b2b_vendor_demand_index",
+      "name": "B2B Vendor Demand Index",
+      "description": "Aggregated vendor/service demand by category",
+      "input_streams": ["vendor_requests", "community_partnerships", "event_vendor_calls", "drop_participation", "referral_activity"],
+      "audience": ["b2b_service_providers"],
+      "cadence": "monthly"
+    },
+    {
+      "id": "lead_quality_index",
+      "name": "Lead Quality Index",
+      "description": "Aggregated lead performance metrics by category and ZIP",
+      "input_streams": ["lead_submissions", "lead_funnel", "response_time", "outcome_tracking", "listing_engagement"],
+      "audience": ["business_owners"],
+      "cadence": "monthly"
+    }
+  ],
+  "schema_plan": {
+    "implemented": [
+      {
+        "table": "business_filings_log",
+        "purpose": "NC business filings log",
+        "phase": 1
+      },
+      {
+        "table": "multifamily_log",
+        "purpose": "Apartment/multifamily properties",
+        "phase": 1
+      },
+      {
+        "table": "language_usage_log",
+        "purpose": "Language/demand event log",
+        "phase": 1
+      },
+      {
+        "table": "signals_feed",
+        "purpose": "Unified signal stream",
+        "phase": 1
+      }
+    ],
+    "future": [
+      { "table": "permits_log", "purpose": "Building permits", "phase": 2 },
+      { "table": "zoning_log", "purpose": "Zoning petitions/decisions", "phase": 2 },
+      { "table": "vacancy_snapshot", "purpose": "Retail/commercial vacancy", "phase": 2 },
+      { "table": "dev_approvals_log", "purpose": "Development approvals", "phase": 2 },
+      { "table": "infra_log", "purpose": "Infrastructure projects", "phase": 2 },
+      { "table": "schools_log", "purpose": "School boundary changes", "phase": 2 },
+      { "table": "crime_trends", "purpose": "Crime aggregates by ZIP", "phase": 2 },
+      { "table": "qr_scan_log", "purpose": "QR scan events", "phase": 3 },
+      { "table": "vendor_requests", "purpose": "B2B vendor needs", "phase": 3 },
+      { "table": "space_listings", "purpose": "Available commercial space", "phase": 3 },
+      { "table": "partnership_requests", "purpose": "Community partnerships", "phase": 3 },
+      { "table": "event_vendor_calls", "purpose": "Event vendor solicitations", "phase": 3 },
+      { "table": "liquor_licenses_log", "purpose": "Liquor license filings (optional)", "phase": 3 },
+      { "table": "inspections_log", "purpose": "Health inspection scores (optional)", "phase": 3 }
+    ]
+  },
+  "build_order": {
+    "phase_1": {
+      "status": "implemented",
+      "items": [
+        "Business filings log + CSV/JSON ingestion",
+        "Multifamily log + CSV/JSON ingestion",
+        "Language/search event logging",
+        "Signals feed (auto-populated)",
+        "Admin Intelligence Panel",
+        "CSV export endpoints",
+        "Background job stubs (disabled)"
+      ]
+    },
+    "phase_2": {
+      "status": "planned",
+      "items": [
+        "Building permits log + ingestion",
+        "Zoning petitions log + ingestion",
+        "Commercial vacancy snapshots",
+        "Development approvals tracking",
+        "Infrastructure project tracking",
+        "Derived: Development Pressure Score"
+      ]
+    },
+    "phase_3": {
+      "status": "planned",
+      "items": [
+        "QR scan logging integration",
+        "Opportunity board (vendor requests, space listings)",
+        "Event vendor calls",
+        "Optional: Liquor licenses, health inspections",
+        "Derived: Host Performance Index"
+      ]
+    },
+    "phase_4": {
+      "status": "planned",
+      "items": [
+        "Derived indexes: Zip Demand Heat, Category Momentum, Emerging Neighborhood",
+        "Gap detection algorithms",
+        "Hispanic Market Demand Map computation",
+        "Business Launch Radar aggregation",
+        "Internal reporting dashboards for derived products"
+      ]
+    }
+  }
+}

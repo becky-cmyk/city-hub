@@ -1,0 +1,176 @@
+Build an interactive Charlotte Neighborhood Discovery Map for the relocation section of the City Hub platform.
+
+The purpose of this map is to help people moving to Charlotte explore neighborhoods and discover the local hubs connected to each area.
+
+This is NOT a traditional real estate map. It is a community discovery map that connects users to neighborhood hubs, businesses, events, and Pulse stories.
+
+PAGE LOCATION
+
+/charlotte/moving-to-charlotte
+
+Add a section titled:
+
+Explore Charlotte Neighborhoods
+
+--------------------------------------------------
+
+FEATURE 1 — Interactive Map
+
+Create an interactive Charlotte metro map showing major neighborhoods and surrounding communities.
+
+Each map point should represent a neighborhood hub.
+
+Examples:
+
+Uptown  
+South End  
+NoDa  
+Plaza Midwood  
+Dilworth  
+Ballantyne  
+SouthPark  
+University Area  
+Matthews  
+Huntersville  
+Cornelius  
+Pineville  
+Fort Mill  
+Belmont
+
+When a user clicks a neighborhood:
+
+Open a preview panel with:
+
+Neighborhood name  
+Short description  
+Lifestyle tags  
+Featured local businesses  
+Upcoming events  
+Link to the neighborhood hub page
+
+Example link:
+
+/hub/south-end  
+/hub/noda  
+/hub/plaza-midwood
+
+--------------------------------------------------
+
+FEATURE 2 — Neighborhood Preview Card
+
+When clicking a neighborhood, show a card with:
+
+Neighborhood Name  
+Short overview (2–3 sentences)
+
+Lifestyle indicators:
+
+Walkability  
+Family Friendly  
+Nightlife  
+Urban / Suburban  
+Outdoor access
+
+Add button:
+
+Explore This Neighborhood
+
+Linking to the hub page.
+
+--------------------------------------------------
+
+FEATURE 3 — Lifestyle Filters
+
+Above the map include filter buttons:
+
+Urban Living  
+Young Professionals  
+Family Friendly  
+Walkable Areas  
+Nightlife Districts  
+Suburbs  
+Waterfront Communities  
+Arts & Creative Districts
+
+When a filter is selected:
+
+Highlight matching neighborhoods on the map.
+
+--------------------------------------------------
+
+FEATURE 4 — Sponsored Neighborhood Rotation
+
+Each neighborhood page can display rotating featured sponsors:
+
+Featured Real Estate Partner  
+Featured Local Business  
+Featured Community Organization
+
+Sponsors rotate rather than fixed placement.
+
+--------------------------------------------------
+
+FEATURE 5 — Compare Neighborhoods
+
+Add a section below the map titled:
+
+Compare Charlotte Neighborhoods
+
+Display comparison cards showing:
+
+Neighborhood  
+Housing type  
+Lifestyle  
+Average commute  
+Popular with
+
+Example:
+
+South End  
+Urban apartments  
+Young professionals  
+Walkable  
+Light rail access
+
+Ballantyne  
+Suburban homes  
+Families  
+Corporate offices  
+New developments
+
+--------------------------------------------------
+
+FEATURE 6 — Hub Integration
+
+Each neighborhood hub page should automatically pull data from the platform:
+
+Pulse stories tagged to that neighborhood  
+Local events  
+Businesses with Hub Presence  
+Experts and speakers in the area  
+Marketplace listings
+
+--------------------------------------------------
+
+FEATURE 7 — Relocation Quiz
+
+Add a short quiz titled:
+
+Where Should You Live in Charlotte?
+
+Questions may include:
+
+Preferred lifestyle  
+Commute preference  
+Budget range  
+Rent or buy  
+Nightlife vs quiet  
+Family vs single
+
+After answering, recommend neighborhoods and link to their hub pages.
+
+--------------------------------------------------
+
+GOAL
+
+Create an interactive relocation discovery tool that helps new residents explore Charlotte neighborhoods while feeding traffic into the neighborhood hub network.

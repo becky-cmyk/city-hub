@@ -1,0 +1,265 @@
+GOAL:
+Integrate Cora into the EXISTING Charlotte Content Engine without rebuilding anything.
+
+IMPORTANT:
+- DO NOT create new content tables
+- DO NOT duplicate generation logic
+- USE existing:
+  - ai_content_drafts
+  - social_posts
+  - content_deliverables
+- USE existing generators:
+  - runContentGenerator()
+  - generateSocialPosts()
+  - Content Studio /generate endpoint
+
+Cora = orchestration layer ONLY
+
+--------------------------------------------------
+PART 1 — EXTEND EXISTING TABLES (NO DUPLICATION)
+--------------------------------------------------
+
+ALTER ai_content_drafts:
+ADD COLUMN scope TEXT DEFAULT 'metro';              // 'platform' | 'metro'
+ADD COLUMN persona_name TEXT DEFAULT 'charlotte';   // 'charlotte' | 'cora'
+
+ALTER social_posts:
+ADD COLUMN scope TEXT DEFAULT 'metro';
+ADD COLUMN persona_name TEXT DEFAULT 'charlotte';
+
+ALTER content_deliverables:
+ADD COLUMN scope TEXT DEFAULT 'metro';
+ADD COLUMN persona_name TEXT DEFAULT 'charlotte';
+
+--------------------------------------------------
+PART 2 — STANDARDIZE EXISTING FIELDS
+--------------------------------------------------
+
+Ensure consistent values across ALL THREE tables:
+
+status values MUST be:
+- draft
+- reviewed
+- approved
+- queued
+- published
+
+created_by values MUST be:
+- charlotte
+- cora
+- manual
+
+DO NOT add new columns if these already exist — normalize usage only.
+
+--------------------------------------------------
+PART 3 — CREATE CORA MEMORY TABLES (ADMIN WEDGE)
+--------------------------------------------------
+
+CREATE TABLE cora_knowledge (
+  id UUID PRIMARY KEY,
+  category TEXT,
+  key TEXT,
+  value TEXT,
+  confidence_level TEXT,
+  source TEXT,
+  needs_review BOOLEAN,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE cora_questions (
+  id UUID PRIMARY KEY,
+  question TEXT,
+  context TEXT,
+  priority TEXT,
+  status TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE cora_suggestions (
+  id UUID PRIMARY KEY,
+  suggestion TEXT,
+  context TEXT,
+  impact_level TEXT,
+  approved BOOLEAN DEFAULT FALSE,
+  executed BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+--------------------------------------------------
+PART 4 — CREATE CORA HATS SYSTEM
+--------------------------------------------------
+
+Create file: cora_hats.ts
+
+Export:
+
+resolveHat(input: string)
+
+Basic mapping:
+
+- marketing / content / post → "cmo"
+- writing / article / caption → "editor"
+- pricing / revenue → "cfo"
+- system / structure → "cto"
+- build / feature → "builder"
+- bug / error / not working → "debugger"
+- operations / next steps → "operator"
+- fallback → "admin"
+
+Return:
+{
+  hat: string,
+  confidence: "low" | "medium" | "high"
+}
+
+--------------------------------------------------
+PART 5 — CREATE CORA CONTENT BRIDGE (CRITICAL)
+--------------------------------------------------
+
+Create file: cora_content_bridge.ts
+
+Function:
+
+generateContentWithCora({
+  input,
+  scope,        // "platform" | "metro"
+  metroId,
+  persona       // "cora" | "charlotte"
+})
+
+Behavior:
+
+1. Route ALL generation through EXISTING Content Studio /generate logic
+
+2. Pass:
+   - input
+   - metroId
+   - any existing required params
+
+3. AFTER generation completes:
+   UPDATE records created in:
+   - ai_content_drafts
+   - social_posts
+   - content_deliverables
+
+   SET:
+   - scope = scope
+   - persona_name = persona
+   - created_by = persona
+   - status = 'draft'   // enforce approval workflow
+
+4. RETURN generated outputs grouped
+
+IMPORTANT:
+- DO NOT rewrite prompts
+- DO NOT call OpenAI directly here
+- DO NOT duplicate generation logic
+
+--------------------------------------------------
+PART 6 — CREATE CORA SERVICE
+--------------------------------------------------
+
+Create file: cora_service.ts
+
+Main function:
+
+handleCoraRequest({
+  input,
+  scope,
+  metroId
+})
+
+Steps:
+
+1. resolve hat using resolveHat()
+
+2. Detect intent:
+   IF input includes:
+   - "post", "content", "write", "caption"
+     → CALL generateContentWithCora()
+
+3. If unclear or missing data:
+   INSERT into cora_questions
+
+4. Always return structured response:
+
+{
+  hat,
+  message,
+  outputs (if any),
+  requiresApproval: true
+}
+
+--------------------------------------------------
+PART 7 — ENFORCE APPROVAL RULE
+--------------------------------------------------
+
+Cora MUST NEVER:
+- set status = approved
+- queue content
+- publish content
+
+All generated content:
+→ status = 'draft'
+
+--------------------------------------------------
+PART 8 — TEST ENDPOINTS (ADMIN ONLY)
+--------------------------------------------------
+
+Create routes:
+
+POST /cora/test
+POST /cora/test/platform
+
+REQUIRE:
+- admin authentication (same pattern as metro admin endpoints)
+
+Example body:
+
+{
+  "input": "Create 3 posts for Charlotte",
+  "scope": "metro",
+  "metroId": "clt"
+}
+
+--------------------------------------------------
+PART 9 — DO NOT TOUCH EXISTING SYSTEM
+--------------------------------------------------
+
+DO NOT:
+- modify Content Studio internals
+- change existing generation functions
+- create new content tables
+- alter existing UI
+
+ONLY:
+- extend tables
+- add bridge
+- add Cora layer
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+- Cora can generate content using EXISTING system
+- Outputs saved in existing tables
+- Records tagged with:
+  - scope
+  - persona_name
+  - created_by
+- All outputs are drafts
+- No duplication of logic
+- No system breakage
+
+--------------------------------------------------
+OUTPUT REQUIRED AFTER BUILD
+--------------------------------------------------
+
+Provide summary:
+
+1. which tables were altered
+2. confirmation existing tables reused
+3. where cora_content_bridge lives
+4. confirmation Content Studio was used (not replaced)
+5. confirmation endpoints are admin-protected

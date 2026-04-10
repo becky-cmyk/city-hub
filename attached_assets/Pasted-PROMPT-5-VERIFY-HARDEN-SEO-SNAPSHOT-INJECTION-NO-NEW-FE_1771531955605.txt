@@ -1,0 +1,70 @@
+PROMPT 5 — VERIFY + HARDEN SEO SNAPSHOT INJECTION (NO NEW FEATURES)
+
+GOAL:
+Confirm Prompt 4 worked and harden the snapshot system so it’s stable across routes and does not create duplicate head tags.
+
+DO NOT add new endpoints.
+DO NOT change DB schema.
+DO NOT change token/auth.
+Surgical improvements only.
+
+------------------------------------------------------------
+STEP 1 — ADD 2 NEW CHECKS TO THE SEO DIAGNOSTIC OUTPUT
+------------------------------------------------------------
+
+For each tested page, add:
+
+1) hasSeoSnapshotDiv (boolean)
+   - true if raw HTML contains id="seo-snapshot"
+
+2) snapshotHiddenByJsCss (boolean)
+   - true if raw HTML contains BOTH:
+     - "document.documentElement.classList.add('js')"
+     - "html.js #seo-snapshot"
+
+These confirm Prompt 4 is truly present on every snapshot response.
+
+------------------------------------------------------------
+STEP 2 — HARDEN buildSeoHtml() “HEAD INJECTION” TO BE IDEMPOTENT
+------------------------------------------------------------
+
+Before injecting new tags, strip any existing ones (so re-renders never duplicate):
+
+A) Remove ALL existing <title>...</title>
+B) Remove ALL existing <meta name="description" ...>
+C) Remove ALL existing <link rel="canonical" ...>
+D) Remove ALL existing <script type="application/ld+json">...</script>
+E) Remove any prior injected snapshot helpers if already present:
+   - remove the inline <script> that adds 'js' class IF it exists
+   - remove the inline <style> for html.js #seo-snapshot IF it exists
+
+Then inject a single clean set.
+
+Use simple regex replaces; keep it minimal.
+
+------------------------------------------------------------
+STEP 3 — ROOT INJECTION MUST ALWAYS BE EXACT
+------------------------------------------------------------
+
+Ensure root replacement does exactly this:
+
+<div id="root"><div id="seo-snapshot">...rootHtml...</div></div>
+
+Even if index.html had <div id="root">SOMETHING</div>, replace its contents fully.
+
+------------------------------------------------------------
+STEP 4 — VALIDATION
+------------------------------------------------------------
+
+1) Run:
+   /api/seo-diagnostic?token=<token>
+
+2) Paste FULL JSON output.
+
+Acceptance:
+- hasSeoSnapshotDiv = true for all public pages
+- snapshotHiddenByJsCss = true for all public pages
+- titleTag/metaDescription/canonicalHref/hasJsonLd/h1Text are present and correct
+- No duplicate meta/canonical/jsonld in raw HTML
+
+END PROMPT

@@ -1,0 +1,209 @@
+PROMPT — CHARLOTTE: Google Places Importer + “Listings to Claim” Queue + Admin Chat UI
+
+AUTHORITY
+Implement exactly. No deletions. Preserve existing listing tiers. This adds a controlled importer + AI assistant workflow.
+
+GOAL
+1) Add a Google Places importer that creates “Listings to Claim” (unclaimed presences) for Charlotte Metro.
+2) Add a dedicated Admin page to chat with Charlotte (AI) to run imports and generate listing drafts.
+3) Add hard daily caps + in-app throttling so we control cost.
+
+SECRETS / CONFIG
+- GOOGLE_PLACES_API_KEY is already stored in Replit secrets.
+- Add server env/config:
+  - PLACES_IMPORT_DAILY_TEXTSEARCH_LIMIT=500
+  - PLACES_IMPORT_DAILY_DETAILS_LIMIT=2000
+  - PLACES_IMPORT_RPM_LIMIT=30  (requests per minute, server-side throttle)
+  - DEFAULT_CITY="Charlotte"
+  - DEFAULT_STATE="NC"
+  - DEFAULT_COUNTRY="US"
+
+--------------------------------------------
+1) DATABASE — PLACES IMPORT + QUEUE
+--------------------------------------------
+
+1A) place_import_jobs
+- id (uuid)
+- created_by_user_id
+- mode enum: "text_search" | "nearby_search"
+- query_text (e.g., “coffee shop in Charlotte NC”) nullable
+- category_keyword nullable (e.g., coffee, plumber) nullable
+- center_lat, center_lng nullable
+- radius_meters nullable
+- status enum: "queued" | "running" | "completed" | "failed"
+- requested_count int default 0
+- imported_count int default 0
+- error_text nullable
+- created_at, updated_at
+
+1B) place_import_results
+- id
+- job_id
+- place_id (unique within project)
+- name
+- formatted_address
+- primary_type / categories json
+- lat, lng (optional snapshot)
+- status enum: "discovered" | "details_fetched" | "presence_created" | "skipped" | "failed"
+- skip_reason nullable
+- created_presence_id nullable
+- created_at, updated_at
+
+1C) presence_places_source (attach Google Places pointer to a presence)
+- presence_id (FK)
+- place_id (unique)
+- places_last_refreshed_at nullable
+- places_source_label text default "Google Places"
+- created_at
+
+1D) listings_to_claim_queue (admin working queue)
+- id
+- presence_id
+- source enum: "google_places" | "manual" | "import_csv"
+- status enum: "ready" | "published_free" | "claimed" | "archived"
+- notes nullable
+- created_at, updated_at
+
+--------------------------------------------
+2) GOOGLE PLACES SERVICE (SERVER-ONLY)
+--------------------------------------------
+
+2A) Implement server module: googlePlacesClient
+Endpoints used:
+- Text Search (discover places)
+- Place Details (fetch listing fields)
+Use field masks (request only what we need):
+- place_id, name, formatted_address, address_components
+- national_phone_number / formatted_phone_number (whichever is available)
+- website
+- opening_hours (weekday_text if available)
+- types/categories
+- business_status (if available)
+
+2B) Throttling + daily caps
+- Maintain a daily counter table (or Redis/in-memory with daily reset) per endpoint:
+  - textsearch_count_today
+  - details_count_today
+- Enforce:
+  - textsearch <= PLACES_IMPORT_DAILY_TEXTSEARCH_LIMIT
+  - details <= PLACES_IMPORT_DAILY_DETAILS_LIMIT
+  - rpm <= PLACES_IMPORT_RPM_LIMIT
+If cap exceeded:
+- job fails gracefully with clear admin message and creates an Inbox item.
+
+--------------------------------------------
+3) PRESENCE CREATION RULES (LISTINGS TO CLAIM)
+--------------------------------------------
+
+3A) For each place result:
+- Fetch Place Details (within caps)
+- Create (or find) an UNCLAIMED presence record:
+  - claim_status="unclaimed"
+  - microsite_tier="none"
+  - public label should be “Free” by your mapping
+- Populate listing fields from Place Details:
+  - name
+  - address
+  - phone
+  - website
+  - hours
+  - categories
+- Attach presence_places_source with place_id
+- Create listings_to_claim_queue record with status="ready"
+- Add Admin Inbox item:
+  - item_type="listing_imported_needs_publish" (add enum)
+  - title: "Imported listing ready: {name}"
+  - related_id = presence_id
+Dedup:
+- If presence_places_source already exists for place_id, skip creation and mark result as skipped.
+
+3B) Publishing rule (DO NOT AUTO-PUBLISH unless explicitly set later)
+- Default: Imported listings are created as “ready” and visible in admin queue.
+- Add a “Publish as Free listing” button in queue UI to flip status to "published_free".
+(Do not assume auto-publish right now.)
+
+--------------------------------------------
+4) ADMIN UI — PLACES IMPORTER + LISTINGS TO CLAIM
+--------------------------------------------
+
+4A) New Admin menu: “Places Import”
+Screen elements:
+- Mode toggle: Text Search or Nearby Search
+- Text Search input:
+  - Query (e.g., “plumbers in Charlotte NC”)
+  - Max results (default 20, cap 60)
+- Nearby Search input:
+  - Center (lat/lng) OR pick a Zone center if zones exist
+  - Radius (meters)
+  - Keyword
+  - Max results
+- Run Import button
+- Job history table + job detail drilldown (results list)
+
+4B) New Admin menu: “Listings to Claim”
+- List view from listings_to_claim_queue:
+  - name, category, address, phone, website, status
+  - actions:
+    - View presence
+    - Publish Free
+    - Archive
+    - Assign to rep/region (if CRM ownership exists)
+- Bulk actions:
+  - Publish Free (selected)
+  - Assign owner
+  - Assign region
+
+--------------------------------------------
+5) CHARLOTTE CHAT (ADMIN)
+--------------------------------------------
+
+5A) Add Admin page: “Chat with Charlotte”
+- Simple chat UI:
+  - left panel: conversation
+  - right panel: quick actions:
+    - “Import Listings (Text Search)”
+    - “Import Listings (Nearby Search)”
+    - “Draft Description for Selected Presences”
+    - “Generate Claim Invite Email (Template D)”
+- Charlotte can execute tools:
+  - start import job with your inputs
+  - summarize what was imported (counts, categories)
+  - generate safe listing descriptions ONLY from:
+    - Google Places fields
+    - (optional later) owner-submitted text
+No web scraping in this prompt.
+
+5B) Message logging
+- Store chat messages in admin-only table:
+  - charlotte_chat_threads
+  - charlotte_chat_messages
+- Add “Send to Inbox” action for Charlotte’s outputs:
+  - creates an admin_inbox_item with links to generated drafts.
+
+--------------------------------------------
+6) LISTING DESCRIPTION DRAFTS (SAFE MODE)
+--------------------------------------------
+
+6A) Add fields to presence for draft copy (do not overwrite owner-written copy):
+- description_draft_en
+- description_draft_es (optional now)
+- description_source enum: "google_places_only"
+- description_drafted_at
+
+6B) Charlotte drafting rules:
+- Use only Place Details facts (category, location, hours, website domain name if present)
+- No claims like “best”, “top-rated”, etc. unless you have internal editorial rules later
+- Output 2 variants: short (1–2 sentences) + medium (4–6 sentences)
+
+--------------------------------------------
+7) ACCEPTANCE CHECKLIST
+--------------------------------------------
+
+- Admin can run Places imports (text/nearby) without exposing API key to frontend.
+- Imports create unclaimed presences + add them to Listings to Claim queue.
+- Daily caps and RPM throttle prevent runaway cost.
+- Admin Inbox receives items for imports and issues.
+- Admin can chat with Charlotte and trigger imports and draft descriptions.
+- No auto-publish to public unless admin clicks “Publish Free”.
+
+IMPLEMENT NOW.

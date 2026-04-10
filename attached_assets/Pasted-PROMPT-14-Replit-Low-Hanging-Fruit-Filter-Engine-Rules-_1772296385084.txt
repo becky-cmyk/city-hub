@@ -1,0 +1,217 @@
+PROMPT 14 (Replit) — Low-Hanging Fruit Filter Engine (Rules-based sales buckets + pipeline views)
+GOAL
+Now that we have seeding + crawl verification + scoring + outreach recommendations, add a “Low-Hanging Fruit” filter/bucket engine that:
+1) Computes named sales buckets (rules-based, deterministic).
+2) Feeds an Operator pipeline view (“Top targets” lists) without requiring manual filtering across many columns.
+3) Works across all metros and all micro licenses (scope-gated).
+
+This is NOT AI ranking. It is fast, explainable, rules-based buckets computed nightly and on-demand.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) entity_sales_buckets
+- id (pk)
+- metro_id
+- entity_id
+- bucket (enum)
+- priority_score (int 0-100)              // within bucket ordering
+- reasons_json (json)                     // exact rule triggers
+- computed_at (datetime)
+Unique: (entity_id, bucket)
+
+Bucket enum (initial set):
+- DIGITAL_GAP_HIGH
+- DEMAND_PRESENT_NOT_VERIFIED
+- WEBSITE_DEGRADED
+- DATA_INCONSISTENT
+- HIGH_ACTIVITY
+- CONVERSION_GAP
+- CONTACT_READY_NO_WEBSITE
+- STOREFRONT_WALKIN_READY
+
+--------------------------------------------------
+PART B — INPUTS (USE WHAT WE ALREADY BUILT)
+--------------------------------------------------
+Use existing tables/fields:
+- entities: website, phone, address, category tags, is_claimed/is_verified status (if exists)
+- intelligence_event_log: views/clicks/leads per entity (last 30d)
+- entity_contact_verification: crawl_status, http_status, detected_contact_form_url, detected_email, detected_phone, final_url
+- entity_location_profile: location_type, has_physical_address, address flags
+- entity_scores: prospect_fit_score, contact_ready_score, data_quality_score
+- entity_outreach_recommendation: recommended_method
+
+--------------------------------------------------
+PART C — BUCKET RULE DEFINITIONS
+--------------------------------------------------
+
+Implement rules in:
+ /server/intelligence/salesBuckets/salesBucketEngine.ts
+
+For each entity, compute membership + priority_score + reasons.
+
+1) CONTACT_READY_NO_WEBSITE
+IF:
+- entities.website is null OR empty
+AND (entities.phone exists OR entity_contact_verification.detected_phone exists)
+THEN bucket=CONTACT_READY_NO_WEBSITE
+priority_score:
++40 no website
++25 has phone
++15 has physical address
++10 location_type in (STOREFRONT, OFFICE)
++10 not verified
+Cap 100
+
+2) STOREFRONT_WALKIN_READY
+IF:
+- entity_location_profile.location_type = STOREFRONT
+AND entity_outreach_recommendation.recommended_method = WALK_IN
+THEN bucket=STOREFRONT_WALKIN_READY
+priority_score:
++50 storefront
++20 has address quality HIGH/MED
++15 not verified
++15 contact_ready_score>=40
+
+3) DIGITAL_GAP_HIGH
+IF:
+- (no website OR website_degraded) AND (has phone OR has physical address)
+AND (no social links detected)
+THEN DIGITAL_GAP_HIGH
+priority_score emphasizes: no website, storefront/office, phone, not verified.
+
+4) WEBSITE_DEGRADED
+IF crawl succeeded or attempted AND:
+- http_status in (404, 410, 500-599)
+OR SSL/cert failure detected (if you capture)
+OR final_url redirects to parked domain patterns (optional)
+THEN WEBSITE_DEGRADED
+priority_score:
++50 degraded
++20 has phone
++15 has address
++15 not verified
+
+5) DATA_INCONSISTENT
+IF crawl SUCCESS and any:
+- detected_phone exists AND entities.phone exists AND mismatch
+- detected_address exists AND entities.address exists AND mismatch (loose compare)
+- detected_name differs materially from entities.name (optional)
+THEN DATA_INCONSISTENT
+priority_score:
++60 inconsistency
++20 storefront/office
++20 not verified
+
+6) DEMAND_PRESENT_NOT_VERIFIED
+IF last_30d metrics show:
+- profile_views >= 25 OR (call_click + website_click + directions_click) >= 10
+AND entity is NOT verified (or NOT claimed if that’s your status flag)
+THEN DEMAND_PRESENT_NOT_VERIFIED
+priority_score:
+Scale by engagement volume:
++ min(60, views*1.2)
++ min(40, clicks*4)
+
+7) HIGH_ACTIVITY
+IF last_30d metrics show:
+- leads_started >= 5 OR leads_submitted >= 2 OR engagement_growth >= 30% week-over-week
+THEN HIGH_ACTIVITY
+priority_score:
++ engagement-based scaling
+
+8) CONVERSION_GAP
+IF website exists AND crawl SUCCESS AND:
+- no detected_contact_form_url
+AND no detected_email
+AND (no phone found on site OR phone missing)
+THEN CONVERSION_GAP
+priority_score:
++50 conversion gap
++20 engagement volume
++30 not verified
+
+--------------------------------------------------
+PART D — METRICS AGGREGATION (LAST 30 DAYS)
+--------------------------------------------------
+
+Create a utility:
+ /server/intelligence/salesBuckets/entityEngagementStats.ts
+
+Compute per entity:
+- profile_views_30d
+- call_clicks_30d
+- website_clicks_30d
+- directions_clicks_30d
+- leads_started_30d
+- leads_submitted_30d
+- week_over_week_change (optional)
+Cache results in:
+entity_engagement_30d (optional table) to avoid expensive queries.
+
+(Optional table)
+entity_engagement_30d
+- entity_id
+- metro_id
+- views_30d
+- clicks_30d
+- leads_started_30d
+- leads_submitted_30d
+- updated_at
+
+--------------------------------------------------
+PART E — JOBS
+--------------------------------------------------
+Nightly jobs:
+1) compute_entity_engagement_30d
+2) compute_entity_sales_buckets
+
+Also provide admin-only “Recompute now” button.
+
+--------------------------------------------------
+PART F — OPERATOR PIPELINE VIEWS
+--------------------------------------------------
+
+Add operator UI:
+ /operator/micro/:licenseId/pipeline
+
+Tabs (default order):
+1) “No Website, Contact Ready” (CONTACT_READY_NO_WEBSITE)
+2) “Walk-in Ready” (STOREFRONT_WALKIN_READY)
+3) “Demand Already Here” (DEMAND_PRESENT_NOT_VERIFIED)
+4) “Fix Your Public Info” (DATA_INCONSISTENT)
+5) “Broken Website” (WEBSITE_DEGRADED)
+
+Each tab:
+- shows Top 25 ordered by priority_score
+- shows reasons badges (from reasons_json)
+- shows recommended outreach method
+- has actions:
+  - Mark Contacted
+  - Set Follow-up
+  - Open Claim Link
+  - Copy “Intelligence Report” link
+
+Scope gating:
+Operator only sees entities in their license scope (entity_license_map).
+
+--------------------------------------------------
+PART G — ADMIN VIEW (OPTIONAL)
+--------------------------------------------------
+Admin can view buckets globally by metro:
+ /admin/intelligence/sales-buckets
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+1) Buckets populate with deterministic rules.
+2) Operator can open Pipeline and see top targets by bucket instantly.
+3) Buckets respect license scope.
+4) Recompute works and is fast enough for nightly runs.
+
+DELIVERABLES
+- migrations: entity_sales_buckets (+ optional entity_engagement_30d)
+- bucket engine + engagement stats utility
+- nightly jobs + admin recompute
+- operator pipeline UI

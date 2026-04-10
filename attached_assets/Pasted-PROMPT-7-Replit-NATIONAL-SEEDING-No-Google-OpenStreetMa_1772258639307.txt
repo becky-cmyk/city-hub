@@ -1,0 +1,121 @@
+PROMPT 7 (Replit) — NATIONAL SEEDING (No Google): OpenStreetMap (Overpass) + IRS Nonprofits + (optional) National Park/POI feeds if available
+GOAL
+Build a national, metro-agnostic seeding pipeline for:
+A) Businesses + POIs from OpenStreetMap (OSM) via Overpass API
+B) Nonprofits/organizations from IRS Exempt Organizations (EO) bulk data
+This must plug into our Metro Sources framework and work for any metro by config only.
+
+NON-NEGOTIABLES
+- No Google Places.
+- No scraping consumer directories (Yelp, YellowPages, etc.).
+- Must be legal/low-cost: OSM + IRS bulk are free/open.
+- Multi-metro: all pulls are scoped by metro_id and geography config.
+- Store “source provenance” on every record: source_type, source_url, external_id, license_note.
+
+DATA MODEL (Add/extend tables)
+1) entities (canonical listing table used by Hub)
+- id (pk)
+- metro_id (fk)
+- entity_type (enum: "BUSINESS" | "ORG" | "POI")
+- name
+- address_line1 (nullable)
+- city (nullable)
+- state_code (nullable)
+- zip_code (nullable)
+- lat (nullable)
+- lng (nullable)
+- phone (nullable)
+- website (nullable)
+- categories_json (json)           // normalized tags/categories
+- source_type (enum: "OSM" | "IRS" | "OTHER")
+- source_external_id (string)      // stable id from source (OSM node/way/relation id OR IRS EIN)
+- source_url (string nullable)
+- license_note (string nullable)   // e.g. "© OpenStreetMap contributors, ODbL"
+- is_claimed (boolean default false)
+- created_at, updated_at
+Unique constraint: (metro_id, source_type, source_external_id)
+
+2) entity_source_raw (optional, if you want traceability)
+- id (pk)
+- metro_id
+- source_type
+- source_external_id
+- payload_json (json)
+- created_at
+
+INTEGRATION A — OSM OVERPASS (Businesses/POIs)
+Add a new source_type to metro_sources: "OSM_OVERPASS"
+Config (params_json) must support:
+- geography: { type: "BBOX" | "RADIUS" | "POLYGON", ... }
+- filters: list of OSM tags to pull, e.g. amenity, shop, office, tourism
+- max_pages / rate limits
+
+Implement:
+ /server/intelligence/connectors/osmOverpassConnector.ts
+
+Behavior:
+- Build Overpass QL query from metro_sources.params_json:
+  - For BBOX: (south,west,north,east)
+  - For RADIUS: around:radius, lat, lng
+  - For POLYGON: poly:"lat lon lat lon ..."
+- Pull nodes + ways + relations matching filters:
+  Examples of useful tags:
+  - node/way/relation["amenity"](area);
+  - node/way/relation["shop"](area);
+  - node/way/relation["office"](area);
+  - node/way/relation["tourism"](area);
+- Parse response JSON; normalize:
+  - name, addr:*, phone, website, opening_hours (optional)
+  - category tags into categories_json
+  - lat/lon (for ways/relations compute center if provided)
+- Upsert into entities table:
+  entity_type:
+   - ORG if tags indicate community/organization (e.g., amenity=community_centre, place_of_worship, school, etc.)
+   - BUSINESS for most shop/office/amenity=restaurant etc.
+   - POI for tourism/attraction, etc.
+- Store license_note: "© OpenStreetMap contributors, ODbL"
+
+INTEGRATION B — IRS NONPROFITS (Organizations)
+Add new source_type to metro_sources: "IRS_EO_BULK"
+Implement:
+ /server/intelligence/connectors/irsEoBulkConnector.ts
+
+Approach:
+- Use IRS bulk downloadable data (EO) (CSV or index files).
+- This job should:
+  1) Download latest bulk file to storage (or stream parse).
+  2) Filter rows by geography for each metro:
+     - Match state_code (and optionally zip prefixes) based on metro config.
+  3) Normalize into entities with:
+     - entity_type="ORG"
+     - source_external_id = EIN
+     - name, address, city, state, zip
+     - categories_json = org type/classification if present
+
+IMPORTANT:
+- Make this connector run on WEEKLY or MONTHLY frequency.
+- For performance: store last processed file version/date in metro_sources.last_cursor.
+
+ADMIN + JOB RUNNER
+- Extend jobRunner to dispatch OSM_OVERPASS and IRS_EO_BULK.
+- Add admin UI fields for:
+  - OSM geometry config
+  - OSM filters config
+  - IRS filter config (state_code + zip ranges)
+
+SEED CONFIG
+- Seed metro_sources templates (disabled by default):
+  - OSM_OVERPASS (enabled=false until bbox/polygon set)
+  - IRS_EO_BULK (enabled=true for state_code)
+
+ACCEPTANCE
+1) Run OSM pull for a configured metro and see entities populated.
+2) Run IRS pull for a configured metro and see orgs populated.
+3) Dedupe works via (metro_id, source_type, source_external_id).
+4) Provenance fields populated.
+
+DELIVERABLES
+- connectors/osmOverpassConnector.ts
+- connectors/irsEoBulkConnector.ts
+- schema migrations for entities (+ optional entity_source_raw)
+- admin UI edits to configure and run pulls

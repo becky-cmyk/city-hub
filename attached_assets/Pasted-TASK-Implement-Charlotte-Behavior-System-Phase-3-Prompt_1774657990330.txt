@@ -1,0 +1,191 @@
+TASK: Implement Charlotte Behavior System (Phase 3 — Prompt 1)
+
+GOAL:
+Add a structured behavior + response layer on top of the existing orchestrator and recommendation systems so Charlotte becomes a guided, conversational local assistant.
+
+CRITICAL RULES:
+- DO NOT modify scoring, search, or recommendation engines
+- DO NOT create new databases
+- Build as a behavior layer only
+- Must reuse existing orchestrator + recommendation connector outputs
+
+--------------------------------------------------
+PART 1 — RESPONSE COMPOSER LAYER
+--------------------------------------------------
+
+Create new module:
+
+/server/services/charlotte/charlotte-response-composer.ts
+
+PURPOSE:
+Take structured results from orchestrator + recommendation connector and convert them into human-friendly responses.
+
+FUNCTION:
+
+composeCharlotteResponse(input: {
+  intent: string;
+  domain: string;
+  results: any[];
+  geoContext?: any;
+  confidence?: number;
+  userContext?: any;
+}): {
+  message: string;
+  recommendations: any[];
+  followUps: string[];
+  actions: any[];
+}
+
+BEHAVIOR RULES:
+
+1. RESPONSE STYLE
+- Clear, local, conversational
+- No fluff
+- No generic AI phrasing
+- Speak like a knowledgeable local guide
+
+2. MESSAGE STRUCTURE
+- 1–2 sentence summary
+- Then optionally highlight top recommendation
+- Then optional guidance line
+
+Example:
+"Here are a few great brunch spots in South End that locals consistently rate highly. Suffolk Punch and Ruby Sunshine stand out for atmosphere and consistency."
+
+3. FOLLOW-UP QUESTIONS
+Generate 2–4 smart follow-ups based on domain:
+
+Dining:
+- “Want something more casual or upscale?”
+- “Looking for indoor or outdoor seating?”
+
+Housing:
+- “Buying or renting?”
+- “What price range are you targeting?”
+
+Events:
+- “Looking for something this weekend or later?”
+- “More family-friendly or nightlife?”
+
+4. ACTIONS
+Map results to actions using existing resolveActionRoute()
+
+Return actions like:
+- view_profile
+- view_map
+- make_reservation
+- apply
+- contact
+- schedule_with_becky
+
+--------------------------------------------------
+PART 2 — CONFIDENCE-AWARE BEHAVIOR
+--------------------------------------------------
+
+If confidence < 0.5 OR results.length === 0:
+
+- Message:
+  "I don’t have strong matches for that yet, but I can help you find exactly what you’re looking for."
+
+- Provide fallback options:
+  - ask clarifying question
+  - offer broader search
+  - trigger inbox gap (already implemented)
+
+--------------------------------------------------
+PART 3 — INTENT-BASED RESPONSE TEMPLATES
+--------------------------------------------------
+
+Create lightweight templates per domain:
+
+/server/services/charlotte/charlotte-response-templates.ts
+
+Domains:
+- dining
+- services
+- shopping
+- housing
+- jobs
+- events
+- marketplace
+- creators
+- experts
+- general
+
+Each template defines:
+- intro phrasing
+- follow-up questions
+- tone modifiers
+
+--------------------------------------------------
+PART 4 — ORCHESTRATOR INTEGRATION
+--------------------------------------------------
+
+Modify:
+
+charlotte-orchestrator.ts
+
+After recommendation results are returned:
+
+1. Call composeCharlotteResponse()
+2. Replace raw output with structured response:
+
+RETURN:
+
+{
+  message,
+  recommendations,
+  followUps,
+  actions
+}
+
+Ensure:
+- Search mode uses it
+- Concierge mode uses it
+
+--------------------------------------------------
+PART 5 — OPTIONAL PERSONALIZATION HOOK (LIGHT)
+--------------------------------------------------
+
+If userContext exists:
+
+- Adjust tone slightly:
+  - returning user → more direct
+  - new user → slightly more guidance
+
+DO NOT build full personalization system
+
+--------------------------------------------------
+PART 6 — TEST CASES (LIGHT)
+--------------------------------------------------
+
+Test 5 flows manually:
+
+1. “Best brunch in Charlotte”
+2. “Looking for a job in marketing”
+3. “Where should I live with a family?”
+4. “Things to do this weekend”
+5. “I need a plumber”
+
+Validate:
+- Response reads naturally
+- Follow-ups are relevant
+- Actions are present
+- No raw data dumps
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+- Charlotte responses feel like a real local guide
+- No raw JSON-style outputs
+- Follow-ups guide the user forward
+- Actions are always available
+- Works across all domains
+
+DO NOT:
+- Rebuild recommendation logic
+- Add new scoring
+- Overcomplicate tone system
+
+END TASK

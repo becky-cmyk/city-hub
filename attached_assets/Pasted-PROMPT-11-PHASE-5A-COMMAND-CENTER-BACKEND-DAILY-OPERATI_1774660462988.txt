@@ -1,0 +1,221 @@
+PROMPT 11 — PHASE 5A: COMMAND CENTER BACKEND + DAILY OPERATIONS VIEW (NO HEAVY UI)
+
+You are implementing ONLY Phase 5A.
+
+Prerequisite:
+- Phase 4A (engagement + retention triggers) is complete
+- Charlotte can onboard, recommend, execute, follow up, and prompt ongoing activity
+
+DO NOT implement:
+- full UI redesign
+- frontend dashboards
+- new CRM
+- new automation systems
+- new scoring/recommendation engines
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Create a clean backend “Command Center” layer that lets Becky:
+
+1) see what Charlotte is doing
+2) review proposals and actions
+3) prioritize work
+4) manage exceptions
+5) operate the system daily without chaos
+
+This is a backend aggregation + structure layer only.
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1) REUSE existing:
+- inbox
+- CRM/pipelines
+- automation system
+- batch processor outputs
+- proposal engine outputs
+
+2) DO NOT create:
+- new systems that duplicate inbox or CRM
+- heavy new tables unless absolutely required
+
+3) KEEP LIGHT:
+- aggregation layer
+- structured views
+- minimal schema additions if needed
+
+--------------------------------------------------
+PART 1 — COMMAND CENTER SERVICE
+--------------------------------------------------
+
+Create:
+
+charlotte-command-center.ts
+
+This is the aggregation layer.
+
+Main function:
+
+getCommandCenterOverview()
+
+Return:
+
+{
+  actionQueue: [],
+  reviewQueue: [],
+  followUps: [],
+  opportunities: [],
+  recentActivity: []
+}
+
+--------------------------------------------------
+PART 2 — DEFINE QUEUES (BACKEND STRUCTURE)
+--------------------------------------------------
+
+A) ACTION QUEUE (high priority, ready to execute)
+- high-confidence proposals
+- ready actions from templates
+- onboarding steps ready to move
+
+B) REVIEW QUEUE
+- low-confidence entity matches
+- merge conflicts
+- unclear proposals
+- items flagged from batch processing
+
+C) FOLLOW-UPS
+- onboarding incomplete
+- story not approved
+- verification pending
+- engagement triggers
+
+D) OPPORTUNITIES
+- high scoring entities (reuse existing scoring)
+- Crown candidates
+- TV/venue candidates
+- event potential
+- upsell signals
+
+E) RECENT ACTIVITY
+- last actions executed
+- batch runs
+- onboarding completions
+
+--------------------------------------------------
+PART 3 — DATA SOURCING (IMPORTANT)
+--------------------------------------------------
+
+Each queue must pull from EXISTING systems:
+
+- inbox → reviewQueue
+- proposal engine outputs → actionQueue
+- automation/scheduler → followUps
+- scoring/opportunity signals → opportunities
+- logs/activity → recentActivity
+
+DO NOT duplicate data.
+Aggregate only.
+
+--------------------------------------------------
+PART 4 — ACTION CONTROL HOOKS
+--------------------------------------------------
+
+Allow basic backend controls:
+
+Functions:
+
+approveAction(actionId)
+rejectAction(actionId)
+runActionNow(actionId)
+sendToInbox(itemId)
+
+These should:
+- call existing systems
+- not reimplement logic
+
+--------------------------------------------------
+PART 5 — PRIORITIZATION LOGIC (LIGHT)
+--------------------------------------------------
+
+Add simple prioritization:
+
+- high priority = actionable + high confidence
+- medium = actionable but needs confirmation
+- low = informational
+
+Do NOT build complex ranking models.
+
+--------------------------------------------------
+PART 6 — ORCHESTRATOR CONNECTION
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts:
+
+- log actions into command center layer
+- flag items for review when needed
+- push proposals into actionQueue when appropriate
+
+--------------------------------------------------
+PART 7 — EXPO / BATCH VISIBILITY
+--------------------------------------------------
+
+Ensure batch processor outputs feed into:
+
+- actionQueue (high-confidence)
+- reviewQueue (low-confidence)
+- opportunities (strong candidates)
+
+This is critical for real-world capture usability.
+
+--------------------------------------------------
+PART 8 — LIGHT ADMIN ACCESS POINT
+--------------------------------------------------
+
+Expose simple endpoint:
+
+/admin/command-center
+
+Return:
+getCommandCenterOverview()
+
+No heavy UI — just structured JSON for now.
+
+--------------------------------------------------
+PART 9 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1) Run expo batch → items appear correctly in queues
+2) Create proposal → shows in actionQueue
+3) Low-confidence entity → appears in reviewQueue
+4) Incomplete onboarding → appears in followUps
+5) High scoring business → appears in opportunities
+6) Execute action → moves to recentActivity
+
+--------------------------------------------------
+PART 10 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — COMMAND CENTER STRUCTURE
+OUTPUT C — QUEUE DEFINITIONS (action, review, follow-ups, opportunities, activity)
+OUTPUT D — SAMPLE COMMAND CENTER RESPONSE
+OUTPUT E — HOW EXISTING SYSTEMS WERE REUSED
+OUTPUT F — WHAT WAS NOT BUILT (to confirm scope control)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 5A is complete.
+
+Do NOT begin:
+- frontend UI
+- advanced analytics
+- system redesign

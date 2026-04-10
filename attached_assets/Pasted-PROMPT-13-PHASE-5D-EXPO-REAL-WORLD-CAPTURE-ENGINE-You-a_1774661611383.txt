@@ -1,0 +1,283 @@
+PROMPT 13 — PHASE 5D: EXPO / REAL-WORLD CAPTURE ENGINE
+
+You are implementing ONLY Phase 5D.
+
+Prerequisite:
+- Command Center backend + UI exists (Phases 5A + 5B)
+- Prospect pipeline + entity resolution exists
+- Inbox exists (even if basic)
+- Recommendation + proposal system exists
+
+DO NOT implement:
+- full mobile app
+- complex OCR pipelines
+- third-party paid scanning services
+- redesign of entire admin
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Create a REAL-WORLD CAPTURE ENGINE so Becky can:
+
+- go to events, expos, networking
+- capture people/businesses quickly
+- have that data automatically:
+  → structured
+  → enriched
+  → routed
+  → turned into actions (story, outreach, proposal, follow-up)
+
+This is the bridge between:
+REAL WORLD → CHARLOTTE SYSTEM → REVENUE
+
+--------------------------------------------------
+CORE PRINCIPLE
+--------------------------------------------------
+
+Speed over perfection.
+
+We are NOT building a perfect scanner.
+We ARE building a frictionless capture → process → action system.
+
+--------------------------------------------------
+PART 1 — CREATE CAPTURE ENTRY POINT
+--------------------------------------------------
+
+Create a simple capture interface:
+
+Route example:
+/capture
+or
+/admin/capture
+
+Must support:
+
+1) Quick Add Form
+2) Business Card Photo Upload
+3) Voice Note Input (basic)
+4) Bulk Quick Entry (list of names/emails)
+
+Keep UI extremely simple and mobile-friendly.
+
+--------------------------------------------------
+PART 2 — QUICK ADD FORM (PRIMARY FLOW)
+--------------------------------------------------
+
+Fields (minimal required):
+
+- Name
+- Business Name (optional)
+- Email (optional)
+- Phone (optional)
+- Notes (free text)
+- Source (default: expo/event/manual)
+
+Optional:
+- Tag (event name, expo, location)
+
+Buttons:
+- Save & Next (fast capture loop)
+- Save & Process
+
+--------------------------------------------------
+PART 3 — BUSINESS CARD IMAGE SUPPORT (LIGHT)
+--------------------------------------------------
+
+Allow image upload.
+
+For now:
+- store image
+- attempt VERY LIGHT parsing (if easy)
+  - detect email patterns
+  - detect phone numbers
+- attach extracted text to capture record
+
+DO NOT:
+- build complex OCR system
+- rely on paid APIs
+
+Fallback:
+- user can manually edit after upload
+
+--------------------------------------------------
+PART 4 — VOICE NOTE INPUT (BASIC)
+--------------------------------------------------
+
+Allow:
+- record or upload audio
+- convert to text using existing LLM or simple transcription if available
+
+Store:
+- raw transcript
+- attach to capture record
+
+Do not overbuild UX here.
+
+--------------------------------------------------
+PART 5 — CAPTURE STORAGE MODEL
+--------------------------------------------------
+
+Create a table (or reuse if similar exists):
+
+captures
+
+Fields:
+- id
+- raw_name
+- raw_business
+- email
+- phone
+- notes
+- source
+- tags
+- image_url (optional)
+- transcript (optional)
+- status:
+  - new
+  - processing
+  - processed
+  - needs_review
+- created_at
+
+--------------------------------------------------
+PART 6 — PROCESSING PIPELINE (CRITICAL)
+--------------------------------------------------
+
+After save (or via batch):
+
+Run capture through pipeline:
+
+STEP 1 — Normalize
+- clean name/business
+- extract structured hints
+
+STEP 2 — Entity Resolution (reuse existing)
+- match to existing business/contact
+- or create new entity
+
+STEP 3 — Enrichment (light)
+- try to find:
+  - website
+  - category
+  - location
+- optional: use Google Places if already integrated
+
+STEP 4 — Intent Detection
+Based on notes + context:
+- story opportunity
+- potential client
+- partner
+- event-related
+- unknown
+
+STEP 5 — Routing
+Send to:
+- Action Queue (if confident)
+- Review Queue (if unclear)
+- Follow-Up Queue
+- Opportunities Queue
+
+--------------------------------------------------
+PART 7 — AUTO ACTIONS (FIRST VERSION)
+--------------------------------------------------
+
+When confidence is high, auto-create:
+
+- Story invite
+- Follow-up task
+- Proposal stub
+- Outreach suggestion
+
+Do NOT auto-send anything yet unless already supported safely.
+
+--------------------------------------------------
+PART 8 — CAPTURE → COMMAND CENTER INTEGRATION
+--------------------------------------------------
+
+Every processed capture must show up in Command Center:
+
+- actionQueue
+- reviewQueue
+- followUps
+- opportunities
+
+Include source:
+"capture"
+
+--------------------------------------------------
+PART 9 — FAST CAPTURE LOOP UX
+--------------------------------------------------
+
+Critical for real-world use:
+
+After saving:
+- clear form quickly
+- keep last event/tag
+- minimal clicks to next entry
+
+This must feel like:
+tap → type → save → next
+
+--------------------------------------------------
+PART 10 — BULK ENTRY MODE
+--------------------------------------------------
+
+Allow quick paste input:
+
+Example:
+John Smith – ABC Roofing – john@email.com
+Jane Doe – Event Planner – 704-xxx
+
+Parse line-by-line into capture records.
+
+No perfection required.
+
+--------------------------------------------------
+PART 11 — REVIEW & EDIT SCREEN (LIGHT)
+--------------------------------------------------
+
+Allow basic editing of captures before/after processing:
+
+- fix name
+- fix business
+- add missing info
+- re-run processing
+
+--------------------------------------------------
+PART 12 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1) Manual quick add → appears in system → routes correctly
+2) Image upload → stored → partial extraction works or fallback OK
+3) Voice note → transcript stored
+4) Capture becomes:
+   - action item OR
+   - review item
+5) Bulk entry creates multiple captures
+6) Command center reflects new items immediately
+
+--------------------------------------------------
+PART 13 — OUTPUT REQUIRED
+--------------------------------------------------
+
+OUTPUT A — NEW TABLES / DATA MODELS
+OUTPUT B — ROUTES CREATED (/capture etc.)
+OUTPUT C — PIPELINE STEPS IMPLEMENTED
+OUTPUT D — HOW CAPTURE CONNECTS TO ENTITY RESOLUTION
+OUTPUT E — HOW ITEMS FLOW INTO COMMAND CENTER
+OUTPUT F — WHAT WAS INTENTIONALLY NOT BUILT
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 5D is complete.
+
+Do NOT:
+- build full CRM
+- build advanced OCR
+- build mobile apps
+- overcomplicate capture UX

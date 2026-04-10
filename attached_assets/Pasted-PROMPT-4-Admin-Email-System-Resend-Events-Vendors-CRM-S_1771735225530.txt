@@ -1,0 +1,320 @@
+PROMPT 4 — Admin Email System (Resend) + Events/Vendors CRM (Standalone Vendors) + CMS Auto-Pull Weekly/Weekend
+
+AUTHORITY
+Implement exactly. Do not delete existing data. Add tables/migrations safely. Append-only logs where specified.
+
+GOAL (PHASE 1)
+A) Email system:
+- HTML template editor + campaigns sender using RESEND
+- Templates supported now: H (Welcome), C (Prospecting), D (Claim Invite), A (Weekly Hub), B (Weekend Hub)
+- Unsubscribe + suppression enforced for marketing emails
+- Transactional vs marketing guardrails
+
+B) CRM expansion:
+- Vendor master records (standalone) reusable across multiple events
+- Event CRM records + vendor participation per event
+- Vendor contacts supported (multiple) but UI can stay simple with “Primary Contact”
+
+C) Weekly/Weekend emails:
+- Auto-pull content from CMS (published items) with optional manual overrides
+
+--------------------------------------------
+1) DATABASE — EMAIL SYSTEM
+--------------------------------------------
+
+1A) email_templates
+- id (uuid)
+- template_key enum:
+  - "welcome"
+  - "prospecting"
+  - "claim_invite"
+  - "weekly_hub"
+  - "weekend_hub"
+- classification enum: "marketing" | "transactional"
+  - weekly_hub, weekend_hub, prospecting, claim_invite => marketing
+  - welcome => marketing (unless you want transactional later; keep as marketing now)
+- name
+- subject
+- preheader
+- html_body
+- text_body (optional)
+- brand_id nullable (future hubs)
+- status enum: "draft" | "active" | "archived"
+- created_by_user_id
+- updated_by_user_id
+- created_at, updated_at
+
+1B) email_template_revisions (field-level old->new)
+- id
+- template_id
+- actor_user_id
+- field_name
+- old_value
+- new_value
+- reason nullable
+- created_at
+RULE: Any template update creates revision rows per changed field.
+
+1C) email_campaigns
+- id
+- template_id
+- classification (copy from template at send time)
+- audience_type enum:
+  - "subscribers"
+  - "presence_owners"
+  - "crm_prospects"
+  - "billing_customers"
+  - "event_attendees"
+- audience_filter_json (optional; e.g., region_id, tier, tags)
+- subject_override nullable
+- preheader_override nullable
+- html_override nullable (optional)
+- scheduled_at nullable (ET)
+- status enum: "draft" | "scheduled" | "sending" | "sent" | "canceled"
+- created_by_user_id
+- sent_at nullable
+- created_at, updated_at
+
+1D) email_campaign_recipients (snapshot)
+- id
+- campaign_id
+- email
+- user_id nullable
+- presence_id nullable
+- vendor_id nullable
+- status enum: "queued" | "sent" | "delivered" | "bounced" | "complaint" | "suppressed" | "unsubscribed"
+- provider_message_id nullable
+- created_at, updated_at
+
+1E) email_suppression
+- id
+- email
+- suppression_type enum: "bounce" | "complaint" | "manual"
+- reason nullable
+- created_at
+
+1F) email_unsubscribes
+- id
+- email
+- scope enum: "global_marketing"
+- unsubscribed_at
+- source (link/webhook/admin) nullable
+
+1G) email_events (webhook log)
+- id
+- provider enum: "resend"
+- provider_message_id
+- event_type (delivered/bounced/complaint/open/click if available)
+- email
+- payload_json
+- created_at
+
+--------------------------------------------
+2) EMAIL MERGE TAGS + COMPLIANCE
+--------------------------------------------
+
+2A) Supported merge tags (Phase 1)
+- {{first_name}}
+- {{city}}  (default "Charlotte")
+- {{presence_name}}
+- {{claim_link}}
+- {{manage_link}}
+- {{unsubscribe_link}}
+
+2B) Marketing compliance rules
+- All marketing templates MUST include:
+  - physical footer block (brand/company + contact)
+  - {{unsubscribe_link}}
+- If missing at send-time, block send and show error.
+
+2C) Unsubscribe behavior
+- Generate unsubscribe URL per recipient (tokenized):
+  /unsubscribe?email=...&token=...
+- Hitting link creates email_unsubscribes(global_marketing) and suppresses future marketing sends.
+
+2D) Suppression behavior
+- Before enqueueing recipients, exclude:
+  - email_unsubscribes (global_marketing) for marketing campaigns
+  - email_suppression (bounce/complaint/manual) for all campaigns unless admin overrides (do NOT override in Phase 1)
+
+--------------------------------------------
+3) RESEND INTEGRATION (SEND + WEBHOOKS)
+--------------------------------------------
+
+3A) Sending
+- Use Resend API to send emails.
+- Store provider_message_id per recipient for event correlation.
+
+3B) Webhook endpoint
+- Create endpoint to receive Resend events:
+  - delivered
+  - bounced
+  - complaint
+  - (open/click if supported/configured)
+- Update email_campaign_recipients.status accordingly.
+- If bounced => add to email_suppression(type=bounce)
+- If complaint => add to email_suppression(type=complaint) AND add to email_unsubscribes(global_marketing)
+
+--------------------------------------------
+4) ADMIN UI — EMAIL
+--------------------------------------------
+
+4A) New Admin section: “Email”
+Subpages:
+- Templates
+- Campaigns
+- Suppression & Unsubscribes
+
+4B) Templates UI
+- List templates (5 keys)
+- Edit template:
+  - Subject, Preheader
+  - HTML editor with two modes:
+    - Visual blocks (basic: header, text, image, button, divider, spotlight card, footer)
+    - Raw HTML
+  - Preview (desktop/mobile)
+  - Test send to self
+- Save creates template revisions (field-level)
+
+4C) Campaigns UI
+- Create campaign:
+  - select template
+  - select audience_type
+  - optional filters (region, tier, tag)
+  - schedule ET or send now
+  - preview + test send
+- Send:
+  - snapshot recipients
+  - enqueue + send
+  - show progress + results table
+- Campaign detail:
+  - recipients list + statuses
+  - export CSV
+
+--------------------------------------------
+5) WEEKLY/WEEKEND AUTO-PULL FROM CMS
+--------------------------------------------
+
+5A) CMS source query (published only)
+For weekly/weekend templates, provide an “Auto-fill from CMS” button and default behavior:
+
+Weekly Hub:
+- pull last 7 days:
+  - up to 3 articles
+  - up to 3 events
+  - optionally 2 attractions/curated items (if present)
+Weekend Hub:
+- pull upcoming Fri–Sun events + 1–2 articles
+
+5B) Overrides
+Campaign composer allows manual override:
+- replace the selected content blocks
+- edit intro text
+
+Implementation:
+- campaign stores selected content IDs in audience_filter_json or a new field selected_content_json.
+
+--------------------------------------------
+6) DATABASE — EVENTS + VENDORS CRM
+--------------------------------------------
+
+6A) vendors (standalone CRM master)
+- id
+- name
+- vendor_type enum: "event_vendor" | "sponsor" | "both" (default both)
+- website nullable
+- notes nullable
+- primary_region_id nullable
+- owner_user_id nullable (sales owner)
+- status enum: "prospect" | "invited" | "committed" | "paid" | "attended" | "churned" (default prospect)
+- created_at, updated_at
+
+6B) vendor_contacts (multiple contacts supported)
+- id
+- vendor_id
+- first_name
+- last_name
+- email
+- phone
+- role_title nullable
+- is_primary boolean default false
+- created_at, updated_at
+UI: show “Primary Contact” card; allow add more.
+
+6C) crm_events (admin event CRM record)
+(If you already have events table for public, do NOT replace it. Create CRM wrapper.)
+- id
+- public_event_id nullable (FK to existing events table if present)
+- name
+- start_at
+- end_at
+- venue_name nullable
+- owner_user_id nullable
+- primary_region_id nullable
+- status enum: "draft" | "selling" | "active" | "completed" | "canceled" (default selling)
+- notes nullable
+- created_at, updated_at
+
+6D) event_vendors (join: vendor participation per event)
+- id
+- crm_event_id
+- vendor_id
+- participation_status enum:
+  - "invited"
+  - "applied"
+  - "accepted"
+  - "paid"
+  - "checked_in"
+  - "no_show"
+- booth_details nullable
+- amount_due_cents nullable
+- amount_paid_cents nullable
+- invoice_ref nullable
+- created_at, updated_at
+
+6E) event_sponsorships / supporters (optional if already exists)
+- Ensure alignment with “Hub Event Partners” uncapped model if present.
+- Do not cap; store display priority + start/end.
+
+--------------------------------------------
+7) ADMIN UI — EVENTS/VENDORS CRM
+--------------------------------------------
+
+7A) New Admin section: “Events CRM”
+- Events list (crm_events) with filters (date, status, owner, region)
+- Event detail:
+  - vendors tab (list from event_vendors; add vendor)
+  - sponsorship/support tab (hub event partners)
+  - tasks/activity tab (reuse CRM task/activity components)
+
+7B) New Admin section: “Vendors”
+- Vendor list with status pipeline + filters
+- Vendor detail:
+  - contacts tab (primary + others)
+  - events tab (past/upcoming participation)
+  - tasks/activity tab
+  - deal/subscription tab (if you sell sponsorship packages later)
+
+--------------------------------------------
+8) PERMISSIONS
+--------------------------------------------
+Email:
+- Admin + Sales + Editors can access Templates/Campaigns
+- Only Admin + Sales can SEND campaigns (Editors can draft templates)
+
+Events/Vendors CRM:
+- Admin + Sales full access
+- Editors read-only unless explicitly promoted
+
+--------------------------------------------
+9) ACCEPTANCE CHECKLIST
+--------------------------------------------
+- You can edit and save 5 email templates (with preview + test send).
+- You can create and send campaigns via Resend to each audience type.
+- Unsubscribe link works and suppresses future marketing sends.
+- Bounce/complaint webhooks populate suppression and update recipient statuses.
+- Weekly/Weekend campaign can auto-pull CMS content into a draft email.
+- Vendors exist standalone with multiple contacts and appear across multiple events.
+- Event CRM supports vendor participation tracking per event.
+
+IMPLEMENT NOW.

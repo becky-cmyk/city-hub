@@ -1,0 +1,203 @@
+Work inside the existing City Hub codebase.
+
+This is Prompt 7.
+Focus on SOURCE QUALITY, DEDUPLICATION, and CONTENT BALANCE.
+
+Do NOT rebuild:
+- editorial system
+- geo scoring
+- category system
+- routing engine (use existing evaluateContentRouting)
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+
+Ensure incoming content (RSS + AI-generated) is:
+
+1. NOT duplicated
+2. NOT spammy or low-quality
+3. NOT overly dominated by a single source
+4. Balanced across categories and geos
+
+--------------------------------------------------
+PART 1 — DEDUPLICATION ENGINE
+--------------------------------------------------
+
+Problem:
+Same story can appear:
+- across multiple RSS feeds
+- multiple times from same source
+- rewritten by AI and re-ingested
+
+Build deduplication logic using:
+
+Signals:
+- normalized title similarity
+- source URL (exact match)
+- canonical URL (if available)
+- content hash (body text)
+- publish date proximity
+
+Rules:
+
+1. HARD DUPLICATE:
+   - same URL OR same canonical URL
+   → do not ingest again
+
+2. SOFT DUPLICATE:
+   - high title similarity + similar publish window
+   → mark as duplicate_candidate
+
+3. AI DUPLICATE:
+   - same base story rewritten
+   → link to original
+
+Behavior:
+
+- Keep ONE primary record
+- Store duplicates as linked references OR discard (based on confidence)
+- Flag duplicates for editorial review if unclear
+
+--------------------------------------------------
+PART 2 — SOURCE PROFILE SYSTEM
+--------------------------------------------------
+
+Create a source registry table:
+
+source_profiles:
+- id
+- source_name
+- base_url
+- feed_url
+- city/metro association
+- content_types (news, events, blogs, etc.)
+- trust_score (0–100)
+- frequency_weight
+- last_ingested_at
+- active (true/false)
+
+Use this for:
+
+- ingestion weighting
+- throttling
+- future ranking signals (NOT Pulse scoring yet)
+
+--------------------------------------------------
+PART 3 — SOURCE TRUST SCORING
+--------------------------------------------------
+
+Assign trust score based on:
+
+Signals:
+- consistency of valid category mapping
+- geo accuracy
+- duplication rate
+- spam signals
+- manual admin adjustment
+
+Behavior:
+
+- low trust → more items flagged REVIEW_REQUIRED
+- high trust → smoother ingestion
+
+Do NOT block ingestion yet.
+Just influence flags and visibility.
+
+--------------------------------------------------
+PART 4 — SOURCE THROTTLING / BALANCING
+--------------------------------------------------
+
+Problem:
+One source can flood the system.
+
+Build:
+
+1. per-source ingestion cap (per time window)
+2. per-source Pulse exposure soft cap (flagging, not scoring)
+
+Example:
+- no more than X items per source per hour/day into "ready" pool
+
+If exceeded:
+- mark as LOWER_PRIORITY or QUEUE_DELAYED
+
+Do NOT change Pulse scoring logic.
+This is pre-Pulse filtering/queueing.
+
+--------------------------------------------------
+PART 5 — CONTENT DIVERSITY GUARDRAILS
+--------------------------------------------------
+
+Problem:
+Feed can become:
+- too category-heavy
+- too geo-heavy
+- too source-heavy
+
+Build flags:
+
+- OVERREPRESENTED_SOURCE
+- OVERREPRESENTED_CATEGORY
+- OVERREPRESENTED_GEO
+
+These flags:
+- surface in editorial queue
+- help future tuning
+- do NOT block content
+
+--------------------------------------------------
+PART 6 — INGESTION PIPELINE UPDATE
+--------------------------------------------------
+
+Update feed-service.ts flow:
+
+For each incoming item:
+
+1. dedupe check
+2. category normalization (Prompt 6)
+3. geo assignment (Prompt 6)
+4. routing evaluation
+5. source scoring lookup
+6. assign flags:
+   - duplicate_candidate
+   - low_trust_source
+   - overrepresented_source/category/geo
+7. send to editorial queue if needed
+
+--------------------------------------------------
+PART 7 — ADMIN VISIBILITY (LIGHT)
+--------------------------------------------------
+
+Do NOT build a full dashboard.
+
+Only add:
+- filters in editorial queue:
+  - duplicate_candidate
+  - low_trust_source
+  - overrepresented flags
+
+--------------------------------------------------
+PART 8 — DO NOT TOUCH
+--------------------------------------------------
+
+Do NOT:
+- change Pulse ranking
+- delete existing content automatically
+- block ingestion completely
+- create a separate content system
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+
+1. how deduplication works (rules + signals)
+2. source profile structure
+3. trust scoring logic
+4. throttling approach
+5. ingestion flow updates
+6. new flags introduced
+7. % duplicates detected in sample
+8. what remains for next phase

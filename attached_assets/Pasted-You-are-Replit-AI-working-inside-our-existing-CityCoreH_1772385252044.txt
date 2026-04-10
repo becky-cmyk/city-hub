@@ -1,0 +1,103 @@
+You are Replit AI working inside our existing CityCoreHub / CLT Connects codebase.
+
+OBJECTIVE
+We are pivoting from “directory/publication” to a multi-metro, feed-first, geo-structured platform with controlled social mechanics. Implement what is LOCKED now and scaffold what we are MOVING TOWARDS (without overbuilding). This is additive and must not break existing routes/SEO.
+
+LOCKED (BUILD NOW)
+1) Multi-metro / Tenant model
+- Everything is scoped by metroId.
+- We can launch any new metro by creating a Metro record (data/config driven, no code fork).
+
+2) Account required for interactions
+- Account required for: like, follow, submit, inquire (inquiry can be scaffolded lightly).
+- Add a hidden “ghost submit” path (admin/backdoor route) that still captures contact info; always goes to moderation; lower trust.
+
+3) No comments, no open DMs
+- Do NOT implement comments.
+- Do NOT implement DMs.
+
+4) Controlled submissions + moderation
+- User submissions are allowed (photo/report/event/update) but NOTHING is published without moderation by the metro owner (for now: Becky is the metro owner).
+- Create moderation queue + admin review UI.
+
+5) Tags as the core model (structured hashtags)
+- Normalize tags for geo/topic/entity/status.
+- Users may “suggest” tags, but tags are admin-controlled; user suggestions go to moderation/pending and are not auto-created.
+- Frontend shows only limited tags (primary topic + geo), backend stores deeper tag sets.
+
+6) Feed-first + dual mode direction
+- Feed is the primary experience; Map is Phase 2 but we must scaffold the toggle + API compatibility now.
+- Feed is mixed content (posts/submissions + events + businesses/orgs + pulses/articles if they exist + sponsored placements as feed cards).
+- Likes/follows exist; only 1 click per user per item.
+
+7) Metrics policy
+- Track likes/follows/submissions counts privately.
+- DO NOT show public metrics (counts) in the UI yet.
+- Provide admin-only analytics view or API endpoints (minimal) for counts by metro/tag.
+
+8) Business/Org profile includes “their feed”
+- Each business/org page should show its approved posts/updates/events (their feed) to incentivize adoption and sharing.
+
+MOVING TOWARDS (SCAFFOLD, DO NOT OVERBUILD)
+A) Sponsored feed placements
+- Store sponsored placement metadata now (active window, weight, targeting tags/geo).
+- Insert sponsored items in feed with a conservative rule (e.g., 1 per N) and label as Sponsored.
+- Keep logic configurable; we’ll refine later.
+
+B) Author / Influencer ladder
+- Add fields to support later tiers:
+  - user.roleTier ENUM('user','contributor','verified','author') (or equivalent)
+  - application request flag + submittedAt
+- Do NOT build full application workflow beyond a button + request record.
+
+C) Inquiry/Request gateway (NOT messaging)
+- Add a minimal “Inquiry” data model and endpoint scaffolding:
+  - user submits structured request to business/org/author
+  - status=pending; routed to metro admin for now
+- Do NOT implement payments or automation; just capture and queue.
+
+IMPLEMENTATION STEPS (DO IN ORDER)
+1) Audit existing schema/routes for: metros/cities, zips/neighborhoods, categories, businesses, orgs, events, pulses/articles, users/auth, SEO.
+2) Add additive DB tables/migrations for:
+   - metros
+   - tags, content_tags, tag_suggestions (pending)
+   - posts (submissions), moderation_queue
+   - likes, follows
+   - sponsored_placements
+   - inquiry_requests (scaffold)
+   - user tier fields (scaffold)
+3) Backfill tags minimally from existing data:
+   - metro tag + topic tags from categories
+   - geo tags (zip/neighborhood) where available
+   - entity tags for businesses/orgs (not public visible by default)
+4) Build unified FEED API:
+   - GET /api/feed?metroSlug=&geoTagSlug=&topicTagSlug=&context=&page=&limit=
+   - Mix types, filter by tag intersection, return item projections.
+   - Ensure it supports future map mode (include lat/lng when available).
+5) Build moderation admin UI:
+   - List pending items by metro
+   - Approve/reject with notes
+   - Publish approved
+6) Implement likes/follows endpoints:
+   - like/unlike with UNIQUE(userId,contentType,contentId)
+   - follow/unfollow for tag/business/org/author
+7) Frontend minimal shift:
+   - Add new home feed view that calls /api/feed and displays cards
+   - Show limited tag badges, like button, share button, save (optional)
+   - Map toggle placeholder (no full map yet)
+8) Business/org profile:
+   - Add “Updates” (their feed) powered by /api/business/:id/feed or a generic /api/entity/:type/:id/feed
+
+NON-NEGOTIABLE QUALITY
+- Do not delete existing tables or break existing URLs.
+- Keep SEO/canonical/meta logic intact.
+- Add feature flags if needed to switch between old homepage and new feed homepage.
+
+DELIVERABLES
+- DB migrations + any seed/backfill command(s)
+- Updated endpoints + UI routes
+- Short repo note: “How to add a new metro” + “How moderation works” + “How tags work”
+- Confirm where metro owner is set and how permissions are enforced.
+
+START
+Begin with the audit, then implement the additive schema + feed API + moderation workflow first.

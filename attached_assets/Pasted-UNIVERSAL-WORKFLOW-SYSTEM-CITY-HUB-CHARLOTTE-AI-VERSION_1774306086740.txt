@@ -1,0 +1,428 @@
+UNIVERSAL WORKFLOW SYSTEM — CITY HUB / CHARLOTTE AI
+VERSION: V1
+PURPOSE: Build the single universal workflow that powers onboarding, verification, routing, activation, and follow-up across the platform.
+
+IMPORTANT:
+- Do not create separate onboarding systems for each feature.
+- Build ONE universal workflow with multiple entry points and multiple output paths.
+- Reuse existing systems where possible.
+- Do not replace existing Hub Presence, Crown, Story Builder, Events, Jobs, Pulse, Marketplace, or existing verification work.
+- This prompt is for orchestration and workflow logic only.
+- Preserve existing architecture: Hub Presence = identity layer, objects = created once, surfaced across multiple discovery surfaces.
+- Keep current systems append-friendly and modular.
+- No service worker.
+- No caching tricks.
+- No duplicate record systems.
+- Everything should feed the same core workflow state model.
+
+==================================================
+A. GOAL
+==================================================
+
+Build a UNIVERSAL WORKFLOW layer that allows any person entering the platform to move through a guided process using either:
+1. Charlotte AI conversational flow
+2. Form fallback flow
+
+Both methods must feed the SAME system, SAME questions, SAME state model, SAME outcomes.
+
+The platform already has pieces of this built. This task is to unify and extend it.
+
+==================================================
+B. CORE RULES
+==================================================
+
+1. ONE WORKFLOW, MANY ENTRY POINTS
+Users may come in from:
+- claim listing
+- story builder
+- create content
+- create event
+- jobs
+- Crown invitation
+- QR code
+- external publication landing page
+- CTA button anywhere on the site
+
+Do NOT build separate funnels for these.
+All feed one universal workflow.
+
+2. SAME WORKFLOW, TWO INTERFACES
+- Charlotte AI = primary guided interface
+- Form = fallback interface
+Both must use the same workflow steps and data structure.
+
+3. PARTICIPATION IS GATED BY ACTION, NOT SIGNUP
+Users can browse as:
+- Visitor
+- Reader
+Then when they try to participate, they enter verification + workflow.
+
+4. ASSUMED EXISTENCE MODEL
+The system should assume the business / entity may already exist.
+Workflow should:
+- search for existing listing / presence
+- if found, attach user to it
+- if not found, create it silently and present it as if it already existed, then continue
+
+5. HUB PRESENCE IS REQUIRED ENTRY LAYER, NOT THE PRODUCT
+Hub Presence is the minimum system identity / participation anchor.
+Do not position it as the product itself.
+
+6. TRUSTED NETWORK IS LATER IN THE WORKFLOW
+It is not the front door.
+Users / businesses can exist in the system without being in the Trusted Network.
+
+==================================================
+C. UNIVERSAL WORKFLOW STEPS
+==================================================
+
+Build the workflow as a state machine with clear transitions.
+
+REQUIRED CORE STEPS:
+
+STEP 0 — ENTRY
+User enters from any CTA / page / QR / link / internal action.
+
+STEP 1 — MATCH / FIND
+Prompt for identifying info:
+- person name
+- business / org / brand name
+- optional phone or email
+System attempts to:
+- match to existing listing / Hub Presence / user
+- if not found, create provisional record silently
+
+STEP 2 — ACCOUNT CHECK
+If no account:
+- create free Reader account with minimal friction
+If already logged in:
+- continue
+
+STEP 3 — VERIFICATION GATE
+When user attempts participation:
+- trigger verification
+- use existing verification logic / payment / community-fund structure
+- support current verified model
+Do not break existing verified badge behavior.
+
+STEP 4 — ATTACH OWNERSHIP / RELATIONSHIP
+Attach user to:
+- matched business / creator / organization / existing profile
+or
+- newly created provisional record
+
+STEP 5 — PARTICIPATION IDENTITY ROUTER
+Ask lightweight routing questions to determine who / what they are participating as.
+
+Must support:
+- Reader / community participant
+- Business
+- Creator
+- Expert / Ask an Expert
+- Organization / nonprofit
+- Employer
+- Event organizer / host
+- Personal brand / speaker / podcast / photographer / artist
+
+IMPORTANT:
+Do not force separate systems for each.
+This should route into role/capability flags on a shared Hub Presence identity where appropriate.
+
+STEP 6 — BASIC ACTIVATION
+Collect the minimum information needed to activate presence.
+Examples:
+- name / display name
+- location / ZIP / hub
+- basic description
+- primary category
+- contact info
+- role type
+
+STEP 7 — STORY BUILDER / TRUST INTERVIEW
+Integrate the existing Story Builder into onboarding.
+This should serve as:
+- story creation flow
+- trust capture
+- positioning capture
+- structured business / creator interview
+
+The system should collect story-style answers and derive:
+- profile copy
+- trust profile fields
+- AEO answer material
+- positioning signals
+- future content signals
+
+DO NOT create a separate trust questionnaire flow.
+Use Story Builder as the interview front door for this.
+
+STEP 8 — MODULE / CAPABILITY ACTIVATION
+After identity and basics are known, route into relevant capabilities.
+
+Must support these as selectable / activatable capability layers:
+- Events
+- Jobs
+- Marketplace
+- Creator tools
+- Ask an Expert
+- Speaker / podcast / local expert
+- Community / nonprofit participation
+- Content / Pulse
+- Crown pathway
+- Trusted Network pathway
+- Future booking/service tools
+- Media participation
+
+Use existing add-on / capability structure where possible.
+
+STEP 9 — HUB / CATEGORY / MICRO-CATEGORY SETUP
+Support:
+- ZIP / hub selection
+- category selection
+- micro-category selection
+- location-aware setup
+- multiple hub / territory support later
+
+Must align with existing micro-hub / neighborhood / district structure.
+
+STEP 10 — TRUST SIGNAL SETUP
+Build trust-layer compatibility into workflow.
+
+Must support these trust signals:
+- Verified badge
+- Star reviews
+- Review counts
+- Ask an Expert badge
+- Creator / organizer / role badges
+- Crown badges
+- Activity status
+- story/interview completion
+- trust-profile/interview completion
+
+Do not collapse trust into one public score.
+Support stacked trust signals.
+
+STEP 11 — TRUSTED NETWORK ELIGIBILITY CHECK
+After onboarding, determine if a business/provider is:
+- not eligible
+- eligible but inactive
+- active in trusted pool
+- needs attention
+- at risk
+- removed
+
+This should support the Trusted Network logic already discussed.
+
+STEP 12 — FIRST ACTION ACTIVATION
+Every user / business should leave the flow with a next action or actual activation action.
+Examples:
+- publish story draft
+- claim listing complete
+- start event
+- post first update
+- answer first expert question
+- request first reviews
+- activate Crown interest
+- start Trusted Network steps
+
+STEP 13 — FOLLOW-UP AUTOMATION
+Create workflow triggers so Charlotte can follow up later by:
+- email
+- SMS
+- internal task
+- future voice channel
+
+==================================================
+D. STORY BUILDER INTEGRATION
+==================================================
+
+Use the existing Story Builder as a central workflow component.
+
+Required behavior:
+- Story Builder can be entered as a lead magnet
+- Story Builder should also feed onboarding
+- Story Builder answers must populate structured fields
+- Story Builder outputs must include:
+  1. public story draft
+  2. internal trust data
+  3. positioning cues
+  4. category / service clues
+  5. AEO / recommendation support material
+
+The story can be free.
+The system can still use the information internally even if user does not fully upgrade.
+
+==================================================
+E. TRUST PROFILE / INTERVIEW SUPPORT
+==================================================
+
+Add support for a trust interview / story-derived trust profile.
+
+Important:
+Do not force users to answer abstract strategy questions.
+Design for simple, interview-style prompts that ordinary small businesses can answer.
+
+The workflow should allow structured capture for things like:
+- what people call them for
+- who they usually work with
+- what customers compliment
+- what kind of experience they provide
+- local community involvement
+- licensing / guarantees / operating style
+- recent example / customer story
+
+These should feed internal trust / recommendation systems.
+
+==================================================
+F. TRUSTED NETWORK SUPPORT
+==================================================
+
+Support Trusted Network as a later-layer capability, not entry point.
+
+Requirements:
+- businesses/providers can exist without Trusted Network
+- Trusted Network sits on top of:
+  - verification
+  - profile completion
+  - story/trust capture
+  - activity / reviews / participation
+
+Support recommendation and connection flow readiness:
+- recommendation shown
+- connect me trigger
+- lead/introduction creation
+- response tracking
+- follow-up
+- trust decay / removal if needed later
+
+Do not fully build all recommendation logic in this prompt if already partially exists.
+Just make workflow-compatible states and routing hooks.
+
+==================================================
+G. FORM FALLBACK
+==================================================
+
+The form fallback must:
+- ask the same core questions as Charlotte AI
+- write into the same workflow session/state model
+- generate the same outputs
+- support resume into Charlotte later if needed
+
+The form is NOT a separate system.
+
+==================================================
+H. VOICE INPUT SUPPORT
+==================================================
+
+Add workflow support for future voice input as another capture method.
+
+Do not fully build advanced voice assistant behavior unless already easy.
+But structure the workflow so any step can later accept:
+- typed input
+- Charlotte conversational input
+- form input
+- voice transcription input
+
+Voice is an input method, not a separate workflow.
+
+==================================================
+I. DATA / STATE MODEL
+==================================================
+
+Build a reusable workflow session model.
+
+Minimum suggested entities:
+- workflow_session
+- workflow_step_progress
+- workflow_event_log
+- workflow_action_recommendation
+- workflow_follow_up_queue
+
+Support states such as:
+- entered
+- matched
+- account_created
+- verified
+- attached
+- routed
+- activated_basic
+- story_started
+- story_completed
+- capabilities_selected
+- trusted_eligible
+- trusted_active
+- first_action_completed
+- needs_follow_up
+
+Use enums / constants where sensible.
+Keep the model expandable.
+
+==================================================
+J. DASHBOARD / USER OUTPUT
+==================================================
+
+After workflow completion, show a simple “what’s next” block.
+
+Examples:
+- Finish your story
+- Get verified
+- Ask for your first 3 reviews
+- Create your first event
+- Answer expert questions
+- Activate your profile
+- Join Crown if eligible
+- Unlock Trusted Network if eligible
+
+Do not overwhelm.
+Show max 3 priority actions.
+
+==================================================
+K. DO NOT DO THESE
+==================================================
+
+- Do not create separate onboarding systems for each engine
+- Do not duplicate businesses, creators, or organizations into separate identity tables if Hub Presence can handle it
+- Do not create map-only or page-only records
+- Do not create separate trust system records disconnected from presence
+- Do not make users answer long abstract marketing questions during onboarding
+- Do not break existing verification or Story Builder flows; extend them
+- Do not create bloated admin-only configuration before core logic works
+
+==================================================
+L. BUILD OUTPUT REQUIRED
+==================================================
+
+Please implement:
+
+1. Universal workflow state model
+2. Shared service/controller for workflow progression
+3. Charlotte AI path integration hooks
+4. Form fallback path integration
+5. Match/find-or-create behavior
+6. Identity routing
+7. Story Builder integration into onboarding
+8. Capability/module activation support
+9. Trust-signal compatibility hooks
+10. Follow-up trigger framework
+11. Basic post-completion “next actions” UI
+
+Also provide:
+- a short changelog
+- file list changed
+- any migration notes
+- any placeholders / TODOs for later phases
+
+==================================================
+M. SUCCESS DEFINITION
+==================================================
+
+The system is successful if:
+- one person can enter from any CTA
+- be matched or created
+- verify
+- be routed correctly
+- tell their story
+- activate basics
+- get capability guidance
+- leave with a real next step
+- all without needing separate systems for every engine

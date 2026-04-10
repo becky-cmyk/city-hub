@@ -1,0 +1,234 @@
+CITY HUB / CLT CONNECTS — SOURCE-ALIGNED SURGICAL STABILIZATION PLAN
+
+You are working INSIDE the existing City Hub / CLT Connects codebase.
+
+This is NOT a full rebuild.
+This is NOT a greenfield platform rewrite.
+This is a surgical stabilization and alignment pass across existing systems that were built in stages and now need to work together cleanly.
+
+CRITICAL RULES
+
+1. Do NOT rebuild the whole platform.
+2. Do NOT create duplicate systems.
+3. Do NOT introduce shadow tables, shadow feeds, shadow map records, or parallel object models.
+4. Do NOT create map-only records, Pulse-only records, or search-only records.
+5. Work from the existing codebase first.
+6. Inspect what already exists before changing structure.
+7. Reuse the current data model wherever possible.
+8. Prefer the cheapest stable path that improves long-term architecture.
+9. Preserve existing working pieces unless they conflict with the locked architecture.
+10. Any new logic must align to the existing single-source architecture.
+
+LOCKED CORE ARCHITECTURE
+
+Hub Presence
+→ Objects
+→ Discovery Surfaces
+
+Hub Presence is the identity layer.
+
+Objects include existing platform objects such as:
+- business listings / directory listings
+- events
+- jobs
+- marketplace listings
+- creators
+- stories / Pulse items
+- hubs
+- neighborhoods
+- districts
+
+Discovery surfaces include:
+- Directory
+- Events
+- Jobs
+- Marketplace
+- Creators
+- Pulse
+- Search
+- Interactive Map
+- Hub pages
+- Neighborhood pages
+- Category pages
+- Object profile pages
+
+RULE:
+Objects are created once and surfaced across multiple discovery surfaces.
+No discovery surface may create duplicate content records.
+
+IMPORTANT IDENTITY CLARIFICATION
+
+- A business listing / directory listing is the discovery representation of a business.
+- The business itself operates through Hub Presence.
+- Creator identities also operate through Hub Presence.
+- Authors / creator-public names may exist as role/display layers, but must still connect back to real identity/contact records and Hub Presence when relevant.
+- Reader participation is a separate access ladder, not the same thing as Hub Presence.
+
+READER PARTICIPATION MODEL
+
+The platform must maintain this audience ladder:
+
+Visitor
+→ Reader
+→ Verified Participant
+
+Visitor:
+- limited exploration only
+- approximately 2–4 discovery item views before registration prompt
+- can preview discovery surfaces like Pulse, search, map, events, and listings
+
+Reader:
+- free email-based member
+- unlimited reading and discovery access
+- cannot publish or participate as a contributor by default
+
+Verified Participant:
+- may participate, publish, contribute, post, or unlock deeper ecosystem actions depending on role and permissions
+
+The Visitor → Reader behavior should feel similar to LinkedIn / Facebook style gated discovery:
+limited browsing first, then account creation to continue.
+
+PLATFORM INTENT
+
+City Hub is a geo-organized local operating ecosystem that combines:
+- business discovery
+- events
+- jobs
+- marketplace / classifieds
+- creator media
+- community activity
+- local media
+- discovery by geography
+
+It must remain usable and affordable for normal local operators, not just enterprise users.
+
+SEARCH / DISCOVERY RULES
+
+Search must function as a city-focused discovery engine across all relevant object types.
+Search should:
+- query all indexed object types
+- group results by object type
+- support location-aware intent
+- understand topic + location queries
+- use city / district / neighborhood / micro hub / zip / coordinates when available
+
+PULSE RULES
+
+Pulse is NOT a social feed.
+Pulse is NOT engagement-ranked.
+Pulse is NOT a tile gallery.
+
+Pulse is:
+- a story-driven discovery stream
+- a rotating ecosystem activity layer
+- a discovery surface referencing real objects
+
+Pulse currently should be pulling from:
+- internal stories
+- events
+- Hub Presences where relevant
+- RSS/imported content
+- other internal ecosystem activity already present in the system
+
+Pulse must use controlled visibility windows by content type.
+
+MAP RULES
+
+The map should be treated as a fresh rebuild of the MAP LAYER ONLY, while still using the existing object model and location data as source of truth.
+
+Do NOT rebuild the entire platform for the map.
+
+The map must:
+- become platform-wide
+- stop being relocation-only or narrowly scoped
+- use existing businesses / events / jobs / creators / hubs / neighborhoods / districts
+- never create a separate map database
+- be architected for 3D-capable rendering now
+- use staged implementation if needed, but do not build a throwaway patch
+
+SOCIAL PROOF / TRUST LAYER
+
+Build or prepare a reusable global social proof layer for signup / onboarding / claim / upgrade flows.
+
+Rules:
+- use real seeded ecosystem data where possible
+- seeded Google Places / imported Hub Presences are valid proof sources
+- use counts, coverage, claims, categories, activity, and geographic reach
+- avoid fake users, fake timestamps, and fabricated actions
+- derive proof from real objects whenever possible
+
+BILINGUAL RULE
+
+The platform must continue to support English and Spanish across:
+- UI text
+- categories
+- badges
+- prompts
+- search results
+- listings
+- stories
+- event descriptions
+- marketplace items
+
+Fix incomplete translation behavior without creating a second translation architecture.
+
+ADMIN RULES
+
+The old grouped “operations” concept should not remain a mixed bucket.
+Admin systems must be reorganized by real function such as:
+- feed infrastructure
+- community systems
+- trust/safety
+- content intake / editorial
+- directory population / discovery seeding
+
+Role structure must evolve toward:
+- Platform Admin
+- Metro Hub Admin
+- Micro Hub Admin
+
+Current code may still mostly reflect super-admin + reader. If so, expand carefully in phases rather than forcing a dangerous rewrite.
+
+GENERAL EXECUTION RULE
+
+For each prompt in this rebuild:
+1. Inspect what already exists in code first.
+2. Identify what is already working.
+3. Identify what is partially built but disconnected.
+4. Reconnect and stabilize before inventing new structure.
+5. Only add new structure where absolutely necessary.
+6. Keep migrations light whenever possible.
+7. Preserve single-source relationships at all times.
+
+PROMPT EXECUTION ORDER
+
+Use this order unless an audit proves a dependency must move:
+
+1. Pulse Rotation System
+2. Pulse Story Engine Alignment
+3. Interactive Map Rebuild (3D-capable map layer rebuild)
+4. Search Foundation
+5. Location-Aware Search
+6. Micro Category System
+7. Bilingual Platform Completion
+8. Discovery Surface Integration
+9. Search Logging and Intelligence
+10. Local Intent / Demand Radar
+11. Jobs Workforce Engine
+12. Charlotte Content Output Engine
+13. Creator / Media Integration
+14. Admin Reorganization
+15. Field Capture Inbox
+16. Back-Office Integration
+
+DELIVERABLE FOR THIS PROMPT
+
+First, audit the existing codebase against the above architecture and identify:
+- what already exists and should remain
+- what is disconnected
+- what should be repaired
+- what should be rebuilt only at the layer level
+- the safest implementation sequence for these fixes inside the existing codebase
+
+Then be ready to execute Prompt 1 only.
+Do NOT try to complete all 16 prompts at once.

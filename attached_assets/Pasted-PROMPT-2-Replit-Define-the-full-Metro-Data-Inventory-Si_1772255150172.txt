@@ -1,0 +1,118 @@
+PROMPT 2 (Replit) — Define the full “Metro Data Inventory” (Silent Aggregation Mode) + schema plan + future resale products (NO public UI yet)
+
+GOAL
+Create a documented, build-ready “Metro Data Inventory” for City Core Hub / Metro OS that lists ALL data streams we can pull, normalize, store, and later monetize/resell as aggregated intelligence. This is a planning + architecture deliverable inside the repo (docs + types), plus optional stub schemas. Do NOT build public dashboards. Do NOT change public UX.
+
+OUTPUTS REQUIRED
+1) A single source-of-truth doc in the repo:
+   /docs/metro-intelligence/MetroDataInventory_v1.md
+2) A JSON catalog file for programmatic use:
+   /docs/metro-intelligence/MetroDataInventory_v1.json
+3) (Optional but recommended) A TypeScript type + enums:
+   /server/intelligence/metroDataTypes.ts
+4) A “schema plan” section: recommended tables/event logs for each stream (not necessarily implemented yet).
+5) A “future products” section: how these data streams convert into paid products later (aggregated only).
+
+NON-NEGOTIABLES
+- We never sell raw personal data. Only anonymized, aggregated patterns.
+- Everything is multi-tenant and scoped by: metro_id, zip_id (when available), timestamp, source.
+- Start in Silent Aggregation Mode: collect + normalize + store first; monetization later.
+
+WHAT TO INCLUDE (DATA STREAMS)
+Document these as separate streams with:
+- Stream name
+- What fields to capture
+- Sources (public, licensed, internal logs)
+- Refresh cadence (daily/weekly/monthly/manual)
+- Normalization rules
+- Quality score / confidence
+- Storage pattern (table vs event log)
+- “Monetization potential later” (what product it feeds)
+
+A) Demand / Intent (Resident behavior)
+1) Search / Ask queries (query text, zip, language, category inferred, timestamp)
+2) Filter usage (open now, pet-friendly, family-friendly, etc.)
+3) Neighborhood exploration (live/work/play tracking, cross-zip navigation)
+4) Saves/follows (saved listings, saved events, saved neighborhoods)
+5) “No result found” events (unmet demand)
+6) Repeat-query patterns (persistent demand)
+7) English vs Spanish usage and query differences (language overlay)
+
+B) Supply / Business ecosystem behavior
+8) Listing engagement (views, click-to-call, click-to-site, directions)
+9) Listing updates frequency (freshness)
+10) Event creation and engagement
+11) Drop/offer participation (time-limited activations)
+12) Referral network activity (ReferMe ledger signals later)
+13) Cross-promotion partnerships (bundles/collabs)
+
+C) Lead Gateway Intelligence (Structured inbound)
+14) Lead form submissions (category, zip, timeline, budget range, language preference)
+15) Lead funnel metrics (start/complete/abandon)
+16) Response time tracking (business response speed)
+17) Outcome tracking (converted, not converted; if CRM integration exists)
+18) Demand-to-supply gap metrics (derived)
+
+D) Real estate + development + zoning (Public signals)
+19) Building permits (type, value, address/zip, contractor)
+20) Zoning / rezoning petitions and decisions (hearing dates, outcomes)
+21) Development approvals (projects, unit counts, commercial sq ft)
+22) Infrastructure projects (roads, transit, greenways)
+23) School boundary changes + enrollment shifts (public planning signals)
+24) Crime trend aggregates by zip (high-level trend only; no incident feed)
+25) Retail/commercial vacancy listings (sqft, asking, time on market)
+26) Multifamily/apartment inventory (units, lease-up status, rents, mgmt co)
+27) Residential moving signals (apartment interest flows; later)
+
+E) Business formation / economic activity (Public signals)
+28) New business filings / registrations (LLCs/corps, dates, addresses/zip)
+29) Business closures/dissolutions (where available)
+30) Liquor license filings (where public; good hospitality signals) — document as optional
+31) Health inspection scores (where public) — document as optional
+
+F) Opportunity Board (B2B signal layer)
+32) Vendor requests / service needs
+33) Space available / retail vacancy leads posted
+34) Community partnership requests
+35) Event vendor calls (markets, festivals, pop-ups)
+
+G) Physical-to-digital network (Hub screens, QR, kiosks)
+36) QR scan logs by location node (screen host location id)
+37) On-prem conversion path (scan -> view -> lead -> save)
+38) Host location performance index
+
+RESALE / FUTURE PRODUCTS (AGGREGATED ONLY)
+Document how streams roll up into sellable products later:
+1) Zip Demand Heat Index (by category + language)
+2) Category Momentum Report (weekly/monthly)
+3) Development Pressure Score (permits + zoning + infra)
+4) Emerging Neighborhood Index (multi-factor)
+5) Retail Opportunity Gaps (demand vs supply imbalance)
+6) Apartment Lease-Up & Population Inflow Signals (where available)
+7) Hispanic Market Demand Map (English vs Spanish deltas)
+8) Business Launch Radar (new filings + permits + leasing)
+9) B2B Vendor Demand Index (opportunity board aggregation)
+10) Lead Quality Index (from gateway layer; only aggregated performance)
+
+SCHEMA PLAN (Recommend Tables / Logs)
+In the doc + JSON, propose the storage model:
+- Event logs: search_log, engagement_log, language_usage_log, qr_scan_log, lead_log
+- Snapshots: supply_density_snapshot, vacancy_snapshot, multifamily_snapshot
+- Public signal logs: permits_log, zoning_log, filings_log, infra_log, schools_log, inspections_log (optional)
+All include: metro_id, zip_id (nullable), source, source_url (nullable), created_at, updated_at.
+
+IMPLEMENTATION TASKS (Create tickets in the doc)
+Add a final section: “Build Order (Silent Aggregation Mode)”
+Phase 1: filings + multifamily + language/search logs
+Phase 2: permits + zoning + vacancy
+Phase 3: opportunity board + QR network logging
+Phase 4: derived indexes (demand heat, gap detection) internal-only
+
+DELIVERABLE ACCEPTANCE
+- MetroDataInventory_v1.md exists with all streams above and consistent fields.
+- MetroDataInventory_v1.json mirrors the doc and can be used by code later.
+- Typescript enums/types created for stream ids + signal types (if requested).
+- No public UI changes; doc-only + types-only is acceptable.
+
+NOW DO IT
+Create the files, write the content, ensure naming/versioning exactly as specified.

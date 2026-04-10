@@ -1,0 +1,393 @@
+SYSTEM ROLE
+You are extending the existing City Hub / Charlotte Hub codebase to implement the Crown Program Marketing, Campaign, and Announcement Engine.
+
+IMPORTANT CONTEXT
+The Crown system already exists, and the codebase already includes:
+
+• crown_categories
+• crown_participants
+• crown_votes
+• crown_winners
+• crown_invitations
+• business listings / Hub Presence
+• Opportunity Radar
+• Pulse / story system
+• creator program
+• venue TV system
+• admin dashboard
+• community polls / voting campaigns / quizzes / surveys
+
+DO NOT rebuild Crown.
+DO NOT create a separate marketing platform.
+DO NOT create a generic campaign SaaS.
+
+Your job is to add the **marketing and announcement layer** around the existing Crown infrastructure so each hub can launch, promote, and announce Crown in a repeatable way.
+
+--------------------------------------------------
+
+OBJECTIVE
+
+Create a system that:
+
+1. generates public Crown launch announcements for a hub
+2. generates nominee marketing assets and messaging
+3. generates voting campaign messaging
+4. generates winner announcement messaging
+5. prepares optional marketing/perk packages tied to Crown participation
+6. supports Pulse, creator coverage, and venue TV promotion
+7. gives admin one place to trigger these communications per hub
+
+--------------------------------------------------
+
+STEP 1 — HUB CROWN CAMPAIGN RECORD
+
+Create a hub-level Crown campaign layer tied to the existing Crown hub activation flow.
+
+Each hub Crown campaign should store:
+
+• hub_id
+• hub_name
+• crown_campaign_status
+• launch_date
+• nomination_open_date
+• voting_open_date
+• voting_close_date
+• winner_announcement_date
+• featured_categories
+• featured_nominees
+• campaign_headline
+• campaign_subheadline
+• campaign_description
+• public_rules_summary
+
+Possible statuses:
+
+DRAFT
+READY
+LAUNCHED
+NOMINATIONS_OPEN
+VOTING_OPEN
+WINNERS_ANNOUNCED
+ARCHIVED
+
+Do not replace existing Crown tables.
+This layer should orchestrate messaging and campaign behavior around them.
+
+--------------------------------------------------
+
+STEP 2 — HUB LAUNCH ANNOUNCEMENT GENERATOR
+
+When a hub Crown campaign is launched, generate a public-facing announcement package.
+
+Required outputs:
+
+• public campaign headline
+• short subheadline
+• campaign summary
+• “how to participate” section
+• “how to vote” section
+• “claim your listing” section
+• launch CTA
+
+Example intent:
+
+“The NoDa Crown Program is now open.
+Residents can vote for their favorite local businesses, creators, and community leaders.
+Businesses can claim their listing to participate.”
+
+The system should generate this in a reusable structured format for:
+
+• hub page banner
+• Pulse story draft
+• email/newsletter block
+• social caption draft
+• venue TV message block
+
+--------------------------------------------------
+
+STEP 3 — CLAIM / NOMINEE MARKETING MESSAGING
+
+Generate nominee and claim-listing messaging templates tied to the outreach engine.
+
+Required template types:
+
+1. Claim Invitation
+2. Nominee Invitation
+3. Reminder to Complete Profile
+4. Reminder to Share Voting Link
+5. “You’re Officially a Crown Nominee” message
+
+Each template should support variables such as:
+
+• hub_name
+• business_name
+• category_name
+• claim_link
+• voting_link
+• nomination_deadline
+• voting_deadline
+
+These templates should be usable in:
+
+• email
+• SMS
+• admin copy/paste
+• printable letter format
+
+--------------------------------------------------
+
+STEP 4 — VOTING CAMPAIGN MESSAGING
+
+Once voting opens, generate public and nominee-facing voting materials.
+
+Required outputs:
+
+• public “vote now” campaign message
+• category-specific voting prompt
+• nominee share copy
+• QR-friendly short CTA
+• venue TV slide copy
+• creator coverage angle suggestions
+
+Examples:
+
+Public:
+“Vote for the best coffee, restaurants, creators, and local leaders in NoDa.”
+
+Nominee:
+“You’ve been nominated for Best Coffee in NoDa. Invite your customers to vote.”
+
+Category prompt:
+“Which coffee shop fuels your mornings in NoDa? Vote for the Crown Holder.”
+
+--------------------------------------------------
+
+STEP 5 — WINNER ANNOUNCEMENT ENGINE
+
+When winners are declared, generate winner announcement assets.
+
+Required outputs:
+
+• winner headline
+• short winner announcement
+• long-form winner announcement
+• social copy
+• Pulse story draft
+• winner badge text
+• printable certificate text
+• window cling / sign text
+• venue TV winner slide copy
+
+Variables:
+
+• hub_name
+• category_name
+• winner_name
+• award_year
+• valid_until_date
+
+Example:
+
+“Ballantyne Crown Holder
+Best Coffee
+2026–2027”
+
+--------------------------------------------------
+
+STEP 6 — CROWN MARKETING / PERK PACKAGES
+
+Create a structured marketing package layer tied to the Crown Program.
+
+IMPORTANT:
+Do not make this feel like “pay to win.”
+This is NOT paying for the award.
+This is paying for optional promotional support around participation or winning.
+
+Create package definitions such as:
+
+• Crown Nominee Promo Pack
+• Crown Spotlight Pack
+• Crown Winner Feature Pack
+• Crown Print Feature Pack
+• Crown Event Participation Pack
+
+For each package define:
+
+• package_name
+• package_description
+• what is included
+• whether it is included as a perk or optional paid add-on
+• eligibility rules
+• where it is displayed (Pulse, creator feature, venue TV, print, map, email, etc.)
+
+Examples of included items:
+
+• nominee graphics
+• voting share kit
+• winner badge files
+• featured Pulse story
+• creator interview
+• venue TV rotation
+• print directory inclusion
+• map highlight
+• homepage spotlight
+
+This should be data-driven and admin-manageable.
+
+--------------------------------------------------
+
+STEP 7 — PULSE / STORY INTEGRATION
+
+The marketing engine must integrate with the existing Pulse / story system.
+
+For each Crown hub campaign, generate structured story drafts for:
+
+• hub launch
+• nominations open
+• voting open
+• top nominees / finalist spotlight
+• winners announced
+• creator feature / interview
+• community spotlight
+
+These should be generated as story draft objects or structured content payloads, not just plain text strings.
+
+They should be reusable across:
+
+• Pulse feed
+• hub pages
+• category pages
+• business profiles
+• creator profiles
+
+Do not duplicate content objects unnecessarily.
+Follow the single-source architecture already in the platform.
+
+--------------------------------------------------
+
+STEP 8 — CREATOR CAMPAIGN INTEGRATION
+
+Create hooks for creator coverage tied to Crown.
+
+Required creator-support outputs:
+
+• recommended creator coverage topics
+• nominee interview suggestions
+• winner spotlight suggestions
+• category-specific local guide ideas
+• “top places to vote for” style coverage prompts
+
+For each hub campaign, allow admin to flag:
+
+• ready_for_creator_feature
+• creator_story_requested
+• creator_interview_scheduled
+
+This should tie into the creator/media ecosystem already in the platform.
+
+--------------------------------------------------
+
+STEP 9 — VENUE TV CAMPAIGN INTEGRATION
+
+Create venue TV / screen-ready campaign outputs for Crown.
+
+Required outputs:
+
+• hub launch slide text
+• voting open slide text
+• QR-based vote prompt slide text
+• nominee spotlight slide text
+• winner spotlight slide text
+
+Each output should support:
+
+• short headline
+• subheadline
+• QR prompt
+• optional sponsor line
+• validity window
+
+Do not build full design rendering.
+Build the structured content payloads so venue TV can display them.
+
+--------------------------------------------------
+
+STEP 10 — ADMIN CAMPAIGN CONTROL PANEL
+
+Add a Crown Marketing / Campaign control area in admin.
+
+Required admin actions:
+
+• create campaign draft
+• generate launch announcement
+• generate nominee messaging
+• generate voting campaign copy
+• generate winner announcement copy
+• publish campaign to Pulse draft queue
+• push venue TV content payloads
+• mark creator coverage requested
+• assign perk / promo package to participant
+
+Admin view should show:
+
+• hub name
+• campaign status
+• categories active
+• nominees active
+• voting status
+• messaging assets generated
+• Pulse stories generated
+• venue TV payloads generated
+• perk packages available / assigned
+
+--------------------------------------------------
+
+STEP 11 — OUTPUT STRUCTURE
+
+For each hub Crown campaign return a structured object including:
+
+• hub_name
+• campaign_status
+• launch_announcement
+• claim_invitation_templates
+• nominee_templates
+• voting_campaign_templates
+• winner_announcement_templates
+• Pulse_story_drafts
+• creator_coverage_suggestions
+• venue_tv_payloads
+• available_perk_packages
+• assigned_perk_packages
+
+Make the structure reusable and admin-friendly.
+
+--------------------------------------------------
+
+STEP 12 — CONFIGURATION
+
+Allow admin-configurable settings for:
+
+• campaign language / tone
+• award naming format
+• year / valid-until format
+• whether editorial categories are included
+• whether People’s Choice categories are included
+• whether creator features are enabled
+• whether venue TV assets are generated
+• whether print-feature packages are shown
+
+--------------------------------------------------
+
+FINAL TASK
+
+Implement the Crown Marketing / Campaign / Announcement Engine so the platform can:
+
+1. announce a new hub Crown launch
+2. market nominations and voting
+3. produce winner announcements
+4. generate reusable campaign assets
+5. connect Crown to Pulse, creators, and venue TV
+6. support optional Crown promotional/perk packages
+7. let admin manage the whole campaign from one place
+
+This system must support rolling, hub-by-hub Crown launches where each award lasts one year from the time it is issued.

@@ -1,0 +1,222 @@
+You are building a new multi-tenant platform called "CityCoreHub" (master platform). It powers multiple city hubs (first city: CLT Connects). The architecture MUST support City → Zone → Content and Zone-based admins/operators. Public content must be SEO-indexable like a publication AND app-like on mobile. No WordPress. No plugin stacks.
+
+STACK (required):
+- Next.js (App Router) + TypeScript
+- Tailwind CSS
+- PostgreSQL
+- Prisma ORM
+- Zod validation
+- Stripe (Checkout + Customer Portal + Webhooks) for billing/receipts (NOT net-30 invoicing)
+- Resend-ready (email later) and Twilio-ready (SMS later) but implement stubs only if needed
+
+CRITICAL GUARDRAILS:
+- NO service worker in Phase 1 (avoid stale builds). Do not add next-pwa or SW libraries.
+- HTML responses should be non-cacheable (no-store) to prevent stale shells.
+- Public content must not be behind login. Admin only is gated.
+
+ROUTING DECISION (LOCKED):
+- City routing via PATH: citycorehub.com/[citySlug]/...
+- Zones are NOT separate URL segments in Phase 1. Zone is required in data and used in filtering.
+Example: /clt/directory?zone=south-end
+
+PHASE 1 MVP (strong base + monetization):
+A) Multi-tenant: City + Zone required for Businesses & Events
+B) Public pages for: categories, zones, directory, events, articles, top lists
+C) Global search + filters
+D) Public submissions to moderation queue (never auto-publish)
+E) Admin CMS (Super Admin + City Admin + Zone Admin)
+F) Monetization fields + Stripe entitlements
+G) Mobile-first “native feel” with device-based personalization (no login required)
+H) Saved items + “Create a Plan” lists (device-based)
+I) Share links for items (deep links)
+
+ROLES / PERMISSIONS (server enforced):
+- SUPER_ADMIN: you only; manage all cities/zones/users/content/entitlements
+- CITY_ADMIN: manage content/submissions/sponsors within a city
+- ZONE_ADMIN: manage content/submissions within assigned zones only
+(EDITOR optional; if included, can edit but not publish without approval)
+
+DATA MODEL (Prisma) — REQUIRED TABLES:
+1) City
+- id, name, slug(unique), isActive
+- brandName, logoUrl, primaryColor
+- createdAt, updatedAt
+
+2) Zone
+- id, cityId (FK), name, slug(unique within city), type(enum: ZIP, NEIGHBORHOOD, DISTRICT, MICRO_HUB)
+- parentZoneId (nullable, supports nesting)
+- isActive
+- createdAt, updatedAt
+
+3) User
+- id, email(unique), role(enum: SUPER_ADMIN, CITY_ADMIN, ZONE_ADMIN)
+- cityId (nullable for SUPER_ADMIN; required for CITY_ADMIN)
+- createdAt, updatedAt
+
+4) ZoneOperator (assignment)
+- id, userId (FK), zoneId (FK), status(enum: ACTIVE, PAUSED)
+- revenueSharePercent (nullable)
+- createdAt, updatedAt
+
+5) Category (managed by admin; global set)
+- id, name, slug(unique)
+Seed: biz, food, family, seniors, pets, events, marketplace
+
+6) Tag (managed by admin)
+- id, name, slug(unique)
+
+7) Business
+- id, cityId (FK), zoneId (FK required), name, slug(unique within city), description
+- address, city, state, zip, phone, websiteUrl
+- categories (m2m), tags (m2m)
+- listingTier(enum: FREE, VERIFIED, PREMIUM)
+- isVerified(bool), verifiedAt(nullable)
+- isFeatured(bool), isSponsored(bool)
+- priorityRank(int default 0)
+- featureStartAt, featureEndAt (nullable)
+- sponsorName, sponsorUrl (nullable)
+- leadEnabled(bool default true)
+- createdAt, updatedAt
+
+8) Event
+- id, cityId (FK), zoneId (FK required), title, slug(unique within city), description
+- startDateTime, endDateTime
+- locationName, address, city, state, zip
+- costText
+- categories (m2m), tags (m2m)
+- isFeatured(bool), isSponsored(bool)
+- priorityRank(int default 0)
+- featureStartAt, featureEndAt (nullable)
+- sponsorName, sponsorUrl (nullable)
+- createdAt, updatedAt
+
+9) Article
+- id, cityId (FK), title, slug(unique within city)
+- excerpt, content (markdown)
+- primaryCategoryId (FK nullable)
+- zoneId (FK nullable)
+- relatedBusinesses (m2m), relatedEvents (m2m)
+- isFeatured(bool), isSponsored(bool)
+- priorityRank(int default 0)
+- featureStartAt, featureEndAt (nullable)
+- sponsorName, sponsorUrl (nullable)
+- createdAt, updatedAt
+
+10) CuratedList (for Top 10/Top 25 etc. — NOT tags)
+- id, cityId (FK), title, slug(unique within city), type(enum: TOP10, TOP25, CUSTOM)
+- zoneId (FK nullable), categoryId (FK nullable)
+- description
+- createdAt, updatedAt
+
+11) CuratedListItem
+- id, curatedListId (FK), itemType(enum: BUSINESS, EVENT, ARTICLE)
+- businessId/eventId/articleId (nullable FKs; exactly one set)
+- rank(int)
+- note (nullable)
+- createdAt, updatedAt
+
+12) Submission (public intake; never auto publish)
+- id, cityId (FK), zoneId (FK nullable), type(enum: BUSINESS, EVENT, ARTICLE_PITCH)
+- payload(json), status(enum: PENDING, APPROVED, REJECTED)
+- submitterName, submitterEmail
+- notes (admin)
+- createdAt, updatedAt
+
+13) Lead (qualification layer between directory and business)
+- id, cityId (FK), businessId (FK), zoneId (FK)
+- name, email, phone(nullable)
+- message
+- budgetRange(nullable), timeframe(nullable)
+- status(enum: NEW, ACCEPTED, DECLINED, SPAM, CLOSED)
+- score(int default 0)
+- createdAt, updatedAt
+
+14) Subscriber (internal list; optional email capture; device-first is allowed)
+- id, cityId (FK)
+- email(nullable unique per city), firstName(nullable)
+- status(enum: ACTIVE, PAUSED, UNSUBSCRIBED)
+- createdAt, updatedAt
+
+15) SubscriberPreference
+- id, subscriberId (FK)
+- topics (array of category slugs)
+- zoneIds (array)
+- emailOptIn(bool default false)
+- smsOptIn(bool default false)
+- inAppOptIn(bool default true)
+- createdAt, updatedAt
+
+16) Digest (public “inbox content” pages)
+- id, cityId (FK), title, slug(unique within city), topic(nullable)
+- content(markdown), publishedAt(nullable)
+- createdAt, updatedAt
+
+17) DeviceSaved (device-based saved items + plans; no account required)
+- id, cityId (FK)
+- deviceId(string indexed)
+- itemType(enum: BUSINESS, EVENT, ARTICLE)
+- itemId(string)
+- planName(nullable)  (e.g., Tonight, Weekend, Family)
+- createdAt, updatedAt
+
+18) StripeCustomer
+- id, cityId (FK)
+- email, stripeCustomerId
+- createdAt, updatedAt
+
+19) Entitlement (what Stripe purchase unlocks)
+- id, cityId (FK)
+- subjectType(enum: BUSINESS, USER, ZONE, CITY)
+- subjectId(string)
+- productType(enum: LISTING_TIER, FEATURED_PLACEMENT, SPONSORSHIP, SPOTLIGHT, CONTRIBUTOR_PACKAGE)
+- status(enum: ACTIVE, EXPIRED, CANCELED)
+- startAt, endAt (nullable)
+- stripeSubscriptionId(nullable), stripeCheckoutSessionId(nullable)
+- metadata(json nullable)
+- createdAt, updatedAt
+
+STRIPE (Phase 1 required behavior):
+- Implement Stripe Checkout endpoints for purchasing:
+  - listing tier upgrade (VERIFIED/PREMIUM) for a Business
+  - featured placement timeboxed for a Business/Event/Article
+  - sponsorship package for a City or Category hub
+- Implement Stripe webhook handler to:
+  - verify event signatures
+  - activate/update/cancel Entitlements
+  - set Business.listingTier based on entitlements when appropriate
+- Provide a Billing page that links to Stripe Customer Portal (manage card/cancel/receipts)
+- Use env vars: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PORTAL_RETURN_URL, NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+PUBLIC ROUTES (must exist; SEO render):
+- /[citySlug] (Home: search-first + category chips + featured blocks)
+- /[citySlug]/biz, /food, /family, /seniors, /pets, /events, /marketplace (Category hubs)
+- /[citySlug]/zones (zone index)
+- /[citySlug]/directory (business index; filters: zone, category, tags)
+- /[citySlug]/directory/[slug] (business profile)
+- /[citySlug]/events (event index; filters: zone, category, tags; include “This Weekend” quick filter)
+- /[citySlug]/events/[slug] (event page)
+- /[citySlug]/articles (article index)
+- /[citySlug]/articles/[slug] (article page)
+- /[citySlug]/top (index of curated lists)
+- /[citySlug]/top/[slug] (curated list page)
+- /[citySlug]/digests/[slug] (digest page)
+- /[citySlug]/submit (submission landing)
+- /[citySlug]/submit/business (public form)
+- /[citySlug]/submit/event (public form)
+- /[citySlug]/submit/article (public pitch form)
+- /[citySlug]/advertise (static placeholder)
+
+MOBILE UX (Phase 1):
+- On mobile first visit per city:
+  - show a simple chooser (pick categories + optional zones) with Skip
+  - store to device (localStorage ok) and also create/update DeviceSaved preferences if helpful
+- Provide bottom nav on mobile:
+  - Home, Search, Weekend, Saved, Inbox
+- Saved: device-based saved items + “Create a Plan” lists using DeviceSaved
+- Inbox: show Digests (public) + optional subscribe CTA (does not block browsing)
+
+ADMIN ROUTES (protected):
+- /admin/login (password-based session ok for MVP)
+- /admin (dashboard)
+- /admin/cities (SUPER_ADMIN only)
+- /admin/zones (cit

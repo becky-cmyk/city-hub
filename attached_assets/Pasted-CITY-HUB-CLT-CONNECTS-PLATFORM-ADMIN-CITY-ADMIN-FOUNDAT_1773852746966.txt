@@ -1,0 +1,212 @@
+CITY HUB / CLT CONNECTS — PLATFORM ADMIN / CITY ADMIN FOUNDATION
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Implement the foundational separation between PLATFORM ADMIN and CITY / METRO ADMIN using the current live structure already present in the codebase.
+
+This is a SURGICAL STRUCTURE PASS.
+Do NOT rebuild the admin system.
+Do NOT rebuild auth from scratch.
+Do NOT create a new tenant architecture.
+Do NOT break current Charlotte / CLT operations.
+Do NOT try to complete Zone/Micro admin in this prompt.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Current admin roles already exist:
+- Platform Admin
+- City Admin
+- Zone Admin
+- Operator
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are not a separate table; they are businesses with creator-specific fields/types.
+Pulse is not its own table; it is an aggregation layer over real objects.
+Admin actions already hit real object tables and already use audit logging.
+
+There are TWO valid geographic hierarchies and they must both remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, and operator structures
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and local discovery
+
+Do NOT collapse these into one hierarchy.
+Do NOT simplify them into a single geographic model.
+
+CURRENT ISSUE TO FIX
+
+The platform has multi-city / multi-metro bones in place, but Charlotte / CLT is still acting like the accidental platform layer in too many places.
+
+The problem is NOT lack of structure.
+The problem is inconsistent enforcement and Charlotte hardcoding.
+
+This prompt must:
+- preserve the existing good structure
+- enforce platform vs city scope cleanly
+- reduce Charlotte-as-platform assumptions
+- prepare the system for later prompts without overbuilding
+
+LOCKED TARGET STRUCTURE
+
+PLATFORM ADMIN
+- owns the overall platform
+- controls platform-wide settings
+- manages cities / metros
+- manages licensing / territories / operators at platform level
+- oversees cross-metro systems
+
+CITY ADMIN
+- manages one city / metro only
+- manages that city’s local content, operations, moderation, editorial, local tools, and discovery systems
+- must NOT function as platform owner
+
+ZONE ADMIN
+- keep intact for now
+- do not deeply expand or redesign in this prompt
+
+OPERATOR
+- preserve current structure
+- do not redesign in this prompt
+
+IMPLEMENTATION RULES
+
+1. Prefer the smallest stable change set.
+2. Reuse the current auth/session structure.
+3. Keep migrations light or avoid them if not needed.
+4. Preserve all currently working Charlotte functionality while removing platform-level Charlotte assumptions where appropriate.
+5. Scope by current city / metro context wherever possible.
+6. Keep this foundation-compatible with later prompts for Pulse, Map, Search, Discovery, and Back Office.
+7. Do not break audit logging.
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current implementation and confirm:
+
+1. How Platform Admin, City Admin, Zone Admin, and Operator are currently represented in code
+2. Which routes/pages/actions are currently effectively global when they should be city-scoped
+3. Which routes/pages/actions are correctly platform-scoped and should remain so
+4. Where Charlotte / CLT is hardcoded in admin scope, routing, or admin UI logic
+5. How active city selection is currently determined and passed through admin flows
+6. The smallest stable change set needed to enforce platform vs city separation without disrupting current operations
+
+Return a concise implementation note first before making major changes.
+
+REQUIRED IMPLEMENTATION
+
+1. PLATFORM VS CITY ACCESS ENFORCEMENT
+
+Enforce clear separation between:
+- platform-level routes/actions
+- city-level routes/actions
+
+Requirements:
+- Platform Admin can access platform-wide controls and can act across cities
+- City Admin can only access and mutate data within their assigned city scope
+- Zone Admin and Operator behavior should remain intact unless a change is necessary for safety
+
+If middleware/helpers already exist, reuse and strengthen them.
+Do NOT create a second permission system.
+
+2. CITY SCOPE ENFORCEMENT
+
+For City Admin users:
+- consistently enforce city scoping on admin data reads and writes
+- prevent cross-city access unless explicitly allowed
+- continue allowing Platform Admin to switch active city context
+
+Use existing city selection/context mechanisms if they already exist.
+
+3. REMOVE CHARLOTTE-AS-PLATFORM ASSUMPTIONS IN ADMIN FLOWS
+
+Replace low-risk Charlotte hardcoding in admin contexts with active city context.
+
+Priority targets:
+- admin panels
+- admin content tools
+- admin intake / moderation surfaces
+- admin CRM / outreach tools
+- admin feed / editorial / campaign tools
+- admin-side AI/helper tools that should read active city context
+
+Do NOT attempt a global public-facing Charlotte cleanup in this prompt.
+Keep focus on admin scope and foundational enforcement.
+
+4. ADMIN NAVIGATION / SIDEBAR SEPARATION
+
+Separate or tag admin navigation by scope:
+
+Platform scope examples:
+- platform settings
+- city / metro management
+- licensing / territory controls
+- operator assignment
+- cross-metro controls
+- platform-wide defaults
+
+City scope examples:
+- local content
+- local moderation
+- local intake
+- local editorial
+- local feed / Pulse operations
+- local events
+- local places import
+- local CRM / outreach
+- local discovery operations
+
+Requirements:
+- Platform Admin sees platform tools and city tools
+- City Admin sees only city-scoped tools for their assigned city
+- do not force a full admin UI redesign
+
+5. PRESERVE WORKING FOUNDATIONS
+
+Do not remove or break:
+- current roles
+- existing audit logging
+- existing city / metro support
+- current city selector / active city logic
+- region hierarchy
+- zone hierarchy
+- current object tables and relationships
+
+IMPORTANT “DO NOT DO” LIST
+
+Do NOT:
+- rebuild the admin dashboard from scratch
+- redesign all operator logic
+- complete Zone Admin architecture
+- redesign the public site
+- merge region and zone hierarchies
+- rebuild auth
+- rebuild multi-city from scratch
+- do a full Charlotte debranding sweep
+- change Pulse / Map / Search logic in this prompt unless absolutely required for role-safety
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. Platform Admin and City Admin scopes are clearly enforced
+2. City Admin is prevented from acting as platform owner
+3. Platform Admin can still operate across city contexts
+4. key admin Charlotte hardcoding is replaced with active city context where needed
+5. admin navigation reflects platform vs city separation at a basic stable level
+6. current operations still work
+7. audit logging remains intact
+8. both region and zone hierarchies remain preserved
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. implement the smallest stable change set
+3. list exactly which files/routes/components were changed
+4. list any remaining Charlotte hardcoding or scope issues that should be addressed later
+5. list what should wait for later prompts

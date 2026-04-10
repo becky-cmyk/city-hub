@@ -1,0 +1,264 @@
+PROMPT 2 — CHARLOTTE / CORA FOUNDATION CLEANUP (PHASE 1 ONLY)
+
+You are implementing Phase 1 foundation cleanup for the existing AI architecture.
+
+This is a surgical refactor and documentation pass.
+Do NOT redesign the entire platform.
+Do NOT change public behavior unless required to remove duplication safely.
+Do NOT add new user-facing features yet.
+
+GOAL
+
+Stabilize the current AI foundation by doing only these three things:
+
+1. Create a centralized prompt registry
+2. Deduplicate duplicated Charlotte AI functions
+3. Formalize and document the Charlotte vs Cora boundary in code
+
+CONTEXT
+
+The platform follows:
+Hub Presence → Objects → Discovery Surfaces
+
+Charlotte is intended to operate as an ecosystem assistant tied to content, discovery, intake, and operational workflows — not as a disconnected chatbot. Preserve this.  [oai_citation:0‡Core Architecture Principles.txt](sediment://file_00000000a2c871fdafa274c5e892729a)  [oai_citation:1‡Additional source Rules.txt](sediment://file_00000000851471f8a4f141db80cac0ae)
+
+The content engine direction is:
+capture / intake
+→ spark
+→ story
+→ deliverables
+→ distribution
+→ archive / intelligence
+
+Preserve compatibility with that direction.  [oai_citation:2‡Crown Program.txt](sediment://file_00000000656c722fb97efb4954c0c8fd)
+
+PHASE 1 SCOPE ONLY
+
+IN SCOPE
+- centralized prompt registry
+- dedupe repeated AI helper functions
+- define Charlotte/Cora persona boundary
+- update imports/usages safely
+- add internal docs/comments where needed
+- add light regression checks if test structure exists
+
+OUT OF SCOPE
+- no new front-end features
+- no event workflow expansion
+- no Crown integration
+- no affiliate classification expansion
+- no new guide bubble intelligence
+- no major database redesign
+- no model/provider changes unless absolutely required
+
+--------------------------------------------------
+PART 1 — CREATE CENTRALIZED PROMPT REGISTRY
+--------------------------------------------------
+
+Create a centralized prompt registry/service for all AI prompts currently scattered across the codebase.
+
+Requirements:
+
+A. Create a single prompt module structure, for example:
+- /server/ai/prompts/
+or equivalent existing backend-safe location
+
+B. Organize prompts by function, not by random file:
+- publicGuide
+- adminCopilot
+- rssRewrite
+- localArticleGeneration
+- zoneExtraction
+- classifier
+- storyInterview
+- spotlightContent
+- outreachDrafting
+- micrositeGeneration
+- translation
+- socialCaptions
+- any other currently active AI prompt family
+
+C. Each prompt entry should support:
+- stable key/name
+- persona owner (charlotte / cora / shared)
+- purpose
+- prompt builder function or template
+- optional metadata (temperature intent, output type, notes)
+- version string or constant
+
+D. Preserve existing behavior.
+Do NOT rewrite prompts for style unless needed for extraction into registry.
+
+E. Replace hardcoded prompt strings in scattered files with imports from the new prompt registry.
+
+F. Keep compatibility with the DB-backed override for public Charlotte instructions if it exists.
+That override should remain additive to the base Charlotte public guide prompt, not replace the architecture.
+
+Deliverable:
+- centralized prompt registry implemented
+- all active Charlotte/Cora prompt usages updated to consume it where practical in this phase
+- list of any remaining hardcoded prompts that could not be safely migrated now
+
+--------------------------------------------------
+PART 2 — DEDUPE DUPLICATED AI FUNCTIONS
+--------------------------------------------------
+
+Audit and safely merge duplicated AI helper logic.
+
+Priority duplicates already identified:
+- aiRewriteSummary
+- aiExtractZoneSlug
+- outreach drafting overlap
+- content generation overlap
+
+For THIS phase, do the safe dedupe first.
+
+A. Create one authoritative shared implementation location for reusable AI helpers, such as:
+- rewrite summary
+- zone extraction
+- article generation helper wrappers
+- classification helper wrappers
+only where duplication already exists
+
+B. Remove duplicate local implementations where safe, especially in places like:
+- intelligence-routes.ts local copies vs shared ai-content utilities
+
+C. Update all imports so behavior routes through one authoritative implementation per helper.
+
+D. Preserve all existing output contracts unless changing them is absolutely necessary.
+
+E. If two implementations are not actually equivalent, do NOT force-merge recklessly.
+Instead:
+- keep one active
+- mark the other deprecated
+- document exact behavioral difference
+- route callers intentionally
+
+F. Add clear internal comments:
+- source of truth helper
+- deprecated helper
+- migration note if needed
+
+Deliverable:
+- one authoritative implementation for duplicated helper functions
+- no silent behavior drift
+- deprecated copies removed or clearly marked for later deletion
+
+--------------------------------------------------
+PART 3 — FORMALIZE CHARLOTTE VS CORA BOUNDARY
+--------------------------------------------------
+
+Implement a clean persona boundary in code and documentation.
+
+Target operating rule:
+
+CHARLOTTE
+= metro/city-facing ecosystem assistant
+= public guide + local discovery helper + content/discovery operator
+= tied to city content, feeds, outreach, intake, local intelligence
+
+CORA
+= platform/operator assistant
+= internal planning, system operations, multi-workspace/platform tasks, higher-level operator logic
+
+Requirements:
+
+A. Create a small shared persona definition module, for example:
+- ai/personas.ts
+or equivalent
+
+B. Define at minimum:
+- persona id
+- display name
+- role
+- allowed domains/responsibilities
+- disallowed/avoid domains if needed
+- default tone/doctrine hooks if already used
+- relationship to shared services
+
+C. Tag prompt registry entries as:
+- charlotte
+- cora
+- shared
+
+D. Tag major services similarly where practical:
+- charlotte-only
+- cora-only
+- shared
+
+E. Do NOT break existing behavior.
+This step is for clarity and future refactors, not massive rewiring.
+
+F. Add an internal architecture note file, for example:
+AI_PERSONA_BOUNDARY.md
+
+It should clearly document:
+- what Charlotte is
+- what Cora is
+- what is shared
+- what should not be built twice
+- how future services should choose the correct persona
+
+--------------------------------------------------
+PART 4 — IMPLEMENTATION RULES
+--------------------------------------------------
+
+1. Be surgical.
+Do not rewrite large working systems just for elegance.
+
+2. Preserve runtime behavior first.
+This is a cleanup/stabilization pass.
+
+3. Prefer extraction + import replacement over broad rewrites.
+
+4. If a prompt/helper is used by both Charlotte and Cora:
+mark it SHARED rather than duplicating it.
+
+5. Preserve content/discovery architecture.
+Do not let AI cleanup drift into creating duplicate object systems.  [oai_citation:3‡Core Architecture Principles.txt](sediment://file_00000000a2c871fdafa274c5e892729a)
+
+6. Preserve the operational role of Charlotte in intake/content/discovery workflows.  [oai_citation:4‡Additional source Rules.txt](sediment://file_00000000851471f8a4f141db80cac0ae)
+
+--------------------------------------------------
+PART 5 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return these outputs after implementation:
+
+OUTPUT A — CHANGED FILES
+List every file created, modified, deprecated, or removed.
+
+OUTPUT B — PROMPT REGISTRY MAP
+Show:
+- prompt key
+- persona owner
+- purpose
+- current consumer files
+
+OUTPUT C — DEDUPE SUMMARY
+Show:
+- duplicate found
+- source-of-truth implementation
+- deprecated/removed implementation
+- notes on any behavior differences
+
+OUTPUT D — PERSONA BOUNDARY SUMMARY
+Short clear summary of:
+- Charlotte responsibilities
+- Cora responsibilities
+- shared services
+
+OUTPUT E — RISKS / FOLLOW-UP
+Anything intentionally deferred to Phase 2 or Phase 3.
+
+--------------------------------------------------
+PART 6 — DO NOT CONTINUE PAST PHASE 1
+--------------------------------------------------
+
+Do not start feature work.
+Do not wire guide bubble.
+Do not add event preparation.
+Do not merge the full outreach engine yet unless needed only for safe boundary marking.
+Do not merge the full content generation pipeline yet unless needed only for safe boundary marking.
+
+Stop after the Phase 1 foundation cleanup is complete and report back.

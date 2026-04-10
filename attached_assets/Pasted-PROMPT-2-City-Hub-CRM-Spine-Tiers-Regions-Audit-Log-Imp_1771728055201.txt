@@ -1,0 +1,284 @@
+PROMPT 2 — City Hub CRM Spine + Tiers + Regions + Audit Log (Implement Now)
+
+AUTHORITY
+Implement exactly. Do not ask questions. Do not remove or delete existing data. Use migrations that preserve rows and backfill safely.
+
+GOAL
+Align City Hub backend CRM to the Presence-based “Living Spine”:
+- Presence is the CRM “contact” (business/org)
+- No deletions; full field-level audit trail (old -> new)
+- Rename “Territories” concept to “Regions” (Metro/Hub/County/ZIP)
+- Lock tier mapping:
+  - Listing tier: Free (unclaimed listing)
+  - Claimed: claim+confirm only (basic)
+  - Charter Microsite (paid) => Public label: Verified Microsite
+  - Enhanced Microsite (paid) => Public label: Premium
+- Charlotte (AI) guided claim flow sets “Verified by Charlotte” after walkthrough
+- Org gift: Charter can be granted by Charlotte ONLY AFTER claimed
+- Org Enhanced via 3 supporters @ $199; if supporters drop <3, 30-day grace then downgrade to Charter
+- Founder pricing retained while uninterrupted; missed renewal has 30-day grace; after that renews at standard price
+
+SCOPE
+Admin/Sales backend + database + shared helpers + minimal public label alignment (do not redesign public UI; just ensure labels/states compute correctly).
+
+--------------------------------------------
+1) DATA MODEL / ENUMS (ADD OR ADAPT)
+--------------------------------------------
+
+1A) Presence core state fields (business + org)
+Ensure each presence record can represent:
+
+CLAIM STATUS (ownership)
+- claim_status enum:
+  - "unclaimed"
+  - "claimed_pending_confirm"
+  - "claimed_confirmed"
+
+CHARLOTTE VERIFICATION
+- charlotte_verification_status enum:
+  - "not_verified"
+  - "verified_by_charlotte"
+- charlotte_verified_at timestamp nullable
+- charlotte_verified_by (actor id/type) optional
+
+MONETIZATION TIER
+- microsite_tier enum:
+  - "none"
+  - "charter"
+  - "enhanced"
+
+PUBLIC LABEL MAPPING (derived)
+- If claim_status="unclaimed" AND microsite_tier="none" => "Free"
+- If microsite_tier="charter" => "Verified"
+- If microsite_tier="enhanced" => "Premium"
+NOTE: "Claimed" is NOT a public tier; it is ownership state only.
+
+Do NOT delete existing tier fields. If existing fields exist (e.g., listing_tier), keep them but add derived mapping and backfill microsite_tier appropriately.
+
+1B) Regions (renamed territories)
+Create/confirm Regions:
+
+regions table:
+- id
+- name
+- region_type enum: "metro" | "hub" | "county" | "zip"
+- parent_region_id nullable (supports hierarchy Metro -> Hub -> County -> ZIP)
+- code nullable (e.g., county name, zip string)
+- is_active boolean
+
+region_members table:
+- region_id
+- user_id
+- role enum: "admin" | "manager" | "rep" | "viewer"
+
+presence_region_assignment:
+- presence_id
+- primary_region_id (one primary region)
+- assigned_at
+- assigned_by
+
+presence_owner_assignment:
+- presence_id
+- owner_user_id (sales rep)
+- assigned_at
+- assigned_by
+
+1C) CRM spine tables (admin-only)
+If CRM tables already exist, adapt to link to presence_id rather than separate “account” concepts.
+
+crm_presence:
+- id
+- presence_id (FK)
+- stage enum:
+  - "intake"
+  - "assigned"
+  - "contacted"
+  - "engaged"
+  - "awaiting_info"
+  - "claimed_confirmed"
+  - "charlotte_verified"
+  - "offer_presented"
+  - "active"
+  - "renewal_due"
+  - "closed_lost"
+- priority enum: "low" | "med" | "high"
+- owner_user_id
+- primary_region_id
+- source text (submission/import/discovered/event/etc.)
+
+crm_tasks:
+- id, presence_id, title, due_at, status, assigned_to_user_id, created_by_user_id, created_at
+
+crm_activity:
+- id, presence_id, activity_type (call/email/visit/note), notes, created_by_user_id, created_at
+
+1D) Subscriptions / Plans
+Create plan definitions (config or table). Must support founder vs standard pricing.
+
+plans table (or config constants):
+- "charter" (annual)
+  - founder_price = 99
+  - standard_price = 499
+- "enhanced" (annual)
+  - founder_price = 299
+  - standard_price = 699
+
+presence_subscriptions table:
+- id
+- presence_id
+- plan enum: "charter" | "enhanced"
+- price_tier enum: "founder" | "standard"
+- amount_cents
+- status enum: "active" | "past_due" | "canceled" | "expired"
+- start_at
+- end_at
+- grace_end_at (end_at + 30 days for renewal at same price_tier)
+- founder_locked boolean (true when price_tier="founder")
+- last_payment_ref nullable (Stripe later)
+
+PRICING RULE (LOCKED):
+- If price_tier="founder":
+  - renew at founder amount ONLY if renewed by grace_end_at
+  - if grace_end_at passes without renewal => set price_tier to "standard" for next renewal and record founder forfeited
+
+1E) Organization supporters (upgrade path to enhanced)
+Ensure org supporter records exist or create:
+
+org_supporters table:
+- id
+- org_presence_id
+- supporter_name or supporter_presence_id nullable
+- amount_cents = 19900
+- status enum: "active" | "inactive"
+- start_at
+- end_at nullable
+
+Org Enhanced eligibility:
+- required_active_supporters = 3
+- If active_supporters >= 3 => org may be (or remain) enhanced
+- If active_supporters < 3 AND org currently enhanced:
+  - set org_supporter_grace_started_at if null
+  - set org_supporter_grace_end_at = started_at + 30 days
+  - after grace_end_at, if still <3 => downgrade microsite_tier="charter"
+
+Store on org presence:
+- supporter_grace_started_at nullable
+- supporter_grace_end_at nullable
+
+1F) Field-level audit log (append-only)
+Create presence_audit_log:
+- id
+- presence_id
+- actor_type enum: "admin" | "sales" | "owner" | "charlotte_ai" | "system"
+- actor_user_id nullable
+- field_name text
+- old_value text/json
+- new_value text/json
+- changed_at timestamp
+- reason text nullable
+No deletes.
+
+Implement an audit helper:
+- Every update to any presence “spine” fields logs old/new.
+- Every tier change logs.
+- Every claim/confirm state change logs.
+- Every charlotte verification change logs.
+- Every region/owner assignment logs.
+- Every supporter grace start/end + downgrade logs.
+
+--------------------------------------------
+2) BACKFILL / MIGRATION SAFETY
+--------------------------------------------
+- Backfill microsite_tier using existing listing tier data:
+  - existing "Premium" => microsite_tier="enhanced"
+  - existing "Verified" => microsite_tier="charter"
+  - existing "Free" => microsite_tier="none"
+- Backfill claim_status:
+  - if existing record indicates claimed ownership => "claimed_confirmed"
+  - else "unclaimed"
+- Do not overwrite Stripe/customer ids if present.
+- Preserve all existing rows; do not drop columns unless absolutely required.
+
+--------------------------------------------
+3) CHARLOTTE (AI) VERIFICATION HOOK
+--------------------------------------------
+When Charlotte completes the guided claim walkthrough:
+- set charlotte_verification_status="verified_by_charlotte"
+- set charlotte_verified_at=now
+- audit log it with actor_type="charlotte_ai", reason="Charlotte walkthrough verified"
+
+NOTE: This is distinct from paid tier. A presence can be Charlotte-verified but still microsite_tier="none" unless they purchase/are gifted Charter.
+
+--------------------------------------------
+4) ORG CHARTER GIFT + SUPPORTER UPGRADE LOGIC
+--------------------------------------------
+Gift rules:
+- Charlotte can grant Charter ONLY if claim_status="claimed_confirmed"
+- Granting Charter creates/updates presence_subscriptions record:
+  - plan="charter"
+  - price_tier="founder" OR "standard"? (DEFAULT TO founder if gift is a founder-style benefit)
+  - status="active"
+  - set end_at = now + 1 year
+  - grace_end_at = end_at + 30 days
+- Set microsite_tier="charter"
+- Audit all changes with reason="Charlotte gifted Charter"
+
+Supporter upgrade rules:
+- Enhanced eligibility = 3 active supporters at $199 each
+- If org is enhanced and supporters drop below 3:
+  - set supporter_grace_started_at (if null)
+  - set supporter_grace_end_at = started + 30 days
+  - audit
+- If grace ends and supporters still <3:
+  - downgrade microsite_tier="charter"
+  - audit with reason="Supporter grace expired; downgraded"
+
+--------------------------------------------
+5) ADMIN UI (MINIMUM WIRES)
+--------------------------------------------
+5A) Presence Detail (admin)
+Add a “Spine” card showing:
+- claim_status
+- charlotte_verification_status + verified_at
+- microsite_tier (none/charter/enhanced)
+- public label (Free/Verified/Premium)
+- primary_region
+- owner rep
+- current subscription (plan, price tier, end_at, grace_end_at)
+
+5B) Presence Audit Timeline
+Add a tab/section “History” that renders field-level log:
+- field
+- old -> new
+- who (actor_type + user)
+- timestamp
+- reason
+
+5C) Regions Admin
+Add basic Regions management:
+- create/edit regions
+- set parent region
+- manage region members (role)
+
+5D) CRM Presence list
+Update existing “CRM Accounts” to operate on presences:
+- list presences with stage/owner/region
+- filters by region, owner, stage, tier
+- ability to assign owner + region
+- add tasks and activity
+
+--------------------------------------------
+6) ACCEPTANCE TESTS
+--------------------------------------------
+- Existing public businesses with tiers show the correct derived mapping:
+  - Free => microsite_tier none
+  - Verified => charter
+  - Premium => enhanced
+- Claim-only businesses do NOT become charter/enhanced automatically.
+- Charlotte verification can be toggled only by Charlotte flow/admin; logs audit.
+- Org supporter drop triggers grace timers and downgrade after 30 days.
+- Founder pricing renews at founder only within grace; otherwise converts to standard for next cycle.
+- Presence History shows field-level old/new changes for all spine fields.
+- No existing data is deleted.
+
+IMPLEMENT NOW.

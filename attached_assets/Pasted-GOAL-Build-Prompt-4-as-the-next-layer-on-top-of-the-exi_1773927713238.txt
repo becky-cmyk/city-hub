@@ -1,0 +1,365 @@
+GOAL:
+Build Prompt 4 as the next layer on top of the existing Cora foundation and Prompt 3.
+This prompt should bring together the major missing pieces we defined:
+1. Cora chat interface
+2. Plan → Approve → Build → Revert interaction layer
+3. Outreach draft system
+4. Visual/UI proposal system
+5. Shared AI response doctrine for recommendation/help-me-find requests
+6. Keep everything approval-first and non-destructive
+
+IMPORTANT:
+- DO NOT rebuild the existing Charlotte Content Engine
+- DO NOT duplicate existing marketing engine logic
+- DO NOT auto-apply code, config, publishing, or outreach actions
+- DO NOT break Prompt 1, Prompt 2, or Prompt 3 flows
+- Reuse existing patterns and admin auth
+
+==================================================
+PART 1 — CORA CHAT ADMIN PANEL
+==================================================
+
+Create a lightweight internal admin UI for Cora.
+
+Suggested route:
+- /admin/cora
+or the most consistent admin route already used in the app
+
+This should be an INTERNAL admin surface only.
+
+Core layout:
+- left column: conversation / requests / recent plans
+- main panel: Cora chat thread
+- right panel (or tabs): plan preview / outputs / suggestions / questions
+
+Minimum chat capabilities:
+1. enter freeform request
+2. submit to existing Cora service
+3. display:
+   - active hat
+   - message
+   - structured outputs
+   - whether approval is required
+4. support response cards for:
+   - plan preview
+   - source selections
+   - content outputs
+   - outreach drafts
+   - UI proposals
+
+Do NOT over-design this.
+Keep it practical, admin-first, and readable.
+
+==================================================
+PART 2 — APPROVAL / BUILD / REVERT ACTIONS IN UI
+==================================================
+
+Connect Prompt 3 workflow into the Cora panel.
+
+For plans:
+- show Plan summary
+- buttons:
+  - Approve Plan
+  - Modify Plan
+  - Reject Plan
+
+For builds:
+- show Build summary
+- show Replit-ready prompt if generated
+- buttons:
+  - Preview
+  - Mark Ready
+  - Revert
+- DO NOT auto-apply
+
+For revert:
+- show revert summary
+- show revert prompt / undo instructions
+- log rollback state
+- DO NOT auto-restore automatically
+
+Add a simple history view:
+- recent plans
+- recent builds
+- recent reverts
+
+==================================================
+PART 3 — OUTREACH DRAFT SYSTEM
+==================================================
+
+Create a lightweight outreach table if one does not already exist:
+
+outreach_assets
+- id
+- scope (platform / metro)
+- metro_id (nullable)
+- type (email, sms, call_script, follow_up)
+- title
+- subject_line (nullable)
+- body
+- persona_name
+- target_type (business, creator, sponsor, operator, general)
+- status (draft, approved, sent, archived)
+- created_by
+- created_at
+- updated_at
+
+Add Cora support for outreach requests.
+
+Examples:
+- "Create an email to recruit metro operators"
+- "Write a Crown nomination outreach message"
+- "Draft a sponsor follow-up"
+
+Behavior:
+- Hat should resolve to CMO and/or Editor
+- Save all outreach as DRAFT
+- Show copy in the UI
+- Allow:
+  - Approve
+  - Edit
+  - Copy
+  - Archive
+- DO NOT send anything automatically
+
+==================================================
+PART 4 — VISUAL / UI CHANGE PROPOSALS
+==================================================
+
+Create a lightweight UI proposal system.
+
+ui_change_proposals
+- id
+- scope (platform / metro)
+- metro_id (nullable)
+- name
+- change_type (colors, layout, typography, component, page)
+- description
+- preview_config (json)
+- code_snippet (text, nullable)
+- status (draft, approved, applied, reverted)
+- created_by
+- created_at
+- updated_at
+
+Cora should support requests like:
+- "Change the colors"
+- "Make this page cleaner"
+- "Update the homepage look"
+- "Adjust cards / spacing / header"
+
+Behavior:
+- Hat should resolve to Builder or CTO (visual mode)
+- Cora must respond with:
+  - what is changing
+  - why
+  - preview_config
+  - code snippet or implementation notes if relevant
+- Save as draft proposal
+- Allow:
+  - Approve
+  - Edit
+  - Copy code/prompt
+  - Revert later if applied manually
+
+IMPORTANT:
+This is proposal-first only.
+Do NOT directly change UI automatically.
+
+==================================================
+PART 5 — BUILDER VISUAL MODE
+==================================================
+
+Extend Builder hat behavior to include a visual mode.
+
+When request is visual/UI-focused:
+- return active hat as builder
+- include submode: visual
+
+Expected visual response structure:
+{
+  hat: "builder",
+  submode: "visual",
+  summary: "...",
+  preview_config: {
+    primaryColor: "",
+    accentColor: "",
+    backgroundColor: "",
+    typography: "",
+    spacing: ""
+  },
+  code_snippet: "...",
+  requiresApproval: true
+}
+
+==================================================
+PART 6 — SHARED AI RESPONSE DOCTRINE
+==================================================
+
+Implement the locked response doctrine as a shared helper / formatting layer for recommendation-style and help-me-find requests.
+
+Apply this doctrine to:
+- Cora
+- Charlotte
+- future metro AIs where possible
+
+Use it for requests involving:
+- local services
+- vendors
+- venues
+- rentals
+- agencies
+- professionals
+- "who does X"
+- "where can I find X"
+- "best options"
+- "help me find"
+
+Behavior standard:
+AI should answer like a practical local operator:
+- narrowed down
+- decision-oriented
+- useful
+- action-ready
+
+Required response shape when applicable:
+1. direct opening
+2. decision buckets
+3. option format:
+   - name
+   - what it is
+   - why it fits
+   - best for
+4. what to ask for
+5. what to expect
+6. recommendation
+
+Implementation request:
+- create a shared doctrine helper or formatter
+- wire it into Cora service response flow for recommendation-style requests
+- wire it into Charlotte/local persona responses where practical
+- DO NOT rebuild all prompts, just add the shared behavior layer where it fits
+
+==================================================
+PART 7 — SOURCE SELECTION UI SUPPORT
+==================================================
+
+If Cora auto-selects sources for content generation:
+- show the selected sources in the chat UI
+- show why they were selected
+- show buttons:
+  - Approve and Generate
+  - Replace Source
+  - Use My Own Source
+  - Cancel
+
+Do NOT generate if there is no explicit user approval after auto-selection.
+
+==================================================
+PART 8 — CORA QUESTIONS / SUGGESTIONS / KNOWLEDGE VIEW
+==================================================
+
+In the Cora admin panel, add lightweight tabs or sections for:
+
+1. Questions
+- pending
+- answered
+- ignored
+
+2. Suggestions
+- suggestion text
+- context
+- approved / not approved
+- executed / not executed
+
+3. Knowledge
+- category
+- key
+- value
+- confidence
+- needs_review
+
+Allow simple admin actions:
+- mark answered
+- mark approved
+- mark ignored
+- edit knowledge entry
+
+This is the “admin wedge” where Becky can teach Cora and review open gaps.
+
+==================================================
+PART 9 — RESPONSE GUARDRAILS
+==================================================
+
+Enforce these globally in this layer:
+
+- Cora must declare the active hat
+- Cora must not execute external actions automatically
+- Cora must not auto-send outreach
+- Cora must not auto-publish content
+- Cora must not auto-apply UI/code changes
+- Cora must require approval before generation when sources were auto-selected
+- all outputs should remain draft/proposal-first unless explicitly advanced by the user
+
+==================================================
+PART 10 — AUTH / ACCESS
+==================================================
+
+All Cora admin routes and test routes must be admin-protected.
+
+Use the same auth/admin pattern already used elsewhere in the app.
+
+This includes:
+- /admin/cora
+- /api/cora/*
+- any plan/build/revert actions
+- outreach actions
+- UI proposal actions
+
+==================================================
+PART 11 — DO NOT DUPLICATE EXISTING SYSTEMS
+==================================================
+
+DO NOT:
+- create a second marketing engine
+- create duplicate content tables if existing ones are enough
+- replace Charlotte Content Studio
+- replace existing queue logic
+- rebuild existing AI generation functions
+- create public-facing Cora UI yet
+
+DO:
+- reuse current Cora services
+- reuse Prompt 3 plan/build/revert workflow
+- reuse existing content generation engine
+- add bridge, UI, and management layer only
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+This prompt is successful if an admin can:
+
+1. open /admin/cora
+2. chat with Cora
+3. see the active hat and structured responses
+4. review and approve plans
+5. generate build prompts and see logs
+6. request revert instructions
+7. create outreach drafts and review them
+8. create visual/UI proposals and review them
+9. review Cora questions, suggestions, and knowledge entries
+10. use the shared response doctrine for recommendation/help-me-find type requests
+
+==================================================
+OUTPUT REQUIRED AFTER IMPLEMENTATION
+==================================================
+
+After implementation, provide a concise summary of:
+1. what new UI/routes were added
+2. which tables were added or changed
+3. how Prompt 3 was integrated
+4. how outreach was implemented
+5. how visual proposals were implemented
+6. how the shared response doctrine was wired in
+7. confirmation that nothing auto-applies or auto-sends

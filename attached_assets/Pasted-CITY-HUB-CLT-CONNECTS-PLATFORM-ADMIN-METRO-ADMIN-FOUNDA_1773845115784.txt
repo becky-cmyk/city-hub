@@ -1,0 +1,160 @@
+CITY HUB / CLT CONNECTS — PLATFORM ADMIN / METRO ADMIN FOUNDATION
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Implement the foundational separation between PLATFORM ADMIN and METRO ADMIN using the existing codebase structure revealed by the audit.
+
+This is a SURGICAL STRUCTURE PASS.
+Do NOT rebuild the whole admin system.
+Do NOT rebuild auth from scratch.
+Do NOT break current Charlotte / CLT operations.
+Do NOT attempt full Micro Hub Admin completion yet.
+
+AUDIT FINDINGS TO RESPECT
+
+The codebase already contains:
+- internal admin users with roles including SUPER_ADMIN, CITY_ADMIN, ZONE_ADMIN
+- cities table with multi-city support
+- territories with METRO and MICRO concepts
+- operators with CITY_CORE, METRO, MICRO
+- city switcher in admin sidebar
+- useAdminCitySelection hook
+- cityId on most content tables
+
+The real issue is:
+- Charlotte is hardcoded as the default/fallback in many places
+- role enforcement is inconsistent
+- many admin routes treat any admin as effectively global
+- Charlotte is acting as the accidental platform layer
+
+LOCKED TARGET STRUCTURE
+
+PLATFORM ADMIN
+- platform-wide ownership
+- platform-wide settings
+- metro/city creation and management
+- territory licensing / operator oversight
+- cross-metro controls
+
+METRO ADMIN
+- management of one metro/city hub only
+- local content, moderation, operations, feeds, imports, local workflows
+- must NOT function as platform owner
+
+ZONE / MICRO LEVEL
+- do not fully implement now
+- preserve existing role structures without expanding deeply in this prompt
+
+IMPLEMENTATION RULES
+
+1. Prefer the smallest stable changeset.
+2. Reuse the existing auth/session model.
+3. Keep migrations light.
+4. Preserve current working Charlotte functionality while removing implicit platform ownership assumptions.
+5. Do not force a full admin UI redesign.
+6. Do not introduce a new tenant architecture.
+7. Use the existing city context model wherever possible.
+
+REQUIRED CHANGES
+
+1. ROLE FOUNDATION
+Implement PLATFORM_ADMIN as the true platform-level role.
+
+Safe path:
+- add PLATFORM_ADMIN role to the internal admin role enum
+- treat SUPER_ADMIN as a temporary legacy alias for platform-level access during transition
+- keep CITY_ADMIN as the metro-level admin role
+- preserve ZONE_ADMIN without expanding it yet
+
+2. MIDDLEWARE / ACCESS ENFORCEMENT
+Add clear middleware / role checks for:
+- platform-level routes
+- metro-level routes
+
+Requirements:
+- create requirePlatformAdmin middleware that only allows PLATFORM_ADMIN and temporary legacy SUPER_ADMIN
+- update or wrap requireAdmin so metro-level routes remain accessible to CITY_ADMIN but scoped correctly
+- non-platform admins must not access platform-only routes
+
+3. CITY SCOPE ENFORCEMENT
+For CITY_ADMIN users:
+- enforce cityId scoping consistently where city-scoped admin data is loaded or mutated
+- prevent CITY_ADMIN from acting across all cities
+- continue allowing PLATFORM_ADMIN to switch cities using the existing city selector
+
+4. REMOVE CHARLOTTE HARDCODING IN ADMIN CONTEXTS
+Replace hardcoded Charlotte admin assumptions with active city context wherever low-risk and practical in this pass.
+
+Priority examples from audit:
+- admin panels using CITY_SLUG = "charlotte"
+- admin content tools
+- admin email / campaign tools
+- admin intake / moderation surfaces
+- AI/admin surfaces that should read active city context instead of fixed Charlotte assumptions
+
+Do not try to solve every public-facing Charlotte hardcode in this prompt.
+Focus first on admin / scope behavior and the minimum backend support required.
+
+5. ADMIN SIDEBAR SEPARATION
+Tag or separate sidebar/admin sections by scope:
+
+Platform scope:
+- city / hub management
+- territory licensing
+- operator assignment
+- platform defaults / global settings
+- cross-metro oversight tools
+
+Metro scope:
+- local content
+- local moderation
+- local feed/Pulse operations
+- local events
+- local imports
+- local editorial / CRM / outreach
+- local discovery operations
+
+Show platform sections only to PLATFORM_ADMIN / legacy SUPER_ADMIN.
+Show metro sections to CITY_ADMIN within their scoped city and to platform admins when acting in a city context.
+
+6. PRESERVE EXISTING WORKING MULTI-CITY BONES
+Do not remove:
+- city switcher
+- useAdminCitySelection
+- cityId isolation
+- cities table
+- territory structures
+- operator structures
+
+Build on them.
+
+DO NOT DO IN THIS PROMPT
+
+- full Micro Hub Admin implementation
+- full operator UI redesign
+- full multi-metro polish
+- total Charlotte debranding everywhere in public code
+- platform-wide settings override framework
+- cross-metro reporting dashboards
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. PLATFORM_ADMIN exists and works as the platform-level role
+2. SUPER_ADMIN is safely supported as a transition alias if needed
+3. CITY_ADMIN is clearly metro-scoped
+4. platform-only routes are protected from metro admins
+5. admin UI/navigation reflects platform vs metro separation at a basic stable level
+6. key admin Charlotte hardcoding is replaced with active city context
+7. current Charlotte operations still function
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. implement the smallest stable change set
+3. list exactly which files/routes/components were changed
+4. list what remains for later admin prompts

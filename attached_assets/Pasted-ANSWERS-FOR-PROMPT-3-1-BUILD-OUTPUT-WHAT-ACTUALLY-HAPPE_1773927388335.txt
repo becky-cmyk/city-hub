@@ -1,0 +1,111 @@
+ANSWERS FOR PROMPT 3
+
+1) BUILD OUTPUT — WHAT ACTUALLY HAPPENS
+Build does NOT mean auto-code changes.
+Build means:
+- generate the proposed implementation output
+- generate the Replit-ready prompt and/or structured change request
+- log the intended change
+- prepare preview/review materials
+- wait for my approval before anything is actually applied
+
+So yes:
+Cora should behave like a planning/operator layer that prepares the code/config/build instruction set for execution.
+That output may be:
+- a Replit prompt
+- a structured change request
+- a config update proposal
+- a UI proposal
+- a content/system change plan
+
+Default assumption:
+Human reviews first.
+Nothing auto-applies.
+
+2) SNAPSHOTS — WHAT THEY ARE
+For now, snapshots are PRE-CHANGE REFERENCE POINTS, not full automatic file dumps.
+
+Because builds are not auto-applied yet, snapshot_data should store lightweight pre-change context such as:
+- affected files list
+- relevant table/config names
+- prior status/state summary
+- current values if known
+- related plan/build IDs
+- optional notes on what the current version is before applying
+
+So think of snapshots right now as:
+“state references before change”
+not
+“full automated backups”
+
+Design it so it can support richer snapshots later, but do not overbuild it now.
+
+3) REVERT SCOPE — WHAT REVERT MEANS
+Revert means:
+- generate rollback instructions for something that was applied later
+- provide undo guidance
+- log that the build was rolled back or marked for rollback
+
+For now:
+Revert should generate:
+- revert_summary
+- revert_prompt_or_steps
+- related prior snapshot reference
+
+It should NOT auto-restore anything yet.
+
+So yes:
+revert = structured undo instructions + logged rollback state
+not full automatic restoration right now
+
+4) ADMIN UI — WHAT TO BUILD NOW
+API + Cora chat interaction is enough for now.
+
+Do NOT build a full frontend admin panel yet unless it is very light.
+Priority is backend workflow first.
+
+Acceptable now:
+- API endpoints
+- Cora chat flow
+- logs saved in DB
+
+Later we can add:
+- plan list
+- approve/reject buttons
+- build log viewer
+- revert history
+
+But not required in this prompt unless it is trivial.
+
+5) RELATIONSHIP TO EXISTING CORA TASK
+This should be part of the SAME overall Cora effort, but implemented as its own layer/module.
+
+So:
+- same broader Cora system
+- separate internal service layer
+
+Recommended structure:
+Cora Core
+- hats
+- memory
+- content bridge
+- source selection
+- plan/build/revert workflow
+
+Meaning:
+Do not treat this as a totally separate product.
+Do treat it as a distinct service layer inside the larger Cora architecture.
+
+FINAL IMPLEMENTATION DIRECTION
+
+Please implement Prompt 3 as:
+- a backend workflow layer inside the broader Cora system
+- no auto-apply
+- lightweight snapshots
+- revert as undo instructions/logging
+- API first, UI later
+
+Keep it modular so it can plug into:
+- Cora chat
+- future admin panel
+- future approval UI

@@ -1,0 +1,146 @@
+Audit the CURRENT Pulse feed implementation in this codebase.
+
+Goal:
+Determine exactly how Pulse is selecting, filtering, ranking, and returning items — especially why RSS/article content is underrepresented compared to events and business items.
+
+DO NOT change any code.
+This is a READ-ONLY audit.
+
+---
+
+PART 1 — SOURCE INVENTORY
+
+List ALL data sources currently feeding Pulse:
+- rss_items
+- articles
+- posts
+- events
+- businesses / hub presences
+- marketplace listings
+- jobs
+- any other sources
+
+For each source:
+- confirm if it is INCLUDED in Pulse (yes/no)
+- where in the code it is queried
+- what conditions must be met to be included (status, fields, flags)
+
+---
+
+PART 2 — ELIGIBILITY FILTERS
+
+For each source type, list ALL filters applied before items enter Pulse:
+
+Examples:
+- status = published / approved
+- has image
+- has summary
+- has location
+- date constraints
+- moderation flags
+
+Identify ANY filters that could exclude RSS/articles unintentionally.
+
+---
+
+PART 3 — FIELD NORMALIZATION
+
+Show how each source is mapped into the Pulse item format.
+
+For each source:
+- which fields are used for:
+  - title
+  - summary
+  - image
+  - timestamp
+  - location
+- identify missing or inconsistent fields
+
+Call out if RSS/articles are missing fields that other types have.
+
+---
+
+PART 4 — RANKING / SCORING LOGIC
+
+Explain EXACTLY how items are ordered.
+
+Include:
+- scoring formula (if exists)
+- weighting factors (recency, event timing, etc.)
+- any boosts (events, featured, etc.)
+- default sort (created_at, published_at, etc.)
+
+Specifically answer:
+- are events getting boosted?
+- are businesses getting boosted?
+- do RSS/articles have ANY boost?
+
+---
+
+PART 5 — DISTRIBUTION ANALYSIS
+
+Simulate or inspect the FIRST 20 items returned by Pulse.
+
+Return:
+- count by type:
+  - how many events
+  - how many RSS/articles
+  - how many businesses
+  - how many posts
+  - others
+
+Example output:
+- Events: X
+- Stories (RSS/articles): X
+- Businesses: X
+- Posts: X
+
+---
+
+PART 6 — DATA AVAILABILITY CHECK
+
+Check how many items are AVAILABLE vs how many are SHOWN.
+
+For each source:
+- total eligible items in database
+- items actually returned in top 20
+
+Example:
+- RSS eligible: 200
+- RSS shown in top 20: 1
+
+---
+
+PART 7 — FAILURE POINT IDENTIFICATION
+
+Based on all findings, clearly identify:
+
+1. Is RSS/article content:
+   - not being queried
+   - being filtered out
+   - losing in ranking
+   - missing required fields
+   - or being overshadowed by boosted types
+
+2. The TOP 3 reasons RSS/articles are not appearing in Pulse
+
+---
+
+PART 8 — SUMMARY (VERY CLEAR)
+
+Provide a concise summary:
+
+- What Pulse is doing today (1–2 paragraphs)
+- Why RSS/articles are underrepresented
+- Whether the issue is:
+  - filtering
+  - scoring
+  - distribution
+  - data quality
+
+Do NOT suggest fixes yet.
+Only explain current behavior.
+
+---
+
+Output everything clearly and structured.

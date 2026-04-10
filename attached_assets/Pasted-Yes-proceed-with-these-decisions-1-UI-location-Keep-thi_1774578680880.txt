@@ -1,0 +1,96 @@
+Yes — proceed with these decisions:
+
+1. UI location
+Keep this inside the existing Metro Intelligence panel for now.
+Add:
+- RSS Review
+- Editorial Control
+- Review Queue
+
+Do not create a separate standalone admin section yet.
+
+2. Schema additions
+Yes, add `pulseEligible` to `rss_items`.
+
+For `editHistory jsonb`:
+- allowed only if lightweight
+- do not build a full versioning/history system right now
+
+Minimum required remains:
+- `lastEditedBy`
+- `lastEditedAt`
+
+If `editHistory` is easy, keep it minimal:
+- changed fields
+- timestamp
+- editor id
+
+No separate table.
+
+3. Venue fields
+Yes, make `venueName`, `venueSlug`, and `venueAddress` editable now even if mostly empty.
+They should be visible/editable but not required.
+Do not block this task on venue linking.
+
+4. Scope
+Correct: this task should apply to `rss_items` only.
+Do not try to abstract a universal editor yet.
+We will extend the same pattern to contributor/upload/capture content later.
+
+5. Review queue threshold
+Yes, use `confidence < 0.7` as the initial low-confidence trigger.
+
+Also include items in review queue if:
+- `categoryCoreSlug` is missing
+- `geoPrimarySlug` is missing
+- `policyStatus = REVIEW_NEEDED`
+- routing is incomplete or obviously weak
+
+Additional guardrails:
+
+A. `pulseEligible` is Pulse-specific only
+`pulseEligible = false` should mean:
+- do not show in Pulse
+- item may still exist for other discovery surfaces later
+
+Do NOT treat `pulseEligible` as the same thing as public/private.
+
+Pulse should only include items where:
+- `publishStatus = PUBLISHED`
+- `policyStatus = ALLOW`
+- `pulseEligible = true`
+
+B. Keep category and geo separate in UI and API
+Do NOT flatten routing into one field or one generic selector.
+
+The editor must expose separate fields for:
+- categoryCoreSlug
+- categorySubSlug
+- geoPrimarySlug
+- geoSecondarySlug
+- hubSlug
+- countySlug
+- venue fields
+
+C. Show AI vs Final values distinctly
+The editorial UI should clearly show:
+- AI Suggested
+- Final Active
+
+Do not merge them into one set of fields.
+
+D. Review Queue quick actions
+Please include quick actions where practical:
+- Approve + Publish
+- Approve but exclude from Pulse
+- Edit
+- Suppress
+- Archive
+
+E. Feed service update
+Yes, update feed service to respect:
+- `publishStatus`
+- `policyStatus`
+- `pulseEligible`
+
+Proceed with this task on that basis.

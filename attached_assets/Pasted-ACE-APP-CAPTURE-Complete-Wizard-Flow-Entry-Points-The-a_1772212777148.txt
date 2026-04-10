@@ -1,0 +1,162 @@
+ACE APP → CAPTURE: Complete Wizard Flow
+Entry Points
+The amber Catch / Scan button on the Face App routes to /capture with optional query params:
+
+/capture — personal capture, owned by user
+/capture?org=X — capture associated with an organization
+/capture?org=X&guest=true — unauthenticated guest check-in for an org event
+The 8 Named Steps
+type_select → doc_subtype ─────────────┐
+           → route_list_upload → scanning → route_list_review
+           → capture ──────────→ scanning → form → confirm → [saved]
+STEP 1 — type_select — "What are you capturing?"
+The first screen the user sees. Four tile choices:
+
+Tile	What it does
+Person / Contact	Sets intakeType: "person" → goes to capture step
+Receipt	Sets intakeType: "document", presets documentCategory: "receipt" → goes to capture
+Document or ID	Goes to doc_subtype step to pick the specific document type
+Route List	Producer's Desk only — goes to route_list_upload
+STEP 2A — doc_subtype — "Document or ID?"
+10 document category tiles:
+
+Driver's License, Passport, State ID, Insurance Card, Medical Card, Business License, Certificate, Contract, Receipt, Other
+Selecting any one sets documentCategory and goes to capture step
+STEP 2B — route_list_upload (Producer's Desk only)
+Upload panel for Kemper route lists:
+
+Accept: PDF (preferred) or one or multiple images
+On submit: goes to scanning with live status messages: "Reading files..." → "Extracting text from PDF..." → "Analyzing image..." → "Extracting client records with AI..."
+Calls POST /api/ocr/extract-route-list
+On success: runs deduplicateAndBucketRecords() locally (merges same name + phone OR same name + address), assigns client buckets, goes to route_list_review
+On failure: returns to route_list_upload with error toast
+STEP 2C — route_list_review
+A filterable table of every extracted client record from the route list:
+
+Each row: name, address, phone, amount due, policy flags, client bucket badge (Current | Lapsed < 6mo | Lapsed 6mo-2yr | Lapsed 2yr+ | New Business | Needs Review)
+Merged duplicates are collapsed into one row with merged family group notes
+Checkboxes to select/deselect individual records
+"Import Selected" creates one intake item per selected record, then redirects to inbox
+Bucket logic (runs client-side at import time):
+
+NB flag → New Business
+LPS flag + last paid ≤ 6mo → Lapsed Warm
+LPS flag + last paid 6-24mo → Lapsed Mid
+LPS flag + last paid 2yr+ → Lapsed Cold
+Last paid ≤ 3mo → Current
+Arrears status → falls into lapsed tiers by date
+Anything else → Needs Review
+STEP 3 — capture — "Capture Method"
+For Person intakeType — 6 methods:
+
+1. Photo (captureMethod: "photo")
+
+Opens rear-facing live camera (tries { facingMode: "environment" } with 2 fallback attempts)
+User taps shutter → captures frame to canvas → converts to base64 image
+Immediately calls POST /api/ai/analyze-business-card-image with the base64 image
+GPT-4 Vision extracts: name, email, phone, company, jobTitle, website, address
+Extracted fields auto-populate the form
+Option to capture back of card too (stored as businessCardBackImageUrl)
+Goes to scanning (brief) → form
+2. Voice (captureMethod: "voice")
+
+Browser MediaRecorder starts recording audio chunks into audioChunksRef
+Red pulsing mic indicator, elapsed timer shown
+On stop: combines chunks into one Blob, sends to POST /api/voice-transcribe (multipart)
+Server runs OpenAI Whisper → returns { transcript, extractedName }
+Extracted name pre-fills the name field; full transcript stored in audioTranscription
+Goes straight to form
+After form submit, background job runAutoAnalysis() fires: POST /api/ai/analyze-voice-note enriches with category suggestion, summary, action items
+3. QR Scan (captureMethod: "qr_scan")
+
+Live camera feed, scanned frame by frame with jsQR library
+Three outcomes:
+If raw text contains BEGIN:VCARD → POST /api/ocr/vcard to parse the vCard fields
+If text is a URL → POST /api/ocr/vcard-url to try fetching contact data from the URL
+Otherwise → stores raw text as qrLinkUrl in form
+Goes to form with fields pre-filled if vCard data was found
+4. Manual (captureMethod: "manual")
+
+No capture at all — goes directly to form with empty fields
+5. Handwrite (captureMethod: "handwrite")
+
+Camera capture of a handwritten note or napkin
+Image stored as handwritingImageUrl
+Goes to form
+After form submit, background job fires: POST /api/ai/analyze-handwriting extracts name, contacts, text from the handwritten image
+6. File Upload (captureMethod: "file_upload")
+
+File picker — accepts images
+Same OCR path as photo capture
+Goes to form
+For Document / ID intakeType:
+
+Only Photo or File Upload available
+Image stored as documentImageUrl
+No AI extraction on the capture step — goes to form for manual entry
+STEP 4 — scanning — Processing state
+Full-screen spinner with status text
+Used for: photo OCR processing, QR scanning, voice transcription, route list AI extraction
+Automatically exits to form when processing finishes (or route_list_review for route lists)
+If offline and captureMethod is photo: shows offline warning — photo OCR requires connectivity
+STEP 5 — form — "Contact Details"
+The main data entry / review screen:
+
+Fields:
+
+Name (required), email, phone, company, jobTitle, website, address
+Category (personal / business / family / community / etc.)
+Why Captured (brief context note)
+Notes (longer field — AI can polish via "Polish with AI" button)
+Contextual extras:
+
+If intakeType === "document": shows documentTitle + documentCategory fields
+If captureMethod === "qr_scan": shows the QR link as a preview chip
+If captureMethod === "voice": shows the voice transcript in a read-only box
+If org context: shows "Capturing for [Org Name]" banner
+Hat selector: dropdown of user's hats (only for business tier users)
+Offline mode: form still works, data saved to IndexedDB on submit
+Phone contact picker (iOS/Android native):
+
+On supported browsers: "Pick from Contacts" button uses navigator.contacts.select() (Contact Picker API)
+Auto-fills name, email, phone from the device's native contacts app
+STEP 6 — confirm — "Confirm & Save"
+Summary card showing all entered data before committing:
+
+Name, email, phone, company, category, notes, attached images
+"Save to Inbox" button
+On save:
+
+Calls POST /api/inbox-intake with the full capture payload
+Toast: "Contact captured! Added to your Inbox for review."
+Background: checkDuplicatesAfterCapture() — calls GET /api/contacts/check-duplicates?name=X&email=Y&phone=Z
+If duplicates found: amber warning toast ("Possible duplicate — check inbox before promoting")
+Background (voice/handwrite only): runAutoAnalysis() enriches the saved item with AI
+If server returns 402: shows paywall/upgrade dialog
+If save fails: falls back to IndexedDB offline storage, syncs when connection returns
+After save: resets all state back to type_select so the page is ready for the next capture immediately
+
+What "Inbox-First" Means
+Every single capture — regardless of method — lands in inbox_intake_items first. Nothing goes directly to living_contacts. The user then goes to the Inbox page to:
+
+Review the AI-enriched data
+Edit / confirm fields
+Promote to a full Living Contact record
+Or discard/archive
+The promote action is what moves data from inbox_intake_items → living_contacts (with a new LC number assigned).
+
+The Full Data Package Sent to the Server
+{
+  source: "face_app",
+  captureMethod: "photo" | "voice" | "qr_scan" | "manual" | "handwrite" | "file_upload",
+  intakeType: "person" | "document" | "id_card",
+  name, email, phone, company, jobTitle, website, address,
+  qrLinkUrl, vcardData,
+  audioTranscription, audioUrl,
+  category, whyCaptured, notes,
+  documentCategory, documentTitle,
+  documentImageUrl, businessCardImageUrl, businessCardBackImageUrl,
+  collectedWithHatId,
+  organizationId
+}
+That's every path, every branch, and every AI call in the entire capture wizard.

@@ -1,0 +1,352 @@
+You are continuing work INSIDE the existing City Hub / Charlotte Hub application.
+
+DO NOT build a separate platform.
+DO NOT create a new SaaS.
+DO NOT rebuild the hub.
+DO NOT generalize into a full event enterprise suite.
+
+You are extending the existing Events capability so events can support real organizer operations inside the current hub ecosystem.
+
+This prompt assumes Prompt 1, Prompt 2, and Prompt 3 already exist:
+- event model
+- event micro-sites
+- invitations / RSVP
+- public / unlisted / private visibility
+- event discovery layer
+- recurring event series
+- venue event engine
+- Presence integration
+- Pulse integration
+
+Now build the **Event Back Office** with sponsor management, vendor management, and internal operational workflows.
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Allow organizers and venues to manage the business side of events inside the hub.
+
+This includes:
+1. sponsors
+2. vendors / exhibitors
+3. event partner records
+4. public sponsor/vendor display on event pages
+5. internal workflow tracking
+6. conversion of sponsors/vendors into hub opportunities and Presences later
+
+This is NOT just for public display.
+This is also an internal organizer tool.
+
+==================================================
+PHASE 1 — SPONSOR MODEL
+==================================================
+
+Create an EventSponsor model.
+
+EventSponsor
+- id
+- event_id (nullable if attached at series level)
+- event_series_id (nullable)
+- presence_id (nullable if sponsor already has Presence)
+- sponsor_name
+- sponsor_contact_name (nullable)
+- sponsor_email (nullable)
+- sponsor_phone (nullable)
+- sponsor_website (nullable)
+- sponsor_logo_url (nullable)
+- sponsor_tier
+    title
+    presenting
+    gold
+    silver
+    bronze
+    supporting
+    community_partner
+    custom
+- sponsor_tier_label (nullable)
+- status
+    prospect
+    invited
+    confirmed
+    declined
+    past
+- notes (nullable)
+- display_publicly (boolean default true)
+- created_at
+- updated_at
+
+Rules:
+- sponsor can exist without an existing Presence
+- if sponsor later becomes a Presence, keep linkable relationship
+- sponsors can attach to a single event OR an event series
+
+==================================================
+PHASE 2 — VENDOR / EXHIBITOR MODEL
+==================================================
+
+Create an EventVendor model.
+
+EventVendor
+- id
+- event_id (nullable)
+- event_series_id (nullable)
+- presence_id (nullable if vendor already has Presence)
+- vendor_name
+- vendor_contact_name (nullable)
+- vendor_email (nullable)
+- vendor_phone (nullable)
+- vendor_website (nullable)
+- vendor_logo_url (nullable)
+- vendor_category (nullable)
+- booth_label_or_location (nullable)
+- status
+    applied
+    invited
+    approved
+    declined
+    confirmed
+    past
+- notes (nullable)
+- display_publicly (boolean default true)
+- created_at
+- updated_at
+
+Rules:
+- vendors may be exhibitors, food vendors, artists, makers, booths, service vendors, nonprofits, etc.
+- vendors can exist before they become Presences in the hub
+- if they are already a Presence, link them
+
+==================================================
+PHASE 3 — EVENT PARTNER / SUPPORTING ROLE FLEXIBILITY
+==================================================
+
+If helpful, create a lightweight generic relationship pattern or helper so events can also support:
+- partner
+- community supporter
+- media partner
+- venue partner
+
+Do NOT overengineer this.
+If a simple sponsor/vendor split is enough, keep it simple.
+Only add a generic partner relation if it clearly improves implementation.
+
+==================================================
+PHASE 4 — EVENT BACK OFFICE DASHBOARD
+==================================================
+
+Extend the event dashboard.
+
+Route example:
+- /dashboard/events
+- /dashboard/events/{id}
+- or the route structure most consistent with the existing app
+
+For each event or series, add tabs/sections for:
+
+Overview
+Invitations / RSVP
+Sponsors
+Vendors
+Files / Assets (simple placeholder if needed)
+Analytics (lightweight)
+Archive / History
+
+Sponsor section should allow:
+- add sponsor manually
+- edit sponsor
+- update tier
+- mark status
+- toggle public display
+- link to existing Presence if available
+
+Vendor section should allow:
+- add vendor manually
+- approve/reject vendor
+- edit booth/category
+- toggle public display
+- link to existing Presence if available
+
+Keep UI functional, simple, and consistent with the current admin/dashboard patterns.
+
+==================================================
+PHASE 5 — PUBLIC EVENT PAGE DISPLAY
+==================================================
+
+On public event micro-sites and series pages, add optional sections:
+
+Sponsors
+Vendors / Exhibitors
+
+Sponsors display:
+- logo
+- name
+- tier label
+- link to Presence if available
+- external link if no Presence exists and link is provided
+
+Vendors display:
+- logo if available
+- name
+- category if available
+- booth/location if available
+- link to Presence if available
+
+Rules:
+- only display if display_publicly = true
+- do not display prospects publicly
+- only show statuses appropriate for public viewing
+  e.g. confirmed / approved
+
+==================================================
+PHASE 6 — INTERNAL WORKFLOW STATUSES
+==================================================
+
+This system must support actual organizer workflow.
+
+Sponsor statuses:
+- prospect
+- invited
+- confirmed
+- declined
+- past
+
+Vendor statuses:
+- applied
+- invited
+- approved
+- declined
+- confirmed
+- past
+
+These statuses are primarily for internal use.
+
+Do NOT force all statuses into public UI.
+Public UI should only surface appropriate confirmed/approved relationships.
+
+==================================================
+PHASE 7 — OPPORTUNITY / LEAD READINESS
+==================================================
+
+Build this so unlinked sponsors/vendors can later become:
+- Presences
+- leads
+- opportunity records
+
+If there is already an opportunity or CRM-like table/pattern in the hub, reuse it.
+If not, keep this prompt light and simply ensure sponsor/vendor records store enough contact info for later conversion.
+
+At minimum:
+- preserve contact data
+- preserve relationship to event or series
+- preserve status history where practical
+
+==================================================
+PHASE 8 — SUBMISSION / APPLICATION SUPPORT
+==================================================
+
+Add lightweight intake flows where useful.
+
+For vendors:
+- allow vendor application submission from public event pages if enabled
+- submission should create EventVendor in applied status
+
+For sponsors:
+- optional simple “Interested in Sponsoring?” intake form if enabled
+- submission should create EventSponsor in prospect or invited status depending on your implementation choice
+
+Keep this optional and lightweight.
+Do NOT build a full commerce workflow here.
+
+==================================================
+PHASE 9 — PRESENCE LINKING
+==================================================
+
+If sponsor/vendor already has a Presence:
+- link directly to that Presence
+
+If not:
+- allow placeholder unclaimed record
+- preserve future ability to connect them to a Presence later
+
+This matters because events should help bring sponsors/vendors onto the hub.
+
+==================================================
+PHASE 10 — EVENT SERIES SUPPORT
+==================================================
+
+Sponsors and vendors may attach at:
+- single occurrence level
+- event series level
+
+Examples:
+- weekly trivia night with the same sponsor every week
+- one-time pop-up market with one-day vendors
+- annual event series with rotating sponsors
+
+Support both relationships without duplicating unnecessary data.
+
+==================================================
+PHASE 11 — FILTERS / SEARCH / ADMIN USABILITY
+==================================================
+
+Inside the back office, allow filtering by:
+
+Sponsors:
+- status
+- tier
+- linked vs unlinked Presence
+
+Vendors:
+- status
+- category
+- linked vs unlinked Presence
+
+This does not need to be fancy.
+Just make it usable for real event management.
+
+==================================================
+PHASE 12 — PULSE + CONTENT READINESS
+==================================================
+
+Prepare sponsor/vendor records so they can later feed:
+- Pulse highlights
+- sponsor spotlights
+- vendor spotlights
+- event recap content
+
+Do NOT build the full content engine here.
+Just make sure data is structured well enough for that future use.
+
+==================================================
+PHASE 13 — GUARDRAILS
+==================================================
+
+DO NOT:
+- build invoicing
+- build sponsor billing
+- build full exhibitor commerce
+- build contract systems
+- build complicated CRM systems
+- create a separate event operations platform
+
+DO:
+- add sponsor/vendor management inside the existing event system
+- make it useful for real organizer workflows
+- preserve future ability to connect sponsors/vendors to Presences and opportunities
+- keep it modular and readable
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+An organizer or venue can:
+
+1. add sponsors to an event or event series
+2. add vendors/exhibitors to an event or event series
+3. track statuses internally
+4. choose what displays publicly
+5. show sponsors/vendors on event pages
+6. preserve sponsor/vendor records even if they are not yet hub Presences
+7. manage this work from the event back office
+
+After this prompt, the Events capability should begin functioning like a real organizer operations layer inside the hub, not just a public event calendar.

@@ -1,0 +1,204 @@
+PROMPT 7 — PHASE 2D: INTEGRATION TESTING + END-TO-END WIRING
+
+You are implementing the integration/testing pass after Task A, Task B, and Task C.
+
+Prerequisites:
+- Task A complete (orchestrator core)
+- Task B complete (proposal engine + action templates + batch)
+- Task C complete (recommendation/trust/geo adapter)
+
+DO NOT implement:
+- command center UI
+- Phase 3 lifecycle/sales engine
+- new recommendation/scoring engines
+- broad refactors
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Verify that Charlotte now works end-to-end across the new Phase 2 connection layer.
+
+Test and tighten the full flow:
+
+intent
+→ entity resolution
+→ routing
+→ proposal/recommendation
+→ action execution
+
+This is an integration pass, not a feature expansion pass.
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1. Do NOT rebuild systems.
+2. Do NOT add duplicate logic.
+3. Fix only what is needed to make the connected flow reliable.
+4. Prefer small integration fixes over architecture rewrites.
+5. Reuse existing systems as source of truth.
+
+--------------------------------------------------
+PART 1 — VERIFY TASK A/B/C WIRING
+--------------------------------------------------
+
+Audit and confirm the integration points between:
+
+- charlotte-chat-routes.ts
+- charlotte-orchestrator.ts
+- charlotte-proposal-engine.ts
+- charlotte-action-templates.ts
+- charlotte-batch-processor.ts
+- charlotte-recommendation-adapter.ts
+- existing executeCharlotteTool flow
+- existing trust/scoring/recommendation sources
+- existing claim/story/CRM/outreach/event/jobs/marketplace flows
+
+Confirm:
+- orchestrator is actually being called
+- proposal mode actually returns proposals
+- operator mode can execute via templates
+- search/concierge mode uses the recommendation adapter
+- existing direct routes still work and were not broken
+
+--------------------------------------------------
+PART 2 — CREATE TEST SCENARIOS
+--------------------------------------------------
+
+Run realistic end-to-end test scenarios for at minimum these cases:
+
+1. OPERATOR TEST
+“Start a TV venue for ABC Coffee in Pineville”
+
+2. PROPOSAL TEST
+“What should we do with these expo leads?”
+
+3. BATCH TEST
+“These are expo leads — create stories and outreach”
+
+4. SEARCH/RECOMMENDATION TEST
+“Who should I talk to for brunch in Ballantyne?”
+or equivalent local recommendation request
+
+5. STORY TEST
+“Create a story for this business”
+
+6. CLAIM TEST
+“Set up a claim listing flow for this business”
+
+7. CROWN/ACTIVATION TEST
+“Flag this as a Crown candidate”
+
+For each test, verify:
+- intent parsed correctly
+- entity resolved correctly
+- route chosen correctly
+- proposal/recommendation generated correctly
+- execution calls the expected existing system
+- failures are handled cleanly
+
+--------------------------------------------------
+PART 3 — FIX INTEGRATION GAPS ONLY
+--------------------------------------------------
+
+If tests reveal issues, fix only the integration gaps such as:
+
+- wrong mode detection
+- weak entity resolution handoff
+- broken template routing
+- missing recommendation adapter call
+- missing structured return shape
+- brittle batch processing handoff
+- confirmation flags not being respected
+
+Do NOT:
+- redesign the whole parser
+- rewrite scoring/trust systems
+- rebuild proposal logic from scratch
+unless absolutely required
+
+--------------------------------------------------
+PART 4 — VERIFY NO PARALLEL ENGINE WAS CREATED
+--------------------------------------------------
+
+Explicitly confirm:
+
+- no second recommendation engine was created
+- no second scoring engine was created
+- Charlotte is using existing trust/scoring/recommendation logic as source of truth
+- the new layer is orchestration/adapter only
+
+If any parallel logic slipped in, remove or collapse it now.
+
+--------------------------------------------------
+PART 5 — VERIFY EXPO / FIELD-CAPTURE READINESS
+--------------------------------------------------
+
+Because real-world capture is a priority, verify that Charlotte can support the beginning of the expo/field workflow:
+
+- grouped items can be processed as a batch
+- proposals can be produced per item
+- low-confidence matches are flagged instead of guessed
+- outputs are usable for next-phase expo workflow expansion
+
+Do NOT build the full expo UI here.
+Just confirm the connection layer supports it.
+
+--------------------------------------------------
+PART 6 — LIGHT HARDENING
+--------------------------------------------------
+
+Add only light hardening where needed:
+
+- null/undefined guards
+- safer structured returns
+- clearer error messages
+- safer fallbacks when entity resolution is weak
+- consistent response objects across modes
+
+No broad cleanup pass.
+
+--------------------------------------------------
+PART 7 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — INTEGRATION STATUS
+- what is fully wired
+- what is partially wired
+- what failed and was fixed
+
+OUTPUT B — TEST SCENARIOS RUN
+For each scenario:
+- input
+- detected mode/intent
+- entity resolution result
+- route selected
+- proposal/recommendation/execution result
+
+OUTPUT C — FILES MODIFIED
+List only files changed in this integration pass
+
+OUTPUT D — GAPS STILL DEFERRED
+Examples:
+- full expo workflow UI
+- Phase 3 lifecycle/sales engine
+- command center UI
+- inbox redesign beyond current use
+- inventory caps / cadence rules
+
+OUTPUT E — CONFIRMATION
+Explicitly confirm:
+- no duplicate recommendation engine
+- no duplicate scoring engine
+- existing trust/scoring systems remain source of truth
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after integration/testing is complete.
+
+Do NOT begin Phase 3 yet.

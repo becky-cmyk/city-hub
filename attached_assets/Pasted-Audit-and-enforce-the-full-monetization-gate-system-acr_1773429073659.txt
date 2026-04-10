@@ -1,0 +1,222 @@
+Audit and enforce the full monetization gate system across the platform. Do not redesign the product. Match the existing app structure and add/confirm gating, pricing hooks, entitlement checks, admin controls, and UI messaging for each layer below.
+
+OBJECTIVE
+We are moving to a monthly-first pricing model with optional annual pricing. The platform is hub-scoped. Nothing is global except the master account/profile. Every paid feature, category, micro, job, promotion, and capability must be tied to a specific hub presence. I need a full audit plus implementation pass to make sure gates, levels, limits, and enforcement are consistent everywhere.
+
+CORE RULES
+1. Hub is king.
+   - Every feature lives inside a hub.
+   - A business has a master presence/account, but all activity is hub-scoped.
+   - A job in one hub is only in that hub.
+   - A category in one hub is only in that hub.
+   - A micro in one hub/category is only in that hub/category.
+   - Ask-an-Expert eligibility is hub + category + micro based.
+   - Nothing auto-carries across hubs.
+
+2. Presence structure.
+   - Master account/profile exists.
+   - One active paid Presence includes:
+     - 1 home hub/location coverage unit
+     - 1 category
+     - 3 micros under that category
+     - base participation rights
+   - Additional hubs/locations are separate paid monthly add-ons.
+   - Additional categories are separate paid monthly add-ons per hub.
+   - Additional micros are separate paid monthly add-ons per category per hub.
+
+3. Monthly-first pricing with optional annual.
+   Use these clean pricing targets and wire them into config/admin:
+   - Founder Presence: $19/mo or $199/yr
+   - Standard Presence: $29/mo or $299/yr
+   - Additional hub/location: $19/mo or $199/yr
+   - Additional category (per hub): $9/mo or $89/yr
+   - Additional micro (per category per hub): $3/mo or $29/yr
+   - Keep capability add-ons configurable in admin because we are still refining exact final pricing.
+   - Annual pricing should be roughly 10% off and use clean numbers only.
+
+4. Founder / grandfathering rules.
+   - Founder pricing stays as long as the subscriber remains active.
+   - 7-day grace period on failed/cancelled billing.
+   - After grace period, shut off gated access.
+   - If they return later, they return at current offered pricing, not founder pricing.
+   - Build support for plan versioning / grandfathered plan preservation.
+
+5. Verification / ecosystem entry.
+   - Keep/support the $1 verification transaction for businesses that want to post or actively participate in the ecosystem.
+   - Free profiles may exist only as limited/non-posting/non-participating records if already supported, but they must not be able to post/use paid tools without verification + correct entitlements.
+   - Audit all post/create/update actions to ensure proper verification and entitlements.
+
+6. Everything capped, then paid expansion.
+   - No unlimited anything.
+   - Base allocation, cap, then paid add-on.
+   - If they pay for more, they can have more, subject to existing moderation/review rules.
+
+MONETIZATION / ENTITLEMENT LAYERS TO AUDIT AND ENFORCE
+
+A. PRESENCE LAYER
+Audit and enforce:
+- Presence subscription gate
+- Founder vs Standard plan versioning
+- Annual vs monthly support
+- Grace period handling
+- Active/inactive state effects
+- UI messaging for locked states
+- Admin controls for plan pricing and active versions
+
+B. HUB COVERAGE LAYER
+Audit and enforce:
+- 1 included home hub/location with base Presence
+- Additional hub/location requires separate paid entitlement
+- Every hub should behave like its own mini-site presence
+- Prevent posting/visibility in hubs not purchased/activated
+- Ensure jobs/events/listings/categories/micros/expert routing only work inside active purchased hub presences
+- Admin should show all hub entitlements per account
+
+C. CATEGORY LAYER
+Audit and enforce:
+- 1 category included with each hub presence
+- Additional categories are paid add-ons per hub
+- Categories are not global
+- Categories should unlock category-specific visibility and lead routing only within that hub
+- Ask-an-Expert lead eligibility depends on active category within that hub
+- UI must show included category vs add additional category
+- Admin must be able to review/edit category entitlements
+
+D. MICRO LAYER
+Audit and enforce:
+- 3 included micros per category
+- Additional micros are paid add-ons
+- Micros are category-specific only, not global tags
+- Micros are required for deeper expertise routing and discovery
+- Ask-an-Expert routing must honor hub + category + micro
+- Search/discovery must only show active purchased micros
+- UI must display included micros and locked/additional micros clearly
+- Admin must be able to manage micro entitlements
+
+E. CAPABILITY / TOOL LAYER
+Audit all existing modules and make sure each can be turned on/off by entitlement at the hub level where applicable:
+- Jobs / Employer tools
+- Marketplace / Social Selling
+- Creator / Podcast / Media tools
+- Ask an Expert / professional lead-gen tools
+- Events
+- Provider features
+- Community posting privileges
+- Any additional platform tools already built
+
+Requirements:
+- Capability subscriptions should remain configurable in admin
+- Capability access should be hub-aware where applicable
+- Access is subscription/add-on based; amplification is credit based
+- Do not hardcode final pricing for these unless already stable in config
+- Add clear entitlement checks at server/API/UI layer
+
+F. JOBS / EMPLOYER GATING
+Audit and enforce:
+- Job tools are a separate capability/add-on
+- Jobs are hub-scoped only
+- Base included amount should remain configurable
+- Active jobs are capped, then renewals/additional postings should use credits or paid rules already supported
+- Job listings must require real structured titles, not vague “hiring now” posts
+- A job posted in one hub does not appear in all hubs
+- Employer/recruiting agency flows should respect hub entitlements and capability entitlements
+
+G. ASK-AN-EXPERT / LEAD GATING
+Audit and enforce:
+- Expert access is capability-gated
+- Lead eligibility only for active purchased hub + category + micro combinations
+- No category = no leads for that category
+- No micro = no deep specialty routing
+- Make sure professional tools can be priced/configured separately from lighter participation tools
+- Support higher-tier/professional pricing hooks in admin/config
+
+H. CROWN / AWARDS GATING
+Audit and enforce:
+- Crown participation tied to active hub presence
+- Category participation tied to active category in that hub
+- Promotion/amplification tied to credits / eligible paid access
+- Keep support for finalist/winner logic already built
+- Do not redesign Crown flows; only make sure eligibility and gates are correct
+
+I. CREDITS
+Audit and enforce the shared credit wallet model:
+- Monthly included credits can expire monthly
+- Purchased credit packs do not expire
+- Wallet should spend monthly included credits first, then banked credits
+- Credits should be usable across allowed actions
+- Add/configure a credit action table so actions can have different costs
+- Initial example structure is okay to support:
+  - small boosts lower cost
+  - jobs / promotions moderate cost
+  - stronger rotations / Crown promotions higher cost
+- Keep all credit costs configurable in admin, not hardcoded in many places
+
+J. SEPARATE NON-CREDIT MEDIA PRODUCTS
+Do not mix these into memberships/credits:
+- Radio ads
+- TV/venue ads
+- Print publication ads
+- Sponsorships and certain media buys
+These can be eligible via access rules but must remain separate fee products.
+Audit current implementation to make sure they are not incorrectly bundled into credits or base Presence.
+
+K. ENTERPRISE GATE
+Audit and confirm enterprise gating triggers:
+- corporate-owned business
+- national/corporate chain
+- other defined enterprise criteria already supported
+If enterprise, route out of self-serve flow and flag for manual/internal handling.
+
+WHAT I NEED REPLIT TO DO
+1. Audit the current codebase, schemas, route handlers, entitlement logic, admin screens, and UI states against the rules above.
+2. Produce a gap list of what already exists vs what is missing/broken/inconsistent.
+3. Implement the missing gates and enforcement.
+4. Centralize pricing/plan/entitlement config where possible.
+5. Ensure all create/update/post/promote actions check:
+   - verification
+   - active subscription
+   - active hub entitlement
+   - active category entitlement where required
+   - active micro entitlement where required
+   - capability entitlement where required
+   - credit balance where required
+6. Update admin screens so pricing, plan versions, hub/category/micro entitlements, and capability pricing can be managed cleanly.
+7. Update owner-facing UI so locked states are understandable:
+   - what is included
+   - what is locked
+   - what requires another hub
+   - what requires another category
+   - what requires another micro
+   - what requires a capability
+   - what requires credits
+8. Keep all existing product direction and platform architecture intact. This is an audit-and-tighten pass, not a redesign.
+
+DELIVERABLES
+I want:
+1. A concise audit report in-app or in output:
+   - already correct
+   - missing
+   - changed
+2. A list of all places entitlements were enforced or fixed
+3. Any schema/config additions clearly documented
+4. Any assumptions called out
+5. A final confirmation matrix for:
+   - Presence
+   - Hub
+   - Category
+   - Micro
+   - Capabilities
+   - Credits
+   - Jobs
+   - Ask-an-Expert
+   - Crown
+   - Enterprise gate
+
+IMPORTANT
+- Do not flatten the hub model.
+- Do not convert this to a citywide/global entitlement model.
+- Do not remove existing functionality.
+- Do not make everything unlimited.
+- Do not simplify away the hierarchy.
+- Preserve current UX where possible, but tighten locked states and upgrades.
+- Build this as a monetization/entitlement hardening pass.

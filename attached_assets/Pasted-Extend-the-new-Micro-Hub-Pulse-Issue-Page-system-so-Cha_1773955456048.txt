@@ -1,0 +1,91 @@
+Extend the new “Micro Hub Pulse Issue Page” system so Charlotte can generate and populate a new issue from a structured issue-creation task.
+
+GOAL
+Create a simple internal workflow where Charlotte can be given issue inputs and produce a ready-to-review issue page draft for a micro hub. The operator should then be able to review, adjust, and print from that issue.
+
+PURPOSE
+This workflow should support:
+- writing the story
+- filling quick hits
+- assigning the route/path
+- inserting featured businesses
+- inserting advertiser cards
+- preparing the online edition page that matches print
+
+DO NOT build a giant automation system.
+Build a lean, practical issue-generation workflow that fits the current app.
+
+WORKFLOW TO SUPPORT
+
+1. Operator starts a new issue task
+Inputs may include:
+- district / micro hub name
+- issue number
+- issue theme or headline
+- story notes or source notes
+- quick hits / trivia
+- featured businesses
+- advertiser businesses
+- CTA / giveaway info
+
+2. Charlotte generates:
+- issue title
+- intro
+- featured story draft
+- quick hits formatting
+- slug / path
+- page content mapped into the reusable issue template
+
+3. Operator reviews and edits if needed
+
+4. Issue is saved/published and used for print QR destination
+
+BUILD REQUIREMENTS
+
+A. Create a simple issue-generation input structure
+At minimum include:
+- districtName
+- issueNumber
+- storyPrompt or sourceNotes
+- quickHits[]
+- featuredBusinesses[]
+- advertisers[]
+- giveaway / CTA info
+- publish status
+
+B. Charlotte content generation behavior
+Prepare the workflow so Charlotte can:
+- draft a local-style featured story
+- generate a clean issue intro
+- format quick hits
+- produce a clean slug/path
+- map content into the issue template
+
+C. Route / path generation
+Generate a clean path automatically from issue info, such as:
+- /pineville/pulse/001
+
+D. Reviewable draft state
+Do not auto-publish final content without operator review.
+Allow draft/review/published states if practical.
+
+E. Reusability
+The same workflow should work for any micro hub issue.
+
+DESIGN / PRODUCT INTENT
+Charlotte is acting as the operational assistant for building these issue pages.
+This is aligned with the broader Charlotte AI role as an operational assistant inside the ecosystem.
+
+DO NOT
+- do not build a separate blog system
+- do not create duplicate records if the issue can use one lean issue object
+- do not overcomplicate the interface
+- do not make this a generic AI writer tool disconnected from the issue template
+
+OUTPUT NEEDED
+Implement the issue-generation workflow and provide:
+1. the issue task/input structure
+2. the Charlotte generation flow
+3. the draft/review/publish state if used
+4. the final route/path generation logic
+5. one working example showing a new issue draft created from the workflow

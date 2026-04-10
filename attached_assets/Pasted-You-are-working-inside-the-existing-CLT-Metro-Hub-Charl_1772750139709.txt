@@ -1,0 +1,216 @@
+You are working inside the existing CLT Metro Hub / Charlotte City Hub codebase.
+
+GOAL
+Add “Web TV” (venue screens) + a back-office admin area to manage screens, content items (slides + short videos), scheduling/rotation rules, and monetization placements.
+This must support the hierarchy:
+- Metro Hub (citywide)
+- Micro Hub (neighborhood/niche)
+- Location (specific venue hosting a screen)
+Revenue shares are future-proofed for: Venue, Micro Operator, Metro Operator, Core.
+Right now only Venue share is active; all other shares roll up to Core automatically.
+
+NON-NEGOTIABLES
+- Keep it lightweight: mostly slides (7–12 seconds) + occasional short video clips (30–60 seconds).
+- 20-minute loop target (approximate; dynamic playlist is ok).
+- Glanceable templates: 1 idea per slide, large text, minimal copy, always include QR when appropriate.
+- Must allow competitor blocking (e.g., host gelato shop should not show other gelato shops).
+- No new paid services required. Use existing DB + storage approach in the app (or local assets if that’s what exists). If storage is needed, implement abstraction with pluggable provider.
+
+DELIVERABLES
+A) PUBLIC “TV” ROUTES
+1. /tv (full-screen player)
+   - Accepts query params:
+     - metroSlug (optional; default current city/metro)
+     - hubSlug (micro hub slug, required for micro feeds)
+     - locationSlug (optional; for venue-specific inserts)
+     - mode=autoplay (default)
+   - Example:
+     - /tv?hubSlug=southend
+     - /tv?hubSlug=southend&locationSlug=ginmill
+   - Must run fullscreen, kiosk-friendly, no nav chrome.
+   - Pull playlist from API and play continuously.
+   - Should refresh playlist every 5 minutes without breaking playback.
+
+2. /api/tv/playlist
+   - Inputs: metroSlug, hubSlug, locationSlug
+   - Output: ordered list of “TV items” with timing/duration and render instructions:
+     {
+       items: [
+         { id, type: "slide"|"video", durationSec, templateKey, data, assetUrl, clickUrl, qrUrl, priority, source: "metro"|"hub"|"location" }
+       ],
+       generatedAt,
+       nextRefreshSec
+     }
+   - Playlist generation rules:
+     - Default mix target:
+       - 70–80% slides (7–12s each)
+       - 20–30% short videos (30–60s each)
+     - Loop length target ~20 minutes (allow slight variance).
+     - Always include venue promo slides if locationSlug exists (frequency: every 2–4 minutes).
+     - Insert “Hub discovery” slide at least once per loop.
+     - If no content exists for hub/location, gracefully fall back to metro content.
+
+B) BACK OFFICE (ADMIN)
+Add /admin/tv with these sections:
+
+1) Screens
+- Create/edit screens (each screen represents a deployed TV endpoint)
+Fields:
+- name
+- metroSlug
+- hubSlug (micro hub)
+- locationSlug (optional)
+- status (active/inactive)
+- screenKey (unique token, optional if you want to lock screens)
+- competitorProtectionEnabled (boolean)
+- protectedCategoryIds (list)
+- excludedBusinessIds (list)
+- playlistSettings JSON:
+  - slideDurationDefaultSec (default 9)
+  - videoDurationMaxSec (default 60)
+  - loopTargetMin (default 20)
+  - venuePromoFrequencyMin (default 3)
+  - adSlotFrequencyMin (default 6) (can be 0 if not used yet)
+- notes
+
+2) TV Content Library
+Manage content items that can appear in playlists.
+Content types:
+- Slide items (rendered from templates + data)
+- Video items (mp4/webm URL)
+Sources:
+- Metro (citywide)
+- Hub (micro)
+- Location (venue-specific)
+
+Fields:
+- title
+- type: slide|video
+- sourceScope: metro|hub|location
+- metroSlug (nullable)
+- hubSlug (nullable)
+- locationSlug (nullable)
+- templateKey (for slides)
+- data JSON (for slides)
+- assetUrl (optional image/logo)
+- videoUrl (for videos)
+- clickUrl (optional)
+- qrUrl (optional)
+- durationSec (optional; for slides default applies)
+- startAt, endAt (optional scheduling)
+- priority (1–10)
+- enabled boolean
+- tags array
+- categoryIds array (for competitor logic)
+- createdBy, updatedBy
+
+3) Venue Promotions
+Simple form to create “venue promo” slides fast for a location:
+- Special of the day
+- Event tonight
+- Menu QR
+- IG handle
+These should generate slide items using templates.
+
+4) Ad / Paid Placements (future-proof now, can be minimal UI)
+Create “placements” that are just slide items marked as paid, with revenue attribution.
+Fields:
+- placementName
+- screenId (or hubSlug/metroSlug targeting)
+- advertiserName
+- amountMonthly
+- startAt/endAt
+- creative: slide template + data or image
+- competitor categories (optional)
+- enabled
+
+C) SLIDE TEMPLATES
+Implement these built-in slide templates (templateKey) rendered on the TV page (React component):
+1) venue_special
+2) venue_event
+3) hub_event
+4) pulse_headline
+5) hub_discovery
+6) advertiser_basic
+7) neighborhood_spotlight
+8) qr_cta_simple
+
+Each template must be:
+- large headline
+- 0–2 short lines max
+- optional background image
+- QR code rendered if qrUrl exists
+- small “Powered by Charlotte Metro Hub” footer (or current brand string), but keep subtle.
+
+D) PULSE / EXISTING CONTENT INTEGRATION
+Integrate existing DB content into TV slides automatically (without manual duplication):
+- Events -> hub_event slides
+- Pulse posts -> pulse_headline slides (headline + image + QR to full post)
+- Featured listings -> neighborhood_spotlight or advertiser_basic slides
+Rules:
+- Only include items with required fields (headline/title + URL).
+- Add “TV eligibility” filters so low-quality items don’t show (e.g., missing image -> use fallback background).
+- Allow admin to toggle an event/pulse post as “Include in TV”.
+
+E) COMPETITOR EXCLUSION LOGIC
+When locationSlug exists:
+- Determine host business categories (from listings table).
+- Exclude other listings/promotions with overlapping protected categories.
+- Also respect explicit excludedBusinessIds on the Screen.
+Add admin UI controls to set:
+- competitorProtectionEnabled
+- protectedCategoryIds override
+If competitorProtectionEnabled is true and protectedCategoryIds is empty, auto-protect using host primary categories.
+
+F) REVENUE SHARE MODEL (FUTURE-PROOF)
+Create a revenueSplit model stored per screen (or global default):
+- venuePct
+- microPct
+- metroPct
+- corePct
+For now:
+- venuePct is active
+- microPct and metroPct should automatically roll into corePct until those operators exist.
+Implement this as a function that computes effective splits given active parties.
+Expose in admin UI but keep defaults:
+- venue 30%
+- micro 20%
+- metro 20%
+- core 30%
+Current effective: venue 30%, core 70%.
+
+G) AUTH / ACCESS
+- /admin/tv must be behind existing admin auth.
+- Only super-admin can edit revenue splits and competitor rules.
+
+H) IMPLEMENTATION DETAILS
+- Add DB tables via Drizzle (or the ORM used in this app).
+Suggested tables:
+1) tv_screens
+2) tv_items
+3) tv_placements (optional; can be same as tv_items with paid flags)
+4) tv_settings (optional global defaults)
+If the app already has event/pulse/listing tables, do NOT duplicate them—only reference them.
+- Add API routes:
+  - GET /api/tv/playlist
+  - CRUD for /api/admin/tv/screens
+  - CRUD for /api/admin/tv/items
+  - CRUD for /api/admin/tv/placements (optional)
+- Build the TV player to be resilient:
+  - prefetch next item
+  - handle image/video load failure (skip gracefully)
+  - never show blank screen (fallback slide)
+- Add a simple “Preview” button in admin for each screen that opens /tv with the correct params.
+
+OUTPUT REQUIRED
+1) Code changes implementing all above.
+2) Minimal, clean admin UI under /admin/tv with tabs: Screens, Content, Venue Promos, Placements.
+3) Seed example templates and a few demo items so /tv works immediately in dev.
+
+Start by scanning the existing codebase for:
+- routing framework (Next.js / React Router)
+- existing admin layout
+- existing DB schema for hubs, locations, listings, pulse, events
+Then implement the new tables and routes and wire everything together.
+
+Do not add any paid dependencies. Use existing libraries already in the repo for QR generation; if none exist, add a lightweight open-source QR lib.

@@ -1,0 +1,135 @@
+Create a Charlotte relocation SEO cluster for the City Hub platform.
+
+Primary authority page:
+
+/charlotte/moving-to-charlotte
+
+This page will act as the relocation hub and must be the central internal link target for all relocation-related articles.
+
+All supporting articles must link to this page using anchor text such as:
+"Moving to Charlotte Guide"
+
+
+STEP 1 — Create Long-Form Relocation Articles (3000–5000 words)
+
+Generate the following SEO articles:
+
+/charlotte/relocating-to-charlotte
+/charlotte/cost-of-living-in-charlotte
+/charlotte/best-neighborhoods-in-charlotte
+/charlotte/living-in-charlotte-nc
+/charlotte/charlotte-nc-neighborhood-guide
+
+Each article must:
+
+• include relocation information
+• reference Charlotte lifestyle
+• link to neighborhood hubs
+• internally link to /charlotte/moving-to-charlotte
+• contain FAQ sections answering relocation questions
+
+
+STEP 2 — Create Neighborhood Relocation Pages
+
+Generate supporting neighborhood pages:
+
+/charlotte/living-in-south-end-charlotte
+/charlotte/living-in-noda-charlotte
+/charlotte/living-in-plaza-midwood
+/charlotte/living-in-dilworth-charlotte
+/charlotte/living-in-ballantyne
+/charlotte/living-in-matthews-nc
+/charlotte/living-in-huntersville-nc
+/charlotte/living-in-cornelius-nc
+
+Each page must:
+
+• describe the neighborhood lifestyle
+• link to the neighborhood hub page
+• link back to /charlotte/moving-to-charlotte
+• include nearby businesses and events
+
+
+STEP 3 — Include Fast-Ranking Relocation Search Queries
+
+Use these keywords within headings and FAQ sections:
+
+best neighborhoods in charlotte nc
+cost of living in charlotte nc
+living in charlotte nc pros and cons
+is charlotte nc a good place to live
+what salary do you need to live in charlotte
+is charlotte expensive to live in
+charlotte nc lifestyle guide
+charlotte nc housing market
+charlotte nc job market
+best suburbs of charlotte nc
+best areas to live near charlotte
+
+
+STEP 4 — Include Long-Tail Relocation Search Queries
+
+Create sections answering these phrases:
+
+moving from new york to charlotte
+moving from california to charlotte
+moving from florida to charlotte
+moving to charlotte for work
+moving to charlotte with family
+moving to charlotte as a young professional
+moving to charlotte job opportunities
+moving to charlotte apartment guide
+moving to charlotte suburbs guide
+moving to charlotte housing tips
+should i move to charlotte nc
+why are people moving to charlotte
+is charlotte nc good for young professionals
+is charlotte nc good for families
+
+
+STEP 5 — Internal Linking Structure
+
+Use the following structure:
+
+moving-to-charlotte
+    ↓
+relocating-to-charlotte
+    ↓
+best-neighborhoods-in-charlotte
+    ↓
+living-in-neighborhood pages
+    ↓
+neighborhood hub pages
+
+Every page must link back to:
+
+/charlotte/moving-to-charlotte
+
+
+STEP 6 — Integrate Hub Platform Content
+
+Each page should include dynamic sections pulling data from the hub platform:
+
+• Pulse feed (tag: moving-to-charlotte)
+• upcoming events
+• neighborhood hubs
+• expert directory
+• marketplace listings
+• local businesses
+
+
+STEP 7 — Add FAQ Schema Sections
+
+Include structured FAQ sections answering:
+
+Is Charlotte expensive to live in?
+What salary do you need to live in Charlotte?
+What are the best neighborhoods in Charlotte?
+Is Charlotte good for families?
+Is Charlotte a good city for young professionals?
+What is the cost of rent in Charlotte?
+
+
+GOAL
+
+Build a relocation SEO cluster that captures search traffic for relocation-related queries and funnels users into the main relocation hub page.

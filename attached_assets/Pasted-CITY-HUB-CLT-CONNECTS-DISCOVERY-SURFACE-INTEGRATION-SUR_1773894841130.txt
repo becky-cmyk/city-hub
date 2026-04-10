@@ -1,0 +1,227 @@
+CITY HUB / CLT CONNECTS
+DISCOVERY SURFACE INTEGRATION
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Integrate the major discovery surfaces so they behave as one connected ecosystem using the existing object model, taxonomy, geography, and discovery logic already present in the platform.
+
+This is a DISCOVERY INTEGRATION PASS.
+Do NOT rebuild the platform.
+Do NOT create duplicate systems.
+Do NOT create shadow records for Pulse, Map, Search, or category pages.
+Do NOT flatten geography or taxonomy.
+
+LOCKED ARCHITECTURE RULE
+
+Hub Presence
+→ Objects
+→ Discovery Surfaces
+
+Objects are created once and surfaced across the platform.
+
+Discovery surfaces must reference the SAME underlying objects.
+
+Do NOT allow each discovery surface to drift into its own logic or duplicate data layer.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are businesses with creator-specific fields/types.
+Pulse is an aggregation layer, not a table.
+Search already exists and has been refined.
+Map already uses real objects and real location data.
+Taxonomy already exists in layered form.
+Jobs and creators already use the real object model.
+Social/activity signals already exist.
+Opportunity / Radar / intelligence either exists or is being refined separately.
+
+There are TWO valid geographic hierarchies and both must remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, operators
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and local discovery
+
+Do NOT collapse them into one model.
+
+DISCOVERY SURFACES TO ALIGN
+
+This prompt must align the behavior of these surfaces:
+
+- Directory
+- Pulse
+- Search
+- Interactive Map
+- Category pages
+- Hub pages
+- Neighborhood pages
+- Object profile pages
+
+PRIMARY OBJECTIVE
+
+Make the discovery surfaces feel like one connected ecosystem instead of multiple partially disconnected systems.
+
+That means:
+
+- same object appears consistently across surfaces
+- categories/taxonomy mean the same thing everywhere
+- location scope behaves consistently
+- Pulse/search/map/category pages reinforce each other
+- hub/neighborhood pages reflect the same discovery logic
+- object profiles connect back into the right discovery surfaces
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current codebase and confirm:
+
+1. Which discovery surfaces are currently fully wired to real objects
+2. Which surfaces are still using custom or inconsistent filtering logic
+3. Whether Pulse/search/map/category pages are all using the same taxonomy consistently
+4. Whether hub pages and neighborhood pages are pulling the same object families as the rest of discovery
+5. Whether creators, jobs, marketplace, and events appear consistently across surfaces
+6. Whether object profile pages connect back into discovery cleanly
+7. Whether geographic scoping is consistent across surfaces
+8. Whether Charlotte-only assumptions still exist in discovery routing or filtering
+9. The smallest stable path to unify discovery behavior without rebuilding the system
+
+Return a concise implementation note first before major changes.
+
+REQUIRED IMPLEMENTATION
+
+1. UNIFY DISCOVERY OBJECT LOGIC
+
+Ensure the major discovery surfaces reference the same underlying object model.
+
+Examples:
+- a business in Directory should also behave correctly in Search, Map, Category pages, and Hub pages
+- an event in Search should also surface correctly in Pulse, Map, and Neighborhood pages
+- a creator business should remain consistent across Search, Pulse, profile pages, and category discovery
+- a job listing should behave consistently across Search, business pages, and geography-based discovery
+
+Do NOT allow separate surface-specific object definitions.
+
+2. TAXONOMY CONSISTENCY ACROSS SURFACES
+
+Ensure the same category/subcategory/micro-category logic is used consistently across:
+
+- Directory
+- Search
+- Map filters
+- Category pages
+- Hub pages
+- Neighborhood pages
+
+Do NOT create one taxonomy for search and another for browse.
+
+3. GEOGRAPHY CONSISTENCY ACROSS SURFACES
+
+Ensure geography behaves consistently across discovery surfaces.
+
+Use:
+- ZONES for local discovery context where appropriate
+- REGIONS for broader territory/metro logic where appropriate
+
+Examples:
+- neighborhood pages should align with zone-based local content
+- broader metro/hub pages can use larger geographic logic
+- search/map/category pages should not contradict each other about where something “belongs”
+
+Do NOT flatten geography.
+
+4. PULSE / SEARCH / MAP / CATEGORY REINFORCEMENT
+
+These are the core discovery engines.
+Make them reinforce each other.
+
+Examples:
+- Pulse item should link to real object pages and relevant category/hub context
+- Search results should connect cleanly into category pages and object pages
+- Map results should connect to the same real objects and reflect the same filtering logic
+- Category pages should reflect the same discovery model as search and map
+
+5. HUB / NEIGHBORHOOD PAGE ALIGNMENT
+
+Hub pages and neighborhood pages should not feel like disconnected microsites.
+
+They should use the same object families and discovery logic already established elsewhere.
+
+Examples:
+- businesses
+- events
+- jobs
+- creators
+- marketplace
+- stories/Pulse coverage where appropriate
+
+6. OBJECT PROFILE PAGE INTEGRATION
+
+Object pages should connect back into the ecosystem.
+
+Examples:
+- business profile links into category discovery, map discovery, neighborhood context, jobs, related stories
+- creator profile links into creator content and local discovery context
+- event pages link into related business/neighborhood/category context
+
+Do not isolate object pages from discovery.
+
+7. CITY / PLATFORM SAFETY
+
+Do not reinforce Charlotte-as-platform assumptions.
+
+Discovery logic should remain city-aware and expandable, even if Charlotte is the active metro today.
+
+8. BILINGUAL SAFETY
+
+Do not break the bilingual system.
+
+Discovery labels, filters, navigation cues, and cross-surface links should remain compatible with the English/Spanish system already in place.
+
+9. PERFORMANCE / STABILITY
+
+Keep this pass focused and practical.
+
+Prefer:
+- aligning queries
+- aligning filters
+- aligning routing
+- aligning category/geography handling
+- aligning object display expectations
+
+Do NOT overengineer a new discovery framework.
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild all pages from scratch
+- create a second discovery architecture
+- duplicate objects into surface-specific tables
+- flatten taxonomy
+- flatten geography
+- redesign the entire UI system
+- rebuild Pulse/Search/Map independently again unless a small fix is required for consistency
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. major discovery surfaces behave as one connected system
+2. the same real objects appear consistently across surfaces
+3. taxonomy is used consistently across discovery
+4. geography is used consistently across discovery
+5. hub/neighborhood/category/object pages reinforce discovery correctly
+6. Pulse/Search/Map/Directory feel connected
+7. no duplicate or shadow discovery systems are introduced
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current discovery surface connections first
+3. implement the smallest stable change set to align discovery behavior
+4. list exactly which files/components/services/routes were changed
+5. list what should wait for later polish prompts

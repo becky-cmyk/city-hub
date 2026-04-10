@@ -1,0 +1,200 @@
+PROMPT — HUBS (NEIGHBORHOODS + TOWNS) + ZIP COVERAGE MAPPING
+
+AUTHORITY
+Append-only. Do not delete anything. Seed what’s missing. All mappings must be editable in admin.
+
+GOAL
+1) Add Hub regions for Charlotte neighborhoods and key metro towns.
+2) Create an explicit mapping between hubs and ZIP codes (many-to-many) so:
+   - importer can target by Hub (expands to ZIP set)
+   - CRM/reporting can roll up by Hub
+   - content can attach to Hub and still know which ZIPs it covers
+
+NOTE ON ZIP ACCURACY
+Neighborhood boundaries are not strict. Seed mappings as a STARTING DEFAULT and flag them as “needs review” so Becky can adjust.
+
+------------------------------------------------------------
+1) DATABASE — HUB ↔ ZIP MAPPING
+------------------------------------------------------------
+
+1A) Create table hub_zip_coverage
+- id (uuid)
+- hub_region_id (FK -> regions.id, CASCADE)
+- zip (FK -> zip_geos.zip, CASCADE)
+- confidence enum: "high" | "med" | "low" default "low"
+- notes text nullable
+- created_at
+Unique index: (hub_region_id, zip)
+
+1B) Create table hub_geo_snapshot (optional helper)
+- hub_region_id (FK -> regions.id, PK)
+- center_lat numeric nullable
+- center_lng numeric nullable
+- created_at
+(This avoids changing regions schema if you don’t want new columns.)
+
+------------------------------------------------------------
+2) SEED HUB REGIONS (NEIGHBORHOODS + TOWNS)
+------------------------------------------------------------
+
+Pre-req:
+- Ensure regions row exists for:
+  - Metro: "Charlotte Metro"
+  - County: "Mecklenburg"
+  - County: "York County"
+  - County: "Gaston"
+(If any missing, create them under Charlotte Metro.)
+
+2A) Seed Charlotte Neighborhood Hubs (parent = Mecklenburg county)
+Create (region_type="hub") if not exists:
+
+- "Uptown"
+- "NoDa"
+- "Plaza Midwood"
+- "South End"
+- "Dilworth"
+- "Myers Park"
+- "Elizabeth"
+- "SouthPark"
+- "Cotswold"
+- "University City"
+- "Steele Creek"
+- "Ballantyne"
+- "LoSo"
+- "West End"
+
+2B) Seed Metro Town Hubs (parent = their county)
+Create (region_type="hub") if not exists:
+
+York County:
+- "Rock Hill"
+- "Lake Wylie"
+
+Gaston County:
+- "Gastonia"
+- "Belmont"
+
+------------------------------------------------------------
+3) AUTO-GENERATE HUB CENTER POINTS (GOOGLE PLACES LOOKUP)
+------------------------------------------------------------
+
+For each hub region created above:
+- If hub_geo_snapshot missing:
+  - Run Google Places Text Search query: "{Hub Name}, Charlotte NC" for neighborhoods
+  - For towns: "{Hub Name}, SC" or "{Hub Name}, NC"
+  - Take first result geometry.location
+  - Save into hub_geo_snapshot (center_lat/center_lng)
+
+If no result, skip and log.
+
+------------------------------------------------------------
+4) SEED HUB ↔ ZIP COVERAGE (STARTING DEFAULTS)
+------------------------------------------------------------
+
+Pre-req:
+- zip_geos must contain these zips; if missing, do NOT insert mapping; just log “zip missing”.
+
+Charlotte neighborhoods (Mecklenburg):
+Uptown:
+- 28202, 28203, 28204 (confidence=med)
+
+NoDa:
+- 28205, 28206 (confidence=med)
+
+Plaza Midwood:
+- 28205 (confidence=med)
+
+South End:
+- 28203, 28209 (confidence=med)
+
+Dilworth:
+- 28203, 28209 (confidence=med)
+
+Myers Park:
+- 28207, 28209, 28211 (confidence=low)
+
+Elizabeth:
+- 28204 (confidence=med)
+
+SouthPark:
+- 28211, 28209, 28226 (confidence=low)
+
+Cotswold:
+- 28211 (confidence=med)
+
+University City:
+- 28262, 28213, 28269 (confidence=low)
+
+Steele Creek:
+- 28273, 28278 (confidence=low)
+
+Ballantyne:
+- 28277, 28226 (confidence=med)
+
+LoSo:
+- 28217, 28209 (confidence=low)
+
+West End:
+- 28208, 28216 (confidence=low)
+
+Metro towns:
+Rock Hill (York SC):
+- 29730, 29732, 29733 (confidence=high)
+
+Lake Wylie / Clover area (York SC):
+- 29710 (confidence=high)
+
+Gastonia (Gaston NC):
+- 28052, 28054 (confidence=high)
+
+Belmont (Gaston NC):
+- 28012 (confidence=high)
+
+IMPLEMENT:
+- Upsert hub regions
+- Upsert hub_geo_snapshot
+- Insert hub_zip_coverage rows only when zip exists in zip_geos
+- Set confidence + notes="Seeded default; review/edit as needed"
+
+------------------------------------------------------------
+5) ADMIN UI — HUBS + ZIP COVERAGE EDITOR
+------------------------------------------------------------
+
+Add Admin page: “Hubs & Coverage”
+- Left: Hub list (filter by county)
+- Right: Hub detail:
+  - Hub name, parent county, center lat/lng
+  - ZIP coverage table (zip, confidence, notes)
+  - Add ZIP (search zip_geos)
+  - Remove ZIP (soft delete not required; delete mapping row is OK)
+  - Bulk add ZIPs (paste list)
+- Show “ZIP missing” warnings if user tries to add a zip not in zip_geos.
+
+Also add an action button:
+- “Use this Hub for Places Import”
+  -> launches import with area_mode="zip" for each mapped ZIP (batch with caps)
+
+------------------------------------------------------------
+6) PLACES IMPORTER — HUB MODE
+------------------------------------------------------------
+
+Extend place_import_jobs area_mode enum to include:
+- "hub"
+
+If area_mode="hub":
+- require hub_region_id
+- resolve ZIP list from hub_zip_coverage
+- run import sequentially per ZIP (respect daily caps + RPM)
+- job output includes per-ZIP counts
+
+------------------------------------------------------------
+7) OUTPUT (RAW)
+------------------------------------------------------------
+
+Print:
+- hubs created/skipped (by name + id)
+- hub centers found/missing
+- coverage mappings inserted/skipped
+- missing zip list (zips referenced above but not present in zip_geos)
+
+END.

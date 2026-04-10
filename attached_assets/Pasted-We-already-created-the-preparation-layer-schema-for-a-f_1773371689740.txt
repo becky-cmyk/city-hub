@@ -1,0 +1,161 @@
+We already created the preparation-layer schema for a future Jobs / Workforce module. Now build the profile and back-office management layer for both applicants and employers, but do NOT build the full public job marketplace yet.
+
+Goal:
+Create the internal management experience and public-facing profile views so the future jobs system can plug into them later.
+
+Context:
+This is part of a city hub platform with:
+- existing user accounts
+- subscriber profiles
+- business / organization profiles
+- hub location hierarchy
+- Charlotte AI assistant
+
+We need a two-sided profile model:
+- public-facing profile
+- private/back-office management side
+
+Build the following:
+
+1. Applicant Workforce Profile
+Create the applicant workforce profile experience tied to the existing user account.
+
+Public Applicant Profile should support:
+- headline
+- summary/about
+- city / hub location
+- desired roles
+- key skills
+- certifications / licenses / badges
+- work preferences
+- visibility controls
+
+Private Applicant Back Office should support:
+- edit workforce profile
+- manage multiple resumes
+- manage skills
+- manage certifications / licenses
+- set work preferences
+- set availability
+- set desired pay range
+- choose visibility settings
+- track future applications (placeholder for now)
+
+2. Applicant Resume Manager
+Build a resume manager that supports:
+- multiple resumes per applicant
+- resume title
+- primary resume selection
+- upload / replace resume
+- delete resume
+- assign different resumes later to different applications
+
+Do not build actual job application flow yet, but structure it so it can plug in later.
+
+3. Credential / License Manager
+Build a credential manager in the applicant back office.
+
+Requirements:
+- add credential from structured directory
+- optional custom credential entry if not found
+- issuing organization
+- credential/license number
+- state/jurisdiction if applicable
+- issue date
+- expiration date if applicable
+- upload proof document
+- verification status
+- expired badge if past expiration
+
+Support:
+- certifications with no expiration
+- certifications with expiration
+- licenses with one or more states/jurisdictions
+
+If one credential applies to multiple states, support linked jurisdiction entries rather than forcing one record only.
+
+4. Skills Manager
+Build a structured skills manager using the L1 / L2 / L3 taxonomy already created.
+
+Requirements:
+- users select from structured categories
+- no uncontrolled free-text skills as primary data
+- support skill level
+- support years of experience
+- allow marking key strengths / top skills
+
+5. Work Preferences + Availability
+Build structured applicant work preferences fields:
+- employment type sought
+- full-time / part-time / temp / contract / second job
+- preferred industries
+- preferred roles
+- shift preferences
+- days available
+- remote / hybrid / onsite preference
+- desired pay range
+- willing to travel radius later (placeholder)
+
+6. Employer Hiring Profile
+Build the employer-side workforce profile tied to the existing business profile.
+
+Public Employer Workforce Profile should support:
+- business overview
+- workplace / culture summary
+- hiring status
+- industries / role categories
+- hiring contact method
+- future active jobs section placeholder
+- future hiring events section placeholder
+- future employer trust / verification badges placeholder
+
+Private Employer Back Office should support:
+- edit hiring profile
+- set hiring status
+- define common roles hired for
+- manage hiring contact info
+- set workplace summary
+- future jobs dashboard placeholder
+- future applicant dashboard placeholder
+
+7. Public vs Private Visibility Controls
+Implement clear visibility logic.
+
+Applicant examples:
+- public profile visible in future employer search
+- visible only when applying
+- private/not searchable
+
+Business examples:
+- workforce profile public
+- hiring info visible publicly
+- contact method controlled
+
+8. Charlotte AI Hooks
+Add hooks/components/placeholders so Charlotte AI can later assist with:
+- applicant profile completion
+- certification recommendations
+- skill gap suggestions
+- employer hiring guidance
+
+Do not build advanced AI behavior yet, but prepare the interfaces and data access points.
+
+9. UX / UI Requirements
+- clean, simple dashboard layout
+- mobile responsive
+- clear separation between public-facing profile preview and private editing
+- tabs or sections are acceptable
+- design should feel like a workforce module inside the hub, not a completely separate app
+- keep the architecture modular so a dedicated jobs app could be split out later if needed without rebuilding data
+
+10. Output Required
+Provide:
+- any schema updates needed
+- UI component structure
+- route/page structure
+- back-office workflow
+- notes on how this will connect later to:
+  - job listings
+  - applications
+  - employer applicant review
+  - Charlotte AI

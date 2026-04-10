@@ -1,0 +1,265 @@
+You are working INSIDE the existing Charlotte / City Hub app codebase.
+
+This is Prompt 5.
+
+The entitlement framework, package mapping, operational activation layer, and admin/billing connection points are already being added.
+Now complete the user-facing behavior and final validation pass so the app clearly reflects access levels, upgrade paths, locked states, and credit usage throughout the product.
+
+IMPORTANT:
+Do NOT build a separate app.
+Do NOT redesign the whole UI.
+Do NOT create a giant new design system.
+This step is to make the existing app behave clearly and correctly for real users and for internal testing.
+
+GOAL:
+Finish the entitlement rollout by making sure:
+- gated areas look and behave correctly
+- upgrade paths are understandable
+- credit usage is clearly offered where appropriate
+- blocked actions explain why
+- admin/operator restrictions are visible where needed
+- the platform can be tested systematically across tiers, add-ons, credits, and roles
+
+==================================================
+PRIMARY OBJECTIVE
+==================================================
+
+Implement the user-facing locked/open states plus a full QA/test pass for the entitlement and package system already added to the app.
+
+Need this to work across:
+- free
+- verified
+- charter
+- enhanced
+- enterprise
+- active/inactive add-ons
+- available/unavailable credits
+- admin/operator roles
+- account/business/entity scope where applicable
+
+==================================================
+PART 1 — LOCKED / AVAILABLE / CONDITIONAL UI STATES
+==================================================
+
+Across all major gated modules and actions, add clear lightweight states for:
+
+1. Included / available
+2. Locked by plan
+3. Locked but available through add-on
+4. Locked but available through credits
+5. Operator/admin only
+6. Approval required
+7. Inactive because subscription/add-on status is inactive
+8. Temporarily granted / promo access if applicable
+
+Keep the UI simple and existing-brand friendly.
+Need clarity more than polish.
+
+Examples of user-facing status text:
+- Included in your plan
+- Upgrade to Verified to access this
+- Included in Charter and above
+- Requires Event Host add-on
+- Use 1 credit to post this event
+- Available with Marketplace Storefront add-on
+- Operator approval required
+- Enterprise access only
+- Your add-on is inactive
+- No credits available
+
+Do not add bloated explanatory copy.
+
+==================================================
+PART 2 — APPLY UX STATES TO MAJOR MODULES
+==================================================
+
+Wire these states into the existing app areas that matter most:
+
+- business / hub presence
+- creator participation
+- expert participation
+- events
+- jobs
+- marketplace / classifieds
+- pulse / story / content participation
+- boosts / featured placement / premium visibility
+- media participation / distribution actions
+- analytics/reporting if present
+- admin/operator tools
+
+For each area, ensure the user can tell:
+- whether they have access
+- what action is available
+- what is blocked
+- how to unlock it
+- whether credits can be used instead
+
+==================================================
+PART 3 — UPGRADE CTA BEHAVIOR
+==================================================
+
+Every blocked action should connect to a clear next step.
+
+Need standardized CTA patterns such as:
+- Upgrade Plan
+- Add Add-On
+- Use Credits
+- Contact Hub Admin
+- Request Approval
+- Learn More
+
+These CTAs should come from the centralized upgrade/unlock resolver, not hardcoded one by one.
+
+Examples:
+- blocked event posting → requires Event Host or 1 credit
+- blocked job posting → requires Job Board add-on or eligible plan
+- blocked premium boost → upgrade to Charter/Enhanced or spend credits
+- blocked operator area → admin only / not shown or shown as restricted depending on UX context
+
+==================================================
+PART 4 — CREDIT FLOW UX
+==================================================
+
+Where a blocked action is credit-eligible, the interface must clearly offer the credit path.
+
+Need behavior like:
+- show credit cost
+- show available balance
+- confirm credit use before final action
+- only deduct after success
+- show helpful error if credits are insufficient
+- show updated balance after successful use if practical
+
+Keep this simple and integrated into the current flow.
+
+==================================================
+PART 5 — ERROR / EDGE-CASE UX
+==================================================
+
+Handle edge cases cleanly:
+- expired/inactive plan
+- cancelled add-on
+- no credits available
+- action allowed in theory but blocked by approval requirement
+- account missing entitlement record
+- partial migration state / legacy records
+- operator role without needed scope
+- entity mismatch (user owns one business but not another)
+
+Need safe, understandable responses instead of silent failures.
+
+==================================================
+PART 6 — QA / TEST MATRIX
+==================================================
+
+Create a thorough entitlement QA pass.
+
+Build a practical test matrix that covers combinations such as:
+
+Plans:
+- free
+- verified
+- charter
+- enhanced
+- enterprise
+
+Add-on states:
+- none
+- relevant add-on active
+- add-on inactive/cancelled
+
+Credits:
+- zero credits
+- enough credits
+- insufficient credits for action
+- manual/promo credits present
+
+Roles:
+- normal user
+- business owner
+- creator
+- expert
+- operator/admin
+- scoped operator with limited permissions
+
+Major actions:
+- create/edit listing
+- post event
+- post job
+- create marketplace/classified listing
+- submit story/content
+- boost/feature content
+- request social distribution
+- request video/podcast distribution
+- access analytics
+- access operator-only tools
+
+For each test case verify:
+- visibility
+- action allowed/blocked
+- unlock message
+- CTA path
+- credit deduction behavior if used
+- no regression to existing allowed flows
+
+==================================================
+PART 7 — TEST FIX PASS
+==================================================
+
+After building the matrix, run through and fix inconsistent states such as:
+- action appears available but fails later
+- upgrade message is wrong
+- credit path appears where not allowed
+- add-on path missing
+- tier path missing
+- admin/operator restrictions leaking
+- hidden modules still reachable by URL if not authorized
+- duplicate gating logic causing mismatched UI vs backend behavior
+
+Need one clean system, not conflicting layers.
+
+==================================================
+PART 8 — ROUTE / SERVER / BACKEND PROTECTION
+==================================================
+
+Make sure this is not only UI-deep.
+
+Validate that protected routes, APIs, server actions, and mutation handlers also enforce the same access logic.
+
+A user should not be able to bypass entitlement checks by:
+- direct URL
+- API call
+- stale client state
+- old cached form access
+- manual request payloads
+
+Centralized access checks must protect both frontend and backend entry points.
+
+==================================================
+PART 9 — INTERNAL TEST / REVIEW NOTES
+==================================================
+
+At the end, provide a clean implementation review including:
+
+1. where locked-state UX was added
+2. where upgrade CTA patterns were added
+3. where credit use UX was added
+4. what routes/actions were server-protected
+5. summary of QA scenarios tested
+6. issues fixed during QA
+7. any remaining business-rule decisions still needing confirmation
+
+==================================================
+PART 10 — FINAL DELIVERABLE
+==================================================
+
+Deliver a finished entitlement rollout pass for the current City Hub app so that:
+
+- the package system is understandable to users
+- upgrades and add-ons are easy to follow
+- credits are usable in the right places
+- admin/operator restrictions are enforced
+- backend protection matches frontend states
+- the app is testable and stable across all major package combinations
+
+This is the final cleanup, UX clarity, and validation layer for the entitlement/gating system already implemented in the existing City Hub app.

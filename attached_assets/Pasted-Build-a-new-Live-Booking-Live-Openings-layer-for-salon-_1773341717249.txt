@@ -1,0 +1,335 @@
+Build a new “Live Booking / Live Openings” layer for salon and service-based businesses inside the Hub platform.
+
+IMPORTANT CONTEXT
+This is NOT a full booking platform.
+The Hub is the discovery + conversion layer.
+The actual booking stays inside each provider’s existing booking app, booking link, or website.
+
+We do NOT want to:
+- manage calendars
+- own appointment operations
+- handle reschedules/cancellations
+- process appointment payments
+- become the system of record for bookings
+
+We DO want to:
+- show service providers on the Hub
+- show services and pricing
+- show “Available Today / Tomorrow” style openings
+- let users feel like they can book directly from the Hub
+- use embedded widgets where available
+- use deep links / fallback booking buttons where needed
+- track referral / booking clicks and contact actions
+- support solo providers in salon suites, Phoenix-style suites, and other service businesses
+
+TARGET BUSINESSES
+Prioritize:
+- salon suites
+- independent stylists
+- barbers
+- nail techs
+- estheticians
+- lash artists
+- massage therapists
+- makeup artists
+- wellness providers
+- other service-based local businesses with appointment-driven revenue
+
+KEY PRODUCT IDEA
+The Hub should have a universal provider booking system built around provider profiles and booking module types.
+
+Each provider can have one booking connection type:
+1. embed_widget
+2. popup_widget
+3. deep_link
+4. call_text_fallback
+5. manual_live_opening
+6. api_connected (future placeholder only)
+
+Do NOT force all providers into one workflow.
+
+CORE EXPERIENCE
+A user should be able to:
+- discover a provider by category, specialty, or neighborhood
+- view provider profile
+- see services and prices
+- see live openings like “Available Today” or “Tomorrow”
+- click Book Now, Call, Text, or Instagram
+- complete the actual booking in the provider’s own system
+
+The Hub should feel like the front door, not just a directory.
+
+DATA MODEL
+Add or extend the data model with the following:
+
+Provider
+- id
+- businessId (nullable)
+- displayName
+- slug
+- category
+- subcategory
+- bio
+- specialties (array)
+- phone
+- smsNumber
+- email
+- instagramUrl
+- websiteUrl
+- bookingUrl
+- bookingPlatform
+- bookingModuleType
+- bookingEmbedCode (nullable)
+- bookingWidgetUrl (nullable)
+- isVerified
+- isActive
+- acceptsWalkIns
+- supportsLiveOpenings
+- suiteLocationName
+- suiteNumber (nullable)
+- cityId
+- microHubId
+- neighborhoodId
+- heroImageUrl
+- profileImageUrl
+- createdAt
+- updatedAt
+
+ProviderService
+- id
+- providerId
+- name
+- description
+- durationMinutes (nullable)
+- priceDisplay
+- priceMin (nullable)
+- priceMax (nullable)
+- isFeatured
+- isActive
+- sortOrder
+
+ProviderOpening
+- id
+- providerId
+- serviceId (nullable)
+- title
+- openingDate
+- openingTimeLabel
+- startAt (nullable)
+- endAt (nullable)
+- notes (nullable)
+- status (active / claimed / expired / hidden)
+- urgencyLabel (available_today / available_tomorrow / last_minute / this_afternoon / this_evening)
+- isToday
+- isTomorrow
+- expiresAt (nullable)
+- createdBy
+- createdAt
+- updatedAt
+
+ProviderContactActionLog
+- id
+- providerId
+- actionType (profile_view / booking_click / opening_click / call_click / text_click / instagram_click / directions_click)
+- sourceContext
+- referrerPage
+- cityId
+- microHubId
+- neighborhoodId
+- userId (nullable)
+- sessionId (nullable)
+- metadataJson
+- createdAt
+
+BookingPlatformConfig
+- id
+- platformKey
+- displayName
+- supportsEmbed
+- supportsPopup
+- supportsDeepLink
+- supportsApi
+- notes
+- isActive
+
+SEED BOOKING PLATFORMS
+Seed platform options for:
+- square
+- vagaro
+- booksy
+- glossgenius
+- schedulicity
+- acuity
+- calendly
+- fresha
+- styleseat
+- other
+- none
+
+Treat unsupported platforms as deep-link or fallback.
+
+PAGES / FEATURES TO BUILD
+
+1. Provider Profile Page
+Create a polished service provider page with:
+- provider name
+- verified badge if applicable
+- profile image / hero image
+- specialties
+- service menu with pricing
+- suite / neighborhood / micro hub context
+- live openings section
+- booking area
+- call/text/Instagram buttons
+- related providers nearby
+- strong mobile-first CTA design
+
+2. Reusable Booking Module Renderer
+Render booking area based on bookingModuleType:
+
+If embed_widget:
+- safely render approved embed / iframe container
+
+If popup_widget:
+- show Book Now button that opens modal/widget
+
+If deep_link:
+- show Book Now button
+- track click before redirect
+- support same-tab or new-tab config
+
+If call_text_fallback:
+- show call, text, Instagram, and booking link buttons
+- track each separately
+
+If manual_live_opening:
+- show live openings prominently
+- each opening can have Book / Call / Text CTA
+
+If api_connected:
+- create architecture placeholder only
+- no deep integration yet
+
+3. Live Openings System
+Build a fast way for provider/admin to add openings like:
+- Available Today
+- Available Tomorrow
+- Last-Minute Opening
+- This Afternoon
+- This Evening
+
+Requirements:
+- quick-add form
+- opening auto-expires if expiresAt passes
+- sort by soonest
+- show on provider profile
+- show on service category pages
+- show on micro hub pages
+- ready for future “Near Me Right Now” block
+
+Opening cards should show:
+- service/title
+- date/time label
+- provider name
+- location / neighborhood
+- CTA button
+
+4. Provider Directory / Category Page
+Create a directory page for salon and service businesses with filters:
+- Hair
+- Barber
+- Nails
+- Lashes
+- Brows
+- Makeup
+- Esthetics
+- Massage
+- Wellness
+- Other
+
+Filter options:
+- available today
+- available tomorrow
+- accepts walk-ins
+- verified only
+- booking available
+- neighborhood / micro hub
+
+5. Admin / Management UI
+Create admin/provider management tools to:
+- add/edit provider profile
+- assign booking module type
+- paste booking URL
+- store embed config safely
+- add/edit services
+- add/edit live openings
+- toggle verified
+- toggle walk-ins
+- assign city / micro hub / neighborhood
+- view metrics and action logs
+
+TRACKING / REPORTING
+Before any outbound action, log it in ProviderContactActionLog.
+
+Track:
+- profile views
+- booking clicks
+- opening clicks
+- call clicks
+- text clicks
+- Instagram clicks
+- directions clicks
+
+Add basic reporting:
+- provider profile views
+- provider booking clicks this month
+- provider contact actions this month
+- top providers
+- top openings
+- performance by micro hub / neighborhood
+
+This tracking is our proof-of-value layer since the Hub is not processing the actual booking.
+
+LIVE BOOKING UX DIRECTION
+This should feel urgent, useful, and local.
+
+Examples of labels:
+- Available Today
+- Tomorrow at 10:30 AM
+- Last-Minute Opening
+- Book Now
+- Walk-Ins Welcome
+
+Design goals:
+- mobile-first
+- fast scanning
+- strong CTA buttons
+- feels immediate and local
+- not cluttered
+- not a generic marketplace look
+
+IMPORTANT RULES
+- Do not build internal calendar logic
+- Do not build rescheduling/cancellation handling
+- Do not process appointment payments
+- Do not add service worker or caching complexity
+- Keep code modular and future-safe
+- Sanitize embed handling
+- Reuse existing Hub patterns where sensible
+
+DELIVERABLES
+Implement end-to-end with:
+- schema/model updates
+- provider CRUD
+- provider profile page
+- booking module renderer
+- live openings system
+- directory/category page
+- action tracking
+- basic reporting
+
+At the end provide:
+- summary of what was built
+- schema changes
+- assumptions made
+- placeholders left for future API-connected booking platforms

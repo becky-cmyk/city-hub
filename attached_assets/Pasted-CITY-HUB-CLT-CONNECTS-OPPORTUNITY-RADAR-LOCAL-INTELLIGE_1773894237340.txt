@@ -1,0 +1,189 @@
+CITY HUB / CLT CONNECTS
+OPPORTUNITY RADAR + LOCAL INTELLIGENCE
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Stabilize and strengthen the Opportunity Radar / Local Intelligence layer so the platform can identify local gaps, opportunities, and outreach targets using the REAL existing object model and geography structure.
+
+This is an INTELLIGENCE / OPPORTUNITY PASS.
+Do NOT rebuild the entire platform.
+Do NOT create a second object model.
+Do NOT flatten the geography system.
+Do NOT turn this into a giant enterprise BI tool.
+Do NOT break current discovery systems.
+
+LOCKED STRATEGIC ROLE
+
+City Hub is not just a directory.
+It is a living geo-organized ecosystem and local discovery engine.
+
+Opportunity Radar / Local Intelligence should help identify:
+- unmet local demand
+- missing categories
+- under-covered neighborhoods
+- business acquisition opportunities
+- creator/media opportunities
+- event opportunities
+- job/workforce opportunities
+- marketplace gaps
+- content/story opportunities
+
+This layer should support:
+- sales/outreach
+- local ecosystem growth
+- editorial opportunities
+- community activation
+- smarter hub development
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are businesses with creator-specific fields/types.
+Pulse is an aggregation layer over real objects.
+Search already exists.
+Map already exists.
+Taxonomy already exists.
+Bilingual system already exists.
+Admin/audit patterns already exist.
+
+Current core object areas include real tables such as:
+- businesses
+- events
+- articles
+- posts
+- jobs
+- job_listings
+- marketplace_listings
+
+There are already seeded data sources and signals in the platform, including things like:
+- Google Places seeded hub presences/businesses
+- RSS/content feeds
+- engagement metrics
+- reviews
+- SEO/AEO/intelligence-related signals where already present
+
+Preserve and build on the current real data structure.
+Do NOT invent a second shadow intelligence database unless absolutely necessary.
+
+VERY IMPORTANT GEOGRAPHY RULE
+
+The platform has TWO valid geographic hierarchies and both must remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, operator structures
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and local discovery
+
+Do NOT flatten these.
+Opportunity analysis must use the correct geography for the correct purpose.
+
+In general:
+- discovery/content coverage should respect ZONES
+- broader market/territory analysis may use REGIONS
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current codebase and confirm:
+
+1. What Opportunity Radar / Intelligence features already exist
+2. Which routes, services, tables, or UI panels currently relate to opportunity analysis
+3. Which current metrics/signals are already available and reliable
+4. Whether there is already geographic gap analysis, category gap analysis, or acquisition scoring
+5. Whether any Charlotte-specific assumptions are hardcoded in intelligence logic
+6. Which parts are usable today and should remain
+7. The safest low-risk path to improve the intelligence layer without creating a giant new subsystem
+
+Return a concise implementation note first before major changes.
+
+PRIMARY OBJECTIVE
+
+Turn Opportunity Radar into a practical local operating tool.
+
+It should help answer questions like:
+- Which neighborhoods are under-covered?
+- Which categories are missing or weak in a given zone?
+- Which businesses look like claim/acquisition opportunities?
+- Which areas have events activity vs no events activity?
+- Which creator/media categories are missing locally?
+- Where are there job opportunities but low employer presence?
+- Which categories show demand signals but low supply?
+
+This should be practical and decision-oriented, not theoretical.
+
+REQUIRED IMPLEMENTATION
+
+1. LOCAL GAP ANALYSIS
+
+Support lightweight analysis for coverage gaps by geography and category.
+
+Examples:
+- neighborhood with very few businesses in a category
+- district with no creator coverage
+- micro_hub with no active events
+- area with weak marketplace participation
+- category present in metro overall but missing locally
+
+Use real current objects and taxonomy.
+Do NOT fabricate demand.
+
+2. CATEGORY / SUPPLY COVERAGE SIGNALS
+
+Use existing taxonomy and object counts to identify supply-side opportunities such as:
+- no dentist listings in this neighborhood
+- only one roofer in this district
+- no active pet services in this micro_hub
+- strong restaurant density but no events coverage
+- creators missing in a category that has business activity
+
+This should use the existing category hierarchy.
+Do NOT create a second taxonomy system.
+
+3. CLAIM / OUTREACH OPPORTUNITY SIGNALS
+
+Use real business/object signals to identify likely outreach opportunities.
+
+Potential signals may include examples such as:
+- imported/seeded business not yet claimed
+- incomplete business profile
+- missing media/content
+- no verified badge
+- no active offers/events/jobs despite category fit
+- high local relevance but low engagement/completeness
+
+This is for practical sales/growth outreach.
+Keep it lightweight and explainable.
+
+4. CONTENT / STORY OPPORTUNITY SIGNALS
+
+Identify content/media/editorial opportunities such as:
+- active business category but no recent stories
+- neighborhood with activity but no local coverage
+- event-rich area with weak Pulse/story presence
+- creator gap in an otherwise active zone
+- business cluster that suggests a roundup/article opportunity
+
+This should help the content/marketing engine later.
+Do NOT build the full content engine here.
+
+5. JOB / WORKFORCE OPPORTUNITY SIGNALS
+
+Use existing jobs/job_listings and business presence to identify simple workforce opportunities such as:
+- jobs posted in an area/category with weak employer density
+- hiring activity in a neighborhood with low job visibility
+- categories with businesses but no current hiring listings
+- local job coverage gaps
+
+Keep this lightweight and useful.
+
+6. GEOGRAPHIC SAFETY
+
+Use both hierarchies correctly.
+
+Examples:
+- use ZONES for discovery/local content coverage analysis
+- use REGIONS for broader territory/expansion/sales views

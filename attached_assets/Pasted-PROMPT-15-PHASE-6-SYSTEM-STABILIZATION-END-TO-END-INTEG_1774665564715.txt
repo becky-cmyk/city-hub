@@ -1,0 +1,207 @@
+PROMPT 15 — PHASE 6: SYSTEM STABILIZATION + END-TO-END INTEGRATION
+
+You are implementing ONLY Phase 6.
+
+Prerequisite:
+- Orchestrator / entity resolution exists
+- Proposal + recommendation engine exists
+- Command Center (backend + UI) exists
+- Capture system exists (5D)
+- Inbox redefinition exists (5E)
+
+DO NOT implement:
+- new features
+- new products
+- redesigns
+- new data models unless absolutely required for fixes
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Ensure the FULL SYSTEM works end-to-end:
+
+INTENT / INPUT
+→ CAPTURE / INGESTION
+→ ENTITY RESOLUTION
+→ INTENT DETECTION
+→ ROUTING
+→ (INBOX if needed)
+→ COMMAND CENTER
+→ ACTION EXECUTION
+
+This is a stabilization, connection, and verification phase.
+
+--------------------------------------------------
+PART 1 — DEFINE CRITICAL FLOWS
+--------------------------------------------------
+
+Validate these flows:
+
+FLOW A — Capture (Manual / Expo)
+- create capture
+- process
+- resolve entity
+- route correctly:
+  → action queue OR
+  → inbox OR
+  → follow-up/opportunity
+
+FLOW B — Onboarding / Story
+- intake → story generation → recommendation → next step
+
+FLOW C — System Recommendation
+- Charlotte surfaces opportunity
+- appears in Command Center
+- user can act on it
+
+FLOW D — Inbox Resolution
+- item enters inbox
+- user resolves
+- moves to correct queue or exits system
+
+--------------------------------------------------
+PART 2 — TRACE EACH FLOW END-TO-END
+--------------------------------------------------
+
+For each flow:
+
+- log each step
+- confirm data passes correctly
+- confirm no dead ends
+- confirm no duplicate entries
+
+Identify:
+- breaks
+- missing links
+- wrong routing
+- silent failures
+
+--------------------------------------------------
+PART 3 — FIX CONNECTION GAPS
+--------------------------------------------------
+
+Where systems do not connect:
+
+- wire them properly
+- reuse existing logic
+- avoid duplication
+
+Examples:
+- capture not feeding command center
+- inbox not forwarding resolved items
+- proposal engine not surfacing results
+- orchestrator not passing context forward
+
+--------------------------------------------------
+PART 4 — REMOVE DUPLICATION
+--------------------------------------------------
+
+Identify and eliminate:
+
+- duplicate queues
+- duplicate routing logic
+- parallel pipelines doing same job
+- unused legacy code paths (only if safe)
+
+--------------------------------------------------
+PART 5 — STANDARDIZE STATUS + STATES
+--------------------------------------------------
+
+Ensure consistent states across system:
+
+Examples:
+- new
+- processing
+- needs_review
+- action_ready
+- completed
+- dismissed
+
+Align:
+- capture
+- inbox
+- command center
+- proposals
+
+--------------------------------------------------
+PART 6 — ERROR HANDLING + FAIL SAFES
+--------------------------------------------------
+
+Add basic safeguards:
+
+- failed processing → goes to inbox (exceptions)
+- missing data → flagged for review
+- broken action → logged + visible
+
+No silent failures.
+
+--------------------------------------------------
+PART 7 — LIGHT LOGGING / VISIBILITY
+--------------------------------------------------
+
+Ensure visibility into:
+
+- what Charlotte is doing
+- what was processed
+- what failed
+
+Do NOT build a full analytics system.
+Keep it practical.
+
+--------------------------------------------------
+PART 8 — PERFORMANCE / UX CHECKS
+--------------------------------------------------
+
+Confirm:
+
+- no blocking UI during processing
+- command center loads cleanly
+- capture flow is fast
+- inbox is responsive
+
+--------------------------------------------------
+PART 9 — CLEANUP PASS
+--------------------------------------------------
+
+Light cleanup only:
+
+- remove obvious dead code (safe only)
+- simplify confusing logic
+- align naming if inconsistent
+
+DO NOT refactor entire codebase.
+
+--------------------------------------------------
+PART 10 — FINAL SYSTEM TESTS
+--------------------------------------------------
+
+Run real-world scenarios:
+
+1) Expo capture → becomes follow-up or opportunity
+2) Capture with low confidence → inbox → resolved → action
+3) Opportunity → proposal → appears → actionable
+4) Action executed → reflected in activity
+5) No duplication across queues
+
+--------------------------------------------------
+PART 11 — OUTPUT REQUIRED
+--------------------------------------------------
+
+OUTPUT A — VERIFIED FLOWS (A–D)
+OUTPUT B — GAPS FOUND + FIXES APPLIED
+OUTPUT C — CONNECTIONS ADDED
+OUTPUT D — DUPLICATION REMOVED
+OUTPUT E — STATE MODEL (final)
+OUTPUT F — KNOWN LIMITATIONS (remaining)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after system is stable and flows are verified.
+
+Do NOT:
+- expand scope
+- add new feature sets
+- redesign UI

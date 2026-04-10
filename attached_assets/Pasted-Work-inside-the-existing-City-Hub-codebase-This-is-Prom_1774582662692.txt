@@ -1,0 +1,273 @@
+Work inside the existing City Hub codebase.
+
+This is Prompt 5B.
+Do NOT rebuild the editorial control foundation that already exists.
+Extend the current Feature #37 implementation.
+
+Existing foundation already present:
+- editorial-control-tab.tsx
+- review-queue-tab.tsx
+- intelligence-routes.ts endpoints
+- basic edit dialog
+- current review queue
+- quick actions
+- lightweight edit history
+- AI vs Final comparison
+
+Goal:
+Upgrade the EXISTING editorial control layer into a full operator-facing control system for imported / AI-generated / RSS-derived content.
+
+This prompt is an EXPANSION prompt, not a rebuild.
+
+--------------------------------------------------
+PART 1 — EXPAND REVIEW QUEUE INTO FULL EDITORIAL QUEUE
+--------------------------------------------------
+
+Current gap:
+The queue currently only shows items needing attention.
+
+Build:
+A full browsable editorial queue that supports ALL relevant states, not only review-needed items.
+
+Required queue views / filters:
+- REVIEW_REQUIRED
+- READY_TO_PUBLISH
+- PUBLISHED
+- PULSE_SUPPRESSED
+- UNPUBLISHED
+- ARCHIVED
+- SUPPRESSED
+
+Required filters:
+- source
+- content type
+- core category
+- subcategory
+- geo_primary
+- geo_secondary
+- publish state
+- policy state
+- date created
+- date updated
+- editor
+- confidence / routing issues
+
+Important:
+Do not remove the current “needs review” workflow.
+Expand it into a complete editorial queue.
+
+--------------------------------------------------
+PART 2 — ADD ROUTING CONFIRMATION PANEL
+--------------------------------------------------
+
+Current gap:
+No clear visibility into where content landed and why.
+
+Add a routing confirmation panel for each imported / AI-generated item showing:
+
+Core fields:
+- source name
+- original source URL
+- content type
+- core category
+- subcategory
+- geo_primary
+- geo_secondary
+- related entity / venue / business
+- queue status
+- publish status
+- policy status
+
+Destination checks:
+- Pulse
+- story/article page
+- hub page
+- category page
+- map
+- search
+
+For each destination show:
+- YES / NO
+- reason if NO
+- routing explanation if YES
+
+Examples:
+- Pulse: YES — allowed, published, active window
+- Hub: NO — no matching geo_primary/geo_secondary
+- Category page: YES — category + subcategory valid
+- Map: NO — insufficient location precision
+
+This panel must make routing decisions understandable to the operator.
+
+--------------------------------------------------
+PART 3 — EXPAND POST-PUBLISH EDITING
+--------------------------------------------------
+
+Current gap:
+Basic edits exist, but missing full editorial control.
+
+Expand editing support to include:
+- title
+- full article body
+- summary/excerpt
+- core category
+- subcategory
+- geo_primary
+- geo_secondary
+- related entity
+- venue linkage
+- source attribution fields
+- image attribution fields
+- image replace/remove support
+- state changes:
+  - unpublish
+  - archive
+  - Pulse-only suppress
+  - full suppress
+  - send back to review
+
+Important:
+Use the current edit flow as the foundation.
+Do not replace it with a disconnected new editor.
+
+--------------------------------------------------
+PART 4 — VERSION PRESERVATION
+--------------------------------------------------
+
+Current gap:
+Lightweight history exists, but stronger version preservation is needed.
+
+Preserve and expose:
+- original imported version
+- AI-generated version
+- latest edited version
+
+Track:
+- field changed
+- previous value
+- new value
+- editor
+- timestamp
+
+If full version snapshots are too heavy for current architecture, implement the strongest practical version-preservation approach without overbuilding.
+
+The operator must be able to understand:
+- what came from source
+- what AI changed
+- what humans changed later
+
+--------------------------------------------------
+PART 5 — SOURCE / IMAGE ATTRIBUTION MANAGEMENT
+--------------------------------------------------
+
+Current gap:
+Missing source attribution and image management controls.
+
+Add editable fields and display for:
+- source publication name
+- original source URL
+- source attribution text
+- image source URL
+- image credit text
+- image retained / removed / replaced state
+
+Admin must be able to:
+- remove inappropriate source image
+- replace image
+- keep article live without image
+- correct attribution text
+
+Do not remove source metadata from the system.
+
+--------------------------------------------------
+PART 6 — LIFECYCLE VISIBILITY + CONTROL
+--------------------------------------------------
+
+Current gap:
+No active-until / expired / evergreen visibility.
+
+Expose lifecycle fields in the editorial layer:
+- active_until
+- expired status
+- evergreen flag if present
+- archived state
+
+Apply to content types where relevant:
+- stories
+- events
+- jobs
+- marketplace items
+
+Minimum requirement:
+Operators must be able to SEE lifecycle state clearly.
+
+If practical in this pass, allow admin to edit:
+- active_until
+- evergreen flag
+- archive state
+
+Do not redesign the entire rotation engine here.
+
+--------------------------------------------------
+PART 7 — SUPPRESSION REASON + POLICY OVERRIDE
+--------------------------------------------------
+
+Current gap:
+Suppression exists but no stored reason.
+
+Add suppression reason support.
+
+When content is suppressed, store:
+- suppression reason
+- suppressing user/admin
+- timestamp
+
+Support policy states:
+- ALLOW
+- REVIEW_REQUIRED
+- SUPPRESS
+
+Allow manual override by admin.
+
+Do not delete suppressed items.
+Keep them available in admin.
+
+--------------------------------------------------
+PART 8 — KEEP UI IN CURRENT EDITORIAL AREA
+--------------------------------------------------
+
+Do not create a brand-new disconnected subsystem.
+
+Extend the current:
+- editorial-control-tab
+- review-queue-tab
+- existing backend endpoints and supporting services
+
+Keep it aligned with the existing content/editorial workflow.
+
+--------------------------------------------------
+PART 9 — DO NOT TOUCH THESE
+--------------------------------------------------
+
+Do NOT:
+- rebuild geo scoring
+- rebuild Pulse logic
+- rebuild the entire CMS
+- create duplicate records
+- replace working current editorial controls unnecessarily
+
+This prompt is specifically an expansion of Feature #37.
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary
+2. what existing components were extended
+3. what new filters/views were added to the queue
+4. what routing confirmation logic was added
+5. what post-publish controls were added
+6. how version preservation now works
+7. how suppression reason now works
+8. what remains for Prompt 6

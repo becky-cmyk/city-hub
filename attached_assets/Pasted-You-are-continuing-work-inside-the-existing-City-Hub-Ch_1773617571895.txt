@@ -1,0 +1,226 @@
+You are continuing work inside the existing City Hub / Charlotte Hub application.
+
+This prompt builds the **Event Discovery Layer** on top of the event system that already exists.
+
+DO NOT create a new platform.
+DO NOT build a separate SaaS.
+Extend the existing hub architecture.
+
+The hub already includes:
+- Presences
+- Categories and micros
+- Pulse feed
+- hub discovery
+- credit system
+- admin tools
+- event system from Prompt 1
+
+This prompt builds the public discovery and browsing experience.
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Allow residents and visitors to easily discover local events through:
+
+Event calendar
+Event map
+"What’s Happening Tonight"
+"This Weekend"
+Category filters
+
+Events must still link to their event micro-site pages.
+
+==================================================
+PHASE 1 — HUB EVENT DISCOVERY PAGE
+==================================================
+
+Create a discovery route.
+
+Example:
+
+/events
+
+This page should display:
+
+Upcoming events
+Filter options
+Featured events
+
+Filters:
+
+Date
+Category
+Neighborhood / hub
+Free vs paid
+Recurring events
+
+Sort options:
+
+Soonest
+Trending
+Recently added
+
+Only PUBLIC events appear here.
+
+==================================================
+PHASE 2 — EVENT CALENDAR VIEW
+==================================================
+
+Add a calendar display option.
+
+Users can toggle:
+
+List view
+Calendar view
+
+Calendar should show:
+
+Events per day
+Event title
+Location
+Quick link to event page
+
+Recurring events should display across dates.
+
+==================================================
+PHASE 3 — WHAT’S HAPPENING TONIGHT
+==================================================
+
+Create a quick discovery module.
+
+Route example:
+
+/events/tonight
+
+Logic:
+
+Show events starting between:
+today 4pm → midnight
+
+Sort by start time.
+
+Show:
+
+Title
+Venue
+Time
+Category
+Quick RSVP link
+
+This page should be optimized for mobile.
+
+==================================================
+PHASE 4 — THIS WEEKEND
+==================================================
+
+Route example:
+
+/events/weekend
+
+Logic:
+
+Friday 4pm → Sunday midnight.
+
+Used for weekend planning.
+
+==================================================
+PHASE 5 — CATEGORY EVENT FILTERS
+==================================================
+
+Events must connect to existing hub categories.
+
+Examples:
+
+Live Music
+Networking
+Food & Drink
+Family
+Community
+Business
+Arts
+
+Route example:
+
+/events/category/{category-slug}
+
+==================================================
+PHASE 6 — EVENT MAP
+==================================================
+
+Create optional map view.
+
+Route example:
+
+/events/map
+
+Display events by:
+
+location
+venue
+neighborhood
+
+Clicking an event opens:
+
+event preview
+link to event page.
+
+==================================================
+PHASE 7 — EVENT COLLECTIONS
+==================================================
+
+Support curated collections.
+
+Examples:
+
+Trending Events
+Featured This Week
+Crown Nominated Events
+
+Collections should be manageable in admin.
+
+==================================================
+PHASE 8 — PRESENCE EVENT INTEGRATION
+==================================================
+
+Events must appear on Presence pages.
+
+Section:
+
+Upcoming Events
+Past Events
+
+Private events should show:
+
+"Private Event Scheduled"
+
+without exposing details.
+
+==================================================
+PHASE 9 — PERFORMANCE CONSIDERATIONS
+==================================================
+
+Use indexed queries for:
+
+hub_id
+start_datetime
+category_id
+
+Only load upcoming events by default.
+
+Archive past events.
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+Users can:
+
+Browse events from the hub homepage
+See what’s happening tonight
+Browse by category
+View events on a calendar
+Open event micro-sites
+Discover events hosted by local Presences
+
+This discovery layer must feel like the hub is the **central place to see what’s happening locally.**

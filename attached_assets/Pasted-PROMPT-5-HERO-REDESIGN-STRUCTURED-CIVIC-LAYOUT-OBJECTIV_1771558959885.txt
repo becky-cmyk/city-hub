@@ -1,0 +1,111 @@
+PROMPT 5 — HERO REDESIGN: STRUCTURED CIVIC LAYOUT
+
+OBJECTIVE:
+Rebuild the homepage hero to reflect Charlotte City Hub positioning.
+
+We are NOT redesigning the entire page.
+We are restructuring the hero only.
+
+---------------------------------------
+PART 1 — LOGO REPOSITIONING
+---------------------------------------
+
+1) Move the main logo:
+   - Position: left third of the skyline
+   - Vertically centered relative to the skyscraper height
+   - Reduce size ~12%
+   - Remove any glow or heavy shadow
+   - It must feel anchored, not floating
+
+Do NOT center the logo.
+Do NOT place it at top like a badge.
+
+---------------------------------------
+PART 2 — BACKGROUND DARKENING
+---------------------------------------
+
+Add a subtle gradient overlay to the skyline:
+
+background: linear-gradient(
+  to bottom,
+  rgba(0,0,0,0.35),
+  rgba(0,0,0,0.55)
+)
+
+Keep skyline visible.
+Do NOT make it too dark.
+
+---------------------------------------
+PART 3 — GLASS PANEL BEHIND HERO TEXT
+---------------------------------------
+
+Wrap headline + tagline + bullet scope in a centered container.
+
+Create a semi-transparent plum-tinted panel:
+
+- background: rgba(45, 0, 60, 0.55)
+- backdrop-filter: blur(6px)
+- padding: 32px 40px
+- border-radius: 16px
+- max-width: 820px
+- margin: 0 auto
+- text-align: center
+
+This panel must sit centered over skyline.
+
+---------------------------------------
+PART 4 — HERO COPY (REPLACE EXISTING)
+---------------------------------------
+
+Replace "Discover Your City" section entirely with:
+
+H1:
+Charlotte City Hub
+
+Sub-line:
+Built for visibility, opportunity, and what comes next — through
+
+Bullet Scope:
+• Commerce
+• Leadership
+• Neighborhoods
+• Community organizations
+
+Use proper vertical spacing between bullets.
+No icons.
+No decorative graphics.
+
+---------------------------------------
+PART 5 — SEARCH BAR ADJUSTMENT
+---------------------------------------
+
+Place search bar BELOW the glass panel.
+It should be slightly narrower than panel (max-width: 720px).
+
+Add:
+- Subtle box shadow
+- Rounded corners
+- Slight brand accent border on focus
+- Increase vertical padding slightly
+
+It must feel intentional, not default SaaS.
+
+---------------------------------------
+CONSTRAINTS
+---------------------------------------
+
+- Do NOT touch routing
+- Do NOT change functionality
+- Do NOT modify SEO snapshot system
+- Do NOT modify data loading
+- Only adjust hero JSX + styling
+
+---------------------------------------
+DELIVERABLE
+---------------------------------------
+
+Show updated hero JSX and CSS/Tailwind adjustments.
+
+Do not summarize.
+Do not explain.
+Just show updated code blocks.

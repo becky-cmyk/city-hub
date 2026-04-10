@@ -1,0 +1,328 @@
+SYSTEM ROLE
+You are auditing and extending the CityMetroHub codebase.
+
+Context:
+The platform already contains a business directory and hub presence system.
+All monetization and contributor roles must attach to that single listing.
+
+Rule:
+There are NO separate profile systems.
+Everything attaches to the base "Hub Presence / Directory Listing".
+
+A listing is the core identity object for:
+- business
+- organization
+- nonprofit
+- podcast
+- creator
+- speaker
+- local expert
+- contributor
+- venue
+
+All monetized participants must have the $299 Hub Presence.
+
+Your job is to audit the platform and confirm whether the following capabilities already exist.
+If they exist, document where they live.
+If they do not exist, design and scaffold them using the existing listing system.
+
+--------------------------------------------------
+
+STEP 1 — VERIFY HUB PRESENCE AS BASE PROFILE
+
+Confirm that the following fields exist on the business/listing model.
+
+If missing, add them.
+
+Required fields:
+
+listingType
+(business | org | nonprofit | podcast | creator | speaker | venue)
+
+badges
+[array]
+
+monetizationTier
+(free | verified | charter | enhanced | presence)
+
+roles
+[array]
+
+creatorType
+(podcast | artist | photographer | writer | musician | maker | educator)
+
+speakerTopics
+[array]
+
+expertCategories
+[array]
+
+acceptingPressRequests
+boolean
+
+acceptingSpeakingRequests
+boolean
+
+acceptingMarketplaceOrders
+boolean
+
+localHubAffiliations
+[array]
+
+revenueShareEligible
+boolean
+
+--------------------------------------------------
+
+STEP 2 — BADGE SYSTEM EXTENSION
+
+Verify existing badges.
+
+Platform uses:
+
+Business
+Org
+Nonprofit
+Podcast
+Creator
+Contributor
+Local Expert
+Speaker
+Venue
+
+Add additional monetizable badges if missing:
+
+Artist
+Photographer
+Author
+Musician
+Maker
+Instructor
+Community Leader
+Event Host
+Press Source
+
+Badges appear:
+
+1) listing card
+2) hub presence page
+3) pulse feed attribution
+
+--------------------------------------------------
+
+STEP 3 — SPEAKERS BUREAU
+
+Check if speakers bureau exists.
+
+If not, build it.
+
+Routes:
+
+/:citySlug/speakers
+/:citySlug/speakers/:listingSlug
+
+Speaker data should come from:
+
+Hub Presence listing
+
+Add fields if missing:
+
+speakingTopics
+speakingFeeRange
+speakingFormats
+(workshop | keynote | panel | training)
+
+speakerMedia
+(video | podcast appearances)
+
+speakerAvailability
+
+Add booking CTA:
+
+Request Speaker
+
+Requests go to CRM.
+
+--------------------------------------------------
+
+STEP 4 — HELP A REPORTER (SOURCE REQUEST BOARD)
+
+Check if Source Request board exists.
+
+If not, scaffold.
+
+Routes:
+
+/:citySlug/source-requests
+/:citySlug/source-requests/:id
+
+Request types:
+
+Journalist request
+Podcast guest request
+Expert comment request
+Community story request
+
+Allow users to post requests.
+
+Experts and contributors can respond.
+
+Listings with badges:
+
+Local Expert
+Speaker
+Creator
+Contributor
+
+should surface first.
+
+--------------------------------------------------
+
+STEP 5 — CREATOR MARKETPLACE (LOCAL ETSY)
+
+Verify marketplace already exists.
+
+Extend marketplace to support creator storefronts.
+
+Routes:
+
+/:citySlug/marketplace
+/:citySlug/marketplace/artists
+/:citySlug/marketplace/:listingSlug
+
+Marketplace types:
+
+art
+prints
+photography
+handmade goods
+digital downloads
+music
+classes
+
+Each item links to the creator's hub presence.
+
+Revenue model:
+
+monthly creator subscription
++ transaction fee
+
+--------------------------------------------------
+
+STEP 6 — CONTENT SOURCE INGESTION
+
+Audit existing sources for Pulse Feed.
+
+Current sources likely include:
+
+RSS
+podcasts
+articles
+business posts
+events
+jobs
+shop items
+digests
+
+Add missing source types if not present:
+
+Press releases
+Nonprofit announcements
+Community alerts
+Local government updates
+Artist releases
+Podcast guest announcements
+Local expert commentary
+Venue event calendars
+University research stories
+
+Each source should map to:
+
+sourceType
+sourceAttribution
+contentCategory
+
+--------------------------------------------------
+
+STEP 7 — CREATOR / EXPERT DISCOVERY
+
+Add explore hubs if missing.
+
+Routes:
+
+/:citySlug/explore/creators
+/:citySlug/explore/artists
+/:citySlug/explore/podcasts
+/:citySlug/explore/experts
+/:citySlug/explore/speakers
+
+All results must pull from listings with those badges.
+
+--------------------------------------------------
+
+STEP 8 — MONETIZATION MODEL
+
+Verify pricing configuration.
+
+Base requirement:
+
+Hub Presence ($299 annually)
+
+Additional revenue layers:
+
+Speaker bureau listing upgrade
+Expert featured placement
+Creator marketplace subscription
+Podcast Pro tier
+Artist storefront
+Sponsored Pulse posts
+Radio advertising
+Venue TV placements
+
+Create pricing table if missing.
+
+--------------------------------------------------
+
+STEP 9 — CRM INTEGRATION
+
+Ensure all of the following actions create CRM opportunities:
+
+Speaker requests
+Marketplace seller onboarding
+Expert inquiries
+Source request responses
+Venue media participation
+Creator marketplace applications
+
+--------------------------------------------------
+
+STEP 10 — ADMIN PANELS
+
+Confirm admin tools exist for:
+
+Badge assignment
+Speaker approvals
+Marketplace creator approval
+Source request moderation
+Expert verification
+Creator revenue reporting
+
+If missing, add admin panels.
+
+--------------------------------------------------
+
+STEP 11 — FINAL OUTPUT
+
+After audit:
+
+Return a structured report:
+
+1) systems already implemented
+2) systems partially implemented
+3) systems missing
+4) schemas required
+5) routes required
+6) admin panels required
+7) monetization flows
+
+Then scaffold missing features.

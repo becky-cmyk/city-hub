@@ -1,0 +1,72 @@
+PROMPT — UI POLISH PASS (DESKTOP CLEANUP + MOBILE COLOR) — LAYOUT ONLY
+
+CONTEXT (LOCKED):
+- Same CityCoreHub project.
+- Do not touch Stripe, entitlements, ranking logic, database, or routes.
+- This is purely UI layout + styling improvements for desktop and mobile.
+- No refactors. No renaming. Implement in-place.
+
+OBJECTIVE:
+1) Desktop: make the homepage feel intentional (not “floating in whitespace”).
+2) Mobile: add controlled brand color (not a full redesign) so it feels less plain.
+
+TARGET SCREENS:
+- Home page with “Discover Your City” hero + search + category pills + Featured Businesses.
+- Top nav/header.
+
+DESKTOP REQUIREMENTS:
+1) Add a consistent content container:
+   - Max width ~ 1100–1200px
+   - Centered with responsive side padding
+   - Apply to hero + sections below so everything aligns.
+
+2) Hero improvements:
+   - Reduce top whitespace (bring hero content up).
+   - Increase visual hierarchy:
+     - Headline slightly larger, tighter line-height
+     - Subtitle constrained to readable width
+   - Search bar should be visually “primary”:
+     - slightly taller
+     - stronger border/soft shadow
+     - clear focus ring
+
+3) Category pills:
+   - Align in a neat row with wrapping
+   - Improve spacing and hover states (subtle)
+   - Keep them lightweight (do not look like heavy buttons)
+
+4) Featured Businesses section:
+   - Ensure the section title aligns with the same container
+   - Add consistent vertical spacing between sections (hero -> pills -> featured)
+
+MOBILE COLOR REQUIREMENTS (CONTROLLED):
+1) Add a soft brand-tinted background on mobile only:
+   - A subtle purple-tinted gradient or wash behind the hero area
+   - Keep body content readable (no low-contrast text)
+
+2) Buttons on mobile:
+   - Primary buttons should have a slightly stronger color presence (purple tint)
+   - Keep text high contrast
+
+3) Avoid “too much purple”:
+   - Use color as accents: hero background wash + primary CTA + focused input ring
+   - Everything else stays clean/neutral
+
+IMPLEMENTATION INSTRUCTIONS:
+- Introduce a small set of design tokens (CSS variables) for:
+  --brand-primary (purple)
+  --brand-accent (gold or warm highlight)
+  --surface, --surface-2, --border, --text, --muted
+- Apply tokens to the home hero + inputs + buttons + pills.
+- Use a mobile media query to apply the hero background wash (mobile only).
+- Do NOT change component behavior or API calls.
+
+ACCEPTANCE CHECKS:
+1) Desktop: hero content sits higher, aligned to a container, and feels “designed” not floating.
+2) Desktop: search bar looks primary and polished (height, border, focus).
+3) Desktop: pills wrap cleanly and look consistent.
+4) Mobile: hero area has a tasteful brand-tinted background wash, not overpowering.
+5) No layout breakage in nav.
+
+DELIVERABLE:
+Implement the layout/styling changes for the Home screen and header as described, using minimal code changes and reusing existing styling approach (Tailwind/CSS modules/etc.) already in the repo.

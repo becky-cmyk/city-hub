@@ -1,0 +1,240 @@
+PROMPT 3 — IMPLEMENT SEO PRERENDER “SNAPSHOT” HTML FOR PUBLIC ROUTES (NO REBUILD, NO SCHEMA CHANGES)
+
+OBJECTIVE:
+Fix the confirmed SPA-only crawlability problem by serving meaningful server-generated HTML (title/meta/canonical/JSON-LD + minimal visible content) for PUBLIC routes, while keeping the React SPA as-is for users.
+
+We are NOT implementing full SSR/hydration complexity.
+We ARE implementing “SEO Snapshot Injection”:
+- Server fetches the same DB data
+- Builds an HTML snapshot
+- Injects it into the <head> and <div id="root"> of the existing index.html shell
+- Ships the normal SPA scripts so the app still runs normally in browsers
+
+LOCKED:
+- No schema changes
+- No service workers
+- No caching systems beyond simple in-memory TTL (optional)
+- Multi-tenant cityId scoping must remain correct
+- No endpoint/token/auth changes in this prompt
+- Surgical change: server-side public GET handling only
+
+------------------------------------------------------------
+STEP 1 — ADD A SERVER UTILITY: loadIndexHtmlTemplate()
+------------------------------------------------------------
+
+Create a helper that returns the raw index.html as a string.
+
+It must work in BOTH dev and prod, so try these paths in order (first that exists):
+
+1) dist/client/index.html
+2) dist/index.html
+3) client/index.html
+4) index.html
+
+(Use fs.existsSync checks.)
+
+Cache the loaded template in memory (so we don’t read from disk every request).
+
+------------------------------------------------------------
+STEP 2 — ADD A SERVER UTILITY: buildSeoHtml({ title, description, canonical, jsonLd, rootHtml })
+------------------------------------------------------------
+
+Given the index.html template string, inject:
+
+A) <title>…</title>
+- Replace an existing <title> tag if present, otherwise insert before </head>.
+
+B) <meta name="description" content="...">
+- Replace if exists, otherwise insert before </head>.
+
+C) <link rel="canonical" href="...">
+- Replace if exists, otherwise insert before </head>.
+
+D) JSON-LD:
+Insert:
+<script type="application/ld+json">...</script>
+before </head>
+(ensure jsonLd is JSON.stringify(obj))
+
+E) Root HTML:
+Replace:
+<div id="root"></div>
+OR
+<div id="root">...</div>
+with:
+<div id="root">${rootHtml}</div>
+
+Return the final HTML string.
+
+------------------------------------------------------------
+STEP 3 — IMPLEMENT PUBLIC “SEO SNAPSHOT” ROUTE HANDLERS (MINIMUM SET)
+------------------------------------------------------------
+
+Implement Express GET handlers for these PUBLIC routes (these match our diagnostic set):
+
+1) City Home:
+   /cities/:citySlug
+
+2) Directory:
+   /cities/:citySlug/directory
+
+3) Business Detail:
+   /cities/:citySlug/business/:businessSlug
+
+4) Category Hub:
+   /cities/:citySlug/category/:categorySlug
+
+5) Zone Filter:
+   /cities/:citySlug/directory?zone=:zoneSlug  (NOTE: this is the SAME route as #2, but detect query.zone)
+
+IMPORTANT:
+- These handlers must run BEFORE the SPA fallback handler that serves index.html for all routes.
+- These handlers must NOT affect /admin or /api routes.
+
+------------------------------------------------------------
+STEP 4 — DATA LOADING (SERVER-SIDE) — USE EXISTING DB ACCESS LAYER
+------------------------------------------------------------
+
+For each route, fetch the minimum needed DB data server-side (cityId-scoped).
+
+A) City:
+- Get city by slug: id, name, state, canonical base URL building
+
+B) Business:
+- By businessSlug + cityId
+- Need: name, category, zone, address fields, phone, website, description/summary if exists, updatedAt, isFeatured, etc.
+
+C) Category Hub:
+- By categorySlug + cityId
+- Need: category display name (EN/ES if exists), and top businesses list (e.g., 10)
+
+D) Zone Filter:
+- By zoneSlug + cityId
+- Need: zone display name, and top businesses list (e.g., 10)
+
+E) Directory:
+- For baseline: list top businesses (e.g., 10) and total count if easy
+
+Use current existing query patterns already used by API routes.
+Do not add new tables.
+Do not change city scoping rules.
+
+------------------------------------------------------------
+STEP 5 — BUILD SEO FIELDS PER ROUTE
+------------------------------------------------------------
+
+1) City Home
+Title:
+  `${city.name} Local Business Hub | CityCoreHub`
+Description:
+  `Discover businesses, events, and local highlights in ${city.name}.`
+Canonical:
+  `${basePublicUrl}/cities/${citySlug}`
+JSON-LD:
+  Organization + WebSite + SearchAction (reuse existing objects if you already have them, but now on server)
+Root HTML:
+  Minimal:
+  - H1 with city name
+  - A short paragraph
+  - A UL list of 8–10 top business links (anchor tags with clean paths)
+
+2) Directory (no zone)
+Title:
+  `Directory | ${city.name} | CityCoreHub`
+Description:
+  `Browse businesses in ${city.name} by category and area.`
+Canonical:
+  `${basePublicUrl}/cities/${citySlug}/directory`
+JSON-LD:
+  BreadcrumbList + (optional) ItemList of top businesses
+Root HTML:
+  H1 + short copy + list of business links
+
+3) Directory (zone filter)
+If query.zone exists:
+Title:
+  `${zone.name} Directory | ${city.name} | CityCoreHub`
+Description:
+  `Businesses in ${zone.name}, ${city.name}.`
+Canonical:
+  `${basePublicUrl}/cities/${citySlug}/directory?zone=${zoneSlug}`
+(OK to keep query in canonical since it is a real indexable facet; we can refine later.)
+JSON-LD:
+  BreadcrumbList + ItemList
+Root HTML:
+  H1 includes zone name + list links
+
+4) Category Hub
+Title:
+  `${category.name} in ${city.name} | CityCoreHub`
+Description:
+  `Explore ${category.name} businesses in ${city.name}.`
+Canonical:
+  `${basePublicUrl}/cities/${citySlug}/category/${categorySlug}`
+JSON-LD:
+  BreadcrumbList + ItemList
+Root HTML:
+  H1 + short copy + list links
+
+5) Business Detail
+Title:
+  `${business.name} | ${city.name} | CityCoreHub`
+Description:
+  Use business summary/description if available; else:
+  `Details, location, and contact info for ${business.name} in ${city.name}.`
+Canonical:
+  `${basePublicUrl}/cities/${citySlug}/business/${businessSlug}`
+JSON-LD:
+  LocalBusiness + BreadcrumbList (reuse the existing schema structure you already built client-side, but server-side now)
+Root HTML:
+  Must include:
+  - H1 = business name
+  - Address (if exists)
+  - Phone (if exists)
+  - Category + Zone (if exists)
+  - A short description (if exists)
+  - A “Visit website” link if website exists (clean anchor)
+
+------------------------------------------------------------
+STEP 6 — BASE PUBLIC URL
+------------------------------------------------------------
+
+Use the SAME base URL resolver we just fixed for the diagnostic:
+
+resolvePublicBaseUrl():
+- APP_PUBLIC_URL if set (trim trailing slash)
+- else REPLIT_DEV_DOMAIN -> https://<domain>
+- else http://127.0.0.1:<PORT>
+
+Use this to generate canonicals.
+
+------------------------------------------------------------
+STEP 7 — QUICK SAFETY + PERF
+------------------------------------------------------------
+
+- If any lookup fails (city not found, business not found), fall back to serving the normal SPA index.html (do not throw a 500).
+- Optional: in-memory TTL cache (e.g., 60 seconds) for rendered HTML per URL to reduce DB reads, but keep it simple (a Map with timestamps). If you add it, keep it small and safe.
+
+------------------------------------------------------------
+STEP 8 — VALIDATION (MUST DO IN REPLIT)
+------------------------------------------------------------
+
+After implementation, run the diagnostic endpoint and confirm these fields are now TRUE on public pages:
+
+- titleTag present and non-empty
+- metaDescription present
+- canonicalHref present
+- hasJsonLd true
+- h1Text present
+- containsBusinessName true for business page
+- containsCategoryName true for category page
+- containsZoneName true for zone-filtered directory
+
+Paste the FULL JSON output from:
+  /api/seo-diagnostic?token=<token>
+
+Also paste the first ~40 lines of raw HTML from:
+  /cities/<citySlug>/business/<businessSlug>
+(showing <title>, meta description, canonical, JSON-LD script, and the H1 in #root)
+
+END PROMPT

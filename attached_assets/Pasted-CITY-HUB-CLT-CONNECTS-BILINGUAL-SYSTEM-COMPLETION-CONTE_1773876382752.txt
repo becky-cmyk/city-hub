@@ -1,0 +1,255 @@
+CITY HUB / CLT CONNECTS — BILINGUAL SYSTEM COMPLETION
+CONTENT + DISCOVERY ALIGNMENT
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Complete and stabilize the bilingual English/Spanish behavior across discovery, content, and object presentation using the REAL current bilingual system already in the codebase.
+
+This is a SURGICAL BILINGUAL COMPLETION PASS.
+Do NOT rebuild the translation system from scratch.
+Do NOT create a second translation architecture.
+Do NOT duplicate content into separate English and Spanish object systems.
+Do NOT break the current English experience.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+The platform already has a real bilingual system in place.
+
+Current implementation includes:
+- 370+ UI string translations
+- custom English/Spanish support
+- per-field database columns for translated content where applicable
+  examples may include:
+  - titleEs
+  - descriptionEs
+  - summaryEs
+  - other translated content fields already present
+- auto-translation via OpenAI in parts of the system
+
+This existing architecture must remain the source of truth.
+
+Do NOT create:
+- separate Spanish tables
+- duplicate object records for language variants
+- a second translation pipeline
+- a separate Spanish-only discovery system
+
+LOCKED BILINGUAL RULE
+
+The platform must support both English and Spanish across:
+- UI text
+- object display
+- categories
+- badges
+- prompts
+- CTAs
+- listings
+- events
+- jobs
+- marketplace
+- Pulse/discovery content
+- search labels and grouped results
+- map-adjacent controls and labels
+
+Translation should feel natural and platform-aware, not mechanically bolted on.
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current bilingual implementation and confirm:
+
+1. How language selection is currently stored and applied
+2. Which UI layers are already correctly translated
+3. Which discovery surfaces already respect language correctly
+4. Which discovery surfaces are still leaking English when Spanish is selected
+5. Which content/object types already have translated fields
+6. Which content/object types are still falling back badly or inconsistently
+7. How categories currently render in English/Spanish
+8. How search behaves in English vs Spanish today
+9. Whether Pulse cards/labels/story framing are fully bilingual or only partially
+10. Whether map filters/labels/controls are fully bilingual or only partially
+11. The safest low-risk path to complete bilingual support without rewriting the system
+
+Return a concise implementation note first before major changes.
+
+PRIMARY OBJECTIVE
+
+Finish the bilingual system so English and Spanish behave consistently across discovery and content.
+
+This means:
+- the UI should switch correctly
+- object content should display the right translated fields where available
+- discovery surfaces should not partially revert to English
+- category and filter language should remain consistent
+- search labels/grouping should remain bilingual-safe
+- missing translated fields should fail gracefully
+
+This is a completion/refinement pass, not a conceptual rebuild.
+
+REQUIRED IMPLEMENTATION
+
+1. LANGUAGE STATE CONSISTENCY
+
+Ensure the current language selection is consistently respected across:
+- public discovery pages
+- search
+- Pulse
+- map-related controls
+- category pages
+- neighborhood/hub pages
+- object pages
+- signup/gating language where already supported
+
+Do not let parts of the UI silently revert to English when Spanish is selected.
+
+2. PER-FIELD CONTENT DISPLAY
+
+Use existing translated content fields correctly where they already exist.
+
+Examples:
+- title / titleEs
+- description / descriptionEs
+- summary / summaryEs
+- CTA labels and badges if field-based
+
+Rules:
+- if Spanish is selected and a valid Spanish field exists, show it
+- if Spanish is selected and the translated field is missing, use graceful fallback behavior
+- do not show broken blanks where fallback should occur
+- do not overwrite original language source fields in this prompt
+
+3. DISCOVERY SURFACE COMPLETION
+
+Ensure bilingual behavior is consistent on these discovery surfaces where applicable:
+- search results
+- Pulse
+- map filters and labels
+- directory/business discovery
+- events discovery
+- jobs discovery
+- marketplace discovery
+- category pages
+- hub/neighborhood pages
+
+The discovery system should feel like one bilingual platform, not a partially translated shell.
+
+4. CATEGORY / TAXONOMY DISPLAY
+
+Preserve the existing taxonomy structure and ensure categories render correctly in both languages where translation support exists.
+
+Requirements:
+- category labels should display in the selected language
+- filters should remain understandable in the selected language
+- category pages should not mix English and Spanish unnecessarily
+- do not create a second taxonomy system
+
+5. SEARCH BILINGUAL SAFETY
+
+Do not rebuild search in this prompt.
+
+But ensure search remains bilingual-safe:
+- labels, result group names, filters, and interface text should follow selected language
+- if current data supports matching translated fields, preserve and refine that safely
+- if deep bilingual synonym handling is still incomplete, note that clearly rather than overbuilding now
+
+This prompt is about compatibility and consistency first.
+
+6. PULSE BILINGUAL COMPLETION
+
+Pulse must preserve its story/discovery behavior while respecting language selection.
+
+Requirements:
+- Pulse card labels/story framing should render in the selected language
+- translated object fields should display when available
+- imported/native content should fall back gracefully
+- do not create Pulse-specific translated duplicates
+
+7. MAP / DISCOVERY CONTROL BILINGUAL COMPLETION
+
+Ensure map-adjacent controls and labels remain bilingual where they exist, including examples such as:
+- category/type filters
+- legends
+- badges
+- action buttons
+- empty states
+- helper text
+
+Do not rebuild the map system in this prompt.
+
+8. SIGNUP / GATING / READER LADDER LANGUAGE SAFETY
+
+Because the platform uses a visitor → registered/reader → verified contributor ladder, make sure the discovery gating language is consistent in both languages where supported.
+
+Examples:
+- visitor gating prompts
+- free reader signup prompts
+- verification/contributor upgrade prompts
+- CTA text around limited access
+
+Do not redesign the ladder here.
+Just ensure bilingual consistency.
+
+9. ADMIN / CONTENT AUTHORING SAFETY
+
+Do not rebuild admin translation tooling in this prompt.
+
+But preserve compatibility so current admins/content workflows still work with:
+- translated fields
+- auto-translation behavior
+- bilingual display logic
+
+If there are obvious low-risk fixes to field handling or display mapping, make them.
+Do not attempt a full translation workflow redesign.
+
+10. CITY / PLATFORM SAFETY
+
+Do not leave hidden Charlotte-only language assumptions where the platform should be city-agnostic.
+
+This prompt is not about metro rollout, but it should not reinforce Charlotte-as-platform language assumptions.
+
+11. PERFORMANCE / STABILITY
+
+Keep this implementation light and stable.
+
+Prefer:
+- fixing field mapping
+- fixing render conditions
+- fixing language-state propagation
+- fixing fallback logic
+- fixing missing bilingual labels on discovery surfaces
+
+Do not introduce a heavy translation engine rewrite.
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild the translation architecture
+- create separate Spanish tables
+- duplicate content objects by language
+- redesign all admin translation tooling
+- rebuild search from scratch
+- rebuild Pulse from scratch
+- rebuild the map from scratch
+- overwrite source language content automatically in bulk unless that already safely exists and is already part of the workflow
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. language selection behaves consistently across discovery surfaces
+2. translated content fields display correctly where available
+3. fallback behavior is clean where translations are missing
+4. category/taxonomy labels remain bilingual-safe
+5. Pulse/search/map-adjacent discovery UI behaves consistently in English and Spanish
+6. signup/gating language is not partially broken
+7. no second translation architecture is introduced
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current bilingual implementation first
+3. implement the smallest stable change set for bilingual completion
+4. list exactly which files/components/services/routes were changed
+5. list what deeper bilingual/search/synonym work should wait for later prompts

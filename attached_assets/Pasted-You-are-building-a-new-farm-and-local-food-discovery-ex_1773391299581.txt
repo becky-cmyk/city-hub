@@ -1,0 +1,192 @@
+You are building a new farm and local food discovery expansion inside the existing CLT Hub / City Hub platform.
+
+This is NOT a simple directory add-on.
+This should function like a local food discovery layer with directory support, search support, filters, SEO support, micro hub support, and recurring-use behavior.
+
+Build this as a structured extension of the existing business directory and micro hub system.
+
+==================================================
+PROJECT GOAL
+==================================================
+
+Add a new business/category system for:
+
+- Local Farms
+- Meat Producers
+- Egg Producers
+- CSA / Farm Boxes
+- Farm Co-ops / Buying Clubs
+- Pickup Locations
+- Farmers Markets
+- Farm Stores / Farm Stands
+- Related local food sources
+
+The purpose is to help users discover:
+- where to buy local meat
+- where to buy eggs
+- where to subscribe to farm boxes
+- where to find CSA programs
+- where to find pickup locations
+- where to find farmers markets
+- where to buy directly from local farms
+
+This must support both:
+1. standard directory browsing
+2. micro hubs that can become traffic drivers and monetization layers
+
+This should be implemented in a way that works first for Charlotte / CLT Hub but is reusable across future metro hubs.
+
+==================================================
+CORE PRODUCT THINKING
+==================================================
+
+Do NOT treat this as just “add a category called farms.”
+
+Treat this as a new discovery cluster with high-repeat-use potential.
+
+Users return repeatedly for:
+- weekly egg purchases
+- monthly meat purchases
+- CSA subscriptions
+- seasonal produce
+- market schedules
+- pickup logistics
+
+So this needs:
+- business directory categories
+- business subtype tagging
+- search filters
+- micro hub pages
+- recurring / seasonal fields
+- local SEO landing structures
+- “where to buy” utility behavior
+
+==================================================
+TOP-LEVEL DIRECTORY CATEGORY
+==================================================
+
+Create a top-level business directory category:
+
+Local Farms & Food Sources
+
+Description:
+Local farms, meat producers, egg producers, CSA programs, food co-ops, pickup locations, farm stands, and farmers markets serving the Charlotte region.
+
+==================================================
+DIRECTORY CATEGORY STRUCTURE
+==================================================
+
+Create the following categories and subtype support.
+
+1. Farms
+Subtypes:
+- Meat Farm
+- Egg Farm
+- Produce Farm
+- Dairy Farm
+- Mixed Farm
+- Organic Farm
+- Regenerative Farm
+- Family Farm
+- Urban Farm
+- Educational Farm
+
+2. Meat Producers
+Subtypes:
+- Grass-Fed Beef
+- Pastured Pork
+- Pastured Chicken
+- Turkey
+- Lamb
+- Goat
+- Bulk Beef Sales
+- Bulk Pork Sales
+- Bulk Meat Bundles
+- Custom Meat Orders
+
+3. Egg Producers
+Subtypes:
+- Pasture-Raised Eggs
+- Free-Range Eggs
+- Duck Eggs
+- Specialty Eggs
+- Weekly Egg Availability
+
+4. CSA / Farm Boxes
+Subtypes:
+- Produce CSA
+- Meat CSA
+- Mixed Farm Box
+- Seasonal Box
+- Weekly Subscription Box
+- Monthly Subscription Box
+- Home Delivery
+- Pickup Only
+
+5. Farm Co-ops / Buying Clubs
+Subtypes:
+- Meat Buying Club
+- Produce Buying Club
+- Bulk Order Group
+- Community Co-op
+- Farm Share Group
+
+6. Pickup Locations
+Subtypes:
+- Neighborhood Pickup Site
+- Church Pickup Site
+- School Pickup Site
+- Retail Pickup Site
+- Farm Pickup
+- Community Center Pickup
+
+7. Farmers Markets
+Subtypes:
+- Weekly Farmers Market
+- Seasonal Farmers Market
+- Pop-Up Market
+- Neighborhood Market
+- Producer-Only Market
+
+8. Farm Stores / Farm Stands
+Subtypes:
+- Farm Store
+- Roadside Stand
+- Seasonal Stand
+- On-Farm Market
+
+9. Local Food Specialty Sources
+Subtypes:
+- Honey Producer
+- Dairy / Raw Milk Info Listing
+- Soap / Tallow / Farm Goods
+- Bakery / Farm Kitchen
+- Flowers / U-Pick
+- Herbal / Specialty Farm
+
+10. Homestead / Backyard Food Support
+Subtypes:
+- Feed Store
+- Seed / Starts
+- Garden Supply
+- Chicken Supply
+- Homestead Support
+
+==================================================
+MICRO HUBS TO BUILD
+==================================================
+
+Create support for these farm-related micro hubs as standalone discoverable hub pages under the CLT Hub architecture.
+
+Priority micro hubs:
+1. CLT Meat
+2. CLT Farm Boxes
+3. CLT Fresh Eggs
+4. CLT Farmers Markets
+5. CLT Local Food
+
+These must work like traffic-entry pages with:
+- intro copy
+- featured listings
+- filters
+- map/list toggle if available in

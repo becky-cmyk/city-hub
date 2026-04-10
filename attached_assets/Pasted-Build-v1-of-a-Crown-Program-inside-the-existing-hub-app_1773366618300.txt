@@ -1,0 +1,267 @@
+Build v1 of a “Crown Program” inside the existing hub app.
+
+GOAL
+Create a working Year-1 micro-hub awards system that helps onboard businesses, creators, networking groups, and community organizations into the hub through a nomination + Hub Presence flow. This is NOT metro-wide yet. Year 1 is micro-hub only.
+
+IMPORTANT V1 RULES
+- Build only Micro Hub crowns in v1.
+- Do NOT build Metro Crown yet.
+- Keep admin control high and automation light.
+- Make the system modular so Metro Crown can be added later.
+- Keep the UI clean, simple, mobile-friendly, and operational.
+
+CORE PROGRAM LOGIC
+
+1) PARTICIPANT TYPES
+Support these participant types:
+- Business
+- Creator
+- Networking Group
+- Community Organization
+
+2) ELIGIBILITY
+- Businesses must be locally owned and/or locally operated.
+- Locally owned franchises may qualify.
+- Corporate-owned chains do NOT qualify.
+- Networking groups qualify based on local chapter activity, not national ownership.
+- Chambers are excluded from v1 unless manually approved by admin later.
+
+3) HUB RULE
+- A participant can only compete in a hub where they have a real physical location, chapter, or regular meeting presence.
+- They cannot compete in a hub where they do not operate.
+- Multi-location businesses and multi-chapter organizations must be handled with parent/child structure:
+  - Parent profile = master organization/business
+  - Child profile/location/chapter = actual hub presence and actual competing entry
+- Each child location/chapter competes only in its own hub.
+
+4) YEAR-1 STATUS MODEL
+Implement these statuses:
+- Candidate
+- Invited
+- Verified Participant
+- Nominee
+- Qualified Nominee
+- Crown Winner
+
+Status intent:
+- Candidate = AI-identified or community-submitted possibility
+- Invited = outreach sent
+- Verified Participant = accepted and activated paid Hub Presence
+- Nominee = officially entered into category/hub
+- Qualified Nominee = met threshold + participation rules
+- Crown Winner = winner in that hub/category
+
+5) PAYMENT / ENTRY FLOW
+- If they proceed into the Crown nomination flow and purchase Hub Presence, they do NOT need the $1 verification flow separately.
+- Hub Presence is required to participate in the Crown program.
+- Price shown in v1:
+  - Retail value: $699/year
+  - Crown participant launch offer: $99/year
+- Messaging must make clear:
+  - they are NOT paying for votes
+  - they are paying for Hub Presence, visibility, profile, and participation infrastructure
+
+6) QUALIFICATION MODEL
+Do NOT use one universal number for all categories.
+Support category-level minimum vote thresholds.
+
+Default v1 thresholds:
+- High competition categories: 75 votes
+- Mid competition categories: 40 votes
+- Community / org categories: 25 votes
+
+A nominee becomes Qualified Nominee only when:
+- they have active paid Hub Presence
+- they have a complete eligible profile
+- they meet the category vote threshold
+- if participant type is Networking Group or Community Organization, they must also have at least 1 active event/calendar entry
+
+7) VOTING RULES
+- One vote per user per category per hub
+- Verified email required to vote
+- User may vote in multiple hubs, but only once in each category/hub contest
+- Allow suspicious vote flagging for admin review
+- Build basic fraud flags:
+  - unusual vote spikes
+  - repeated IP patterns if available
+  - duplicate-like voting patterns if detectable
+- Admin can review and override if needed
+
+8) HUB CATEGORY ENGINE
+- Not all hubs run the same categories
+- Admin can assign categories by hub
+- Categories should be flexible per hub based on relevance and local density
+- Build admin tools so categories can be turned on/off by hub
+- This should be manual/admin-led in v1, but data model should allow future AI suggestions
+
+9) YEAR-1 CORE LAUNCH CATEGORIES
+Create category support for these initial categories:
+
+Business / Venue
+- Best Coffee
+- Best Restaurant
+- Best Brewery
+- Best Food Truck
+- Best Realtor
+- Best Insurance Advisor
+- Best Mortgage Broker
+- Best Date Night Spot
+
+Creator
+- Best Local Creator
+- Best Podcast
+
+Networking / Community
+- Best Networking Group
+- Best Community Connector
+
+10) EVENTS / CALENDAR
+Minimal v1 event support only:
+- Networking Groups and Community Organizations can create recurring or one-time events
+- Events display on the hub calendar
+- Events are linked to the organization/chapter hub presence
+- Need only basic create/edit/list/display event support in v1
+- Recurring meeting support is preferred if simple to build, otherwise basic recurring pattern placeholder is acceptable
+
+PAGES TO BUILD
+
+1. Crown Program Overview Page
+Purpose:
+- explain the program
+- explain who qualifies
+- explain local-first philosophy
+- explain that Hub Presence is required
+- explain that awards are micro-hub only in v1
+
+2. Candidate Invitation / Landing Page
+This is the page both email outreach and QR cards will point to.
+Must include:
+- “You’ve been identified as a potential Crown candidate” style language
+- why they may qualify
+- what the program is
+- how it works
+- what they receive with Hub Presence
+- CTA to accept nomination and activate Hub Presence
+
+3. Nomination Acceptance / Onboarding Flow
+Steps:
+- confirm participant type
+- connect to or create parent profile if needed
+- create/select child location or chapter
+- assign hub
+- assign category
+- purchase / activate $99 Hub Presence
+- mark as Verified Participant / Nominee
+
+4. Contest Rules Page
+Need a public-facing rules page with sections for:
+- eligibility
+- local ownership / local operation
+- participant types
+- location/hub rules
+- Hub Presence requirement
+- voting rules
+- qualification thresholds
+- fraud/disqualification
+- admin review rights
+- winner determination
+- rights to publish names/photos/logos
+Keep this editable in admin if possible.
+
+5. Voting Page
+Users can:
+- browse by hub
+- browse by category
+- view nominees
+- vote once per category/hub
+- see clear status
+Need nominee cards with:
+- name
+- image/logo
+- short description
+- participant type
+- hub
+- category
+- vote CTA
+
+6. Winners Page
+Display current Crown Winners by hub and category.
+
+7. Basic Admin Dashboard
+Need admin views for:
+- hubs
+- categories
+- candidates
+- nominees
+- votes
+- winners
+- events
+- flagged voting activity
+
+ADMIN FUNCTIONS
+Build basic admin actions:
+- create/edit hubs
+- create/edit categories
+- assign categories to hubs
+- review/approve candidate
+- invite candidate
+- activate nominee
+- mark nominee qualified
+- manually set crown winner
+- review flagged votes
+- manage events
+
+DATA MODEL / STRUCTURE
+Create the data model needed for:
+- Hubs
+- ParticipantTypes
+- ParentProfiles
+- ChildLocationsOrChapters
+- Categories
+- HubCategoryAssignments
+- Candidates
+- Invitations
+- Participants
+- Nominees
+- Votes
+- VoteFlags
+- Winners
+- Events
+
+Suggested logic relationships:
+- ParentProfile has many ChildLocationsOrChapters
+- ChildLocationOrChapter belongs to one Hub
+- ChildLocationOrChapter can enter many categories over time
+- Nominee belongs to one ChildLocationOrChapter + one Hub + one Category
+- Winner belongs to one Hub + one Category + one Nominee
+
+OUTREACH SUPPORT
+The system should support email/QR campaign flow later.
+For now, structure candidate records so they can store:
+- source (AI / community / self-submitted)
+- email
+- website
+- invite token or unique page link
+- notes about why they were identified
+
+UI / UX NOTES
+- Mobile-first
+- Clean and simple
+- Not flashy
+- Easy for admin to operate
+- Easy for invitees to understand
+- Use clear wording around “Hub Presence” and “Crown candidate”
+- Avoid language that implies anyone paid to win
+
+SEEDING / TESTING
+Please also:
+- seed sample hubs
+- seed sample categories
+- seed sample participants across at least a few hubs
+- demonstrate one multi-location business example
+- demonstrate one networking organization with parent + multiple chapter entries example
+- demonstrate one creator example
+- demonstrate one community organization example
+
+DELIVERABLE
+Build the v1 operational system inside the app with the pages, schema, admin controls, and flows above. Prioritize working functionality over polish. Keep code organized so Metro Crown and future AI automation can be added later.

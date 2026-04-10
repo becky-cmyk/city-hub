@@ -1,0 +1,359 @@
+Update the existing CLT City Hub legal page system and add the following missing protections across:
+- /legal
+- /terms
+- /privacy
+- /ai-policy
+- /disclaimer
+- /acceptable-use
+- /content-policy
+
+Also create these new standalone routes:
+- /affiliate-disclosure
+- /dmca
+- /listing-policy
+
+Use firm, protective language. Keep formatting consistent with the existing legal pages.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: PLATFORM CONTENT, LISTING, AND PROFILING RIGHTS
+----------------------------------
+
+CLT City Hub may create, publish, enhance, organize, and display listings, profiles, summaries, pages, and other content using:
+- publicly available information
+- submitted information
+- licensed information
+- editorial research
+- AI-assisted generation
+
+This may occur before a business, creator, organization, or individual claims or manages a listing.
+
+The Platform is not required to obtain advance consent before creating or displaying a listing, profile, summary, or page based on publicly available or lawfully obtained information.
+
+The Platform may:
+- create unclaimed listings
+- create neighborhood, business, event, creator, or category pages
+- summarize businesses or organizations
+- display contact, category, location, and descriptive information
+- connect listings to discovery surfaces, maps, search, Pulse, editorial, and monetized placements
+
+Claiming a listing does not transfer ownership of the platform page, URL, layout, structure, ranking position, or discovery placement.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: EDITORIAL, MODERATION, AND REMOVAL CONTROL
+----------------------------------
+
+CLT City Hub has sole discretion to:
+- edit
+- rewrite
+- shorten
+- expand
+- categorize
+- tag
+- reposition
+- suppress
+- remove
+- archive
+
+any listing, submission, profile, post, review, image, video, audio, or other material.
+
+This includes the right to remove or refuse content that is:
+- inaccurate
+- outdated
+- unverified
+- misleading
+- low quality
+- legally risky
+- harmful to platform integrity
+- inconsistent with platform standards
+
+The Platform is not obligated to publish, retain, restore, or explain the removal of any content or account.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: COMMERCIALIZATION, ADS, AFFILIATES, AND REVENUE RIGHTS
+----------------------------------
+
+CLT City Hub is a commercial platform.
+
+The Platform reserves the right to:
+- place advertising, sponsorships, promoted listings, and paid placements
+- place affiliate links or affiliate-enabled outbound actions
+- monetize traffic, discovery, leads, clicks, views, placements, and pages
+- insert, label, or reposition sponsored content
+- monetize claimed and unclaimed listing environments where legally permitted
+
+Users acknowledge that the Platform may generate revenue from:
+- subscriptions
+- upgrades
+- ads
+- sponsorships
+- affiliate links
+- paid boosts
+- featured placement
+- media distribution
+- print and digital extensions
+
+No user is entitled to revenue, traffic, ranking, visibility, or compensation unless explicitly set out in a separate written agreement.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: NO REFUNDS / ALL SALES FINAL
+----------------------------------
+
+All sales are final.
+
+No refunds, no partial refunds, no prorated refunds, no retroactive credits, and no reimbursement will be provided for:
+- subscriptions
+- listing fees
+- upgrades
+- boosts
+- advertising
+- sponsorships
+- promotional packages
+- creator features
+- event features
+- media placements
+- setup work
+- custom work
+
+This applies regardless of:
+- usage level
+- performance
+- visibility
+- dissatisfaction
+- account suspension
+- content removal
+- strategic changes by the platform
+
+Any exception must be made in writing by the Platform and does not create a future obligation.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: AI USAGE, AI GENERATION, AND AI EDITORIAL RIGHTS
+----------------------------------
+
+CLT City Hub uses artificial intelligence to assist with:
+- content generation
+- content enhancement
+- summaries
+- categorization
+- discovery
+- recommendations
+- SEO/AEO formatting
+- metadata creation
+- editorial preparation
+
+Content on the Platform may be:
+- AI-generated
+- AI-assisted
+- AI-enhanced
+- AI-rewritten
+
+The Platform does not guarantee that AI-generated or AI-enhanced content is error-free, complete, current, or suitable for any specific purpose.
+
+The Platform may use submitted content and lawfully obtained content to:
+- analyze
+- transform
+- summarize
+- restructure
+- generate platform-ready versions
+
+Users are responsible for reviewing their own claimed or managed content.
+
+The Platform may continue to use AI systems and workflows as they evolve.
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: DATA RETENTION, ARCHIVE, AND SURVIVAL
+----------------------------------
+
+The Platform may retain copies, backups, archives, logs, revisions, moderation records, analytics records, and historical content records for operational, legal, editorial, security, or business reasons.
+
+Deletion of an account or removal of public visibility does not require permanent deletion from backups, records, logs, or internal systems.
+
+Any licenses granted to the Platform for already-submitted or already-published content survive account closure to the extent necessary for:
+- archives
+- legal compliance
+- platform records
+- historical references
+- prior publications
+- analytics
+- system integrity
+
+----------------------------------
+ADD NEW SECTION TO TERMS:
+SECTION: RIGHT TO REFUSE TAKEDOWN OR EDIT REQUESTS
+----------------------------------
+
+The Platform may, but is not required to, honor requests to edit, unpublish, de-index, remove, or transfer listings, profiles, or content.
+
+The Platform may refuse a request if it determines that retention, editing, or continued display is justified by:
+- public interest
+- accuracy
+- editorial judgment
+- operational consistency
+- anti-fraud protections
+- recordkeeping
+- business legitimacy
+- platform integrity
+
+----------------------------------
+ADD NEW ROUTE:
+ /listing-policy
+----------------------------------
+
+Title: Listing Creation, Claiming, and Removal Policy
+
+Include the following:
+
+CLT City Hub may create and display listings based on public or lawfully obtained information.
+
+Listings may be:
+- claimed
+- unclaimed
+- enhanced
+- suppressed
+- merged
+- corrected
+- archived
+- removed
+
+Claiming a listing allows limited management rights as determined by the Platform, but does not transfer ownership of:
+- the page
+- URL
+- structure
+- platform-generated text
+- discovery placement
+- ranking logic
+- associated platform data
+
+The Platform may request proof before granting or transferring listing control.
+
+The Platform may deny, delay, revoke, or modify claim access at its sole discretion.
+
+The Platform is not required to remove a listing merely because a person or business requests removal.
+
+The Platform may correct or supplement listing information to improve quality, usefulness, and consistency.
+
+----------------------------------
+ADD NEW ROUTE:
+ /affiliate-disclosure
+----------------------------------
+
+Title: Affiliate and Monetization Disclosure
+
+Include:
+
+Some links, buttons, bookings, ticketing actions, reservations, ordering flows, or outbound actions on CLT City Hub may generate revenue for the Platform through affiliate relationships, referrals, sponsorships, paid placements, or commercial partnerships.
+
+This may include claimed or unclaimed experiences where permitted by platform rules.
+
+The Platform may earn money when users:
+- click links
+- purchase tickets
+- place orders
+- make bookings
+- submit leads
+- engage with promoted content
+
+Not all links are affiliate-enabled, and affiliate availability may vary.
+
+Commercial relationships do not guarantee endorsement.
+
+----------------------------------
+ADD NEW ROUTE:
+ /dmca
+----------------------------------
+
+Title: Copyright and Takedown Policy
+
+Include:
+
+If you believe content on CLT City Hub infringes your copyright, send a written notice including:
+- your name and contact information
+- identification of the copyrighted work
+- identification of the allegedly infringing content
+- a statement of good-faith belief
+- a statement under penalty of perjury that your claim is accurate
+- your signature
+
+Send notices to:
+[INSERT LEGAL EMAIL]
+
+The Platform may remove or disable access to disputed material while reviewing claims.
+
+The Platform may terminate repeat infringers.
+
+The Platform may also reject incomplete, abusive, or unsupported notices.
+
+----------------------------------
+UPDATE PRIVACY PAGE WITH:
+SECTION: AI AND PLATFORM PROCESSING
+----------------------------------
+
+We may use submitted, observed, or lawfully obtained information to support:
+- AI-assisted content generation
+- AI-assisted recommendations
+- categorization
+- quality improvement
+- discovery systems
+- platform operations
+
+We may retain platform logs, moderation records, and backups.
+
+We do not guarantee complete erasure from all backup or archival systems.
+
+----------------------------------
+UPDATE DISCLAIMER PAGE WITH:
+SECTION: NO PROFESSIONAL RELIANCE
+----------------------------------
+
+Content on CLT City Hub, including AI-generated or AI-enhanced content, is for general informational purposes only.
+
+It is not legal, financial, tax, medical, or professional advice.
+
+Users must verify important information independently.
+
+----------------------------------
+UPDATE CONTENT POLICY WITH:
+SECTION: PLATFORM REUSE RIGHTS
+----------------------------------
+
+By submitting content, users acknowledge that the Platform may:
+- reformat it
+- excerpt it
+- summarize it
+- convert it into promotional or editorial formats
+- distribute it across multiple channels
+
+This includes platform, social, print, newsletter, map, Pulse, and media contexts.
+
+----------------------------------
+ADD FOOTER LINKS SITEWIDE
+----------------------------------
+Legal
+Terms
+Privacy
+AI Policy
+Listing Policy
+Affiliate Disclosure
+DMCA
+Acceptable Use
+Content Policy
+Disclaimer
+
+----------------------------------
+GOAL
+----------------------------------
+These updates should make the legal system clearly protect:
+- platform control
+- content control
+- AI generation rights
+- listing creation rights
+- monetization rights
+- affiliate rights
+- takedown discretion
+- archival retention
+- no-refund enforcement

@@ -1,0 +1,238 @@
+PROMPT 11 (Replit) — Automated Website Crawl + Contact Verification + Confidence Scoring + Prospect Fit Rating (Talent Layer, licensee-read-only)
+
+GOAL
+Add an automated “Verification Crawl” system that:
+1) Crawls seeded entity websites (when present) to CONFIRM/normalize contact channels and key listing info.
+2) Produces a confidence score + prospect fit score so licensees don’t waste time.
+3) Classifies entities into buckets:
+   - TARGET (high-probability prospect to contact)
+   - VERIFY_LATER (needs more signals)
+   - CONTENT_SOURCE_ONLY (not a sales target; keep as content reference)
+4) Runs automatically on a schedule with cost controls (rate limits, concurrency, retries).
+
+NON-NEGOTIABLES
+- This is Talent Layer logic controlled by SUPER_ADMIN only.
+- Licensees can SEE scores/flags; cannot change logic or run global crawls.
+- Respect robots.txt where feasible; throttle aggressively; do not scrape paywalled content.
+- Do NOT harvest personal emails; only store PUBLIC business contact emails if clearly presented (e.g., info@, contact@).
+- Store provenance + crawl timestamps; never overwrite original seed values without keeping history.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) entity_contact_verification
+- id (pk)
+- metro_id (fk)
+- entity_id (fk/string to entities.id)
+- website_url (string)
+- crawl_status (enum: PENDING|SUCCESS|FAILED|BLOCKED|NO_WEBSITE) default PENDING
+- http_status (int nullable)
+- final_url (string nullable)                 // after redirects
+- page_title (string nullable)
+- detected_name (string nullable)             // from page signals
+- detected_phone (string nullable)
+- detected_email (string nullable)            // only business/public, not personal
+- detected_contact_form_url (string nullable)
+- detected_social_json (json nullable)        // facebook/instagram/linkedin/youtube
+- detected_address (string nullable)
+- detected_hours_json (json nullable)
+- schema_org_json (json nullable)             // LocalBusiness schema if present
+- confidence_score (int default 0)            // 0-100
+- notes (text nullable)
+- crawled_at (datetime nullable)
+- created_at, updated_at
+Unique: (entity_id)
+
+2) entity_scores  (computed; licensee-read-only)
+- id (pk)
+- metro_id
+- entity_id
+- contact_ready_score (int default 0)         // 0-100
+- data_quality_score (int default 0)          // 0-100
+- prospect_fit_score (int default 0)          // 0-100
+- bucket (enum: TARGET|VERIFY_LATER|CONTENT_SOURCE_ONLY) default VERIFY_LATER
+- reasons_json (json)                          // explain score drivers
+- computed_at (datetime)
+Unique: (entity_id)
+
+3) entity_field_history (optional but recommended)
+- id (pk)
+- entity_id
+- field_name
+- old_value (text nullable)
+- new_value (text nullable)
+- source (enum: SEED|CRAWL|MANUAL_VERIFY)
+- changed_at (datetime)
+
+--------------------------------------------------
+PART B — CRAWLER SERVICE
+--------------------------------------------------
+
+Create:
+ /server/intelligence/crawl/websiteCrawler.ts
+
+Capabilities:
+1) Fetch homepage HTML for entity.website (follow redirects)
+2) Parse for:
+   - phone numbers (tel: links + regex)
+   - emails (mailto: + regex), but store ONLY if matches business patterns:
+     allow: info@, hello@, contact@, support@, sales@, admin@, office@
+     block: personal-looking emails (firstname.lastname@) unless explicitly allowed later
+   - contact page URL:
+     detect anchors containing: contact, get in touch, about, connect
+   - contact forms:
+     detect <form> on contact/about pages (crawl max 2 pages beyond home)
+   - social links:
+     facebook.com, instagram.com, linkedin.com, youtube.com, tiktok.com (optional)
+   - address signals:
+     schema.org LocalBusiness, footer address patterns
+   - structured data:
+     JSON-LD schema.org LocalBusiness (name, address, geo, telephone, url, openingHours)
+3) Respect robots:
+   - Fetch /robots.txt once per domain and store allow/block decision cached for 7 days.
+   - If blocked, mark BLOCKED and stop.
+
+Rate limits:
+- per domain: 1 request / 3 seconds
+- global concurrency: 3
+- max pages per entity: 3 (home + up to 2 internal pages)
+- timeouts: 10s per request
+
+Store results in entity_contact_verification.
+
+--------------------------------------------------
+PART C — UPDATE/ENRICH ENTITY RECORDS (WITHOUT LOSING SEED)
+--------------------------------------------------
+
+When crawl succeeds:
+- Do NOT overwrite core entity fields blindly.
+- Write detected fields into entity_contact_verification.
+- If detected values differ from entity values:
+  - update entity fields only if seed value is missing OR confidence_score >= threshold (e.g., 80)
+  - always record change in entity_field_history
+
+Example:
+- If entity.phone missing and crawler found phone -> update entity.phone, log history.
+- If entity.website exists but redirects to new URL -> update website to final_url, log history.
+- If seed name differs slightly but schema.org confirms -> keep seed name, store detected_name only (do not auto-replace unless high confidence).
+
+--------------------------------------------------
+PART D — CONFIDENCE + PROSPECT SCORING (THE “RATING SYSTEM”)
+--------------------------------------------------
+
+Create:
+ /server/intelligence/scoring/entityScoring.ts
+
+Compute:
+
+1) data_quality_score (0-100)
+Inputs (examples):
+- Has valid address + zip (+20)
+- Has phone (+15)
+- Has website (+15)
+- Crawl succeeded (+20)
+- Schema.org LocalBusiness present (+15)
+- Social link present (+5)
+- Seed source count >=2 (OSM + OpenData etc.) (+10)
+
+2) contact_ready_score (0-100)
+- Has phone (+35)
+- Has contact form (+25)
+- Has business email (+25)
+- Has physical address (+15)
+Cap at 100.
+
+3) prospect_fit_score (0-100)
+Default (tune later):
+- No website (+20)  // your low-hanging fruit
+- Has phone (+20)
+- Has physical address (+15)
+- Not verified (+15)
+- In micro scope category/zip (+20)
+- Engagement signals exist (views/clicks) (+10)
+
+Then assign bucket:
+- TARGET if prospect_fit_score >= 70 AND contact_ready_score >= 40
+- VERIFY_LATER if between thresholds
+- CONTENT_SOURCE_ONLY if:
+   - no contact methods AND no physical address AND crawl blocked/failed repeatedly
+   - OR entity appears non-operational / directory-only / placeholder (heuristics)
+
+Store reasons_json explaining:
+- "no_website"
+- "has_phone"
+- "has_address"
+- "crawl_confirmed_contact_form"
+- etc.
+
+--------------------------------------------------
+PART E — JOB RUNNER / SCHEDULING
+--------------------------------------------------
+
+Create jobs:
+1) job_queue_website_crawls.ts
+- nightly enqueue entities with:
+  - website exists
+  - never crawled OR crawled > 30 days ago OR website changed
+
+2) job_run_website_crawls.ts
+- processes queue with throttling and domain caching
+
+3) job_compute_entity_scores.ts
+- runs after crawls complete (or nightly)
+- computes entity_scores for all entities updated in last 24h
+
+Add controls in env:
+- ENABLE_WEBSITE_CRAWL=true/false
+- CRAWL_CONCURRENCY=3
+- CRAWL_MAX_PAGES=3
+
+--------------------------------------------------
+PART F — OPERATOR UI (LICENSEE) READ-ONLY TARGETING
+--------------------------------------------------
+
+In operator dashboard:
+- Add filters:
+  - Bucket = TARGET
+  - No website
+  - Has phone
+  - Has physical address
+  - Contact form present
+  - Score >= X
+- Default view: TARGET + No website + Has phone
+
+Show per entity:
+- contact flags (phone/email/form/social/address)
+- prospect_fit_score + contact_ready_score
+- recommended_contact_strategy:
+   WALK_IN (if storefront/office) / PHONE_FIRST / MAILER / WEBSITE_FORM / SOCIAL_DM
+
+Licensee cannot edit scores.
+
+--------------------------------------------------
+PART G — “CONTENT SOURCE ONLY” HANDOFF
+--------------------------------------------------
+
+If bucket=CONTENT_SOURCE_ONLY:
+- Do not surface in target list
+- Allow system to treat the domain as an RSS/seed content candidate:
+  - if crawler detects /feed or rss links, auto-suggest adding it to RSS sources (admin-only suggestion list)
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------
+
+1) Crawler runs, stores verified contact channels, respects robots, and throttles.
+2) Confidence and scoring tables populate and update automatically.
+3) Operator sees a clean “TARGET” list emphasizing: no website + contact available.
+4) Entities can be bucketed into TARGET / VERIFY_LATER / CONTENT_SOURCE_ONLY.
+5) Changes to entity fields are tracked with history and not overwritten recklessly.
+
+DELIVERABLES
+- migrations (entity_contact_verification, entity_scores, entity_field_history optional)
+- crawler service + robots cache
+- scoring service
+- job runner integration
+- operator UI filters + display
+- admin-only crawl toggle and logs

@@ -1,0 +1,550 @@
+You are working inside the existing CLT Metro Hub / Charlotte City Hub codebase, which already includes the Hub Screens / TV system with these existing full-screen templates:
+
+1. Hub Event
+2. Pulse Headline
+3. Hub Discovery
+4. Neighborhood Spotlight
+5. Venue Special
+6. Live Feed
+7. Traffic Update
+8. Weather Current
+9. Trivia Question
+10. Sports Scores
+11. Social Proof
+12. QR CTA
+13. Sponsor Ad
+14. Event Countdown
+
+GOAL
+Upgrade the existing Hub Screens / TV system so the back office can manage:
+- full 60-minute “program loops”
+- optional expansion to 90-minute programming
+- mixing of multiple full loops across the day
+- dynamic interchanging of loops so the channel feels alive, not repetitive
+- voiceover / hosted narration segments
+- subtitles / closed captions
+- venue-specific inserts
+- metro + micro hub + location layering
+- competitor protection rules
+- monetization inventory that feels like “Support Local / Community Spotlight” rather than only ads
+
+IMPORTANT CONTEXT
+This is NOT just static signage.
+This should feel like a real local channel for the area and the venue.
+
+The venue owner/staff should NOT hear the exact same content in the same order all day.
+We want:
+- full one-hour loops
+- multiple loops
+- loops mixed and rotated
+- some spoken segments
+- some silent/visual slides
+- some video clips
+- captions/subtitles for spoken/video content
+- venue personalization
+- local community feel
+
+CURRENT BUSINESS MODEL / REVENUE LOGIC
+Revenue architecture should be future-proofed for:
+- Venue
+- Micro Hub operator
+- Metro Hub operator
+- Core
+
+Current active state:
+- Venue gets base share
+- all other shares roll to Core until operator roles exist
+
+Default split model:
+- venuePct = 30
+- microPct = 20
+- metroPct = 20
+- corePct = 30
+
+Current effective active split:
+- Venue = 30%
+- Core = 70%
+
+No complicated level logic in the venue UI right now. Keep venue-facing logic simple.
+
+PROGRAMMING MODEL TO IMPLEMENT
+We are moving from a simple 20-minute repeating loop to a “programmed channel” model.
+
+A. FULL LOOPS
+Add support for full loops:
+- 60-minute loops as the standard
+- optional 90-minute loops supported by the system
+- each loop has a name, theme, target audience, target venue types, and item sequence
+
+Examples:
+- Local Pulse Hour
+- Community Spotlight Hour
+- Tonight Around You Hour
+- Venue + Neighborhood Hour
+- Info + Weather + Traffic + Sports Hour
+- Weekend / Nightlife Hour
+
+B. LOOP MIXING
+The system must support:
+- assigning multiple full loops to a screen
+- rotating those loops throughout the day
+- randomizing the order within allowed scheduling rules
+- mixing in venue inserts regardless of which loop is running
+- mixing in real-time/current items (weather, traffic, sports) without rebuilding the entire loop
+
+C. CHANNEL FEEL
+The final result must feel like:
+- a live local community channel
+- not static signage
+- not the same repeated sequence
+- venue-aware and neighborhood-aware
+- partially hosted via narration
+
+D. AUDIO / NARRATION
+Support “spoken segments” for selected templates.
+This means some templates can become short narrated video segments instead of just slides.
+
+Examples of spoken segments:
+- Neighborhood Spotlight
+- Community / Nonprofit Spotlight
+- Support Local / Local Commerce
+- Tonight Around You
+- Weekend Happenings
+- Hub Discovery
+- QR CTA intro
+- Event intro
+
+Voiceover should sound like a local host introducing content.
+
+Examples of style:
+- “We’d like to introduce you to one of the local businesses helping shape this neighborhood…”
+- “Here’s something happening around you this weekend…”
+- “Let’s take a quick look at what’s happening nearby tonight…”
+
+Audio must be optional per item/template.
+Not every item should talk.
+We want spoken segments spaced so they do not fatigue staff or venue owners.
+
+Recommended rule:
+- spoken segments every 3–6 minutes on average, configurable per loop/screen
+
+E. CAPTIONS / SUBTITLES
+For all spoken segments and videos, support captions/subtitles.
+Requirements:
+- WebVTT support
+- optional SRT support if easy
+- captions auto-display when available
+- large, readable caption styling for TVs
+- captions on by default for venue screens
+- if the item has narration text, support auto-generation of subtitles from narration text even without a separate caption upload
+- spoken segments rendered from slide templates must be able to display synchronized subtitle text
+
+F. VENUE / MICRO / METRO LAYERING
+Each screen feed should still support content coming from:
+- Metro
+- Micro Hub
+- Location/Venue
+
+Example:
+- metro-wide event / weather / sports / support local
+- micro hub neighborhood items
+- location-specific specials and promotions
+
+G. COMPETITOR PROTECTION
+If a venue hosts the screen:
+- protect against direct competitor placements
+- example: gelato shop should not show another gelato shop
+- use category-based exclusion and explicit excluded business lists
+- venue content should always be eligible
+- “Support Local” placements should respect protection rules
+
+H. MONETIZATION / INVENTORY FRAMING
+Do NOT make all monetized content feel like generic ads.
+We want inventory types such as:
+- Support Local
+- Local Commerce Spotlight
+- Community Partner
+- Neighborhood Favorite
+- Nonprofit Showcase
+- Around the Neighborhood
+- Tonight Around You
+- Weekend Happenings
+
+Some of those may still be paid placements, but the framing should feel editorial/community-oriented.
+
+I. QUARTERLY COMMERCIAL OFFER CONTEXT
+We are planning to sell quarterly placements, not monthly, and bundle/bonus Enhanced Hub Presence.
+You do not need full sales logic right now, but the data model should support:
+- placement term = quarterly
+- includes bonus enhanced hub presence flag
+- label/value fields for sales display in admin
+
+DO NOT build billing right now.
+Only build management structures for placements and scheduling.
+
+ROUTES / FEATURES TO BUILD
+
+1) PUBLIC TV PLAYER
+Keep/use the existing /tv route and upgrade it.
+Support:
+- /tv?hubSlug=southend
+- /tv?hubSlug=southend&locationSlug=ginmill
+- /tv?hubSlug=southend&locationSlug=ginmill&screenId=abc123
+- kiosk/fullscreen mode
+- auto-play continuous channel behavior
+- loop switching based on schedule/time of day
+- venue inserts
+- subtitle rendering
+- spoken segment support
+- fallback if a video/audio/caption asset fails
+
+2) CHANNEL ENGINE API
+Build or upgrade API routes for:
+- GET /api/tv/playlist/current
+- GET /api/tv/screens/:id/programming
+- POST /api/admin/tv/generate-narration
+- POST /api/admin/tv/generate-captions
+- CRUD /api/admin/tv/loops
+- CRUD /api/admin/tv/screens
+- CRUD /api/admin/tv/items
+- CRUD /api/admin/tv/placements
+- CRUD /api/admin/tv/schedules
+
+3) BACK OFFICE / ADMIN
+Add or upgrade /admin/tv so it can manage the channel properly.
+
+Tabs/sections required:
+
+A. Screens
+Manage each deployed venue screen.
+Fields:
+- name
+- metroSlug
+- hubSlug
+- locationSlug
+- status
+- notes
+- competitorProtectionEnabled
+- protectedCategoryIds
+- excludedBusinessIds
+- activeLoopIds
+- activeScheduleId
+- subtitleDefaultEnabled
+- narrationDefaultEnabled
+- venueInsertFrequencyMinutes
+- spokenSegmentMinGapMinutes
+- preferredVoiceProfile
+- allowMetroFallback
+- allowHubFallback
+
+B. Full Loops
+Manage full 60-minute / 90-minute loops.
+Fields:
+- name
+- slug
+- description
+- durationTargetMinutes (60 default, 90 optional)
+- theme
+- audienceType
+- venueTypes
+- enabled
+- narrationStyle
+- subtitleMode
+- itemIds or loop sections
+- rules JSON
+- weighting/priorities
+- daytime tags (day, happy_hour, nightlife, weekend, etc.)
+
+Need UI to:
+- create a loop
+- assign items/templates to the loop
+- preview estimated runtime
+- set order strategy:
+  - fixed order
+  - weighted shuffle
+  - semi-random within sections
+
+C. Loop Mix / Programming Schedule
+This is critical.
+Need a scheduler that lets admin define what full loops run across the day.
+
+Examples:
+- 10am–2pm = Community Hour / Info Hour mixed
+- 2pm–5pm = Local Pulse / Support Local
+- 5pm–9pm = Tonight Around You / Venue + Nightlife
+- 9pm–close = Entertainment / Social / Sports / Venue Promos
+
+Support:
+- time-of-day scheduling
+- day-of-week scheduling
+- alternating loops
+- weighted random selection among eligible loops
+- fallback loops
+- “do not repeat same loop consecutively unless forced”
+
+D. Content Library
+Manage all individual content items.
+Types:
+- slide
+- video
+- narrated_segment
+- live_data
+- venue_insert
+- support_local
+- nonprofit_feature
+- promo
+- informational
+- social_clip
+
+Fields:
+- title
+- contentType
+- templateKey
+- sourceScope
+- metroSlug
+- hubSlug
+- locationSlug
+- data JSON
+- imageUrl
+- videoUrl
+- audioUrl
+- captionUrl
+- narrationText
+- narrationEnabled
+- subtitleText
+- durationSec
+- startAt/endAt
+- enabled
+- priority
+- tags
+- categoryIds
+- protected/exclusion categories
+- targetVenueTypes
+- targetLoopThemes
+
+E. Placements
+Manage monetized/community placements separately from generic content.
+Placement types:
+- support_local
+- local_commerce_spotlight
+- community_partner
+- neighborhood_favorite
+- nonprofit_showcase
+- sponsor_ad
+- venue_bonus
+- enhanced_presence_bonus
+
+Fields:
+- placementName
+- advertiser/business/nonprofit
+- type
+- targetMetro
+- targetHub
+- targetLocations (optional)
+- quarterlyTerm
+- includesEnhancedHubPresenceBonus boolean
+- valueDisplayText
+- creative source
+- narrationEnabled
+- captionEnabled
+- startAt/endAt
+- enabled
+- categoryIds
+- competitor-sensitive flags
+
+F. Narration / Voiceover
+Admin tools for spoken segments.
+Need:
+- voice profile selector
+- narration preview
+- edit narration text
+- generate audio file from text
+- regenerate audio
+- attach audio to item
+- enable/disable narration per item
+- choose spoken intro style
+
+Suggested voice modes:
+- warm_local_host
+- upbeat_event_host
+- calm_waiting_room
+- nightlife_host
+
+Do not assume paid voice services.
+Implement with provider abstraction:
+- if existing TTS exists in codebase, use it
+- otherwise create adapter interface and local/mock implementation
+- structure code so a provider can be plugged in later
+
+G. Captions
+Admin tools for captions:
+- auto-generate captions from narration text
+- upload/edit VTT
+- preview captions over video
+- toggle captions on/off per item
+- captions on by default at screen level
+
+H. Templates
+Keep the existing 14 templates and enhance the system so templates can support:
+- static slide mode
+- narrated segment mode
+- captioned mode
+- animated entrance/exit transitions
+- optional lower-third
+- optional footer branding
+- subtle “Powered by Charlotte Metro Hub” line
+
+Add support for these additional content flavors using existing or extended templates:
+- Tonight Around You
+- Weekend Happenings
+- Nonprofit Showcase
+- Support Local / Local Commerce Spotlight
+
+If possible, implement these as either:
+- new template keys
+OR
+- configuration variants of existing templates
+
+Preferred new/extended template keys:
+- tonight_around_you
+- weekend_happenings
+- nonprofit_showcase
+- support_local_spotlight
+
+I. Preview Studio
+Admin preview area where I can:
+- preview a single item
+- preview a narrated version
+- preview with captions
+- preview a full loop
+- preview mixed daily programming for a screen
+- preview exactly what a venue would see
+
+J. Venue Insert Logic
+Venue-specific items should be injected into the channel regardless of loop.
+Configurable frequency.
+Examples:
+- venue special
+- venue event
+- menu QR
+- review QR
+- follow-on-social
+- house promo
+
+Rule examples:
+- inject venue item every 5–8 minutes
+- do not repeat same venue item inside 20 minutes unless inventory is low
+
+K. Real-Time Data
+Current templates like:
+- weather
+- traffic
+- sports
+should stay fresh.
+Implement refresh strategy so real-time items can refresh independently from the whole loop engine.
+
+L. CHANNEL ASSEMBLY ENGINE
+This is the most important part.
+
+Build a channel assembly layer that:
+- selects the active schedule for a screen
+- picks the eligible full loops
+- chooses the current loop based on time/day/weighting
+- assembles the loop from its items
+- injects venue content
+- injects current real-time data items
+- applies competitor exclusions
+- applies narration/caption behavior
+- returns the final ordered playlist for the player
+
+Need “anti-fatigue” rules:
+- do not replay same narrated item too frequently
+- do not replay same full loop back-to-back unless forced
+- avoid same voice intro phrase repeating too often
+- vary ordering when allowed
+- maintain overall channel coherence
+
+M. NARRATION PHRASE LIBRARY
+Create a simple system for reusable host intro phrases.
+Examples:
+- “Let’s take a moment to highlight a local favorite…”
+- “Here’s something happening nearby…”
+- “Coming up around the neighborhood…”
+- “We’d like to introduce you to another local business worth knowing…”
+- “Here’s a quick look at what’s happening around you…”
+
+Store these as reusable host phrases by category/theme.
+Allow loop or item to use:
+- fixed phrase
+- random phrase from category
+- no phrase
+
+N. PLAYER REQUIREMENTS
+The /tv player must:
+- be fullscreen and clean
+- preload upcoming items
+- handle transitions
+- render slides, narrated segments, videos, live data
+- show captions when available
+- keep playing even if one asset fails
+- refresh schedule periodically
+- be resilient in venue environments
+
+O. DATABASE / SCHEMA
+Using the existing ORM (likely Drizzle), add/upgrade schema for:
+- tv_screens
+- tv_loops
+- tv_loop_items (or loop_sections)
+- tv_schedules
+- tv_items
+- tv_placements
+- tv_host_phrases
+- optional tv_screen_runtime_cache / playback state if useful
+
+Do NOT duplicate existing events/pulse/listings if already present.
+Reference them where appropriate.
+
+P. EXISTING CONTENT INTEGRATION
+Integrate existing Hub content automatically where possible:
+- events -> event slides / countdown / narrated event intros
+- pulse -> pulse headlines / narrated local updates
+- listings -> neighborhood spotlight / support local
+- venue promotions -> venue specials
+- nonprofits -> nonprofit showcase
+
+Allow admin to mark existing content as:
+- tvEligible
+- narrationEligible
+- premiumPlacementEligible
+
+Q. OUTPUT REQUIRED
+1. Scan the current codebase and reuse what already exists for the Hub Screens system.
+2. Extend the existing architecture instead of replacing it.
+3. Implement the new schema, admin UI, channel engine, loop scheduler, narration support, and caption support.
+4. Seed sample data:
+   - at least 4 full 60-minute loops
+   - at least 1 optional 90-minute loop
+   - sample narrated segments
+   - sample captioned items
+   - sample support local and nonprofit placements
+5. Make sure /tv preview works in dev immediately.
+6. Add a simple README or internal admin help notes explaining:
+   - how loops work
+   - how mixing works
+   - how narration works
+   - how captions work
+   - how venue inserts work
+
+IMPLEMENTATION APPROACH
+Start by:
+1. auditing the existing Hub Screens / TV code
+2. identifying reusable schema/routes/components
+3. extending rather than duplicating
+4. building the loop/schedule model
+5. wiring the player to the assembled programming feed
+6. adding the admin controls
+7. seeding examples
+
+Do not add unnecessary paid dependencies.
+If TTS/captions need abstraction, implement clean provider interfaces so we can plug in providers later.
+Prioritize a working internal system over perfection.

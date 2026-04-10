@@ -1,0 +1,534 @@
+REPLIT PROMPT — BUILD PUBLICATION + KIDS MENU DIGITAL TWIN SYSTEMS
+WITH MASTER ADS MANAGER
+PROJECT: CLT City Hub / City Hub
+PRIORITY: Admin-first, template-based, QR-stable, archive-aware, sponsor-driven
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Build THREE connected admin/publishing systems inside the existing City Hub app:
+
+1. MASTER ADS MANAGER
+2. MICRO PUBLICATION DIGITAL TWIN SYSTEM
+3. KIDS MENU GENERIC DIGITAL TWIN SYSTEM
+
+Do NOT build the custom-back kids menu system yet.
+That will be a later separate build.
+
+The core requirement is that printed assets (publications and kids menus) each have stable QR URLs that do not change over time, while the online landing page updates to the newest version and visually shows older archived versions below.
+
+==================================================
+HIGH-LEVEL ARCHITECTURE
+==================================================
+
+MASTER ADS MANAGER is the source of truth for sponsorship/ad inventory and creative records.
+
+PUBLICATION SYSTEM and KIDS MENU SYSTEM are separate systems that:
+- use locked templates
+- pull assigned sponsor/ad records from Ads Manager
+- publish district-specific landing pages
+- keep stable QR URLs
+- show newest version first
+- show older versions visually below
+
+Use reusable components where appropriate, but keep the systems distinct in admin, data model, and workflow.
+
+==================================================
+SYSTEM 1 — MASTER ADS MANAGER
+==================================================
+
+Build a central Ads Manager that is NOT limited to publications and kids menus.
+
+It is the future master inventory/assignment system for:
+- Micro Publications
+- Kids Menus
+- Digital placements
+- TV
+- Radio
+- Other sponsorship inventory later
+
+For this first build, it must support the publication and kids menu systems directly, but the data model should be extensible for future media types.
+
+----------------------------------
+ADS MANAGER PURPOSE
+----------------------------------
+
+Ads Manager should function like a master sponsorship marketplace / inventory manager.
+
+It must hold:
+- sponsor/ad master records
+- placement inventory
+- creative assets
+- assignment logic
+- placement history
+- optional pricing/package data if available
+- ability to reuse the same sponsor across multiple districts/systems
+- ability to assign one sponsor to all districts or selected districts
+- ability to leave pricing blank if not available yet
+
+It must be visual and organized by sponsorship/ad placement opportunities.
+
+----------------------------------
+ADS MANAGER CORE OBJECTS
+----------------------------------
+
+A. Sponsor / Advertiser Record
+Holds the master sponsor/ad information.
+
+Suggested fields:
+- id
+- sponsor_name
+- business_name if different
+- category
+- contact_name
+- email
+- phone
+- website
+- notes
+- active/inactive
+- package_type (optional)
+- pricing_notes (optional)
+- stripe_price_id (optional)
+- start_date (optional)
+- end_date (optional)
+- exclusivity_flag (optional)
+- custom_creative_required flag
+- created_at
+- updated_at
+
+B. Creative Asset Record
+A sponsor may have one or more creatives.
+
+Suggested fields:
+- id
+- sponsor_id
+- creative_name
+- creative_type
+- intended_use
+- image_url/file_url
+- dimensions/size_label
+- copy_headline
+- copy_body
+- CTA text
+- CTA link
+- phone
+- offer_text
+- active/inactive
+- notes
+- created_at
+- updated_at
+
+C. Placement Inventory Record
+Represents every sponsorship/ad location available across systems.
+
+Suggested fields:
+- id
+- placement_name
+- system_type (publication, kids_menu, tv, radio, digital, etc.)
+- placement_group
+- size_label
+- visual_sort_order
+- district_specific boolean
+- reusable_template_slot boolean
+- price_monthly optional
+- price_3mo optional
+- price_12mo optional
+- active/inactive
+- notes
+
+Examples for first build:
+- Publication Front Main
+- Publication Front Back Placement
+- Publication Small Placement
+- Publication Community Ad
+- Kids Menu Top Sponsor
+- Kids Menu Bottom Sponsor
+
+D. Assignment Record
+Connects sponsor/ad to placement + district + system + issue.
+
+Suggested fields:
+- id
+- sponsor_id
+- creative_id optional
+- placement_inventory_id
+- system_type
+- district_slug
+- issue_id optional
+- assignment_scope (one district, selected districts, all districts)
+- start_date optional
+- end_date optional
+- status
+- notes
+- created_at
+- updated_at
+
+----------------------------------
+ADS MANAGER REQUIRED FEATURES
+----------------------------------
+
+Build admin screens for:
+- Sponsor list
+- Sponsor detail/edit
+- Creative assets manager
+- Placement inventory manager
+- Assignment manager
+
+Need the ability to:
+- create sponsor master record
+- add one or more creatives
+- assign sponsor to one district
+- assign sponsor to selected districts
+- assign sponsor to all districts
+- assign sponsor to publications, kids menus, or both
+- optionally leave pricing blank
+- view where a sponsor is currently assigned
+- view placement inventory visually
+- later extend to TV/radio without rebuilding
+
+Assignments should be manageable through checkbox, multi-select, or selection list UI.
+Do not hardcode one-off sponsor placement flows inside publications or kids menus.
+
+==================================================
+SYSTEM 2 — MICRO PUBLICATION DIGITAL TWIN SYSTEM
+==================================================
+
+Build a separate publication issue system for the 6 district publications.
+
+Districts currently in use:
+1. Pineville Local Core
+2. Pineville Service Corridors
+3. Ballantyne / Blakeney
+4. Carmel / Sharon Corner
+5. SouthPark Retail / Luxury
+6. Quail Hollow / South Residential
+
+Each district needs:
+- stable QR/public URL
+- issue/versioning
+- newest live issue shown first
+- older issues shown visually below
+- admin issue creation
+- Charlotte AI first-draft generation
+- sponsor/ad slots populated from Ads Manager assignments
+
+----------------------------------
+PUBLICATION ROUTING REQUIREMENT
+----------------------------------
+
+Stable route examples:
+- /pineville-local-core/publication
+- /pineville-service-corridors/publication
+- /ballantyne-blakeney/publication
+
+Behavior:
+- QR always points to stable route
+- stable route always shows current live issue first
+- older issues appear visually below on same page
+- older issues remain archived and viewable
+- do not require new QR when a new issue is published
+
+Optional internal/public issue route examples:
+- /pineville-local-core/publication/issues/2026-04
+
+But again:
+stable QR route is the main public route.
+
+----------------------------------
+PUBLICATION ISSUE DATA
+----------------------------------
+
+Suggested issue fields:
+- id
+- district_slug
+- district_name
+- title
+- issue_month / cycle_date
+- status (draft, published, archived)
+- is_current_live
+- hero_image / cover_image
+- intro_text
+- body blocks if needed
+- PDF or page preview images if used
+- notes
+- created_at
+- updated_at
+- published_at
+- archived_at
+- created_by
+
+Publication issue should support pulling sponsor/ad placements from Ads Manager according to assigned placement inventory and district.
+
+Suggested first-wave placement support:
+- front/main sponsor
+- other publication placements
+- community ads
+- other simple ad blocks as needed
+
+----------------------------------
+PUBLICATION TEMPLATE
+----------------------------------
+
+Use a locked template, not a drag-and-drop layout editor.
+
+Need a publication template system that:
+- is fixed/locked for structure
+- allows content and sponsor slots to be swapped
+- allows assigned sponsors from Ads Manager to populate designated slots
+- supports district-specific issue generation
+
+Charlotte AI should be able to generate the first draft of the issue from:
+- district context
+- assigned sponsors/ads
+- previous issue if available
+
+Add one main AI action:
+- “Generate full first draft from district + assigned sponsors + previous version”
+
+You may optionally support later section-level regenerate, but the required first build is the full issue draft generation.
+
+==================================================
+SYSTEM 3 — KIDS MENU GENERIC DIGITAL TWIN SYSTEM
+==================================================
+
+Build a separate kids menu generic issue system.
+
+This is NOT the same as publications.
+This is NOT the custom-back kids menu system.
+This is the generic district-level kids menu twin system only.
+
+Each district gets:
+- stable QR/public URL
+- issue/versioning
+- newest live version shown first
+- older versions visually shown below
+- admin issue creation
+- Charlotte AI full first-draft generation
+- sponsor/ad slots populated from Ads Manager assignments
+
+----------------------------------
+KIDS MENU ROUTING REQUIREMENT
+----------------------------------
+
+Stable route examples:
+- /pineville-local-core/kids
+- /pineville-service-corridors/kids
+- /ballantyne-blakeney/kids
+
+Behavior:
+- QR always points to stable route
+- current live kids menu shown first
+- older kids menu versions shown visually below
+- if a child scans an older printed menu, they still land at the stable page and can see prior versions below if the printed one no longer matches the newest
+
+Optional issue route examples:
+- /pineville-local-core/kids/issues/2026-04
+
+----------------------------------
+KIDS MENU ISSUE DATA
+----------------------------------
+
+Suggested fields:
+- id
+- district_slug
+- district_name
+- title
+- issue_month / cycle_date
+- status
+- is_current_live
+- preview_image or menu image
+- intro/headline optional
+- sponsor/ad placement fields
+- family fun links or digital extension blocks optional
+- notes
+- created_at
+- updated_at
+- published_at
+- archived_at
+- created_by
+
+Kids menu pages should support:
+- top sponsor
+- bottom sponsor placements
+- digital extensions tied to the menu
+- optional family/giveaway blocks later if needed
+
+----------------------------------
+KIDS MENU TEMPLATE
+----------------------------------
+
+Use a locked template, not a layout editor.
+
+The first version should support the simplified structure:
+- one top sponsor area
+- bottom sponsor row
+- central digital twin content area
+
+Assigned sponsor/ad slots should come from Ads Manager.
+
+Charlotte AI should be able to generate the first draft from:
+- district context
+- assigned sponsors
+- previous version if available
+
+Main AI action:
+- “Generate full first draft from district + assigned sponsors + previous version”
+
+==================================================
+ARCHIVE / STABLE URL BEHAVIOR
+==================================================
+
+For both Publications and Kids Menus:
+
+When a new issue is published:
+- previous current issue is archived automatically
+- stable public URL updates to newest issue
+- archived issues remain visible below the current issue on the same public page
+- archive display should be visual, not text-only
+
+Use visual archive cards for older versions.
+At minimum each archive card should show:
+- thumbnail image
+- title
+- date/cycle
+- open/view action
+
+Do not delete older issues.
+
+==================================================
+ADMIN STRUCTURE
+==================================================
+
+Create clear admin sections:
+
+1. Ads Manager
+2. Publications
+3. Kids Menus
+
+Inside Ads Manager, provide:
+- Sponsors
+- Creatives
+- Placements
+- Assignments
+
+Inside Publications, provide:
+- District issue list
+- Create new issue
+- Duplicate previous issue
+- Generate with Charlotte AI
+- Edit issue
+- Preview issue
+- Publish issue
+- Archive history
+
+Inside Kids Menus, provide:
+- District issue list
+- Create new issue
+- Duplicate previous issue
+- Generate with Charlotte AI
+- Edit issue
+- Preview issue
+- Publish issue
+- Archive history
+
+Do NOT merge publications and kids menus into one generic issue type in the UI.
+
+==================================================
+DISTRICT SUPPORT
+==================================================
+
+Seed/configure the 6 districts as active districts for both systems:
+
+- pineville-local-core
+- pineville-service-corridors
+- ballantyne-blakeney
+- carmel-sharon-corner
+- southpark-retail-luxury
+- quail-hollow-south-residential
+
+Use clean slugs and display names.
+
+==================================================
+DUPLICATE / REUSE WORKFLOW
+==================================================
+
+Need duplicate-from-previous workflow in both Publication and Kids Menu systems.
+
+Common admin flow:
+- choose district
+- duplicate previous issue
+- assigned sponsors/ad slots pull in or can be refreshed from Ads Manager
+- Charlotte AI generates first draft
+- user edits
+- preview
+- publish
+- stable URL updates automatically
+- old version moves into archive and remains visible below
+
+==================================================
+DATA / PRICING NOTES
+==================================================
+
+Ads Manager should support pricing fields if available:
+- monthly
+- 3-month
+- 12-month
+- stripe price id optional
+
+If pricing is not available yet, allow blank values.
+Do not block creation if pricing is missing.
+
+Future monetization logic can be layered later.
+
+==================================================
+UI / UX RULES
+==================================================
+
+Public pages must be:
+- mobile-first
+- fast loading
+- QR-friendly
+- clear about district identity
+- stable URL based
+- newest issue first
+- older versions visually below
+
+Admin must be:
+- clean
+- practical
+- easy to reuse monthly
+- structured around templates and assignments, not one-off manual recreation
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+- Reuse existing City Hub design system where reasonable
+- No service worker / stale cache behavior that risks old QR pages sticking
+- Stable URLs must always resolve correctly
+- Preserve archives
+- Keep systems extensible
+- Keep Publications and Kids Menus separate
+- Keep Ads Manager as master source for sponsors/ad placements
+
+==================================================
+DELIVERABLES
+==================================================
+
+Implement:
+1. Ads Manager data model + admin
+2. Publication issue system + admin + routes
+3. Kids menu issue system + admin + routes
+4. Stable URL logic
+5. Archive visual display below current issue
+6. Duplicate previous issue workflow
+7. Charlotte AI full first-draft generation hooks/buttons
+8. District support for all 6 districts
+
+At completion, provide:
+- file/component summary
+- route summary
+- data model summary
+- admin workflow summary
+- notes on assumptions

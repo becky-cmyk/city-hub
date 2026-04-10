@@ -1,0 +1,190 @@
+We are preparing the architecture for a future Jobs / Workforce module that will plug into an existing city hub platform. Do NOT build the full job board yet. The goal is to design the data structure and preparation layer so the system can support a hiring ecosystem later without requiring a rebuild.
+
+The platform already has:
+- user accounts
+- subscriber profiles
+- business / organization profiles
+- hub locations (metro → micro hubs → neighborhoods)
+- Charlotte AI assistant
+
+The Jobs system will be a future module connected to these profiles.
+
+Create the following preparation layer.
+
+1. Workforce Data Models
+
+Design database schemas for these future tables:
+
+ApplicantProfile
+- userId (reference to existing user)
+- headline
+- summary
+- locationHubId
+- availabilityType (full-time, part-time, temp, contract, second-job)
+- desiredPayRange
+- desiredRoles
+- visibilityStatus
+- createdAt
+- updatedAt
+
+ApplicantSkills
+- id
+- applicantId
+- skillCategoryId
+- skillLevel
+- yearsExperience
+
+ApplicantCredentials
+- id
+- applicantId
+- credentialType
+- credentialName
+- issuingOrganization
+- credentialNumber
+- jurisdictionState
+- issueDate
+- expirationDate
+- verificationStatus (self-reported, uploaded, verified, expired)
+- documentUrl
+
+ApplicantResumes
+- id
+- applicantId
+- resumeTitle
+- resumeFileUrl
+- isPrimary
+- createdAt
+
+2. Skill Taxonomy
+
+Create structured taxonomy tables:
+
+SkillCategories (L1)
+SkillSubcategories (L2)
+Skills (L3)
+
+Example structure:
+
+Communication
+→ Customer Communication
+→ Phone Support
+
+Hospitality
+→ Food Service
+→ Bartending
+
+Trades
+→ Electrical
+→ HVAC
+
+The taxonomy must support future expansion.
+
+3. Credential Directory
+
+Create a master directory table:
+
+CredentialDirectory
+- id
+- credentialName
+- credentialCategory
+- issuingBody
+- typicalExpirationYears
+- requiresJurisdiction (boolean)
+
+Examples:
+ServSafe
+CPR / First Aid
+OSHA
+Insurance License
+Real Estate License
+Forklift Certification
+
+4. Employer Workforce Fields
+
+Extend BusinessProfile with workforce fields:
+
+BusinessHiringProfile
+- businessId
+- industryCategory
+- workforceSizeRange
+- hiringStatus (not hiring, occasionally hiring, actively hiring)
+- typicalRoles
+- hiringContactEmail
+- hiringContactPhone
+
+5. Hub Location Link
+
+All applicant and employer workforce data must connect to:
+
+HubLocation
+- metro
+- micro hub
+- neighborhood
+
+This enables local job discovery later.
+
+6. Future Job Module Preparation
+
+Create placeholder schemas for future expansion (do not build functionality yet):
+
+JobListings
+JobApplications
+EmployerHiringMetrics
+
+Only define the schema so the system is ready.
+
+Example:
+
+JobListings
+- id
+- businessId
+- hubLocationId
+- jobTitle
+- jobCategory
+- employmentType
+- compensationType
+- compensationRange
+- positionsAvailable
+- status
+- createdAt
+
+7. Charlotte AI Awareness
+
+Ensure Charlotte AI can access structured fields for:
+
+- applicant skills
+- credentials
+- desired roles
+- employer industries
+- hiring status
+
+These fields will later allow Charlotte to recommend jobs and training.
+
+8. Future Data Intelligence
+
+Add fields that support workforce analytics later:
+
+JobListings
+- applicantsCount
+- interviewsCount
+- hiresCount
+- jobClosedDate
+
+ApplicantProfiles
+- hiredThroughHub (boolean)
+
+This will support workforce intelligence reporting.
+
+9. Design Requirements
+
+Important rules:
+- Use structured fields wherever possible.
+- Avoid relying on free-text data for skills or credentials.
+- Ensure schemas support multi-state licenses and expiration tracking.
+- Ensure applicant profiles can support multiple resumes.
+- Ensure all workforce data connects to hub locations.
+
+Output:
+- proposed database schema
+- entity relationship overview
+- recommendations for indexing and scalability

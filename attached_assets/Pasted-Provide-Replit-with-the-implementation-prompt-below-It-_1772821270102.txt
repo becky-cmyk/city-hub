@@ -1,0 +1,355 @@
+Provide Replit with the **implementation prompt below**. It assumes the Venue Channel system already exists and extends it with **YouTube integration, live sessions, and social selling** without restructuring the current app.
+
+---
+
+# Replit Implementation Prompt
+
+### Extend Venue Channels with YouTube + Live + Social Selling
+
+You are working inside the existing **City Metro Hub platform** that already has:
+
+* City
+* MicroHub
+* Venue
+* VenueChannel
+* Pulse
+* Category
+* Screen feeds
+
+Do **not rebuild these**. Extend them.
+
+The goal is to add:
+
+```text
+YouTube video hosting
+Live streaming support
+Social selling offers
+Transaction tracking
+```
+
+---
+
+# 1. Add New Database Models
+
+Add these tables.
+
+### VideoContent
+
+```text
+id
+venueId
+cityId
+microHubId
+youtubeUrl
+youtubeVideoId
+youtubePlaylistId
+title
+description
+categoryIds
+screenEligible (boolean)
+pulseEligible (boolean)
+createdAt
+```
+
+Purpose:
+
+Store YouTube videos and connect them to venues and hubs.
+
+---
+
+### LiveSession
+
+```text
+id
+venueId
+cityId
+youtubeLiveUrl
+youtubeVideoId
+status (scheduled | live | ended)
+startTime
+endTime
+attachedOfferIds
+createdAt
+```
+
+Purpose:
+
+Manage YouTube live streams for venues.
+
+---
+
+### Offer
+
+```text
+id
+venueId
+cityId
+title
+description
+price
+productType
+checkoutUrl
+liveSessionId
+active
+createdAt
+```
+
+Product types:
+
+```text
+product
+event
+bundle
+gift_card
+reservation
+promotion
+```
+
+Purpose:
+
+Attach commerce offers to videos or live streams.
+
+---
+
+### Transaction
+
+```text
+id
+offerId
+venueId
+cityId
+amount
+platformShare
+venueShare
+timestamp
+status
+```
+
+Purpose:
+
+Track revenue and sales activity.
+
+---
+
+# 2. Extend VenueChannel
+
+Add fields:
+
+```text
+youtubePlaylistId
+channelVideoIds
+liveSessionId
+```
+
+Venue channel page should display:
+
+```text
+Live Now (if active)
+Embedded YouTube player
+Latest videos
+Active offers
+Pulse mentions
+```
+
+---
+
+# 3. YouTube Integration
+
+Use YouTube **embeds only**.
+
+The Hub stores:
+
+```text
+youtubeVideoId
+youtubePlaylistId
+youtubeLiveUrl
+```
+
+Embed using:
+
+```text
+https://www.youtube.com/embed/{videoId}
+```
+
+For playlists:
+
+```text
+https://www.youtube.com/embed/videoseries?list={playlistId}
+```
+
+Do **not host video locally**.
+
+---
+
+# 4. Live Session Logic
+
+Add endpoint:
+
+```text
+/live
+```
+
+Returns all active live sessions for the city.
+
+Add endpoint:
+
+```text
+/venue/{slug}/live
+```
+
+If live session exists:
+
+* show embedded live video
+* show attached offers
+
+If not live:
+
+* show channel videos.
+
+---
+
+# 5. Offer System
+
+Each video or live session may have offers.
+
+Offer card fields:
+
+```text
+title
+price
+description
+buy button
+```
+
+Buy button redirects to:
+
+```text
+checkoutUrl
+```
+
+Checkout happens outside the video.
+
+---
+
+# 6. Transaction Recording
+
+When purchase callback occurs:
+
+Create Transaction record.
+
+Fields populated:
+
+```text
+offerId
+venueId
+cityId
+amount
+timestamp
+status
+```
+
+Revenue splits stored but configurable later.
+
+---
+
+# 7. Screen Feed Integration
+
+Existing screen routes should support new content types.
+
+Add ability for screens to display:
+
+```text
+live stream
+youtube video
+offer QR
+```
+
+Example screen endpoint:
+
+```text
+/screens/{venueSlug}
+```
+
+If venue has active live session:
+
+Show live video.
+
+Else:
+
+Run existing programming loop.
+
+---
+
+# 8. Pulse Integration
+
+Automatically generate Pulse entries when:
+
+```text
+live session scheduled
+live session started
+new venue video uploaded
+```
+
+Pulse items reference:
+
+```text
+videoId
+liveSessionId
+venueId
+```
+
+---
+
+# 9. QR Code Links
+
+QR codes should point to Hub pages.
+
+Examples:
+
+```text
+/offer/{offerId}
+/venue/{slug}
+/live/{liveSessionId}
+```
+
+Never send viewers directly to YouTube.
+
+---
+
+# 10. City Filtering
+
+All queries must filter by:
+
+```text
+cityId
+```
+
+This keeps the platform scalable across multiple metro hubs.
+
+---
+
+# 11. Core System Rule
+
+Follow this architecture:
+
+```text
+Hub = routing + commerce + discovery
+YouTube = video storage + streaming
+```
+
+Do not move video hosting into the Hub.
+
+---
+
+# Result
+
+This extension allows venues to:
+
+* upload videos via YouTube
+* run live streams
+* attach commerce offers
+* appear in venue channels
+* appear in pulse feeds
+* appear in hub screen networks
+
+without changing the existing platform structure.

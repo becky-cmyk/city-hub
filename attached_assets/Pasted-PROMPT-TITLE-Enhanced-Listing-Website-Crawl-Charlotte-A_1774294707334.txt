@@ -1,0 +1,282 @@
+PROMPT TITLE: Enhanced Listing — Website Crawl → Charlotte AI Microsite Draft Generator
+
+You are updating the existing City Hub / Charlotte Hub codebase.
+
+GOAL
+For Enhanced listings only, turn the existing “Re-crawl Website” behavior into a structured website-to-microsite generation workflow.
+
+This is NOT for Free listings.
+Free listings remain basic only.
+Do not add crawling, microsite generation, or editor access for Free.
+
+CORE INTENT
+When a business is Enhanced (or manually upgraded by admin), the admin should be able to trigger a crawl of the business’s external website and generate a Hub microsite draft from that website.
+
+This is NOT a full website embed.
+This is NOT a literal visual clone.
+This is NOT an iframe-based microsite.
+
+It should work like:
+crawl website → extract meaningful business content/assets → Charlotte AI interprets and maps it into Hub microsite sections → save draft microsite for review/edit/publish.
+
+ARCHITECTURE RULES
+Follow the existing City Hub architecture:
+Hub Presence / business record remains the source identity
+Microsite is a presentation layer attached to the business/listing
+Do not create duplicate business objects
+Do not replace the business profile with the external website
+Do not break existing listing URLs or existing Hub Presence relationships
+
+SCOPE
+Implement the following for Enhanced listings only:
+
+1) ADMIN UI CHANGES
+On the business admin modal/page where “Re-crawl Website” currently exists:
+- keep the existing website URL area
+- replace/expand the current re-crawl action so admin has clear actions:
+
+Actions:
+- Refresh Website Data
+- Generate Microsite Draft from Website
+- Refresh + Regenerate
+
+If the listing is not Enhanced, hide/disable these advanced crawl/generation actions and preserve current basic behavior.
+
+Add status indicators for Enhanced listings:
+- Website Crawled
+- Microsite Draft Ready
+- Needs Review
+- Microsite Live
+- Last Crawled [date/time]
+- Last Draft Generated [date/time]
+
+Do not over-design.
+Keep it clean and consistent with the current admin styling.
+
+2) ENHANCED-ONLY PERMISSION RULE
+Microsite crawl/generation is available only when listing tier/status is Enhanced (or equivalent internal enhanced flag).
+Do not expose this workflow to Free.
+If admin manually upgrades a business to Enhanced, this workflow becomes available immediately.
+
+3) WEBSITE CRAWL PIPELINE
+Build or extend a crawl pipeline that can fetch and parse likely useful pages from the linked website.
+
+Priority targets:
+- homepage
+- about
+- services
+- contact
+- faq
+- testimonials/reviews page if present
+- team/providers page if present
+- booking/request/contact CTA targets if obvious
+
+The crawler should:
+- respect sane limits
+- avoid crawling the whole internet
+- avoid login-only or irrelevant pages
+- avoid legal/policy clutter unless needed
+- avoid scripts/nav/footer duplication as content
+- store crawl results in a normalized form for later AI interpretation
+
+Extract where possible:
+- page title
+- meta description
+- headings
+- main text blocks
+- service names
+- CTA labels/links
+- phone
+- email
+- address/location
+- hours if visible
+- social links
+- booking/request URLs
+- FAQ pairs
+- testimonial snippets
+- provider/team names/titles
+- logos/images if usable
+- primary brand colors if reasonably detectable
+
+Do not fail the whole job if some fields are missing.
+
+4) CHARLOTTE AI INTERPRETATION LAYER
+Create a Charlotte AI generation step that takes normalized crawl results and maps them into the Hub microsite structure.
+
+Charlotte AI should:
+- determine business type/category from crawl content if useful
+- identify primary value proposition
+- identify key services
+- identify likely best CTA
+- summarize weak/long copy into cleaner Hub-ready copy
+- ignore junk/repetitive content
+- preserve business tone/positioning where possible
+- flag missing content instead of hallucinating excessive detail
+
+Important:
+Do not attempt to recreate the source site’s layout.
+Do not clone design.
+Do not just dump scraped text into one long blob.
+
+Instead, map content into structured Hub microsite blocks.
+
+5) MICROSITE DRAFT STRUCTURE
+Generate/save a draft microsite with structured sections such as:
+
+- Hero / headline
+- Short summary
+- Key services
+- About
+- Why choose us / differentiators
+- Team/providers (if available)
+- Testimonials/reviews (if available)
+- FAQ (if available)
+- Contact / CTA
+- Booking / request appointment CTA if available
+- Location / service area
+- Gallery / logo assets if available
+
+This should create a draft state first, not auto-publish blindly.
+
+If the system already has a microsite schema/table/model, reuse it.
+If not, create the minimum structured storage needed for:
+- draft content
+- source crawl metadata
+- generation timestamps
+- generation status
+- manual edit tracking
+
+6) DRAFT / LIVE / REVIEW WORKFLOW
+Support these states:
+- no_microsite
+- draft_generated
+- draft_needs_review
+- live
+- sync_conflict or source_changed (optional if simple to add)
+
+Behavior:
+- generation creates/updates a draft
+- draft can be reviewed/edited in the microsite editor
+- live microsite remains unchanged until explicitly published
+- do not automatically overwrite a live microsite without admin action
+
+7) REGENERATION / MERGE RULES
+This is important.
+
+If a microsite already exists, support safe regeneration behavior.
+At minimum provide:
+- Regenerate Draft from Website
+- Keep Live Version Unchanged
+
+Preferred if practical:
+- overwrite existing draft only
+- preserve live until publish
+- store previous draft version if versioning already exists
+
+Do NOT wipe manual edits on the live microsite just because a re-crawl happened.
+
+8) BACKGROUND JOB BEHAVIOR
+The crawl + generation should run as a background job for Enhanced listings.
+
+Suggested flow:
+- admin clicks Generate Microsite Draft from Website
+- job starts
+- UI shows processing status
+- crawl completes
+- Charlotte AI mapping/generation runs
+- draft saved
+- status updates to Draft Ready / Needs Review
+
+Handle failures gracefully:
+- show last error
+- allow retry
+- partial crawl should still generate what it can
+
+9) DATA MODEL / FIELDS
+Add only what is needed.
+
+Suggested fields (adapt to current schema naming):
+Business / Listing level:
+- website_url
+- website_last_crawled_at
+- website_crawl_status
+- microsite_generation_status
+- microsite_last_generated_at
+- microsite_source_type (manual | website_crawl | mixed)
+- is_enhanced
+
+Microsite or related generation record:
+- business_id
+- source_website_url
+- crawl_snapshot / normalized_source_data
+- ai_generation_notes
+- generated_sections_json
+- draft_version
+- last_reviewed_at
+- published_at
+
+If the codebase already has similar tables/columns, extend instead of duplicating.
+
+10) CONTENT QUALITY RULES
+Do not fill the microsite with:
+- navigation labels
+- copyright/footer junk
+- cookie text
+- privacy policy text
+- repeated CTA spam
+- raw uncleaned HTML fragments
+
+Do produce:
+- clean section copy
+- structured service summaries
+- concise business overview
+- usable CTA blocks
+- readable FAQ/testimonial sections if available
+
+11) UI/EDITOR INTEGRATION
+If a microsite editor already exists, connect the generated draft into it.
+The admin should be able to:
+- open draft
+- review/edit generated sections
+- publish microsite
+- regenerate draft later without auto-publishing
+
+If there is no clean editor handoff yet, create the minimum handoff so generated content is visible and editable in admin.
+
+12) TIER LOGIC
+Enhanced only.
+Do not change Free flow.
+Do not add marketing upsell copy in this implementation unless already present.
+Just enforce the rule.
+
+13) NON-GOALS
+Do not build:
+- full website cloning
+- iframe mirroring as primary microsite
+- public-facing website embed mode in this task
+- multi-tier crawl permissions
+- a fully autonomous no-review publish system
+
+14) ACCEPTANCE CRITERIA
+Implementation is complete when:
+
+- Enhanced business admin view can trigger website crawl-based microsite generation
+- crawl runs in background
+- Charlotte AI maps crawl data into structured microsite sections
+- a draft microsite is created
+- live microsite is not overwritten automatically
+- admin can review/edit/publish the generated draft
+- statuses are visible in admin
+- Free listings do not receive this workflow
+- existing business/listing architecture remains intact
+
+15) DELIVERABLES
+Please complete the implementation and report back with:
+- files changed
+- schema changes
+- new background jobs/services
+- admin UI changes
+- how draft vs live microsite behavior works
+- any env vars, service hooks, or follow-up setup required
+
+Build this surgically into the existing system. Reuse current business, listing, enrichment, Charlotte AI, and microsite structures wherever possible instead of inventing a parallel system.

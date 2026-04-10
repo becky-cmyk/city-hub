@@ -1,0 +1,78 @@
+You are Replit AI working inside our existing CityCoreHub / CLT Connects codebase.
+
+TASK
+Implement two FEED RULES as first-class, explicit rules (backend + frontend behavior). These rules must apply to the Pulse feed across all metros and geo contexts.
+
+RULE 1 — SESSION CAPS (ANTI-REPETITION) WITH DOOM-SCROLL RELAXATION
+Goal: prevent early-feed fatigue (same thing over and over), while allowing longer sessions to eventually see more repeats.
+
+Define a "session window" as the next N items requested/rendered for a user within the same geo context selection (NearMe/Home/Work/Metro).
+
+Implement caps (initial strict phase):
+- In the first 15 items: MAX 2 Sponsored items
+- In the first 25 items: MAX 3 items from the same Business/Entity (same businessId/orgId/entityTag)
+- In any contiguous run: MAX 4 video items in a row (video includes TikTok embeds + native video posts)
+- In the first 20 items: avoid identical contentType back-to-back more than 2 times (e.g., don't show 5 "event" items consecutively)
+
+Doom-scroll relaxation:
+- After the user has consumed 40+ items in the current session+geo context, relax caps gradually:
+  - Sponsored: allow MAX 3 per 25 after item #40
+  - Same business/entity: allow MAX 4 per 40 after item #40
+  - Video-in-a-row: allow MAX 6 after item #40
+  - ContentType streak: allow up to 3 repeats after item #40
+This should be configurable via constants.
+
+Implementation approach:
+- Backend should produce a candidate pool ranked by our existing scoring/weighting logic.
+- Then apply a "constrained selection" step that walks the ranked pool and builds the final list while enforcing caps.
+- Return the final list to the client.
+- Ensure rules are applied consistently across pagination (page/limit) by using a server-side session key or cursor that preserves constraints for that session context.
+
+Add:
+- A server-side "feed_session" concept:
+  - feedSessionId (uuid)
+  - userId
+  - metroId
+  - geoContext ENUM('near_me','home','work','metro')
+  - startedAt
+  - lastSeenAt
+  - consumedCount
+  - lightweight counters used for constraints (sponsoredCountFirst15, entityCounts, videoStreak, typeStreak, etc.)
+If we want to avoid DB writes per request, we can store session state in signed cursor tokens or in-memory cache; choose a pragmatic approach for our stack.
+
+Deliverables for Rule 1:
+- Constants/config for caps + thresholds
+- Backend constrained selection implementation
+- Tests or at least a deterministic dev endpoint to validate caps
+- Debug mode (admin-only) that returns "why skipped" for a few excluded candidates
+
+RULE 2 — HARD REFRESH ON GEO SWITCH (FRONTEND + API)
+Goal: when user switches geo context (NearMe/Home/Work/Metro), they made a deliberate choice and must see a freshly recalculated stack for that context.
+
+Implement on frontend:
+- Geo selector has four options: Near Me, Home, Work, Metro
+- On any change:
+  1) Clear feed list state
+  2) Reset scroll to top
+  3) Create a NEW feedSessionId
+  4) Request fresh feed: GET /api/feed?metroSlug=...&geoContext=...&feedSessionId=... (plus tags if applicable)
+- Show a minimal loading state (no white flash) while fetching.
+
+Implement on backend:
+- Accept geoContext + feedSessionId
+- If feedSessionId is new, start a new feed_session state for that user+context.
+- Feed ranking/weighting is recalculated inside the selected geo context.
+- Constraints from Rule 1 apply within the scope of that feedSessionId + geoContext.
+- Do NOT reuse or blend prior context’s feed state.
+
+NOTES / CONSTRAINTS
+- Do not break existing SEO/public routes.
+- This applies to Pulse feed view only.
+- Keep metrics private; no public counts.
+- Keep code additive and feature-flag if needed.
+
+OUTPUT REQUIRED
+- Point me to the exact files changed.
+- Provide the exact API contract for /api/feed including feedSessionId + geoContext.
+- Provide the config constants and where to tune them.
+- Confirm hard refresh works across mobile and desktop.

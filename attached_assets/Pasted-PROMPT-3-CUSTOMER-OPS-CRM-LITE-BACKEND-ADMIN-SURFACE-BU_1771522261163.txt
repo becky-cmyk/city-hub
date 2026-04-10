@@ -1,0 +1,100 @@
+PROMPT 3 — CUSTOMER OPS (CRM-LITE) BACKEND + ADMIN SURFACE (BUSINESS-ONLY)
+
+CONTEXT (LOCKED):
+- Same CityCoreHub Replit project.
+- Living Contacts remains separate. No integration work in this prompt.
+- This Customer Ops system is INTERNAL for managing CityCoreHub customers (accounts/people/pipeline/tasks), not a CRM product for end users.
+- Keep multi-tenant city scope: every record MUST be scoped to cityId.
+- No service worker. No heavy caching.
+- Do not refactor or rename existing structures. Implement minimal additions only.
+
+OBJECTIVE:
+Add a minimal internal “Customer Ops” module that lets admins/operators:
+1) Track businesses as Accounts through a simple pipeline
+2) Store key People contacts for each Account
+3) Create Tasks (follow-ups) tied to Account/Person
+4) Segment via tags
+5) View Stripe context + entitlements for that Account (read-only, using existing Stripe/entitlements data)
+
+SCOPE (MINIMUM DATA MODEL — ADD ONLY WHAT IS LISTED):
+A) New Tables (minimal columns; keep naming consistent with existing DB style)
+1) ops_accounts
+   - id
+   - city_id
+   - business_id (nullable; link to existing businesses if applicable)
+   - name (fallback if no linked business)
+   - status (enum/string): PROSPECT | CONTACTED | QUALIFIED | ONBOARDING | ACTIVE | SPONSOR | CHURNED
+   - owner_user_id (nullable; internal assignee)
+   - tags (json/text array or join table; choose simplest consistent approach)
+   - created_at, updated_at
+
+2) ops_people
+   - id
+   - city_id
+   - account_id
+   - name
+   - email (nullable)
+   - phone (nullable)
+   - role_title (nullable)
+   - is_primary (boolean default false)
+   - created_at, updated_at
+
+3) ops_tasks
+   - id
+   - city_id
+   - account_id
+   - person_id (nullable)
+   - assigned_to_user_id (nullable)
+   - title
+   - due_at (nullable)
+   - status: OPEN | DONE | CANCELED
+   - notes (nullable)
+   - created_at, updated_at
+
+B) Backend Routes (admin-protected; reuse existing admin auth pattern)
+Required endpoints (city-scoped):
+1) CRUD Accounts (create/read/update minimal)
+2) CRUD People under an Account
+3) CRUD Tasks under an Account (including mark done)
+4) Account Summary endpoint that returns:
+   - account core fields
+   - linked business basic details (if business_id set)
+   - people list
+   - open tasks list
+   - Stripe/Entitlement context (read-only):
+     - stripe_customer_id (if available via existing stripe_customers table)
+     - active entitlements + tier/capabilities (reuse existing entitlements resolver)
+   NOTE: DO NOT duplicate entitlement logic; call the existing resolver.
+
+C) Admin UI (minimum surface area)
+Add ONE admin page/surface (wherever admin tools live) that provides:
+1) Account list with filters:
+   - by status
+   - by tag
+   - by “has linked business” (yes/no)
+2) Click into Account detail:
+   - status change dropdown
+   - tags edit
+   - People section (add/edit)
+   - Tasks section (add/mark done)
+   - Stripe/Entitlements read-only box (tier + active entitlements + subscription id if available)
+
+FORENSIC RULES:
+- No changes to existing Stripe webhook behavior.
+- No changes to existing entitlements schema.
+- No schema drift beyond the 3 new ops_* tables above.
+- Keep city_id enforcement consistent with existing patterns.
+- Admin authorization must be required for all ops_* routes and UI.
+
+ACCEPTANCE CHECKS (MUST PASS):
+1) Admin can create an ops_account for a city.
+2) Admin can optionally link ops_account to an existing business (business_id).
+3) Admin can add a person and a task for the account.
+4) Account detail summary shows:
+   - people list
+   - open tasks
+   - entitlement tier/capabilities for the linked business (if linked), otherwise shows “No linked business”
+5) Non-admin cannot access any ops_* routes.
+
+DELIVERABLE:
+Implement the 3 ops_* tables, the admin-protected endpoints, and one minimal admin UI surface (list + detail) with people/tasks/tags/status and read-only Stripe/entitlement context.

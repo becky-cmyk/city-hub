@@ -1,0 +1,216 @@
+Hub Name,Type,ZIP Codes,County,Slug
+Albemarle,District,"28001, 28002",Stanly,albemarle
+Ballantyne,District,28277,Mecklenburg,ballantyne
+Belmont,District,28012,Gaston,belmont
+Boiling Springs,District,28017,Cleveland,boiling-springs
+Cheraw,District,29520,Chesterfield,cheraw
+Chester,District,29706,Chester,chester
+Chesterfield,District,29709,Chesterfield,chesterfield
+China Grove,District,28023,Rowan,china-grove
+Clover,District,29710,York,clover
+Concord,District,"28025, 28027",Cabarrus,concord
+Conover,District,28613,Catawba,conover
+Cornelius,District,28031,Mecklenburg,cornelius
+Cramerton,District,28032,Gaston,cramerton
+Davidson,District,"28035, 28036",Mecklenburg,davidson
+Denver,District,28037,Lincoln,denver
+Fort Mill,District,"29708, 29715",York,fort-mill
+Gastonia,District,"28052, 28054, 28056",Gaston,gastonia
+Glen Alpine,District,28628,Burke,glen-alpine
+Granite Falls,District,28630,Caldwell,granite-falls
+Great Falls,District,29055,Chester,great-falls
+Harrisburg,District,28075,Cabarrus,harrisburg
+Hickory,District,"28601, 28602",Catawba,hickory
+Hiddenite,District,28636,Alexander,hiddenite
+Hudson,District,28638,Caldwell,hudson
+Huntersville,District,28078,Mecklenburg,huntersville
+Indian Land,District,29707,Lancaster,indian-land
+Indian Trail,District,28079,Union,indian-trail
+Kannapolis,District,"28081, 28083",Cabarrus,kannapolis
+Kings Mountain,District,28086,Cleveland,kings-mountain
+Lake Wylie,District,29710,York,lake-wylie
+Lancaster,District,29720,Lancaster,lancaster
+Lawndale,District,28090,Cleveland,lawndale
+Lenoir,District,28645,Caldwell,lenoir
+Lilesville,District,28091,Anson,lilesville
+Lincolnton,District,28092,Lincoln,lincolnton
+Locust,District,28097,Stanly,locust
+Lowell,District,28098,Gaston,lowell
+Maiden,District,28650,Catawba,maiden
+Marion,District,28752,McDowell,marion
+Marvin,District,28173,Union,marvin
+Matthews,District,"28104, 28105",Mecklenburg,matthews
+McAdenville,District,28101,Gaston,mcadenville
+Midland,District,28107,Cabarrus,midland
+Mint Hill,District,28227,Mecklenburg,mint-hill
+Monroe,District,"28110, 28112",Union,monroe
+Mooresville,District,"28115, 28117",Iredell,mooresville
+Morganton,District,28655,Burke,morganton
+Morven,District,28119,Anson,morven
+Mount Holly,District,28120,Gaston,mount-holly
+Mount Pleasant,District,28124,Cabarrus,mount-pleasant
+Newton,District,28658,Catawba,newton
+Northlake,District,28216,Mecklenburg,northlake
+Old Fort,District,28762,McDowell,old-fort
+Pageland,District,29728,Chesterfield,pageland
+Peachland,District,28133,Anson,peachland
+Pineville,District,28134,Mecklenburg,pineville
+Polkton,District,28135,Anson,polkton
+Ranlo,District,28054,Gaston,ranlo
+Rock Hill,District,"29730, 29732, 29733",York,rock-hill
+Salisbury,District,"28144, 28146, 28147",Rowan,salisbury
+Shelby,District,"28150, 28152",Cleveland,shelby
+Stallings,District,28104,Union,stallings
+Statesville,District,"28625, 28677, 28687",Iredell,statesville
+Taylorsville,District,28681,Alexander,taylorsville
+Tega Cay,District,29708,York,tega-cay
+Troutman,District,28166,Iredell,troutman
+University City,District,"28213, 28262",Mecklenburg,university-city
+Uptown,District,"28202, 28203",Mecklenburg,uptown
+Valdese,District,28690,Burke,valdese
+Wadesboro,District,28170,Anson,wadesboro
+Waxhaw,District,28173,Union,waxhaw
+Weddington,District,28104,Union,weddington
+Wesley Chapel,District,28104,Union,wesley-chapel
+York,District,29745,York,york-town
+Afton Village,Neighborhood,28027,Cabarrus,afton-village
+Ansonville Road Area,Neighborhood,28170,Anson,ansonville-road-area
+Antiquity,Neighborhood,28031,Mecklenburg,antiquity
+Ayrsley & Whitehall,Neighborhood,28217,Mecklenburg,ayrsley
+Bailey's Glen,Neighborhood,28031,Mecklenburg,baileys-glen
+Ballantyne Village,Neighborhood,28277,Mecklenburg,ballantyne-village
+Baxter,Neighborhood,29708,York,baxter
+Bethlehem Area,Neighborhood,28681,Alexander,bethlehem-area
+Birkdale,Neighborhood,28078,Mecklenburg,birkdale
+Boiling Springs Historic District,Neighborhood,28017,Cleveland,boiling-springs-historic-district
+Bromley,Neighborhood,28104,Union,bromley
+Brown Creek Area,Neighborhood,28135,Anson,brown-creek-area
+Buffalo Shoals Area,Neighborhood,28650,Catawba,buffalo-shoals-area
+Camp North End,Neighborhood,28206,Mecklenburg,camp-north-end
+Catawba Meadows,Neighborhood,28655,Burke,catawba-meadows
+Cheraw Historic District,Neighborhood,29520,Chesterfield,cheraw-historic-district
+Chesterfield Historic District,Neighborhood,29709,Chesterfield,chesterfield-historic-district
+Clear Creek,Neighborhood,28227,Mecklenburg,clear-creek
+Cleveland Country Club,Neighborhood,28150,Cleveland,cleveland-country-club
+Cotswold,Neighborhood,28211,Mecklenburg,cotswold
+Cureton,Neighborhood,28173,Union,cureton
+Dilworth,Neighborhood,"28203, 28207",Mecklenburg,dilworth
+Dixon School Road Area,Neighborhood,28086,Cleveland,dixon-school-road-area
+Downtown Albemarle,Neighborhood,28001,Stanly,downtown-albemarle
+Downtown Belmont,Neighborhood,28012,Gaston,downtown-belmont
+Downtown Cheraw,Neighborhood,29520,Chesterfield,downtown-cheraw
+Downtown Chester,Neighborhood,29706,Chester,downtown-chester
+Downtown Chesterfield,Neighborhood,29709,Chesterfield,downtown-chesterfield
+Downtown Clover,Neighborhood,29710,York,downtown-clover
+Downtown Concord,Neighborhood,28025,Cabarrus,downtown-concord
+Downtown Conover,Neighborhood,28613,Catawba,downtown-conover
+Downtown Davidson,Neighborhood,28036,Mecklenburg,downtown-davidson
+Downtown Gastonia,Neighborhood,28052,Gaston,downtown-gastonia
+Downtown Glen Alpine,Neighborhood,28628,Burke,downtown-glen-alpine
+Downtown Granite Falls,Neighborhood,28630,Caldwell,downtown-granite-falls
+Downtown Hickory,Neighborhood,28601,Catawba,downtown-hickory
+Downtown Hiddenite,Neighborhood,28636,Alexander,downtown-hiddenite
+Downtown Hudson,Neighborhood,28638,Caldwell,downtown-hudson
+Downtown Kannapolis,Neighborhood,28081,Cabarrus,downtown-kannapolis
+Downtown Kings Mountain,Neighborhood,28086,Cleveland,downtown-kings-mountain
+Downtown Lancaster,Neighborhood,29720,Lancaster,downtown-lancaster
+Downtown Lawndale,Neighborhood,28090,Cleveland,downtown-lawndale
+Downtown Lenoir,Neighborhood,28645,Caldwell,downtown-lenoir
+Downtown Lilesville,Neighborhood,28091,Anson,downtown-lilesville
+Downtown Maiden,Neighborhood,28650,Catawba,downtown-maiden
+Downtown Marion,Neighborhood,28752,McDowell,downtown-marion
+Downtown Monroe,Neighborhood,28112,Union,downtown-monroe
+Downtown Mooresville,Neighborhood,28115,Iredell,downtown-mooresville
+Downtown Morganton,Neighborhood,28655,Burke,downtown-morganton
+Downtown Morven,Neighborhood,28119,Anson,downtown-morven
+Downtown Mount Holly,Neighborhood,28120,Gaston,downtown-mount-holly
+Downtown Newton,Neighborhood,28658,Catawba,downtown-newton
+Downtown Old Fort,Neighborhood,28762,McDowell,downtown-old-fort
+Downtown Pageland,Neighborhood,29728,Chesterfield,downtown-pageland
+Downtown Peachland,Neighborhood,28133,Anson,downtown-peachland
+Downtown Polkton,Neighborhood,28135,Anson,downtown-polkton
+Downtown Rock Hill,Neighborhood,29730,York,downtown-rock-hill
+Downtown Salisbury,Neighborhood,28144,Rowan,downtown-salisbury
+Downtown Statesville,Neighborhood,28677,Iredell,downtown-statesville
+Downtown Taylorsville,Neighborhood,28681,Alexander,downtown-taylorsville
+Downtown Valdese,Neighborhood,28690,Burke,downtown-valdese
+Downtown Wadesboro,Neighborhood,28170,Anson,downtown-wadesboro
+Downtown Waxhaw,Neighborhood,28173,Union,downtown-waxhaw
+Drexel Area,Neighborhood,28655,Burke,drexel-area
+East Forest,Neighborhood,28212,Mecklenburg,east-forest
+East Shelby,Neighborhood,28150,Cleveland,east-shelby
+Eastway,Neighborhood,"28205, 28212",Mecklenburg,eastway
+Elizabeth,Neighborhood,28204,Mecklenburg,elizabeth
+Gamewell,Neighborhood,28645,Caldwell,gamewell
+Gardner-Webb University Area,Neighborhood,28017,Cleveland,gardner-webb-university-area
+Gateway Trails Area,Neighborhood,28762,McDowell,gateway-trails-area
+Gunpowder Creek Area,Neighborhood,28638,Caldwell,gunpowder-creek-area
+Hemby Bridge,Neighborhood,28079,Union,hemby-bridge
+Hiddenite Gem District,Neighborhood,28636,Alexander,hiddenite-gem-district
+Highland,Neighborhood,28601,Catawba,highland-hickory
+Historic Main Street,Neighborhood,28752,McDowell,historic-main-street-marion
+Historic Morganton District,Neighborhood,28655,Burke,historic-morganton-district
+Kenworth,Neighborhood,28602,Catawba,kenworth
+Kingsley,Neighborhood,29708,York,kingsley
+Lake James Area,Neighborhood,28752,McDowell,lake-james-area
+Lake James Gateway Area,Neighborhood,28628,Burke,lake-james-gateway-area
+Lawndale Historic District,Neighborhood,28090,Cleveland,lawndale-historic-district
+Lower Creek,Neighborhood,28645,Caldwell,lower-creek
+Maiden Historic District,Neighborhood,28650,Catawba,maiden-historic-district
+Manchester Village,Neighborhood,29730,York,manchester-village
+Massey,Neighborhood,29707,Lancaster,massey
+McKee Glen,Neighborhood,28105,Mecklenburg,mckee-glen
+Montford,Neighborhood,28209,Mecklenburg,montford
+Morrison Plantation,Neighborhood,28115,Iredell,morrison-plantation
+Morven Historic Area,Neighborhood,28119,Anson,morven-historic-area
+Morven Road Corridor,Neighborhood,28170,Anson,morven-road-corridor
+Moss Lake Area,Neighborhood,28086,Cleveland,moss-lake-area
+Mountain View,Neighborhood,28602,Catawba,mountain-view-hickory
+Mountain View,Neighborhood,28086,Cleveland,mountain-view-km
+Myers Park,Neighborhood,"28207, 28209",Mecklenburg,myers-park
+Newton Historic District,Neighborhood,28658,Catawba,newton-historic-district
+NoDa,Neighborhood,"28205, 28206",Mecklenburg,noda
+Northcross,Neighborhood,28078,Mecklenburg,northcross
+Northlake Mall Area,Neighborhood,28216,Mecklenburg,northlake-mall-area
+Northwest Conover,Neighborhood,28613,Catawba,northwest-conover
+Oakwood Historic District,Neighborhood,28601,Catawba,oakwood-historic-district
+Old Fort Historic District,Neighborhood,28762,McDowell,old-fort-historic-district
+Optimist Park,Neighborhood,28206,Mecklenburg,optimist-park
+Pageland Historic District,Neighborhood,29728,Chesterfield,pageland-historic-district
+Park Crossing,Neighborhood,28134,Mecklenburg,park-crossing
+Peachland Historic District,Neighborhood,28133,Anson,peachland-historic-district
+Pee Dee River Area,Neighborhood,28091,Anson,pee-dee-river-area
+Piper Glen,Neighborhood,28277,Mecklenburg,piper-glen
+Plaza Midwood,Neighborhood,28205,Mecklenburg,plaza-midwood
+Pleasant Gardens,Neighborhood,28752,McDowell,pleasant-gardens
+Polkton Historic Area,Neighborhood,28135,Anson,polkton-historic-area
+Providence,Neighborhood,"28226, 28270",Mecklenburg,providence
+River Bend Park Area,Neighborhood,28630,Caldwell,river-bend-park-area
+River Run,Neighborhood,28036,Mecklenburg,river-run
+Riverside Park Area,Neighborhood,29520,Chesterfield,riverside-park-area
+Riverwalk,Neighborhood,29730,York,riverwalk
+Rock Barn Area,Neighborhood,28613,Catawba,rock-barn-area
+Rocky River Crossing,Neighborhood,28075,Cabarrus,rocky-river-crossing
+Rosedale,Neighborhood,28078,Mecklenburg,rosedale
+Seversville,Neighborhood,28208,Mecklenburg,seversville
+Shelby Historic District,Neighborhood,28150,Cleveland,shelby-historic-district
+South End,Neighborhood,28203,Mecklenburg,south-end
+South Main Area,Neighborhood,28017,Cleveland,south-main-area
+SouthPark,Neighborhood,"28209, 28210, 28211",Mecklenburg,southpark
+Startown Road Area,Neighborhood,28658,Catawba,startown-road-area
+Steele Creek,Neighborhood,28278,Mecklenburg,steele-creek
+Sun City,Neighborhood,29707,Lancaster,sun-city
+Sun Valley,Neighborhood,28079,Union,sun-valley
+Taylorsville Historic District,Neighborhood,28681,Alexander,taylorsville-historic-district
+UNCC Area,Neighborhood,28262,Mecklenburg,uncc-area
+University Research Park,Neighborhood,28213,Mecklenburg,university-research-park
+Uptown Shelby,Neighborhood,28150,Cleveland,uptown-shelby
+Valdese Lakeside Area,Neighborhood,28690,Burke,valdese-lakeside-area
+Viewmont,Neighborhood,28601,Catawba,viewmont
+Wadesboro Historic District,Neighborhood,28170,Anson,wadesboro-historic-district
+Waldensian Historic District,Neighborhood,28690,Burke,waldensian-historic-district
+Weddington Chase,Neighborhood,28104,Union,weddington-chase
+Weddington Trace,Neighborhood,28027,Cabarrus,weddington-trace
+Wesley Heights,Neighborhood,28208,Mecklenburg,wesley-heights
+West Shelby,Neighborhood,28152,Cleveland,west-shelby
+Whitnel,Neighborhood,28645,Caldwell,whitnel

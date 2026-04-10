@@ -1,0 +1,114 @@
+PROMPT 6 — SEO SNAPSHOT EXPANSION: ADD INTERNAL LINKS + ITEMLIST JSON-LD (AUTHORITY CLUSTERS V1)
+
+OBJECTIVE:
+Now that crawlability is solved, increase “authority signals” and internal linking for local SEO without adding new tables.
+
+Add:
+1) Strong internal link modules in the SEO snapshot rootHtml
+2) ItemList JSON-LD for list pages (directory/category/zone)
+3) BreadcrumbList JSON-LD on all public snapshot pages (including directory/home)
+
+CONSTRAINTS:
+- No schema changes
+- No new endpoints
+- No service workers
+- Keep multi-tenant cityId scoping
+- Server-side snapshot only (do not touch React UI)
+
+------------------------------------------------------------
+STEP 1 — LIST PAGES: ADD INTERNAL LINK MODULES TO rootHtml
+------------------------------------------------------------
+
+For these pages:
+- /cities/:citySlug/directory
+- /cities/:citySlug/category/:categorySlug
+- /cities/:citySlug/directory?zone=:zoneSlug
+- /cities/:citySlug
+
+Add below the main list:
+
+A) “Explore Categories” module:
+- Render UL of category links (use categories already known in the system; if there is a categories table use it; if not, use the existing category enum/constant used by the app)
+- Each link: /cities/:citySlug/category/:categorySlug
+
+B) “Explore Zones” module:
+- Render UL of zone links (use zones table by cityId)
+- Each link: /cities/:citySlug/directory?zone=:zoneSlug
+
+C) “Featured Businesses” module:
+- Render UL of 5 businesses with highest priorityRank/isFeatured by cityId (reuse existing ranking logic if present)
+- Each link: /cities/:citySlug/business/:businessSlug
+
+IMPORTANT:
+- Keep modules small (5–12 links each) to avoid bloating HTML.
+- No query strings shown except the zone filter links (allowed and canonicalized already).
+
+------------------------------------------------------------
+STEP 2 — BUSINESS DETAIL PAGE: ADD INTERNAL LINKS
+------------------------------------------------------------
+
+For:
+- /cities/:citySlug/business/:businessSlug
+
+Add below business info:
+
+A) “More in {Category}” (top 5 businesses in same category, cityId-scoped)
+B) “More in {Zone}” (top 5 businesses in same zone, cityId-scoped)
+C) “Back to Directory” link: /cities/:citySlug/directory
+
+------------------------------------------------------------
+STEP 3 — JSON-LD: ITEMLIST FOR LIST PAGES
+------------------------------------------------------------
+
+For list pages (directory/category/zone), add ItemList JSON-LD including up to 10 businesses displayed.
+
+Structure:
+{
+  "@context":"https://schema.org",
+  "@type":"ItemList",
+  "itemListElement":[
+    { "@type":"ListItem", "position":1, "url":"<canonical business url>", "name":"Business Name" },
+    ...
+  ]
+}
+
+Keep LocalBusiness JSON-LD on business detail page as-is.
+
+------------------------------------------------------------
+STEP 4 — JSON-LD: BREADCRUMBS EVERYWHERE
+------------------------------------------------------------
+
+Ensure every snapshot page includes BreadcrumbList:
+- Home: Home
+- Directory: Home > Directory
+- Category: Home > Directory > Category
+- Zone: Home > Directory > Zone
+- Business: Home > Directory > Business Name
+
+(Use canonical URLs and citySlug paths.)
+
+------------------------------------------------------------
+STEP 5 — DIAGNOSTIC EXTENSION
+------------------------------------------------------------
+
+Update SEO diagnostic checks to include:
+
+- internalLinksCount (number of <a href= occurrences)
+- hasItemListJsonLd (boolean) for list pages
+- hasBreadcrumbJsonLd (boolean) for all pages
+
+Acceptance targets:
+- internalLinksCount >= 10 on list pages
+- hasItemListJsonLd true on list pages
+- hasBreadcrumbJsonLd true on all pages
+
+------------------------------------------------------------
+VALIDATION
+------------------------------------------------------------
+
+Run:
+/api/seo-diagnostic?token=<token>
+
+Paste FULL JSON output.
+
+END PROMPT

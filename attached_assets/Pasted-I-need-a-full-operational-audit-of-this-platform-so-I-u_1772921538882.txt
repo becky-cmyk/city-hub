@@ -1,0 +1,89 @@
+I need a full operational audit of this platform so I understand what is already automated and what still requires manual work.
+
+Focus on the following areas and list them clearly.
+
+1. AUTOMATED SYSTEMS
+List every background automation currently running in the platform including:
+- RSS ingestion
+- AI content generation
+- press release ingestion
+- Google Places / business seeding
+- event imports
+- lead detection
+- email automation
+- scheduled publishing
+- cleanup jobs
+
+For each automation include:
+- what triggers it
+- how often it runs
+- what database tables it affects
+- what outputs it produces (posts, leads, emails, etc.)
+
+2. AI FUNCTIONS
+Document everything Charlotte AI currently does in the system:
+- content generation
+- story creation
+- pulse posts
+- lead detection
+- contact extraction
+- opportunity tagging
+- outreach drafting
+- hub activity analysis
+
+Explain what data sources Charlotte is using and what outputs she produces.
+
+3. CONTENT STREAMS
+List every content stream currently feeding the Pulse or article system:
+- RSS feeds
+- press release feeds
+- seeded businesses
+- events
+- community submissions
+- venue content
+- AI generated stories
+
+For each stream identify:
+- how content is filtered
+- how it is categorized
+- whether it requires approval
+- where it publishes.
+
+4. PROSPECT / BUSINESS DISCOVERY
+Explain how the system currently detects and stores:
+- new businesses
+- organizations
+- venues
+- contacts
+- press announcements
+
+Show where these records are stored and how they appear in the admin.
+
+5. CRM / CONTACT DATA
+List how the system currently captures:
+- email
+- phone
+- website
+- press contacts
+- marketing contacts
+- social links
+
+Explain where these are stored and how they can be used for outreach.
+
+6. ADMIN SURFACES
+List all admin dashboards and tools currently available including:
+- inbox systems
+- moderation queues
+- prospect lists
+- hub dashboards
+- venue management
+- advertising inventory
+- automation monitors.
+
+7. WHAT STILL REQUIRES MANUAL WORK
+Identify all tasks that still require manual operator action.
+
+8. AUTOMATION OPPORTUNITIES
+Based on the current system structure, identify areas that could be automated but are not yet automated.
+
+The goal of this audit is to help operate the platform as a single operator with maximum AI automation.

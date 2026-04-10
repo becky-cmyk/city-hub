@@ -1,0 +1,206 @@
+SYSTEM ROLE
+You are performing a structured audit of the existing City Hub / Charlotte Hub codebase.
+
+OBJECTIVE
+Identify and document EVERYTHING that already exists related to:
+
+• voting
+• polls
+• quizzes
+• competitions
+• nominations
+• ranking systems
+• badges
+• awards
+• gamification
+• leaderboards
+
+The goal is to determine what infrastructure already exists that can support the Crown Program.
+
+DO NOT BUILD ANYTHING.
+DO NOT MODIFY CODE.
+ONLY AUDIT AND REPORT.
+
+--------------------------------------------------
+
+STEP 1 — FIND EXISTING SYSTEMS
+
+Search the entire codebase for features related to:
+
+voting
+polls
+quizzes
+surveys
+ratings
+likes
+upvotes
+leaderboards
+badges
+competitions
+awards
+rankings
+engagement systems
+
+Identify any modules, services, routes, or components handling these.
+
+--------------------------------------------------
+
+STEP 2 — IDENTIFY DATABASE STRUCTURES
+
+List all database tables related to these systems.
+
+Examples to look for:
+
+votes
+poll_votes
+quiz_responses
+survey_results
+ratings
+engagement_scores
+leaderboards
+badges
+awards
+achievements
+
+For each table provide:
+
+table name
+columns
+relationships
+indexes
+linked objects (users, listings, hubs, creators, etc)
+
+--------------------------------------------------
+
+STEP 3 — IDENTIFY FRONT-END COMPONENTS
+
+Locate any UI related to:
+
+poll widgets
+quiz widgets
+voting buttons
+leaderboards
+ranking displays
+survey interfaces
+engagement prompts
+
+Report:
+
+component name
+file path
+purpose
+API endpoints used
+
+--------------------------------------------------
+
+STEP 4 — IDENTIFY API ROUTES
+
+List backend routes related to voting or engagement.
+
+Examples:
+
+POST /vote
+POST /poll
+POST /quiz
+GET /leaderboard
+GET /results
+GET /polls
+GET /rankings
+
+For each route provide:
+
+route
+purpose
+data returned
+auth requirements
+
+--------------------------------------------------
+
+STEP 5 — IDENTIFY ADMIN CONTROLS
+
+Search for admin tools that manage:
+
+poll creation
+quiz creation
+survey management
+engagement analytics
+results dashboards
+
+Report:
+
+admin page name
+file path
+permissions required
+
+--------------------------------------------------
+
+STEP 6 — IDENTIFY ANY GAMIFICATION SYSTEM
+
+Look for systems related to:
+
+points
+credits
+badges
+achievements
+levels
+engagement scores
+
+Document how these work.
+
+--------------------------------------------------
+
+STEP 7 — IDENTIFY ANY CONTENT TYPES USING VOTING
+
+Check whether voting already exists on:
+
+articles
+Pulse posts
+business listings
+events
+creators
+profiles
+comments
+
+Explain how it works.
+
+--------------------------------------------------
+
+STEP 8 — IDENTIFY REUSABLE INFRASTRUCTURE
+
+Based on the audit, identify which systems could support:
+
+• Crown nominations
+• Crown voting
+• Crown finalist ranking
+• Crown winner selection
+• category competitions
+
+Explain which parts can be reused instead of building new systems.
+
+--------------------------------------------------
+
+STEP 9 — OUTPUT FORMAT
+
+Return a structured report with these sections:
+
+1. Voting / Poll System
+2. Quiz System
+3. Survey System
+4. Ranking / Leaderboard System
+5. Badge / Award System
+6. Engagement Systems
+7. Relevant Database Tables
+8. Relevant API Routes
+9. Admin Interfaces
+10. Reusable Infrastructure for Crown Program
+
+--------------------------------------------------
+
+IMPORTANT
+
+Do NOT summarize.
+Do NOT guess.
+Only report what actually exists in the codebase.
+Include file paths when possible.
+
+This audit will be used to determine how the Crown Program should integrate with existing voting and quiz infrastructure.

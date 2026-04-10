@@ -1,0 +1,235 @@
+PROMPT 5 (Replit) — Build Human Intelligence Layer (Passive Micro-Pulses + Community Check-In Campaign Engine)
+
+GOAL
+Implement a dual-layer Human Intelligence system that:
+1) Collects lightweight behavioral decision signals passively.
+2) Runs structured Community Check-In campaigns periodically.
+3) Stores all responses anonymously.
+4) Is metro-aware and licensable.
+5) Feeds future “Community Decision Index” analytics (internal only for now).
+
+No public dashboards. No forced surveys. No PII collection.
+
+--------------------------------------------------
+PART A — DATABASE SCHEMA
+--------------------------------------------------
+
+Create tables:
+
+1) human_micro_pulse_log
+- id (pk)
+- metro_id (fk)
+- zip_id (fk nullable)
+- category_id (nullable)
+- listing_id (nullable)
+- event_context (enum: "listing_view","lead_submit","direction_click","save","search")
+- decision_factor (enum)
+- language (enum: "en","es")
+- created_at
+
+Decision factor enum values:
+- PRICE
+- LOCATION
+- TRUST
+- REVIEWS
+- WORD_OF_MOUTH
+- LANGUAGE_SUPPORT
+- SPEED
+- AVAILABILITY
+- QUALITY
+- LOCAL_OWNERSHIP
+- CONVENIENCE
+- BRAND
+- COMMUNITY_REPUTATION
+- OTHER
+
+2) human_free_text_log
+- id (pk)
+- metro_id
+- zip_id (nullable)
+- listing_id (nullable)
+- short_reason_text (varchar 250)
+- language
+- created_at
+
+3) lead_abandonment_log
+- id (pk)
+- metro_id
+- zip_id (nullable)
+- category_id
+- abandonment_reason (enum)
+- language
+- created_at
+
+Abandonment reasons:
+- PRICE_UNCLEAR
+- NO_AVAILABILITY
+- DISTANCE
+- TRUST_CONCERN
+- LANGUAGE_BARRIER
+- FOUND_ALTERNATIVE
+- JUST_BROWSING
+- WEBSITE_CONFUSING
+- OTHER
+
+4) community_campaigns
+- id (pk)
+- metro_id
+- title
+- description
+- start_date
+- end_date
+- is_active
+- created_at
+
+5) community_campaign_questions
+- id (pk)
+- campaign_id (fk)
+- question_text
+- question_type (enum: "MULTIPLE_CHOICE","FREE_TEXT","SCALE")
+- options_json (nullable)
+- language
+
+6) community_campaign_responses
+- id (pk)
+- campaign_id
+- metro_id
+- zip_id (nullable)
+- question_id
+- selected_option (nullable)
+- free_text_response (nullable)
+- scale_value (nullable)
+- language
+- created_at
+
+--------------------------------------------------
+PART B — PASSIVE MICRO-PULSE SYSTEM
+--------------------------------------------------
+
+Behavior:
+Randomly trigger 1-question pulse on:
+- Listing view (10% of sessions)
+- Lead submission (20%)
+- Direction click (15%)
+- Save action (15%)
+
+Trigger rules:
+- Never more than 1 pulse per session
+- Store session_id hash (no PII)
+- Skip if user dismissed pulse in last 24 hours (store in localStorage)
+
+UI:
+Small modal or bottom-sheet:
+Question example:
+“What mattered most in your decision?”
+
+Show structured buttons (tap only, no typing required).
+
+Submit endpoint:
+POST /api/human/micro-pulse
+
+Optional free-text follow-up:
+Short text field (optional, 200 char max).
+
+--------------------------------------------------
+PART C — LEAD ABANDONMENT SIGNAL
+--------------------------------------------------
+
+If lead form started but not completed:
+After 15 seconds idle:
+Trigger optional:
+“What stopped you?”
+
+One-tap structured response.
+
+POST /api/human/lead-abandon
+
+--------------------------------------------------
+PART D — COMMUNITY CHECK-IN CAMPAIGN ENGINE
+--------------------------------------------------
+
+Purpose:
+Occasional structured community pulse (monthly or quarterly).
+
+Examples:
+- “What makes you loyal to a local business?”
+- “What would make you switch?”
+- “What matters most in your neighborhood?”
+
+Admin UI:
+Add page:
+/admin/intelligence/campaigns
+
+Features:
+- Create campaign
+- Add questions
+- Set date range
+- Activate/deactivate
+
+Frontend:
+If campaign is active:
+Show banner:
+“Charlotte Community Check-In”
+
+When clicked:
+Load campaign questions.
+Short, structured.
+Max 3 questions per session.
+Completion under 60 seconds.
+
+POST /api/human/campaign-response
+
+--------------------------------------------------
+PART E — INTERNAL AGGREGATION (NO PUBLIC DASHBOARD YET)
+--------------------------------------------------
+
+Create internal-only endpoint:
+
+GET /api/admin/intelligence/human-summary?metroId=
+
+Return:
+- Top decision factors by zip
+- Decision factor distribution by category
+- Language-based differences
+- Abandonment reason counts
+- Campaign response counts
+
+Do NOT expose publicly.
+
+--------------------------------------------------
+PART F — ROTATIONAL INTELLIGENCE FEED (Optional internal)
+--------------------------------------------------
+
+Add to signals_feed:
+If a decision factor spikes above baseline:
+Create derived signal:
+signal_type="human_trend"
+
+Example:
+“Trust priority up 18% in 28203 this month.”
+
+Internal only.
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------
+
+1) Micro-pulse triggers probabilistically.
+2) Only 1 pulse per session max.
+3) Data stored anonymously.
+4) Campaign system can be created/activated via admin.
+5) Responses logged correctly by metro.
+6) No impact on performance.
+7) No public dashboard yet.
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+- DB migrations
+- API endpoints
+- Micro-pulse frontend component
+- Lead abandonment trigger
+- Campaign admin UI
+- Campaign frontend flow
+- Internal aggregation endpoint

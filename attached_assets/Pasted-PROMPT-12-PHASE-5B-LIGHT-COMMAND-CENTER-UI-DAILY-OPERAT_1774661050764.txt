@@ -1,0 +1,286 @@
+PROMPT 12 — PHASE 5B: LIGHT COMMAND CENTER UI + DAILY OPERATIONS WORKSPACE
+
+You are implementing ONLY Phase 5B.
+
+Prerequisite:
+- Phase 5A (command center backend + /admin/command-center endpoint) is complete
+- Queues already exist in backend:
+  - actionQueue
+  - reviewQueue
+  - followUps
+  - opportunities
+  - recentActivity
+
+DO NOT implement:
+- full app redesign
+- new backend systems
+- new scoring/recommendation engines
+- new CRM
+- advanced analytics suite
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Create a LIGHTWEIGHT admin UI layer so Becky can actually use the command center daily.
+
+The UI should let her:
+1) see what Charlotte is recommending
+2) review action-ready items
+3) handle low-confidence / exception items
+4) watch follow-ups and opportunities
+5) trigger or approve actions
+6) operate the system without hunting across the app
+
+This is not a big dashboard product.
+It is a practical daily operations workspace.
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1) REUSE the Phase 5A backend
+- consume /admin/command-center
+- do not recreate queue logic in frontend
+
+2) KEEP IT LIGHT
+- simple layout
+- practical controls
+- no huge visual overhaul
+
+3) DO NOT bury this in random admin sections
+This should feel like Charlotte’s operating workspace.
+
+4) PRIORITIZE USABILITY OVER BEAUTY
+Becky needs to move fast.
+
+--------------------------------------------------
+PART 1 — CREATE COMMAND CENTER PAGE
+--------------------------------------------------
+
+Create a lightweight admin page such as:
+
+/admin/charlotte-command-center
+or
+/admin/command-center
+
+Use the existing backend endpoint from Phase 5A.
+
+The page should load and display:
+
+- Action Queue
+- Review Queue
+- Follow-Ups
+- Opportunities
+- Recent Activity
+
+--------------------------------------------------
+PART 2 — LAYOUT
+--------------------------------------------------
+
+Build a simple, practical layout.
+
+Recommended structure:
+
+Top summary strip:
+- action-ready count
+- review-needed count
+- follow-up count
+- opportunity count
+
+Main sections:
+1. Action Queue
+2. Review Queue
+3. Follow-Ups
+4. Opportunities
+5. Recent Activity
+
+Keep it list/card based.
+Do NOT overdesign with heavy charts.
+
+--------------------------------------------------
+PART 3 — ACTION QUEUE UI
+--------------------------------------------------
+
+For each action-ready item show:
+- title/entity
+- reason
+- source (proposal/batch/onboarding/etc.)
+- confidence
+- recommended action
+- priority
+
+Buttons:
+- Run now
+- Approve
+- Reject
+- Send to review/inbox if needed
+
+These buttons must call the backend controls already created in Phase 5A.
+Do not build logic in the UI.
+
+--------------------------------------------------
+PART 4 — REVIEW QUEUE UI
+--------------------------------------------------
+
+For low-confidence and exception items show:
+- entity candidate
+- why it needs review
+- confidence
+- relevant details
+
+Buttons:
+- Approve/use existing match
+- Reject
+- Send to inbox if appropriate
+
+This section should make merge/conflict handling fast.
+
+--------------------------------------------------
+PART 5 — FOLLOW-UPS UI
+--------------------------------------------------
+
+Show:
+- entity/contact
+- current stage
+- why follow-up exists
+- next recommended step
+- due timing if available
+
+Buttons:
+- Run follow-up now
+- Dismiss/defer
+- Open related record
+
+--------------------------------------------------
+PART 6 — OPPORTUNITIES UI
+--------------------------------------------------
+
+Show:
+- entity name
+- opportunity type
+- why Charlotte surfaced it
+- relevant signal(s)
+- suggested next action
+
+Examples:
+- Crown candidate
+- TV venue candidate
+- radio partner
+- advertiser opportunity
+- event potential
+- upgrade opportunity
+
+Buttons:
+- Create proposal
+- Open record
+- Dismiss
+
+--------------------------------------------------
+PART 7 — RECENT ACTIVITY UI
+--------------------------------------------------
+
+Show:
+- last actions executed
+- batch runs
+- onboarding completions
+- important system actions
+
+Keep simple.
+This is for visibility, not analytics.
+
+--------------------------------------------------
+PART 8 — QUICK FILTERS
+--------------------------------------------------
+
+Add light filters only:
+
+- All / High Priority
+- By source:
+  - batch
+  - onboarding
+  - proposal
+  - recommendation
+- By status if helpful
+
+No advanced filtering system needed.
+
+--------------------------------------------------
+PART 9 — OPEN RELATED RECORDS
+--------------------------------------------------
+
+Where possible, allow simple navigation from queue items into:
+- business record
+- creator/profile
+- event
+- marketplace item
+- story/content
+- inbox item
+
+Do not invent new detail pages if existing ones already exist.
+
+--------------------------------------------------
+PART 10 — REFRESH / STATE HANDLING
+--------------------------------------------------
+
+Support:
+- load state
+- empty state
+- refresh after action
+- basic error handling
+
+No fancy realtime needed unless already easy.
+
+--------------------------------------------------
+PART 11 — UX RULES
+--------------------------------------------------
+
+This should feel like:
+
+- Charlotte’s daily operating table
+- not a random admin report
+- not a giant enterprise dashboard
+
+Design priorities:
+- speed
+- clarity
+- obvious next actions
+- low friction
+
+--------------------------------------------------
+PART 12 — TEST SCENARIOS
+--------------------------------------------------
+
+Test at minimum:
+
+1) Action queue item can be run from UI
+2) Review queue item can be approved/rejected
+3) Follow-up item can be triggered
+4) Opportunity item can open related record or create proposal
+5) Page handles empty queue cleanly
+6) Counts match backend response
+
+--------------------------------------------------
+PART 13 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — PAGE ROUTE CREATED
+OUTPUT C — UI SECTIONS IMPLEMENTED
+OUTPUT D — SAMPLE SCREEN STRUCTURE / DATA FLOW
+OUTPUT E — HOW PHASE 5A BACKEND WAS REUSED
+OUTPUT F — WHAT WAS NOT BUILT (to confirm scope control)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 5B is complete.
+
+Do NOT begin:
+- major redesign
+- advanced analytics
+- mobile redesign
+- monetization changes

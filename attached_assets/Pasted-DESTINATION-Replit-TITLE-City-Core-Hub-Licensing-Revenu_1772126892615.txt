@@ -1,0 +1,209 @@
+DESTINATION: Replit
+TITLE: City Core Hub – Licensing & Revenue Engine (Metro / Micro Model)
+PURPOSE: Build the full backend structure for centralized territory licensing, revenue splitting, revocation logic, and payout ledger.
+
+---
+
+BUILD THE FOLLOWING STRUCTURE:
+
+1) CORE CONCEPT
+
+City Core Hub is the root owner.
+All payments run through a single Stripe account (City Core).
+Metro and Micro operators are licensed operators tied to territories.
+Revenue is split automatically based on territory ownership.
+No operator owns data, payments, or IP.
+
+---
+
+2) DATABASE TABLES
+
+A) territories
+- id (uuid, pk)
+- type (enum: METRO | MICRO)
+- parentTerritoryId (uuid, nullable)  // MICRO → METRO
+- code (string, unique)               // e.g. CLT, CLT-28277
+- name (string)
+- status (enum: ACTIVE | SUSPENDED | REVOKED)
+- geoType (enum: ZIP | NEIGHBORHOOD | TOWN | CUSTOM)
+- geoCodes (json array)
+- createdAt
+- updatedAt
+
+B) operators
+- id (uuid, pk)
+- operatorType (enum: CITY_CORE | METRO | MICRO)
+- displayName (string)
+- email (string)
+- status (enum: ACTIVE | SUSPENDED | REVOKED)
+- createdAt
+- updatedAt
+
+C) operatorTerritories
+- id (uuid, pk)
+- operatorId (fk operators.id)
+- territoryId (fk territories.id)
+- exclusivity (enum: NONE | CONDITIONAL)
+- createdAt
+
+D) listings
+- id (uuid, pk)
+- businessName
+- stripeSubscriptionId
+- territoryId (fk territories.id)
+- createdAt
+- updatedAt
+
+E) revenueTransactions
+- id (uuid, pk)
+- stripePaymentIntentId
+- listingId
+- grossAmount
+- transactionType (enum: LISTING | AD | ACTIVATION | OTHER)
+- createdAt
+
+F) revenueSplits
+- id (uuid, pk)
+- transactionId (fk revenueTransactions.id)
+- operatorId
+- splitAmount
+- splitType (enum: MICRO | METRO | CITY_CORE | REFERRAL)
+- status (enum: PENDING | PAYABLE | PAID)
+
+---
+
+3) REVENUE LOGIC (AUTOMATED RULES)
+
+A) Standard Listing Revenue
+
+If MICRO exists:
+40% → MICRO
+30% → METRO
+30% → CITY_CORE
+
+If NO MICRO:
+60% → METRO
+40% → CITY_CORE
+
+If NO METRO:
+100% → CITY_CORE
+
+B) Micro Activation Fee
+
+If sourced by METRO:
+50% → METRO
+50% → CITY_CORE
+
+If sourced by CITY_CORE:
+100% → CITY_CORE
+
+C) Metro Activation Fee
+
+100% → CITY_CORE
+If referred by MICRO:
+10% referral commission from CITY_CORE share
+
+D) Referral Outside Territory
+
+10% of first 12 months recurring revenue
+Referral paid from CITY_CORE share
+
+---
+
+4) REVOCATION LOGIC
+
+If MICRO status = REVOKED:
+- Territory remains
+- Revenue auto-adjusts to:
+  60% METRO
+  40% CITY_CORE
+
+If METRO status = REVOKED:
+- All MICRO operators remain active
+- Revenue auto-adjusts to:
+  40% MICRO
+  60% CITY_CORE
+
+If both revoked:
+100% → CITY_CORE
+
+This must be calculated dynamically at transaction time.
+
+---
+
+5) STRIPE INTEGRATION
+
+- Single Stripe account (City Core)
+- Use webhook for:
+  invoice.paid
+  payment_intent.succeeded
+- On webhook:
+  1) Create revenueTransaction
+  2) Calculate splits
+  3) Create revenueSplits entries
+
+No operator-level Stripe accounts allowed.
+
+---
+
+6) ADMIN PANEL
+
+Create Admin views for:
+
+- Create / Edit Territories
+- Assign Operators to Territories
+- View Revenue by Territory
+- View Revenue by Operator
+- Revoke Operator (auto triggers split logic)
+- Manual override split (admin-only)
+
+---
+
+7) DATA OWNERSHIP RULE
+
+All data belongs to City Core Hub.
+Operators only have scoped access via role-based permissions.
+No data export for operators.
+
+---
+
+8) PERMISSION SYSTEM
+
+Roles:
+- SUPER_ADMIN (City Core only)
+- METRO_OPERATOR
+- MICRO_OPERATOR
+
+Access rules:
+Metro can view all data within their metro.
+Micro can view only data in their micro territory.
+Neither can see Stripe credentials or global data.
+
+---
+
+9) FUTURE READY
+
+Code structure must allow:
+- Adding new cities
+- Adding new metros
+- Adding new micro zones
+- Scaling to multi-city
+
+Use clean service layer for:
+- calculateRevenueSplit()
+- handleRevocation()
+- handleReferralCommission()
+
+---
+
+10) OUTPUT REQUIREMENTS
+
+- Build DB schema
+- Build revenue calculation service
+- Build Stripe webhook handler
+- Build admin endpoints
+- Use environment variables for Stripe keys
+- No service workers
+- No client-side revenue logic (server only)
+
+END BUILD SPEC.

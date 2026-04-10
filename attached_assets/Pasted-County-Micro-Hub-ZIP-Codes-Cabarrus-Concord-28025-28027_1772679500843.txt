@@ -1,0 +1,75 @@
+County	Micro Hub	ZIP Codes
+Cabarrus	Concord	28025,28027
+Cabarrus	Harrisburg	28075
+Cabarrus	Kannapolis	28081,28083
+Cabarrus	Midland	28107
+Cabarrus	Mount Pleasant	28124
+Chester SC	Chester	29706
+Chester SC	Great Falls	29055
+Gaston	Belmont	28012
+Gaston	Cramerton	28032
+Gaston	Gastonia	28052,28054,28056
+Gaston	Lowell	28098
+Gaston	McAdenville	28101
+Gaston	Mount Holly	28120
+Gaston	Ranlo	28054
+Iredell	Mooresville	28115,28117
+Iredell	Statesville	28625,28677,28687
+Iredell	Troutman	28166
+Lancaster SC	Indian Land	29707
+Lancaster SC	Lancaster	29720
+Lincoln	Denver	28037
+Lincoln	Lincolnton	28092
+Mecklenburg	Ballantyne	28277
+Mecklenburg	Cornelius	28031
+Mecklenburg	Davidson	28035,28036
+Mecklenburg	Huntersville	28078
+Mecklenburg	Matthews	28104,28105
+Mecklenburg	Mint Hill	28227
+Mecklenburg	Northlake	28216
+Mecklenburg	Pineville	28134
+Mecklenburg	University City	28213,28262
+Mecklenburg	Uptown Charlotte	28202,28203
+Rowan	China Grove	28023
+Rowan	Salisbury	28144,28146,28147
+Stanly	Albemarle	28001,28002
+Stanly	Locust	28097
+Union	Indian Trail	28079
+Union	Marvin	28173
+Union	Monroe	28110,28112
+Union	Stallings	28104
+Union	Waxhaw	28173
+Union	Weddington	28104
+Union	Wesley Chapel	28104
+York SC	Clover	29710
+York SC	Fort Mill	29715,29708
+York SC	Lake Wylie	29710
+York SC	Rock Hill	29730,29732,29733
+York SC	Tega Cay	29708
+York SC	York	29745
+Anson	Wadesboro	28170
+Anson	Polkton	28135
+Anson	Peachland	28133
+Anson	Morven	28119
+Anson	Lilesville	28091
+Cleveland	Shelby	28150,28152
+Cleveland	Kings Mountain	28086
+Cleveland	Boiling Springs	28017
+Cleveland	Lawndale	28090
+Catawba	Hickory	28601,28602
+Catawba	Newton	28658
+Catawba	Conover	28613
+Catawba	Maiden	28650
+Alexander	Taylorsville	28681
+Alexander	Hiddenite	28636
+Burke	Morganton	28655
+Burke	Valdese	28690
+Burke	Glen Alpine	28628
+Caldwell	Lenoir	28645
+Caldwell	Granite Falls	28630
+Caldwell	Hudson	28638
+McDowell	Marion	28752
+McDowell	Old Fort	28762
+Chesterfield SC	Cheraw	29520
+Chesterfield SC	Chesterfield	29709
+Chesterfield SC	Pageland	29728

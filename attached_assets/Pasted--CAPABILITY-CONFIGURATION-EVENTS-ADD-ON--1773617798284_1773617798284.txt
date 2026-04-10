@@ -1,0 +1,91 @@
+==================================================
+CAPABILITY CONFIGURATION — EVENTS ADD-ON
+==================================================
+
+Register a new platform capability called:
+
+Events
+
+This capability should follow the same structure as the other capability add-ons in the hub platform.
+
+Capability Key:
+events
+
+Display Name:
+Events & Event Management
+
+Description:
+Create and manage public, unlisted, and private events inside the hub including invitations, RSVPs, recurring events, and event pages tied to your Presence.
+
+Pricing:
+
+Monthly:
+15 USD
+
+Annual:
+149 USD
+
+Eligibility:
+Requires an active Hub Presence subscription.
+
+==================================================
+INCLUDED FEATURES
+==================================================
+
+When the Events capability is active, the Presence can:
+
+- create events
+- create recurring events
+- create private or invitation events
+- send invitations
+- collect RSVPs
+- manage event series
+- display events on Presence pages
+- archive past events
+- attach sponsors/vendors
+- promote events using visibility credits
+- generate event QR links
+
+==================================================
+OPERATIONAL CREDIT ALLOWANCE
+==================================================
+
+Each active Events capability includes:
+
+Monthly Allowance:
+- 50 invitation sends
+- 1 reminder campaign
+
+Operational Credit Usage Examples:
+
+Invitation sends:
+25 invites = 1 operational credit
+
+Reminder campaign:
+1 campaign = 1 operational credit
+
+Operational credits should draw from the existing platform credit system if available.
+
+==================================================
+DISCOVERY ACCESS
+==================================================
+
+Only PUBLIC events appear in hub discovery.
+
+UNLISTED and PRIVATE events remain accessible via:
+- direct link
+- invitation
+
+==================================================
+GUARDRAIL
+==================================================
+
+Events capability must integrate with the existing capability/add-on system used for:
+
+- Jobs
+- Marketplace
+- Ask an Expert
+- Creator tools
+
+Do NOT hardcode subscription logic inside the event models.
+Use the existing capability entitlement system.

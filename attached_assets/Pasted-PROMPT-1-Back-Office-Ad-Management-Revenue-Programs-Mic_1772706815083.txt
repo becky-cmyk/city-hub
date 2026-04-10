@@ -1,0 +1,180 @@
+PROMPT 1 — Back Office: Ad Management + Revenue Programs (Micro/Hub/Category/Metro)
+
+CONTEXT
+You are working inside the CLT City Hub codebase. There is already a “back office” admin area and some base billing/listing logic. Do NOT remove existing functionality. Add/verify that an “Ad Management” module exists that can manage ALL paid add-ons beyond the base listing.
+
+BUSINESS RULES (LOCKED)
+1) Base listing subscriptions auto-renew. Renewals create new payouts (renewable commissions).
+2) Any “add-on” (ads, sponsorships, authority roles, promos, etc.) requires the business to have an active Expanded Hub Presence (the $299+ base). Enforce as a hard gate.
+3) Ad/placement inventory must be:
+   - Hub-specific (micro hub / territory)
+   - Category-specific (category + micro-category support)
+   - Also have Metro-wide inventory (covers whole metro area) for businesses who want metro coverage.
+4) We do not display “Metro Hub / City Core revenue distribution” in the UI for this module. This admin module is for managing inventory, placements, and billing references. (Payout splits exist elsewhere.)
+
+GOAL
+Implement (or confirm) a Back Office section: Admin → Ad Management that:
+- defines “Programs” (revenue add-ons)
+- defines “Inventory Slots” (where things can appear)
+- allows selling/assigning “Placements” to businesses with correct scoping (hub/category/metro)
+- provides an operational workflow for sales + fulfillment
+- ensures everything is filterable and reportable by: metro, hub, category, micro-category, date range, status.
+
+MODULES TO ADD / VERIFY
+A) Admin Navigation
+- Add left-nav item: “Ad Management” under Back Office.
+- Route: /admin/ad-management
+
+B) Data Model (Drizzle ORM or existing ORM patterns)
+Create tables ONLY if they do not already exist. If similar tables exist, extend them safely.
+
+1) revenue_programs
+- id (pk)
+- name (string) e.g. "Pulse Advertising", "Category Sponsorship", "Event Promotion", "Authority Position", "Seasonal Guide Inclusion", "Welcome Program Sponsor"
+- program_type (enum) [AD, SPONSORSHIP, PROMOTION, AUTHORITY, GUIDE, WELCOME, MARKETPLACE, JOBS, SOCIAL_SELLING]
+- description (text)
+- billing_cycle (enum) [ONE_TIME, MONTHLY, QUARTERLY, ANNUAL]
+- price_mode (enum) [FIXED_PRICE, RANGE_PRICE, CUSTOM_QUOTE]
+- base_price_cents (int, nullable)
+- min_price_cents (int, nullable)
+- max_price_cents (int, nullable)
+- requires_expanded_listing (bool default true)
+- coming_soon (bool default false)
+- is_active (bool default true)
+- created_at, updated_at
+
+2) ad_inventory_slots
+Defines the “space” that can be sold and where it renders.
+- id (pk)
+- slot_name (string) e.g. "Pulse Feed Card", "Category Header Sponsor", "Neighborhood Hero Banner", "Events Featured Slot", "Jobs Highlight", "Marketplace Featured"
+- placement_type (enum) [BANNER, CARD, LIST_ITEM, BADGE, FEATURED_BLOCK, CTA]
+- scope_type (enum) [HUB_ONLY, METRO_ONLY, HUB_OR_METRO]
+- metro_id (fk)
+- hub_id (fk, nullable)  // null when metro-only
+- category_id (fk, nullable)
+- micro_category_id (fk, nullable)
+- max_active_placements (int default 1)  // supports rotation caps like 5 per micro-category, etc.
+- rotation_strategy (enum) [NONE, ROUND_ROBIN, WEIGHTED, RANDOM]
+- status (enum) [ACTIVE, PAUSED]
+- created_at, updated_at
+
+3) ad_placements
+The sold/assigned placement for a business.
+- id (pk)
+- business_id (fk)
+- program_id (fk revenue_programs)
+- slot_id (fk ad_inventory_slots)
+- scope_resolved (json) // store metro_id, hub_id, category_id, micro_category_id
+- start_date (date)
+- end_date (date, nullable if ongoing subscription)
+- status (enum) [DRAFT, PENDING_PAYMENT, ACTIVE, PAUSED, EXPIRED, CANCELED]
+- creative_type (enum) [IMAGE, HTML, TEXT, LINK_ONLY]
+- headline (string, nullable)
+- body (text, nullable)
+- cta_text (string, nullable)
+- cta_url (string, nullable)
+- image_url (string, nullable)
+- notes_internal (text, nullable)
+- created_by_admin_id (fk, nullable)
+- created_at, updated_at
+
+4) ad_creatives (optional if you want multiple creative versions per placement)
+- id (pk)
+- placement_id (fk)
+- variant_name (string) e.g. "A", "B"
+- asset_url (string, nullable)
+- headline/body/cta fields
+- status (enum) [ACTIVE, ARCHIVED]
+- created_at, updated_at
+
+5) OPTIONAL: ad_inquiries (sales pipeline)
+For tracking deals before they are sold.
+- id (pk)
+- business_id (fk, nullable)
+- lead_name, lead_email, lead_phone (nullable)
+- program_id (fk, nullable)
+- requested_scope_type (enum) [HUB, METRO]
+- requested_hub_id/category_id/micro_category_id (nullable)
+- status (enum) [NEW, CONTACTED, PROPOSAL_SENT, WON, LOST]
+- notes
+- created_at, updated_at
+
+C) Enforcement Gate (required Expanded Listing)
+Add a server-side check when creating/activating a placement:
+- If revenue_programs.requires_expanded_listing = true
+- Verify business has an ACTIVE Expanded Hub Presence subscription
+- If not, block activation and show “Requires Expanded Hub Presence ($299+)” in UI.
+
+D) Admin UI — /admin/ad-management
+Build a clean admin interface with these tabs:
+
+TAB 1: Programs
+- list/create/edit revenue_programs
+- toggle “coming soon”
+- set billing cycle and pricing mode
+
+TAB 2: Inventory Slots
+- list/create/edit ad_inventory_slots
+- filters: scope_type, metro, hub, category, micro-category
+- set max_active_placements and rotation strategy
+
+TAB 3: Placements
+- create placement wizard:
+  Step 1: select business
+  Step 2: select program
+  Step 3: choose scope:
+    - HUB placement: choose hub + category/micro-category (optional)
+    - METRO placement: metro-only + category/micro-category (optional)
+  Step 4: choose slot (filtered by scope compatibility)
+  Step 5: set dates + status
+  Step 6: add creative (headline/body/cta/image)
+- placement list with filters:
+  metro, hub, category, micro-category, program, status, date range
+- actions: activate, pause, cancel, extend, duplicate
+
+TAB 4: Reporting (simple)
+- Active placements count by hub and by category
+- Revenue summary (if you have Stripe line items available):
+  - total active recurring placements
+  - expiring soon (next 30 days)
+  - coming soon programs not yet sold
+NOTE: If billing is not integrated for add-ons yet, show placeholders + “billing integration pending”.
+
+E) Runtime Integration Points (rendering)
+Wherever the hub renders ads/sponsors/featured blocks:
+- Add a query helper: getActivePlacements({metroId, hubId, categoryId, microCategoryId, slotName})
+- It should:
+  - respect scope rules:
+    1) Prefer hub-specific placements when hubId present
+    2) Then fall back to metro-wide placements where slot scope allows
+  - respect max_active_placements and rotation_strategy
+  - only return ACTIVE placements within date range
+- Ensure no caching issues; always fetch fresh (or use existing server patterns).
+
+F) Seed Defaults (safe, idempotent)
+On migration/seed:
+- Create default programs (if not exist):
+  - Pulse Advertising (AD, MONTHLY, RANGE_PRICE)
+  - Category Sponsorship (SPONSORSHIP, MONTHLY/QUARTERLY, CUSTOM_QUOTE)
+  - Event Promotion (PROMOTION, ONE_TIME, RANGE_PRICE)
+  - Authority Position (AUTHORITY, QUARTERLY, RANGE_PRICE)
+  - Seasonal Guide Inclusion (GUIDE, ONE_TIME, RANGE_PRICE)
+  - Welcome Program Sponsor (WELCOME, ONE_TIME, CUSTOM_QUOTE)
+  - Social Selling (SOCIAL_SELLING, coming_soon=true)
+- Create sample inventory slots (if not exist):
+  - Pulse Feed Card (HUB_OR_METRO)
+  - Category Header Sponsor (HUB_OR_METRO)
+  - Events Featured Slot (HUB_ONLY)
+  - Neighborhood Hero Banner (HUB_ONLY)
+  - Metro Homepage Sponsor (METRO_ONLY)
+  - Metro Category Sponsor (METRO_ONLY)
+
+G) Acceptance Checklist
+1) Admin can create programs, slots, and placements.
+2) Placement scopes correctly:
+   - HUB: requires hubId
+   - METRO: hubId null; metroId set
+3) Filters work: hub/category/micro-category/metro.
+4) Activation is blocked if Expanded listing is not active.
+5) Runtime helper returns hub-specific first, metro second.
+6) No references to “Metro

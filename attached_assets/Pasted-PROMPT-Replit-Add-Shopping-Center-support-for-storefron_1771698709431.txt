@@ -1,0 +1,63 @@
+PROMPT (Replit): Add “Shopping Center” support for storefront presences + add “Micro-Services” (service hierarchy) for service providers — implement using existing repo patterns
+
+INSTRUCTIONS
+- Do NOT redesign the whole data model. Inspect what already exists for Presences/listings (storefront vs service), categories/services, search/filter, and microsite rendering. Extend minimally.
+- Keep language consistent: Presence, Hub, Microsite. Avoid “directory” wording.
+
+GOAL 1 — SHOPPING CENTER / PLAZA (STOREFRONT CONTEXT)
+A) Data additions (choose best fit with current schema):
+- Add an optional structured field on Presence for storefronts:
+  - shopping_center_name (string) AND/OR shopping_center_id (FK if you create a table)
+- If you create a table, name it something like:
+  - shopping_centers: id, name, address (optional), hub_id (optional), created_at, updated_at
+
+B) Admin/Edit UI:
+- In the Presence edit screen (for storefront-type presences), add:
+  - “Shopping Center / Plaza” field
+  - Support: select existing (typeahead) or create new (if allowed by admin)
+- Ensure this field is visible to owners/managers per existing permissions (edit_details).
+
+C) Display:
+- On the Presence microsite (storefront):
+  - Show “Located in: {Shopping Center Name}” (only if present)
+  - Make the shopping center name clickable if a Shopping Center page exists.
+
+D) Shopping Center Page (aggregator):
+- Add a public page for a shopping center that:
+  - Displays center name + optional location
+  - Lists all presences associated with it
+  - Uses existing listing cards/components and existing hub/niche filters if available
+- Add basic search support so users can find a shopping center by name.
+
+GOAL 2 — MICRO-SERVICES (SERVICE HIERARCHY)
+A) Model:
+- Add a structured service hierarchy to a Presence:
+  - One Primary Service (existing category/service if present)
+  - Many Sub-Services (micro-services), e.g. “Pressure Washing” -> “Roof Washing”, “Driveway Cleaning”, “Soft Wash”
+- Implement in the least invasive way:
+  - Either a new table (preferred) like presence_services:
+    - id, presence_id, service_name, parent_service (nullable) or is_primary boolean, created_at
+  - Or reuse existing tags/services tables if the repo already has them.
+
+B) UI:
+- In Presence edit screen:
+  - Primary Service selector (if not already present)
+  - “Add Micro-Services” multi-entry input (typeahead + free text)
+  - Allow reorder (optional) or at least list them clearly
+- On microsite:
+  - Show Primary Service + a visible list of Micro-Services
+  - Ensure micro-services appear in the overview and can be used as discovery keywords.
+
+C) Search/Discovery:
+- Update search so queries match:
+  - presence name
+  - primary service
+  - micro-services
+- Add optional filter UI (only if simple within current patterns): “Services” filter that includes micro-services.
+
+VALIDATION / ACCEPTANCE
+- Storefront presences can be linked to a shopping center name (structured).
+- Shopping center pages list all associated presences.
+- Presence microsites show shopping center (storefront only) and micro-services (service providers).
+- Search finds presences by micro-service keywords (e.g., “roof washing”).
+- All changes follow existing repo patterns and permission enforcement (owners/managers editing requires edit_details permission).

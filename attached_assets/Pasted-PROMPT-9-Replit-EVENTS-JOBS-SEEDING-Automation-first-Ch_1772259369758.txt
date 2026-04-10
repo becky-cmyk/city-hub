@@ -1,0 +1,204 @@
+PROMPT 9 (Replit) — EVENTS + JOBS SEEDING (Automation-first, Charlotte-ready, Metro-reusable)
+GOAL
+Build an automated ingestion system for:
+A) Community events (RSS/Atom + iCal/ICS + “HTML-list” fallbacks + Eventbrite API)
+B) Jobs (USAJOBS API + “HTML-list” fallbacks for public-sector job boards when no feed exists)
+This must work for Charlotte now and be reusable for any metro via configuration (metro_sources).
+
+KNOWN WORKING/STARTER SOURCES (Charlotte)
+1) CLTtoday “Latest News RSS” page (HTML list; treat as HTML_LIST source) https://clttoday.6amcity.com/latest-news-rss  [oai_citation:0‡6AM - CLTtoday](https://clttoday.6amcity.com/latest-news-rss?utm_source=chatgpt.com)
+2) CLTtoday events page (HTML list) https://clttoday.6amcity.com/events  [oai_citation:1‡6AM - CLTtoday](https://clttoday.6amcity.com/events?utm_source=chatgpt.com)
+3) Charlotte On The Cheap events calendar (HTML list) https://www.charlotteonthecheap.com/events/  [oai_citation:2‡Charlotte On The Cheap](https://www.charlotteonthecheap.com/events/?utm_source=chatgpt.com)
+4) Uptown Charlotte events page (HTML list) https://uptowncharlotte.com/events  [oai_citation:3‡UptownCharlotte.com](https://uptowncharlotte.com/events?utm_source=chatgpt.com)
+5) USAJOBS API (jobs) https://developer.usajobs.gov/api-reference/  [oai_citation:4‡developer.usajobs.gov](https://developer.usajobs.gov/api-reference/?utm_source=chatgpt.com)
+
+NOTE ON RSS/ICS DISCOVERY
+Many sites don’t publish obvious RSS/ICS links. Build “feed discovery”:
+- Fetch page HTML
+- Auto-detect <link rel="alternate" type="application/rss+xml|application/atom+xml">
+- Auto-detect iCal links (.ics) and “subscribe” buttons
+If none found, use HTML_LIST parsing with a source-specific selector map.
+
+NON-NEGOTIABLES
+- No Google Places for events/jobs.
+- No scraping restricted job boards (Indeed/LinkedIn/etc.).
+- Keep it low cost: cache, rate-limit, incremental pulls, and disable sources by default until configured.
+- Every ingested item must store provenance: source_type, source_url, external_id, raw payload reference.
+
+DB SCHEMA (add if not already present)
+1) events
+- id (pk)
+- metro_id (fk)
+- title
+- description (nullable)
+- category (nullable)
+- start_at (datetime)
+- end_at (datetime nullable)
+- all_day (boolean default false)
+- venue_name (nullable)
+- venue_address (nullable)
+- city (nullable)
+- state_code (nullable)
+- zip_code (nullable)
+- lat (nullable)
+- lng (nullable)
+- organizer_name (nullable)
+- ticket_url (nullable)
+- source_type (enum: "RSS"|"ATOM"|"ICS"|"EVENTBRITE"|"HTML_LIST")
+- source_external_id (string)
+- source_url (string)
+- source_license_note (nullable)
+- raw_id (fk to source_raw_rows optional)
+- created_at, updated_at
+Unique: (metro_id, source_type, source_external_id)
+
+2) jobs
+- id (pk)
+- metro_id (fk)
+- title
+- employer (nullable)
+- department (nullable)
+- employment_type (nullable)
+- pay_min (nullable) pay_max (nullable) pay_unit (nullable)
+- location_text (nullable)
+- city (nullable) state_code (nullable) zip_code (nullable)
+- remote_type (nullable)  // remote/hybrid/onsite if available
+- posted_at (datetime nullable)
+- closes_at (datetime nullable)
+- apply_url
+- details_url (nullable)
+- source_type (enum: "USAJOBS"|"RSS"|"ATOM"|"HTML_LIST")
+- source_external_id (string)
+- source_url (string)
+- source_license_note (nullable)
+- raw_id (fk optional)
+- created_at, updated_at
+Unique: (metro_id, source_type, source_external_id)
+
+3) source_raw_rows (recommended)
+- id (pk)
+- metro_id
+- source_type
+- source_key (string)              // e.g. "clttoday_latest_news"
+- source_external_id (nullable)
+- fetched_at
+- payload_json (json)
+- content_hash (string)
+- url (string)
+
+4) metro_sources (extend your existing framework)
+- id, metro_id
+- source_type (enum)
+- source_key (string unique per metro)  // "clttoday_latest_news", "cotc_events", etc.
+- enabled (boolean)
+- params_json (json)
+- last_cursor (string nullable)         // for incremental pulls (page tokens, dates, etags)
+- last_run_at (datetime nullable)
+
+CONNECTORS (implement)
+A) RSS/ATOM CONNECTOR
+/server/intelligence/connectors/rssAtomConnector.ts
+- Input: feed_url
+- Support conditional GET (ETag, If-Modified-Since) to reduce cost
+- Parse RSS/Atom into normalized “items”
+- Map:
+  - events: if source configured as events feed
+  - jobs: if source configured as jobs feed
+- Upsert with (metro_id, source_type, external_id = guid/link hash)
+- Store raw payload in source_raw_rows
+
+B) ICS (iCal) CONNECTOR
+/server/intelligence/connectors/icsConnector.ts
+- Input: ics_url
+- Parse VEVENTs
+- External ID = UID + DTSTART
+- Upsert events
+- Store raw payload
+
+C) EVENTBRITE CONNECTOR (Events)
+/server/intelligence/connectors/eventbriteConnector.ts
+- Requires secret EVENTBRITE_TOKEN
+- Metro config includes:
+  - location: {city, region/state, lat,lng,radius_miles}
+  - categories (optional)
+  - date range window (e.g. next 60 days)
+- External ID = Eventbrite event id
+- Upsert events
+- Store raw payload
+(Only Eventbrite-hosted events; that’s fine as a structured seed layer.)  [oai_citation:5‡Eventbrite](https://www.eventbrite.com/d/nc--charlotte--uptown/events/?utm_source=chatgpt.com)
+
+D) USAJOBS CONNECTOR (Jobs)
+/server/intelligence/connectors/usajobsConnector.ts
+- Requires secrets:
+  - USAJOBS_API_KEY
+  - USAJOBS_USER_AGENT (email used in request header per docs)
+- Use GET /api/Search with filters:
+  - LocationName="Charlotte, North Carolina" (or metro config)
+  - Radius / RemainInLocation, etc. per USAJOBS docs  [oai_citation:6‡developer.usajobs.gov](https://developer.usajobs.gov/api-reference/?utm_source=chatgpt.com)
+- External ID = USAJOBS PositionID or AnnouncementNumber (prefer stable field)
+- Upsert jobs
+- Store raw payload
+
+E) HTML_LIST CONNECTOR (Fallback for “no feed available”)
+/server/intelligence/connectors/htmlListConnector.ts
+Purpose: ingest event/job items from structured list pages that are stable enough to parse.
+- Input: page_url + selector map in params_json:
+  {
+    "itemSelector": "...",
+    "titleSelector": "...",
+    "dateSelector": "...",
+    "timeSelector": "...",
+    "detailUrlSelector": "...",
+    "venueSelector": "...",
+    "descriptionSelector": "...",
+    "externalIdStrategy": "detailUrl|hash(title+date+time)"
+  }
+- For each item:
+  - Build external_id from detail URL if present; else hash(title+start_date+venue)
+  - Parse dates/times with timezone = metro timezone
+  - Upsert events/jobs
+- Store raw HTML snapshot hash + extracted fields in source_raw_rows.payload_json
+Start with these Charlotte HTML_LIST configs:
+- clttoday_latest_news = https://clttoday.6amcity.com/latest-news-rss  [oai_citation:7‡6AM - CLTtoday](https://clttoday.6amcity.com/latest-news-rss?utm_source=chatgpt.com)
+- clttoday_events = https://clttoday.6amcity.com/events  [oai_citation:8‡6AM - CLTtoday](https://clttoday.6amcity.com/events?utm_source=chatgpt.com)
+- cotc_events = https://www.charlotteonthecheap.com/events/  [oai_citation:9‡Charlotte On The Cheap](https://www.charlotteonthecheap.com/events/?utm_source=chatgpt.com)
+- uptown_events = https://uptowncharlotte.com/events  [oai_citation:10‡UptownCharlotte.com](https://uptowncharlotte.com/events?utm_source=chatgpt.com)
+
+FEED DISCOVERY UTILITY (Optional but recommended)
+/server/intelligence/utils/feedDiscovery.ts
+- Given a URL:
+  - Fetch HTML
+  - Detect RSS/Atom <link rel="alternate" ...>
+  - Detect .ics links
+  - Return discovered feed URLs
+Use this to upgrade HTML_LIST sources into RSS/ICS automatically when possible.
+
+JOB RUNNER + ADMIN
+1) Add admin UI:
+- “Sources” tab per metro:
+  - enable/disable each source_key
+  - edit params_json (selectors, URLs, API location config)
+  - “Run now” button per source
+2) Add scheduler:
+- events: run every 6 hours for RSS/HTML_LIST, daily for ICS, every 6–12 hours for Eventbrite
+- jobs: run 2x/day for USAJOBS, daily for any HTML_LIST public-sector boards
+
+RATE LIMITING + COST CONTROL
+- Global per-source concurrency = 1
+- Max fetches per run (cap) from params_json (default 200 items)
+- Cache HTTP responses with ETag/Last-Modified where supported
+
+QUALITY CONTROLS
+- Basic dedupe: same title + start_at + venue within 0.2 miles => merge
+- Normalize:
+  - strip emojis from titles
+  - standardize venue fields
+  - ensure end_at >= start_at
+- Keep “source_url” always clickable on the frontend.
+
+DELIVERABLES
+- migrations for events, jobs, source_raw_rows
+- connectors: rssAtomConnector, icsConnector, eventbriteConnector, usajobsConnector, htmlListConnector
+- feedDiscovery util
+- metro_sources seed entries for Charlotte (disabled until configured except the HTML_LIST starters)
+- admin UI to run/inspect sources and view ingestion logs

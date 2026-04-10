@@ -1,0 +1,183 @@
+SYSTEM UPDATE: Commerce Hub Tier Structure + Category Controls + Reviews/Voting Foundation
+
+OBJECTIVE:
+Align Commerce Hub tiers to the finalized structure:
+Verified (Basic)
+Charter Commerce Hub
+Enhanced Commerce Hub
+
+Do NOT remove existing pricing logic.
+Update feature controls, caps, and DB structure accordingly.
+
+────────────────────────────
+1) TIER DEFINITIONS (FINAL)
+
+VERIFIED (Basic – $1 verification)
+- 1 L2 category required
+- No L3 micro categories
+- 1 neighborhood only
+- 1 image
+- Basic description
+- No external review aggregation
+- No internal review display (can receive but not featured)
+- No “Featured In” links
+- Rotation weight = 1
+
+CHARTER COMMERCE HUB
+- 1 L2 category
+- Up to 3 L3 micro categories
+- 1 neighborhood included
+- Additional neighborhoods = $99 each
+- 10 gallery images
+- 3 social links
+- Up to 5 “Featured In” external URLs
+- Aggregated external review summary block (Google, Yelp, etc.)
+- Internal review block enabled
+- Eligible for featured rotation
+- Rotation weight = 3
+
+ENHANCED COMMERCE HUB
+- Up to 3 L2 categories
+- Up to 12 L3 micro categories (hard cap)
+- 2 neighborhoods included
+- Additional neighborhoods = $99 each
+- 50 gallery images
+- Unlimited social links
+- Up to 15 “Featured In” URLs
+- Owner profile section
+- Video embed section
+- Internal + external review blocks
+- Featured spotlight eligibility
+- Rotation weight = 6
+- Custom accent theme support
+
+────────────────────────────
+2) DATABASE UPDATES
+
+A) Ensure category tables exist:
+
+category_l1
+category_l2 (fk -> l1)
+category_l3 (fk -> l2)
+
+entity_category_map
+- entity_id
+- l2_id
+
+entity_micro_map
+- entity_id
+- l3_id
+
+Enforce caps server-side:
+- Verified: max 1 l2, 0 l3
+- Charter: max 1 l2, 3 l3
+- Enhanced: max 3 l2, 12 l3
+
+B) Reviews Table (Foundation Only – Do Not Build Full UI Yet)
+
+reviews
+- id
+- entity_id
+- neighborhood_id (nullable)
+- l2_id (nullable)
+- rating (1–5)
+- review_text
+- reviewer_contact (optional)
+- source_type (internal | google | yelp | facebook | other)
+- source_url (nullable)
+- moderation_status (pending | approved | rejected)
+- created_at
+
+C) Voting / Campaign Foundation
+
+campaigns
+- id
+- title
+- year
+- neighborhood_id
+- l1_id
+- l2_id
+- campaign_type (Top10 | BestOf | CommunityFavorite | NewAndNoteworthy)
+- opens_at
+- closes_at
+
+nominations
+- id
+- campaign_id
+- entity_id
+- status (pending | approved | live)
+
+votes
+- id
+- campaign_id
+- nomination_id
+- voter_hash
+- created_at
+
+Do not expose UI yet — just scaffold.
+
+────────────────────────────
+3) ROTATION ENGINE UPDATE
+
+Implement weighted rotation logic:
+
+baseWeight:
+- Verified = 1
+- Charter = 3
+- Enhanced = 6
+
+Add freshnessModifier:
++1 if entity updated, posted event, or pulse in last 14 days.
+
+finalWeight = baseWeight + freshnessModifier
+
+Rules:
+- Shuffle per page load
+- Max 1 placement per entity per block
+- Neighborhood filter applies before weight calculation
+
+────────────────────────────
+4) BACK OFFICE CONTROLS
+
+Update dashboard permissions by tier:
+
+Verified:
+- Edit basic info only
+
+Charter:
+- Edit micro-site sections
+- Manage L3 tags (max 3)
+- Upload gallery
+- Add up to 5 Featured-In URLs
+
+Enhanced:
+- Manage up to 3 L2 categories
+- Manage up to 12 L3 tags
+- Add 15 Featured-In URLs
+- Owner profile
+- Accent theme setting
+
+Enforce caps in UI and server validation.
+
+────────────────────────────
+5) FEATURE FLAGS
+
+Add tier config object:
+
+TIER_CONFIG = {
+  verified: { l2:1, l3:0, neighborhoods:1, featuredIn:0, gallery:1 },
+  charter: { l2:1, l3:3, neighborhoods:1, featuredIn:5, gallery:10 },
+  enhanced: { l2:3, l3:12, neighborhoods:2, featuredIn:15, gallery:50 }
+}
+
+Ensure pricing logic remains unchanged.
+
+────────────────────────────
+END STATE:
+
+- Category hierarchy supports 3 levels.
+- Tier caps enforced.
+- Reviews + voting infrastructure scaffolded.
+- Rotation engine weighted and fair.
+- No UI regressions.
+- No pricing changes.

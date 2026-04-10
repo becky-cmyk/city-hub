@@ -1,0 +1,269 @@
+Work inside the existing City Hub codebase.
+
+Goal:
+Build the editorial/admin control layer that allows human override, correction, and routing control over all inbound content that has been enriched by the AI classification layer.
+
+This is the control system that ensures:
+- AI suggestions do not become permanent mistakes
+- content can be corrected after publish
+- routing can be adjusted without rebuilding the object
+- items can be unpublished, suppressed, or rerouted cleanly
+
+This task completes the intake → AI → editorial → distribution loop.
+
+--------------------------------------------------
+CRITICAL GUARDRAIL — DO NOT BREAK MULTI-LAYER ROUTING
+--------------------------------------------------
+
+The system MUST preserve:
+- categoryCoreSlug + categorySubSlug
+- geoPrimarySlug + geoSecondarySlug
+- hubSlug + countySlug
+- contentType
+- entity/venue fields
+
+Do NOT:
+- collapse these into one editable “tag”
+- replace with a single dropdown
+- flatten geo into one location field
+
+The admin layer must expose and respect the multi-layer system already built.
+
+--------------------------------------------------
+TASK PURPOSE
+--------------------------------------------------
+
+Give admin/editor the ability to:
+- review AI-classified content
+- correct category and geo routing
+- override AI decisions
+- update content after publish
+- suppress or unpublish content
+- control whether content appears in Pulse and other surfaces
+
+This applies to:
+- RSS/imported content
+- contributor content
+- uploaded content
+- future capture content
+
+--------------------------------------------------
+PART 1 — EDITABLE ROUTING FIELDS (ADMIN)
+--------------------------------------------------
+
+Create or extend admin editing capability for rss_items (and compatible inbound content types).
+
+Admin must be able to edit:
+
+CONTENT:
+- title
+- summary
+- body (if stored)
+- source attribution (read-only or editable depending on system safety)
+
+ROUTING:
+- contentType
+- categoryCoreSlug
+- categorySubSlug
+- geoPrimarySlug
+- geoSecondarySlug
+- hubSlug
+- countySlug
+
+ENTITY:
+- venueName
+- venueSlug (if applicable)
+- venueAddress
+- related entity (if implemented)
+
+STATUS:
+- publishStatus
+- policyStatus
+
+Important:
+- category and geo must be separate inputs
+- support selecting BOTH primary and secondary geo
+- support clearing incorrect values
+- do not force all fields to be required
+
+--------------------------------------------------
+PART 2 — AI VS FINAL VALUES (VISIBILITY)
+--------------------------------------------------
+
+Expose AI suggestions alongside final values for admin visibility.
+
+At minimum show:
+- AI suggested category (core + sub)
+- AI suggested geo (primary + secondary)
+- AI suggested policy
+- confidence indicators if available
+
+Do NOT overwrite final values when displaying suggestions.
+
+UI/logic should clearly distinguish:
+- “AI Suggested”
+- “Final (Active)”
+
+--------------------------------------------------
+PART 3 — UPDATE AFTER PUBLISH (CRITICAL)
+--------------------------------------------------
+
+Admin must be able to modify content AFTER it has already been published.
+
+Support:
+- updating routing fields (category, geo, contentType)
+- updating text/content fields
+- updating entity/venue fields
+
+Changes must:
+- immediately affect how content is routed into discovery surfaces
+- reflect in Pulse, hub pages, category pages, etc. without duplication
+
+Do NOT:
+- create a new record when editing
+- require re-ingestion
+
+--------------------------------------------------
+PART 4 — PUBLISH / UNPUBLISH / SUPPRESS
+--------------------------------------------------
+
+Implement clean status control behavior.
+
+publishStatus should support:
+- DRAFT
+- REVIEW_NEEDED
+- APPROVED
+- PUBLISHED
+- ARCHIVED
+
+policyStatus should support:
+- ALLOW
+- REVIEW_NEEDED
+- SUPPRESS
+
+Behavior rules:
+
+PUBLISHED + ALLOW
+→ eligible for all discovery surfaces
+
+REVIEW_NEEDED
+→ not visible publicly (or limited visibility if system supports it)
+
+SUPPRESS
+→ excluded from Pulse and discovery surfaces but retained in database
+
+ARCHIVED
+→ removed from active discovery but retained historically
+
+Do NOT hard delete content for suppression.
+
+--------------------------------------------------
+PART 5 — PULSE VISIBILITY CONTROL
+--------------------------------------------------
+
+Add explicit control over whether content appears in Pulse.
+
+Options:
+- include in Pulse (default when PUBLISHED + ALLOW)
+- exclude from Pulse but allow on profile/hub/category pages
+- suppress entirely
+
+This allows:
+- quieter content to exist without flooding Pulse
+- editorial curation of feed quality
+
+Do NOT rely only on category or policy to control Pulse inclusion.
+
+--------------------------------------------------
+PART 6 — SIMPLE REVIEW QUEUE
+--------------------------------------------------
+
+Create a basic admin review queue for items that need attention.
+
+Queue should include:
+- items with publishStatus = REVIEW_NEEDED
+- items with policyStatus = REVIEW_NEEDED
+- items with low AI confidence if available
+- items missing critical routing (e.g., no geoPrimarySlug)
+
+Display:
+- title
+- source
+- suggested category/geo
+- current status
+- quick actions (approve, edit, suppress)
+
+Do NOT overbuild UI — simple list/table is enough for now.
+
+--------------------------------------------------
+PART 7 — AUDIT TRAIL
+--------------------------------------------------
+
+Use existing fields:
+- lastEditedBy
+- lastEditedAt
+
+Ensure they update whenever admin changes:
+- routing
+- content
+- status
+
+Optional (if lightweight):
+- store a minimal change log (field changed + timestamp)
+
+Do NOT build a heavy versioning system in this task.
+
+--------------------------------------------------
+PART 8 — PROTECT MANUAL OVERRIDES
+--------------------------------------------------
+
+Once admin edits a field:
+- AI should not overwrite it on future processing runs
+
+Implement simple protection:
+- if lastEditedBy is set or a field is manually changed, treat it as authoritative
+- AI can still suggest updates, but must not auto-apply over manual values
+
+--------------------------------------------------
+PART 9 — NO DUPLICATION / NO NEW TABLES
+--------------------------------------------------
+
+Continue using rss_items as the source for imported content.
+
+Do NOT:
+- duplicate items into articles/events/jobs tables
+- fork data just to support editing
+
+All edits must apply to the single source object and propagate to all discovery surfaces.
+
+--------------------------------------------------
+PART 10 — SAFETY / GUARDRAILS
+--------------------------------------------------
+
+Do NOT:
+- flatten category and geo into one field
+- remove multi-layer routing
+- hide routing behind one generic selector
+- auto-publish everything AI touches
+- build a separate editorial system disconnected from rss_items
+
+Do:
+- give full control over routing + status
+- preserve multi-layer architecture
+- allow correction after publish
+- support clean suppression and curation
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary of changes
+2. admin editing interface/components added or updated
+3. how routing fields are edited (category + geo separation)
+4. how AI suggestions are displayed vs final values
+5. how publish/unpublish/suppress works
+6. how Pulse inclusion/exclusion is controlled
+7. how review queue works
+8. how manual overrides are protected from AI
+9. what remains for next phase (ranking, weighting, distribution tuning)

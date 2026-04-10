@@ -1,0 +1,233 @@
+CITY HUB / CLT CONNECTS — LOCATION-AWARE SEARCH
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Upgrade the current search foundation so it correctly interprets local geographic intent and returns better place-based discovery results using the REAL existing data model.
+
+This is a SURGICAL SEARCH RELEVANCE PASS.
+Do NOT rebuild search from scratch.
+Do NOT introduce a separate search engine unless absolutely necessary.
+Do NOT create duplicate search-only records.
+Do NOT flatten or merge the platform’s two geographic hierarchies.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Current search uses PostgreSQL ILIKE queries and already searches across multiple object types.
+Search already exists and should be refined, not replaced blindly.
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are not a separate table; they are businesses with creator-specific fields/types.
+Pulse is not a table and must remain an aggregation/discovery surface over real objects.
+
+The platform has TWO valid geographic hierarchies and both must remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, and operator structures
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and local discovery
+
+Do NOT collapse these into one model.
+Do NOT “simplify” geography by removing one.
+Use them correctly according to their purpose.
+
+LOCKED LOCATION-AWARE SEARCH RULE
+
+Search must interpret geographic intent when location terms appear in a query.
+
+Examples:
+- roof washing southside
+- restaurants ballantyne
+- jobs near uptown
+
+These should be interpreted as:
+topic/service/object intent + location filter/context
+
+Search must use available stored location data such as:
+- city
+- district
+- neighborhood
+- micro_hub
+- zip
+- coordinates where available
+
+This aligns with the source-of-truth search model and the platform’s geo-organized operating intent.
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current search implementation and confirm:
+
+1. How queries are currently parsed
+2. Whether any location terms are already recognized
+3. Which location fields are currently searchable
+4. Which object types currently have reliable location data
+5. How businesses, events, jobs, marketplace, and articles currently carry or inherit location context
+6. Whether search is using zones, regions, both, or neither in relevance logic
+7. Whether Charlotte / CLT assumptions are still hardcoded anywhere in search interpretation
+8. The safest low-risk path to add stronger location-aware relevance without breaking current search
+
+Return a concise implementation note first before major changes.
+
+PRIMARY OBJECTIVE
+
+Make search behave more like a local discovery engine by correctly interpreting location-aware intent.
+
+That means:
+- understand topic + place queries better
+- use existing city/zone/region/location fields
+- improve matching and ranking for local relevance
+- preserve grouped search behavior
+- avoid overengineering
+
+REQUIRED IMPLEMENTATION
+
+1. LOCATION TERM DETECTION
+
+Add or refine lightweight parsing so search can identify likely location terms in user queries.
+
+Examples:
+- neighborhood names
+- district names
+- micro_hub names
+- zip codes
+- common local area names already in the database
+- city names where relevant
+
+This should be data-aware where possible, not a giant hardcoded phrase list.
+
+Use the lightest stable method supported by the current stack.
+
+2. TOPIC + LOCATION QUERY SPLITTING
+
+Where practical, split a query into:
+- topical/service/business intent
+- location intent
+
+Examples:
+- "roof washing southside"
+  → topic: roof washing
+  → location: southside
+
+- "coffee ballantyne"
+  → topic: coffee
+  → location: ballantyne
+
+Do not overbuild NLP.
+Keep it pragmatic and aligned to real stored geography.
+
+3. USE THE CORRECT GEOGRAPHY MODEL
+
+Search must use both hierarchies correctly.
+
+Use ZONES primarily for:
+- neighborhood
+- district
+- micro_hub
+- local content/discovery relevance
+
+Use REGIONS primarily for:
+- metro/hub/county/zip
+- broader territory and area relevance
+
+Do not let region logic replace local zone discovery.
+Do not let zone logic break broader area search.
+
+4. IMPROVE RANKING FOR LOCAL RELEVANCE
+
+Adjust ranking so matching nearby/relevant local results appear above generic text matches when location intent is clear.
+
+Useful signals may include:
+- exact neighborhood/district/micro_hub match
+- zip match
+- city match
+- inherited business location for events/jobs where applicable
+- category match
+- creator/business type relevance
+- tier/featured weighting only where valid and not destructive
+
+Keep fairness and usability.
+Do not turn this into pay-to-win ranking.
+
+5. LOCATION-AWARE COVERAGE ACROSS OBJECT TYPES
+
+Ensure location-aware behavior works correctly across supported objects where data exists, including:
+- businesses
+- creators (through businesses)
+- events
+- jobs / job_listings
+- marketplace listings
+- articles/stories where location is attached
+- attractions/places where live in code
+
+If some object types do not yet have clean location support, note that clearly rather than inventing fake logic.
+
+6. RESULT GROUPING SAFETY
+
+Preserve grouped results by object type where the search foundation already supports that direction.
+
+Location-aware relevance should improve the results inside groups, not destroy grouped discovery.
+
+7. CITY / METRO CONTEXT SAFETY
+
+Do not leave hidden Charlotte-only assumptions in search interpretation or fallback logic where city context should be dynamic.
+
+Respect the emerging platform vs city separation.
+Search should be able to work in Charlotte now without coding Charlotte as the platform forever.
+
+8. BILINGUAL SAFETY
+
+Do not break the bilingual system.
+
+Where current data supports it:
+- allow location-aware interpretation to work with English and Spanish UI/search contexts as safely as possible
+- preserve translated labels and search grouping
+- if deeper bilingual search synonym handling should wait, note that explicitly
+
+9. PERFORMANCE / STABILITY
+
+Keep this implementation light and stable.
+
+Prefer:
+- better query parsing
+- better WHERE / ranking logic
+- better geography matching
+- small index improvements if needed
+- minimal code changes with strong leverage
+
+Do not introduce a heavy external search stack in this prompt unless absolutely unavoidable.
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild the whole search system
+- rebuild taxonomy
+- merge region and zone hierarchies
+- create duplicate search tables
+- create a giant AI/NLP parser
+- redesign the entire search UI
+- break grouped search or existing object routes
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. search better interprets topic + location queries
+2. local geographic relevance is stronger and more accurate
+3. zones and regions are both preserved and used appropriately
+4. object types with valid location data benefit from better discovery
+5. grouped search still works
+6. Charlotte-only assumptions are reduced where relevant
+7. no duplicate or shadow search architecture is introduced
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current location-aware search behavior first
+3. implement the smallest stable change set to improve geographic intent handling
+4. list exactly which files/components/services/routes were changed
+5. list what should wait for the next taxonomy / micro-category / bilingual search prompt

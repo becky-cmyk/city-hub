@@ -1,0 +1,104 @@
+You are the coding/build agent inside this CITYCOREHUB / CLT CONNECTS repo.
+
+HATS: CFO-first, Architect-second.
+GOAL: Monetize Phase 1 without rebuild or churn.
+
+NEXT STEP (Prompt 1): Implement Stripe monetization rails + entitlement updates (minimum viable).
+
+NON-NEGOTIABLES
+- Do NOT add service worker.
+- Do NOT add video hosting.
+- Do NOT build Phase 2 features.
+- Keep everything multi-tenant (city-scoped).
+- Use entitlements table as the single source of truth for paid access.
+- Output: code changes only. No explanations.
+
+REQUIREMENTS
+
+A) CONFIG / ENV
+1. Add required env vars (with safe fallbacks for dev only):
+   - STRIPE_SECRET_KEY
+   - STRIPE_WEBHOOK_SECRET
+   - PUBLIC_APP_URL (or APP_URL)
+2. Fail fast if Stripe keys missing in production.
+
+B) STRIPE PRICE MAP (PHASE 1)
+Create a single config object mapping product_type -> Stripe price IDs:
+- LISTING_TIER (FREE/VERIFIED/PREMIUM)   -> price ids
+- FEATURED_PLACEMENT                    -> price id
+- SPOTLIGHT                             -> price id
+- SPONSORSHIP                           -> price id
+- CONTRIBUTOR_PACKAGE                   -> price id
+Store in one file (e.g., server/stripe/priceMap.ts). Use placeholders that are read from env:
+STRIPE_PRICE_LISTING_VERIFIED, STRIPE_PRICE_LISTING_PREMIUM, STRIPE_PRICE_FEATURED, STRIPE_PRICE_SPOTLIGHT, STRIPE_PRICE_SPONSOR, STRIPE_PRICE_CONTRIBUTOR
+
+C) API: CREATE CHECKOUT SESSION
+Add POST /api/stripe/checkout
+Body (zod-validated):
+- citySlug: string
+- subjectType: "BUSINESS" | "USER" | "ZONE" | "CITY"
+- subjectId: string
+- productType: "LISTING_TIER" | "FEATURED_PLACEMENT" | "SPONSORSHIP" | "SPOTLIGHT" | "CONTRIBUTOR_PACKAGE"
+- tier (optional, only when productType=LISTING_TIER): "VERIFIED" | "PREMIUM"
+- successPath: string (default "/:citySlug/owner/:slug?upgrade=success")
+- cancelPath: string (default "/:citySlug/owner/:slug?upgrade=cancel")
+Rules:
+- Resolve city by citySlug (must exist).
+- Determine Stripe priceId from productType (+ tier if listing tier).
+- Create/reuse stripe customer:
+  - Use stripe_customers table keyed by (city_id, email)
+  - Email source:
+    - If subjectType=BUSINESS: owner_email must exist; else reject
+    - If subjectType=USER: user email (if exists), else reject
+- Create Stripe Checkout Session:
+  - Mode:
+    - LISTING_TIER can be subscription OR one-time (pick ONE and implement; default subscription if possible)
+    - All others default one-time payment (mode="payment")
+  - Include metadata:
+    city_id, city_slug, subject_type, subject_id, product_type, tier (if any)
+  - Return { url }.
+
+D) API: STRIPE WEBHOOK
+Add POST /api/stripe/webhook with raw body parsing and signature verification.
+Handle these events minimum:
+1) checkout.session.completed
+   - If mode="payment": upsert entitlement ACTIVE for (city_id, subject_type, subject_id, product_type) with:
+     stripe_checkout_session_id
+     start_at=now
+     end_at = null unless you decide to timebox featured/spotlight (if timeboxed, set end_at = now + 30 days)
+2) customer.subscription.created / updated
+   - Upsert entitlement ACTIVE with stripe_subscription_id, start_at, end_at based on Stripe current_period_end
+3) customer.subscription.deleted
+   - Set entitlement status CANCELED and end_at=now
+
+Webhook must:
+- Use metadata from Stripe objects to locate city_id/subject/product
+- Be idempotent:
+  - If entitlement exists for same stripe_subscription_id or stripe_checkout_session_id, update not duplicate
+- Log minimal errors server-side, always return 200 after processing known events (400 only for signature failure).
+
+E) DB CONSTRAINTS / INDEXES (MINIMUM)
+Add migrations (Drizzle) to:
+1) Add index on businesses.claim_token_hash (if not present)
+2) Add unique constraint on stripe_customers.stripe_customer_id
+3) Add unique constraint on device_saved (device_id, item_type, item_id) (or closest existing columns)
+
+F) OWNER UPGRADE CTA WIRING (MINIMUM)
+On owner dashboard:
+- Make "Upgrade Your Visibility" button call POST /api/stripe/checkout with subjectType="BUSINESS"
+- Use returned url to redirect to Stripe checkout
+- After success, owner page should re-fetch business + entitlements and reflect changes (at least show a “Premium/Verified” badge or “Featured Active” indicator driven from entitlements)
+
+DELIVERABLES
+- New files: server/stripe/priceMap.ts, server/stripe/webhook.ts (or similar)
+- Updated routes: server/routes.ts (or router files)
+- Updated db migrations
+- Updated owner dashboard frontend to trigger checkout and display entitlement-driven status
+- Ensure TypeScript builds and existing routes unaffected
+
+STOP CONDITIONS
+- Do not implement the unified Content table in this prompt.
+- Do not build CRM tables.
+- Do not build RSVP, SMS, marketplace, classifieds.
+
+After implementing, print a short checklist of files changed (file paths only).

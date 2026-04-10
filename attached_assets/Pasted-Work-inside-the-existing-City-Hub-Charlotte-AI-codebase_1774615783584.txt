@@ -1,0 +1,219 @@
+Work inside the existing City Hub / Charlotte AI codebase.
+
+This is Prompt 9.
+
+This is a CORE workflow.
+This connects real-world interactions → content → outreach → scheduling.
+
+Do NOT rebuild:
+- editorial system
+- RSS ingestion
+- routing engine
+
+You are building a CAPTURE + OUTREACH FLOW.
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+
+When Becky meets someone (event, expo, networking):
+
+She should be able to:
+
+1. Capture contact quickly
+2. Generate a story (draft)
+3. Send a personalized invite (from Becky)
+4. Let them book time via calendar
+5. If no booking → follow up via Charlotte
+
+All in ONE connected flow.
+
+--------------------------------------------------
+PART 1 — QUICK CAPTURE ENTRY
+--------------------------------------------------
+
+Create a lightweight capture flow:
+
+Input methods:
+- manual entry (name, business, email, phone)
+- paste from notes
+- optional: business card fields (no OCR required yet)
+
+Fields:
+- name
+- business name
+- email (required for outreach)
+- phone (optional)
+- notes (free text from conversation)
+- event/context tag
+
+Save as:
+contact_capture record
+
+Status:
+- NEW
+- STORY_CREATED
+- INVITE_SENT
+- BOOKED
+- FOLLOWUP_PENDING
+
+--------------------------------------------------
+PART 2 — AUTO STORY GENERATION
+--------------------------------------------------
+
+On save OR batch action:
+
+Generate:
+- draft story using:
+  - captured notes
+  - business name
+  - category guess
+  - Charlotte tone
+
+Output:
+- title
+- summary
+- body draft
+
+Save as:
+content item (unpublished, editable in editorial layer)
+
+Link:
+contact_capture → content_item_id
+
+--------------------------------------------------
+PART 3 — BECKY INTRO EMAIL (PRIMARY)
+--------------------------------------------------
+
+Send email FROM Becky voice.
+
+Email includes:
+- personal intro
+- “great meeting you”
+- short context reminder
+- invitation to be featured
+- calendar link
+- optional link to preview story (if enabled)
+
+Tone:
+human, not AI
+
+This is NOT Charlotte.
+This is Becky.
+
+--------------------------------------------------
+PART 4 — CALENDAR INTEGRATION
+--------------------------------------------------
+
+Add scheduling:
+
+- connect to Google Calendar
+- define available slots (configurable)
+
+Email CTA:
+“Schedule your time here”
+
+On booking:
+- update status → BOOKED
+- attach meeting link (Google Meet)
+- send confirmation
+
+--------------------------------------------------
+PART 5 — NO BOOKING FALLBACK
+--------------------------------------------------
+
+If no booking after X time (e.g., 48–72 hours):
+
+Trigger Charlotte follow-up:
+
+Email from Charlotte:
+- reminder
+- simplified CTA
+- optional:
+  - “or submit your story here” link
+  - or async Q&A option
+
+Tone:
+assistant, but still human
+
+--------------------------------------------------
+PART 6 — OPTIONAL SELF-SERVE PATH
+--------------------------------------------------
+
+If user does not want meeting:
+
+Allow:
+- “Submit your story instead”
+
+This routes to:
+- story builder flow (existing or lightweight form)
+
+--------------------------------------------------
+PART 7 — STATUS TRACKING
+--------------------------------------------------
+
+Track lifecycle:
+
+contact_capture status:
+
+- NEW
+- STORY_CREATED
+- INVITE_SENT
+- OPENED (if tracked)
+- BOOKED
+- NO_RESPONSE
+- FOLLOWUP_SENT
+- COMPLETED
+
+Make visible in simple list view.
+
+--------------------------------------------------
+PART 8 — SIMPLE DASHBOARD (MINIMAL)
+--------------------------------------------------
+
+Do NOT overbuild CRM.
+
+Just show:
+
+- recent captures
+- status
+- quick actions:
+  - resend invite
+  - regenerate story
+  - mark complete
+
+--------------------------------------------------
+PART 9 — FUTURE HOOKS (DO NOT BUILD YET)
+--------------------------------------------------
+
+Leave structure for:
+
+- SMS follow-up (Twilio later)
+- voice AI (your cloned voice later)
+- bulk event import
+- QR capture
+
+--------------------------------------------------
+PART 10 — DO NOT OVERCOMPLICATE
+--------------------------------------------------
+
+Do NOT:
+- build full CRM
+- build complex pipelines
+- block flow with validation
+
+This must be FAST and usable immediately after an event.
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+
+1. capture data model
+2. story generation trigger
+3. email flow (Becky vs Charlotte)
+4. calendar integration approach
+5. status lifecycle
+6. what is manual vs automated
+7. what is ready for real use immediately

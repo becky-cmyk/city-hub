@@ -1,0 +1,272 @@
+CITY HUB / CLT CONNECTS — MICRO CATEGORY / TAXONOMY ALIGNMENT
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Stabilize and align the category taxonomy so discovery across businesses, creators, jobs, events, and marketplace listings works consistently using the existing layered category system.
+
+This is a TAXONOMY ALIGNMENT PASS.
+Do NOT rebuild the entire category system.
+Do NOT create a second taxonomy structure.
+Do NOT duplicate category tables.
+Do NOT break existing category assignments.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Businesses are the primary Hub Presence object.
+Creators are businesses with creator-specific types.
+Pulse is an aggregation layer over real objects.
+
+Search now supports location-aware queries.
+
+The platform already uses a layered category structure.
+
+Typical structure:
+
+LEVEL 1
+Primary category
+Example: Food, Services, Health, Real Estate
+
+LEVEL 2
+Subcategory
+Example: Restaurants, Roofing, Dentistry
+
+LEVEL 3
+Micro-category / specialization
+Example: Sushi Restaurant, Roof Washing, Pediatric Dentist
+
+These layers already exist in the data model and must remain the single source of classification.
+
+Do NOT introduce a second taxonomy system.
+
+LOCKED TAXONOMY RULE
+
+Categories are the classification system for discovery.
+
+They must:
+- classify businesses and creators
+- support search relevance
+- support filtering
+- support map layers
+- support hub discovery pages
+- support category landing pages
+
+Categories are NOT:
+- freeform tags
+- a second directory
+- a content-only system
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current taxonomy implementation and confirm:
+
+1. Which category tables or structures currently exist
+2. How categories are attached to businesses
+3. Whether events, jobs, marketplace listings, and articles use the same taxonomy or different ones
+4. Whether micro-categories are consistently used or partially implemented
+5. Whether any object types are using ad-hoc text categories instead of the taxonomy
+6. How category filtering currently works on discovery pages
+7. Whether category logic differs between search, map, and directory
+8. Whether Charlotte-specific category assumptions exist
+9. What current taxonomy structures should remain unchanged
+
+Return a concise implementation note before making changes.
+
+PRIMARY OBJECTIVE
+
+Ensure that the category system functions consistently across discovery.
+
+This means:
+
+- businesses classified properly
+- creators classified properly
+- events/jobs/marketplace using compatible classification
+- category filters working across discovery surfaces
+- search respecting category hierarchy
+- map layers supporting category filtering
+
+The goal is consistency, not reinvention.
+
+REQUIRED IMPLEMENTATION
+
+1. STANDARDIZE CATEGORY ATTACHMENT
+
+Ensure all discovery objects that should use taxonomy attach to categories consistently.
+
+Primary objects expected to support taxonomy include:
+
+- businesses
+- creators (via businesses)
+- events
+- job listings
+- marketplace listings
+- attractions / places if present
+
+If some object types currently lack category support, add the lightest stable connection to the existing taxonomy.
+
+Do NOT create object-specific category systems.
+
+2. SUPPORT FULL CATEGORY HIERARCHY
+
+Ensure the taxonomy supports three levels cleanly:
+
+Level 1 – main category
+Level 2 – subcategory
+Level 3 – micro-category
+
+Examples:
+
+Food
+ → Restaurant
+   → Sushi Restaurant
+
+Home Services
+ → Roofing
+   → Roof Washing
+
+Health
+ → Dentist
+   → Pediatric Dentist
+
+Micro-categories should be searchable and filterable where data exists.
+
+Do not collapse the hierarchy.
+
+3. SEARCH INTEGRATION
+
+Ensure the search engine respects taxonomy hierarchy.
+
+Examples:
+
+Search query: "roof washing"
+
+Should match:
+- category: roof washing
+- businesses classified under roof washing
+- businesses classified under roofing if relevant
+- businesses classified under home services where applicable
+
+Use taxonomy signals in ranking when available.
+
+4. FILTERING ACROSS DISCOVERY SURFACES
+
+Category filtering should work consistently across:
+
+- directory listings
+- map discovery
+- search filters
+- hub discovery pages
+- neighborhood pages
+
+Do not create different category filters for each discovery surface.
+
+They should all reference the same taxonomy.
+
+5. CATEGORY LANDING PAGES
+
+If category landing pages already exist, ensure they use the taxonomy properly.
+
+Examples:
+
+/services/roofing
+/food/restaurants
+/health/dentists
+
+These pages should show the correct objects classified under the category hierarchy.
+
+Do not generate duplicate pages outside the taxonomy.
+
+6. CREATOR CATEGORY HANDLING
+
+Creators are businesses.
+
+Ensure creator discovery respects taxonomy fields where relevant.
+
+Example:
+
+Creator category
+→ Podcast
+→ Local Influencer
+→ Photographer
+
+Do not build a second creator-only category system.
+
+Use existing taxonomy where possible.
+
+7. MAP CATEGORY FILTERS
+
+Ensure map filtering can use taxonomy.
+
+Examples:
+
+Show only:
+- restaurants
+- dentists
+- roofers
+- real estate agents
+- creators
+
+Map filters should reference taxonomy rather than separate object flags where practical.
+
+8. CITY CONTEXT SAFETY
+
+Do not leave Charlotte-specific category assumptions hardcoded.
+
+Taxonomy should work across any city.
+
+9. BILINGUAL SAFETY
+
+Categories must support bilingual display.
+
+Do not break existing English/Spanish translations.
+
+If category translations exist, preserve them.
+
+If missing, ensure the structure supports translation.
+
+10. PERFORMANCE / STABILITY
+
+Keep the taxonomy implementation lightweight.
+
+Prefer:
+
+- normalized category relationships
+- indexed category columns
+- minimal migrations
+
+Avoid introducing a heavy tagging framework.
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild the entire directory
+- introduce a tag system replacing categories
+- create multiple category trees
+- flatten category hierarchy
+- break existing business classifications
+- redesign all discovery UI
+- rebuild map/search systems
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. taxonomy is consistently used across objects
+2. category hierarchy works cleanly (L1 → L2 → L3)
+3. category filtering works across discovery surfaces
+4. search respects category hierarchy
+5. creators are handled correctly within taxonomy
+6. map filtering supports categories
+7. Charlotte-only assumptions are removed
+8. no duplicate taxonomy systems are introduced
+
+DELIVERABLE
+
+Please:
+
+1. restate the implementation plan based on the audit
+2. audit the current taxonomy structure first
+3. implement the smallest stable change set
+4. list exactly which files/components/services/routes were changed
+5. list what taxonomy improvements should wait for future prompts

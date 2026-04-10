@@ -1,0 +1,56 @@
+PROMPT — SPONSORED + FEATURED SURFACES (V1) USING EXISTING RANKING DATA (NO NEW TABLES)
+
+CONTEXT (LOCKED):
+- Ranking engine exists and returns: tier, priorityScore, badges.
+- Featured boost currently exists (+5).
+- Customer Ops exists.
+- Do not add new tables in this prompt.
+- Do not change Stripe/webhooks/entitlements.
+- Goal is to create sellable placements visually and operationally with minimal work.
+
+OBJECTIVE:
+Create clear “Featured” and “Sponsored” placement surfaces in the UI using existing data + minimal configuration, without building a new ads system.
+
+SCOPE:
+
+A) Homepage
+1) Add a “Sponsored Spotlight” row ABOVE “Featured Businesses”
+   - Display 3–6 businesses max
+   - Must favor CHAMBER/PREMIUM first (use tier + priorityScore)
+   - Show a small “Sponsored” label on the section and on each card
+   - If there are not enough eligible businesses, the section should hide gracefully
+
+2) Keep existing “Featured Businesses” below it
+
+B) Category Pages
+1) Add a “Featured in this Category” strip at top
+   - Pull top 3 by priorityScore for that category
+   - Mark as Featured (label)
+   - Must not break pagination for the main list
+
+C) Zone Pages
+1) Add “Featured in this Zone” strip at top
+   - Pull top 3 by priorityScore for that zone
+   - Mark as Featured (label)
+
+D) Operational Control (NO NEW TABLES)
+Add a temporary admin control to influence “featured boost” using existing fields already present (examples: existing featured boolean, priority_rank, or any existing admin-only field).
+- If you already have a `featured` boolean or `priority_rank`, reuse it.
+- Admin UI should allow:
+  - toggling featured (if field exists)
+  - or adjusting priority rank (if field exists)
+- This is V1 control to let you fulfill sponsor promises immediately.
+
+E) Visual Rules
+- Sponsored sections use a subtle background surface and “Sponsored” label
+- Cards remain professional; no flashy ad styling
+- Ensure mobile looks clean (horizontal scroll ok for the sponsored row)
+
+ACCEPTANCE CHECKS:
+1) Homepage shows Sponsored Spotlight only when eligible items exist.
+2) Category and Zone pages show a featured strip without breaking main list pagination.
+3) Admin can influence featured visibility using existing fields (no new schema).
+4) All pages remain responsive.
+
+DELIVERABLE:
+Add Sponsored Spotlight + Featured strips + minimal admin control using existing data/fields, no new tables.

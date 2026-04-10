@@ -1,0 +1,95 @@
+PROMPT 4 — ENTITLEMENT-DRIVEN RANKING & VISIBILITY ENGINE
+
+CONTEXT (LOCKED):
+- Same CityCoreHub project.
+- Stripe + entitlements resolver already implemented.
+- Customer Ops implemented.
+- No schema refactors.
+- No new tables unless absolutely required.
+- Must remain city-scoped.
+- Do NOT break existing search/filter endpoints.
+
+OBJECTIVE:
+Replace any boolean-based placement logic (e.g., featured=true) with entitlement-driven ranking logic.
+
+SCOPE:
+
+A) Ranking Engine
+
+Implement a reusable ranking function that:
+
+1) Accepts:
+   - business
+   - resolved entitlements (reuse existing resolver)
+   - base relevance score (if already exists)
+
+2) Applies deterministic score boosts:
+
+   Example precedence:
+   CHAMBER tier:
+     + highest boost
+     + qualifies for priority placement
+
+   PREMIUM tier:
+     + medium boost
+
+   BASIC:
+     + small boost (optional)
+
+   FREE:
+     no boost
+
+3) If you already have any:
+   - featured flag
+   - manual boost value
+
+   DO NOT remove them yet.
+   Instead:
+   - override or augment them using entitlement logic.
+
+B) Apply Ranking To:
+
+- Category listing endpoints
+- Zone listing endpoints
+- Search results
+- Any "featured" blocks on homepage
+
+C) Badge Logic
+
+1) If business has CHAMBER tier:
+   - Automatically expose chamber badge in API response.
+
+2) If business has PREMIUM tier:
+   - Expose premium badge flag.
+
+3) Remove dependency on manually stored badge booleans.
+
+D) API Response Must Include:
+
+For each business listing:
+{
+  tier,
+  priorityScore,
+  badges: {
+    chamber: boolean,
+    premium: boolean
+  }
+}
+
+E) Guardrails:
+
+- Do not change entitlements schema.
+- Do not create new entitlement types.
+- Must compute score dynamically (no cron job).
+- No breaking change to public API structure — extend it, do not shrink it.
+
+ACCEPTANCE TESTS:
+
+1) FREE business → appears with no boost.
+2) PREMIUM business → ranks above FREE in same category if otherwise equal.
+3) CHAMBER business → ranks above PREMIUM.
+4) Removing entitlement (manual DB change) immediately changes ranking.
+5) No regression in filtering or pagination.
+
+DELIVERABLE:
+Implement dynamic entitlement-based ranking + badge exposure across listing endpoints.

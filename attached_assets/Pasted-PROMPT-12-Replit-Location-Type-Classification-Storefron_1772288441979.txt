@@ -1,0 +1,211 @@
+PROMPT 12 (Replit) — Location Type Classification (Storefront vs Office vs Home-Based vs Virtual) + Outreach Method Recommendation (Walk-in / Mail / Phone / Web / Social)
+
+GOAL
+Add a robust “Location Type” classifier so the system can:
+1) Determine whether an entity likely has a physical customer-facing location (storefront) vs office vs home-based vs virtual.
+2) Recommend the best outreach method automatically (walk-in, mailer, phone, website form, social DM).
+3) Improve prospect scoring and targeting for licensees (they should never sift through hundreds).
+
+This must be metro-ready and work across all metros. It should use:
+- OSM tags (primary)
+- Address heuristics (secondary)
+- County GIS land-use/property classification (optional enrichment per metro, Charlotte first)
+- Website signals (optional; “virtual-only” clues)
+
+NON-NEGOTIABLES
+- Classification logic lives in Talent Layer (SUPER_ADMIN controlled).
+- Licensees see results only.
+- Do not require manual operator input for baseline classification.
+- Preserve provenance and confidence.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) entity_location_profile
+- id (pk)
+- metro_id
+- entity_id
+- location_type (enum: STOREFRONT|OFFICE|HOME_BASED|VIRTUAL|UNKNOWN)
+- has_physical_address (boolean default false)
+- address_quality (enum: HIGH|MED|LOW|UNKNOWN)
+- address_type_flags_json (json)         // PO_BOX, SUITE, UNIT, RESIDENTIAL_HINT, COMMERCIAL_HINT
+- land_use_code (string nullable)        // from GIS if available
+- land_use_class (enum nullable)         // COMMERCIAL|RESIDENTIAL|MIXED|INDUSTRIAL|UNKNOWN
+- osm_place_class (string nullable)      // e.g. shop, amenity, office, craft, etc.
+- confidence_score (int default 0)       // 0-100
+- computed_at (datetime)
+Unique: (entity_id)
+
+2) entity_outreach_recommendation
+- id (pk)
+- metro_id
+- entity_id
+- recommended_method (enum: WALK_IN|MAILER|PHONE_FIRST|WEBSITE_FORM|SOCIAL_DM|EMAIL|UNKNOWN)
+- method_rank_json (json)                // ordered list with scores
+- reasons_json (json)
+- computed_at (datetime)
+Unique: (entity_id)
+
+--------------------------------------------------
+PART B — INPUTS WE ALREADY HAVE
+--------------------------------------------------
+
+From entities:
+- address fields, zip, lat/lng, phone, website
+
+From OSM seed payload (store in entity_source_raw or in entities.categories_json):
+- tags including:
+  shop=*, amenity=*, office=*, craft=*, tourism=*, healthcare=*, building=*, landuse=*
+
+From website crawl (entity_contact_verification):
+- detected_address, contact form, email, social links
+- schema.org LocalBusiness with address/geo
+- cues like “We come to you” / “remote” / “online” (optional heuristic)
+
+From GIS (optional per metro):
+- parcel land use / property classification (Charlotte/Mecklenburg first)
+- join by lat/lng proximity or address match where possible
+
+--------------------------------------------------
+PART C — CLASSIFIER IMPLEMENTATION
+--------------------------------------------------
+
+Create:
+ /server/intelligence/classify/locationClassifier.ts
+
+Outputs:
+- entity_location_profile
+
+Rules (priority order):
+
+1) HARD SIGNALS (OSM TAGS)
+- If shop=* or amenity in {restaurant,cafe,bar,fast_food,pharmacy,bank,clinic,school,library,marketplace} -> STOREFRONT (confidence 85)
+- If office=* and NOT shop/restaurant -> OFFICE (confidence 75)
+- If tourism=attraction/museum/zoo etc -> STOREFRONT (public-facing) (confidence 75)
+
+2) ADDRESS HEURISTICS
+- If address missing -> has_physical_address=false, location_type=VIRTUAL or UNKNOWN (depends on other signals)
+- Detect PO BOX: "PO Box", "P.O. Box", "Post Office Box" -> HOME_BASED or VIRTUAL (confidence 70), has_physical_address=false for walk-in
+- Detect suite/unit: "Ste", "Suite", "#", "Unit" -> COMMERCIAL_HINT (+)
+- Detect residential hints:
+  - address contains “Apt”, “Apartment”, “Lot”, “Trailer”, “Mobile Home”, “Room” -> RESIDENTIAL_HINT
+  - if RESIDENTIAL_HINT + no storefront tags -> HOME_BASED (confidence 65)
+
+3) GIS LAND USE (if available)
+- If land_use_class=COMMERCIAL -> STOREFRONT or OFFICE depending on OSM category
+- If land_use_class=RESIDENTIAL and no storefront tags -> HOME_BASED
+- If MIXED -> STOREFRONT or OFFICE depending on OSM tags
+
+4) WEBSITE CUES (optional lightweight NLP)
+- If website contains phrases:
+  - “virtual”, “online only”, “remote services”, “we come to you”, “mobile service”
+  -> VIRTUAL or HOME_BASED with medium confidence (50-70) depending on address presence
+
+Confidence scoring:
+- Start from strongest signal used.
+- Add +10 if multiple sources agree (OSM + crawl + GIS).
+- Cap at 100.
+
+Store flags in address_type_flags_json.
+
+--------------------------------------------------
+PART D — OUTREACH METHOD RECOMMENDER
+--------------------------------------------------
+
+Create:
+ /server/intelligence/classify/outreachRecommender.ts
+
+Inputs:
+- entity_location_profile
+- entity_contact_verification (phone/email/contact form/social)
+- entities (phone, website)
+Outputs:
+- entity_outreach_recommendation
+
+Rank methods (score each 0-100):
+- WALK_IN:
+  requires location_type=STOREFRONT and has_physical_address=true
+- MAILER:
+  requires has_physical_address=true and address_quality != LOW and NOT PO_BOX
+- PHONE_FIRST:
+  requires has_phone=true
+- WEBSITE_FORM:
+  requires detected_contact_form_url OR website exists and crawl succeeded
+- EMAIL:
+  requires detected_email present (business email only)
+- SOCIAL_DM:
+  requires social links
+
+Default ranking logic (example):
+- If STOREFRONT: WALK_IN 90, PHONE_FIRST 80, MAILER 70, WEBSITE_FORM 60, SOCIAL 50
+- If OFFICE: PHONE_FIRST 85, MAILER 75, WEBSITE_FORM 70, EMAIL 70
+- If HOME_BASED: PHONE_FIRST 80, WEBSITE_FORM 75, EMAIL 70, SOCIAL 65, MAILER 40
+- If VIRTUAL: WEBSITE_FORM 85, EMAIL 80, SOCIAL 70, PHONE_FIRST 60, MAILER 0, WALK_IN 0
+
+Set recommended_method = highest score > 0.
+
+Reasons_json examples:
+- "storefront_detected_via_osm_shop"
+- "po_box_detected"
+- "contact_form_found"
+- "phone_available"
+
+--------------------------------------------------
+PART E — SCORING INTEGRATION
+--------------------------------------------------
+
+Update prospect scoring (from prior prompt):
+- Add +15 if recommended_method in {WALK_IN, PHONE_FIRST, MAILER}
+- Add +10 if STOREFRONT or OFFICE
+- Deduct -20 if VIRTUAL and no phone and no form/email
+
+Update bucket logic accordingly.
+
+--------------------------------------------------
+PART F — GIS ENRICHMENT (Charlotte first, optional)
+--------------------------------------------------
+
+If Mecklenburg ArcGIS parcel layer is configured:
+- Build a join:
+  - Given entity lat/lng, find nearest parcel polygon within X meters
+  - Pull land_use_code/class
+- Store into entity_location_profile.land_use_code/class
+
+Make this modular per metro:
+- A metro_source of type ARCGIS can be flagged params_json.role="PARCEL_LANDUSE"
+- Only SUPER_ADMIN can configure.
+
+--------------------------------------------------
+PART G — OPERATOR UI UPDATES
+--------------------------------------------------
+
+In operator TARGET list:
+Show columns:
+- Location Type (Storefront/Office/Home/Virt)
+- Recommended Outreach (Walk-in/Mailer/Phone/Web/Social)
+- Contact flags (icons)
+Filters:
+- Location Type = Storefront
+- Recommended = Walk-in
+- Recommended = Mailer
+- Recommended = Phone-first
+- Exclude Virtual
+
+This is the “targeted list” so they never sift.
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------
+
+1) Entities get location_type with confidence score.
+2) Outreach recommendations computed and stored.
+3) Operator can filter by recommended outreach method and location type.
+4) Charlotte GIS enrichment improves accuracy when available but system still works without it.
+
+DELIVERABLES
+- migrations: entity_location_profile, entity_outreach_recommendation
+- locationClassifier.ts + outreachRecommender.ts
+- scoring integration updates
+- operator UI updates (filters + display)
+- optional Mecklenburg parcel join job (guarded by config)

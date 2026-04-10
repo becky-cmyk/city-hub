@@ -1,0 +1,100 @@
+PROMPT ADD-ON — Places Import Area Selection (Charlotte Region + ZIP Code Search)
+
+AUTHORITY
+Implement as an extension to the Places Importer. No deletions.
+
+GOAL
+Add robust area selection for Places imports using:
+- ZIP code (primary)
+- Manual lat/lng + radius (backup)
+- Charlotte default area (small batch)
+Do NOT require zones/neighborhood lat/lng.
+
+--------------------------------------------
+1) DATABASE — ZIP GEO LOOKUP
+--------------------------------------------
+
+Create table zip_geos:
+- zip (PK, text)
+- city text
+- state text
+- lat double precision
+- lng double precision
+- radius_meters int default 3500
+- bbox_json json nullable  (optional)
+- created_at
+
+Seed strategy:
+- Add an admin CSV import tool to load zip_geos for NC (or at least Charlotte metro zips).
+- Minimum required columns in CSV: zip, city, state, lat, lng
+- If radius not provided, default 3500m.
+
+--------------------------------------------
+2) PLACES IMPORT UI — AREA MODES
+--------------------------------------------
+
+In “Places Import” screen add Area Mode selector:
+
+Area Mode:
+A) ZIP Code (default)
+- input: zip
+- on submit: lookup zip_geos
+- if not found: show error “ZIP not in zip_geos. Import ZIP dataset first.”
+
+B) Manual Center
+- inputs: lat, lng, radius_meters
+
+C) Charlotte Default
+- no inputs; uses server constants:
+  - CLT_CENTER_LAT, CLT_CENTER_LNG, CLT_DEFAULT_RADIUS_METERS
+Add env defaults:
+- CLT_CENTER_LAT=35.2271
+- CLT_CENTER_LNG=-80.8431
+- CLT_DEFAULT_RADIUS_METERS=6000
+
+--------------------------------------------
+3) JOB STORAGE UPDATES
+--------------------------------------------
+
+Update place_import_jobs to store:
+- area_mode enum: "zip" | "manual" | "clt_default"
+- zip_code nullable
+- center_lat, center_lng, radius_meters nullable
+- resolved_area_label text (e.g., “ZIP 28203”, “Manual 35.22,-80.84 r=5000”, “Charlotte default”)
+
+--------------------------------------------
+4) SEARCH EXECUTION RULES
+--------------------------------------------
+
+For discovery, use Nearby Search (or Text Search if already built) but ensure:
+
+- If area_mode="zip":
+  - center = zip_geos.lat/lng
+  - radius = zip_geos.radius_meters (or admin override)
+- If manual:
+  - use provided center + radius
+- If clt_default:
+  - use CLT defaults
+
+Dedup by place_id as already specified.
+
+--------------------------------------------
+5) ADMIN “ZIP GEO” TOOLING
+--------------------------------------------
+
+Add Admin page “ZIP Geos”
+- Upload CSV -> upsert zip_geos
+- Search zip_geos
+- Show coverage count
+
+--------------------------------------------
+6) ACCEPTANCE CHECKLIST
+--------------------------------------------
+
+- Admin can import ZIP geos via CSV.
+- Places Import can run for a ZIP code using zip_geos center/radius.
+- Manual center works.
+- Charlotte default works for small batches.
+- No dependency on neighborhood/zone lat/lng.
+
+IMPLEMENT NOW.

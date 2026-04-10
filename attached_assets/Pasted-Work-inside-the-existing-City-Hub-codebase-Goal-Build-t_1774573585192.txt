@@ -1,0 +1,281 @@
+Work inside the existing City Hub codebase.
+
+Goal:
+Build the AI-assisted classification and geo/entity assignment layer on top of the new RSS/imported-content routing foundation that is already in place.
+
+Important:
+Do NOT undo or flatten the multi-layer routing structure that was just built.
+Do NOT replace final fields with one generic AI tag.
+Do NOT create a separate AI-only content path.
+
+This task should use the new routing foundation and populate it intelligently.
+
+--------------------------------------------------
+CRITICAL GUARDRAIL — AI MUST NOT FLATTEN THE SYSTEM
+--------------------------------------------------
+
+The platform requires multi-layer routing.
+
+AI must support and enrich:
+- contentType
+- categoryCoreSlug
+- categorySubSlug
+- geoPrimarySlug
+- geoSecondarySlug
+- hubSlug
+- countySlug
+- venueName / venueSlug / venueAddress
+- related entity detection where possible
+- policyStatus
+- processingStage
+
+Do NOT reduce this to:
+- one category
+- one location
+- one generic label
+- one “news” bucket
+
+AI is an assistive routing layer, not a simplification layer.
+
+--------------------------------------------------
+TASK PURPOSE
+--------------------------------------------------
+
+Use AI to classify and enrich inbound content before final distribution.
+
+This should apply to ALL inbound content types that fit the funnel, including:
+- RSS/imported stories
+- contributor-submitted content
+- uploaded content where applicable
+- manual/admin-created imported content if supported
+- future capture-based content if already wired into intake
+
+For this task, prioritize RSS/imported content first, but architect the classification service so other inbound content types can use the same service.
+
+--------------------------------------------------
+PART 1 — BUILD A SHARED AI CLASSIFICATION SERVICE
+--------------------------------------------------
+
+Create or refactor a shared AI-assisted content classification service/module.
+
+This service should accept inbound content and return structured suggestions for:
+- suggestedContentType
+- suggestedCategoryCoreSlug
+- suggestedCategorySubSlug
+- suggestedGeoPrimarySlug
+- suggestedGeoSecondarySlug
+- suggestedHubSlug
+- suggestedCountySlug
+- suggestedVenueName
+- suggestedVenueAddress
+- suggestedRelatedEntityName
+- suggestedPolicyStatus
+- confidence scores for major suggestions
+- reasoning/debug metadata if practical
+
+Do not make this a UI tool only.
+Make it a reusable service that the ingestion pipeline can call.
+
+--------------------------------------------------
+PART 2 — PRIORITIZE GEO PRECISION
+--------------------------------------------------
+
+Geo precision is more important than perfect category precision.
+
+The AI classification logic should prioritize detecting:
+1. exact venue/location if possible
+2. hub / micro-hub if resolvable
+3. county
+4. metro fallback
+
+AI should look for location clues in:
+- title
+- summary
+- body/article text
+- source/domain patterns
+- venue names
+- known place/business/org names
+- existing zone/location tags if already present
+
+Rules:
+- never leave geo empty if broader geography can be inferred
+- preserve primary vs secondary geography
+- if an article is about Gaston County but still relevant to the Charlotte metro, set:
+  - primary = Gaston County
+  - secondary = Charlotte metro
+- do not collapse multi-geo relevance into one flat field
+
+--------------------------------------------------
+PART 3 — CATEGORY CLASSIFICATION
+--------------------------------------------------
+
+AI should classify content into:
+- categoryCoreSlug
+- categorySubSlug
+
+Use the existing taxonomy and hierarchical category system that was just added.
+
+Rules:
+- if a subcategory is confidently matched, derive the correct core category as well
+- do not assign only a subcategory without a core
+- do not over-generic everything into “news”
+- preserve future micro-category readiness
+- if confidence is weak, assign the best core category and leave subcategory null rather than forcing a bad match
+
+Examples:
+- restaurant opening → core: food-dining, sub: restaurants
+- brewery event → core: food-dining, sub: breweries or events depending on dominant intent
+- high school football recap → core: sports, sub: local sports or high-school sports if taxonomy supports it
+- city permit / rezoning / road closure → core: government-civic or community, not generic news
+
+--------------------------------------------------
+PART 4 — CONTENT TYPE DETECTION
+--------------------------------------------------
+
+AI should help distinguish whether inbound content is best treated as:
+- story
+- event
+- job
+- marketplace
+- business update
+- community update
+
+For this phase:
+- do NOT migrate records into other tables
+- do NOT duplicate into events/jobs tables
+- do detect the intended content type and write it to routing metadata
+
+This prepares future cross-engine promotion without duplicating records now.
+
+--------------------------------------------------
+PART 5 — ENTITY / VENUE DETECTION
+--------------------------------------------------
+
+Add AI-assisted detection for:
+- venue
+- business
+- organization
+- person/entity if strongly identifiable
+
+At minimum support:
+- venueName
+- venueAddress if inferable
+- related entity name
+- possible slug match candidate if such lookups already exist safely in code
+
+Do not overfit weak entity guesses.
+If confidence is low, leave entity linkage unresolved rather than inventing bad matches.
+
+--------------------------------------------------
+PART 6 — POLICY CLASSIFICATION
+--------------------------------------------------
+
+Use AI to support policy routing on inbound/imported content.
+
+At minimum classify into:
+- ALLOW
+- REVIEW_NEEDED
+- SUPPRESS
+
+Policy should help catch content that does not fit the platform’s local discovery role, including:
+- crime
+- violence
+- partisan politics
+- non-local generic filler
+- low-value clutter
+
+Rules:
+- do not hard-delete suppressed content
+- write policyStatus
+- if policy confidence is weak, route to REVIEW_NEEDED rather than blindly ALLOW
+
+--------------------------------------------------
+PART 7 — CONFIDENCE-AWARE WRITEBACK
+--------------------------------------------------
+
+AI suggestions should not blindly overwrite final editorial values in all cases.
+
+Implement a confidence-aware writeback pattern.
+
+Suggested behavior:
+- if confidence is strong and field is empty, populate final routing fields
+- if confidence is weak or ambiguous, populate review-needed state or store suggestion metadata
+- if final editorial fields are already manually set, do not casually overwrite them
+
+At minimum, protect manual/admin corrections from being stomped by later AI runs.
+
+If needed, store:
+- aiSuggestedCategoryCoreSlug
+- aiSuggestedCategorySubSlug
+- aiSuggestedGeoPrimarySlug
+- aiSuggestedGeoSecondarySlug
+- aiSuggestedPolicyStatus
+- aiConfidenceSummary
+
+This is acceptable if it helps preserve editorial control.
+
+--------------------------------------------------
+PART 8 — PIPELINE INTEGRATION
+--------------------------------------------------
+
+Wire the AI classification service into the existing inbound content flow after the new routing foundation.
+
+Desired order:
+ingest
+→ normalize
+→ AI classification/enrichment
+→ routing fields update
+→ publish/review decision support
+
+Integrate this for:
+- real-time RSS ingestion
+- batch/backfill processing where appropriate
+
+Do not break existing ingestion.
+
+--------------------------------------------------
+PART 9 — REVIEW SUPPORT, NOT FULL UI YET
+--------------------------------------------------
+
+Do NOT build the full editorial panel in this task.
+
+But do make sure the AI layer supports future admin review by exposing:
+- suggested values
+- final written values
+- confidence signals
+- review-needed triggers
+
+This task should prepare Prompt 3, where admin can override/edit/unpublish.
+
+--------------------------------------------------
+PART 10 — SAFETY / GUARDRAILS
+--------------------------------------------------
+
+Do NOT:
+- flatten category + geo
+- replace hierarchical routing with one AI label
+- overwrite manual edits blindly
+- move RSS items into duplicate native tables
+- build a separate AI content system
+- rebuild Pulse or all surfaces
+
+Do:
+- preserve the routing foundation from Task A
+- use AI to enrich all inbound content types through one reusable service
+- keep geo multi-layered
+- keep categories multi-layered
+- keep AI assistive, not absolute
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary of changes
+2. what AI service/module was added or refactored
+3. what inbound content types now use it
+4. how category suggestions work
+5. how geo suggestions work
+6. how policy suggestions work
+7. how confidence affects writeback
+8. what remains for Prompt 3 (editorial/admin override layer)

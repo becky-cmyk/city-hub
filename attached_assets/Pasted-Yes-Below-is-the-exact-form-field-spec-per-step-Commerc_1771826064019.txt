@@ -1,0 +1,343 @@
+Yes. Below is the **exact form/field spec per step** (Commerce + Organization + Supporter). This is copy-ready for building.
+
+---
+
+## STEP 0 — Entry
+
+**Page:** `/activate`
+**Goal:** Route + create draft record.
+
+### Fields
+
+1. **Presence Type** *(required, radio)*
+
+* Community Organization
+* Commerce Presence
+
+2. **Neighborhood footprint** *(required, radio)*
+
+* 1 location
+* 2–5 locations
+* 6+ locations (Regional)
+
+### System actions
+
+* Create **draft presence** record immediately after Presence Type selection:
+
+  * `presenceType` = ORG | COMMERCE
+  * `status` = DRAFT
+  * `needsVerification` = true
+* If 6+ chosen → route to Regional handoff form (Step R)
+
+---
+
+## STEP 1A — Commerce Basics
+
+**Goal:** “Confirm what we have” feel, minimum friction.
+
+### Fields (required unless marked optional)
+
+* **Commerce Name** *(required)*
+* **Primary Neighborhood** *(required; dropdown/search)*
+* **Public Phone** *(required)*
+* **Public Email** *(required)*
+* **Website URL** *(optional)*
+* **Google Profile URL** *(optional)*
+* **Primary Category (L2)** *(required; dropdown)*
+* **Short Description** *(optional; 280 chars)*
+
+### System
+
+* Save to draft
+* Determine `emailDomainType` = businessDomain | freeProvider
+* If website provided, set `websiteDomain`
+* If email domain matches website domain, set `domainMatched=true`
+
+---
+
+## STEP 1B — Organization Basics
+
+### Fields
+
+* **Organization Name** *(required)*
+* **Primary Neighborhood** *(required)*
+* **Public Phone** *(required)*
+* **Public Email** *(required)*
+* **Website URL** *(optional)*
+* **Mission / Public-Facing Programs** *(required; 2–3 sentences)*
+* **Organization Type (L2)** *(required; dropdown)*
+
+  * Community Organizations
+  * Senior Services
+  * Youth Programs
+  * Civic & Advocacy
+  * Faith-Based Services (service programs) *(only if service-focused)*
+
+### Leadership contacts
+
+1. **Executive Director / Lead Contact** *(required)*
+
+* Full Name
+* Title
+* Direct Phone
+* Direct Email
+
+2. **Board Chair / Governance Contact** *(optional but shown)*
+
+* Full Name
+* Direct Phone
+* Direct Email
+
+---
+
+## STEP 2 — Contact Verification Method
+
+**Goal:** Complete at least one verification method.
+
+### UI choice (required)
+
+* **Verify by Email**
+* **Verify by SMS**
+
+### Email verification fields
+
+* Email (prefilled, editable)
+* “Send Code” button
+* Code input (6 digits)
+
+### SMS verification fields
+
+* Phone (prefilled, editable)
+* “Send Code” button
+* Code input (6 digits)
+
+### Rules
+
+* Must complete **Email OR SMS** (or both)
+* If `freeProvider email` and no SMS verified yet → show nudge copy (not blocking)
+
+### Stored fields
+
+* `emailVerifiedAt` (nullable)
+* `phoneVerifiedAt` (nullable)
+* `verificationMethodUsed` = EMAIL | SMS | BOTH
+
+---
+
+## STEP 3 — $1 Verification Payment (Stripe)
+
+**Goal:** Spam protection + authority activation.
+
+### Fields
+
+None (Stripe Checkout)
+
+### Stored fields (on webhook success)
+
+* `isVerified = true`
+* `verifiedAt`
+* `stripeVerificationPaymentIntentId`
+* `stripeVerificationSessionId`
+
+### Completion rule
+
+Step 3 completes only if:
+
+* $1 paid **AND**
+* (emailVerifiedAt OR phoneVerifiedAt) exists
+
+---
+
+## STEP 4 — Post-Verification Routing
+
+### Commerce path
+
+**Screen:** “Your Commerce Presence is Verified”
+
+Buttons:
+
+* **Open Charter Commerce Hub**
+* **Expand to Enhanced Commerce Hub**
+* **Not now — keep Verified Presence**
+
+### Organization path
+
+**Screen:** “Your Organization Presence is Verified”
+
+Actions:
+
+* Auto-activate **Charter Organization Hub (Gift)**
+
+Buttons:
+
+* **Invite Community Supporters**
+* **Not now**
+
+---
+
+## STEP 5A — Commerce Hub Level Selection (Annual)
+
+**Goal:** Choose Charter or Enhanced.
+
+### Fields
+
+* **Hub Level** *(required)*
+
+  * Charter Commerce Hub
+  * Enhanced Commerce Hub
+
+### Optional (can be deferred to back office)
+
+* Upload logo
+* Add socials
+* Add gallery
+
+---
+
+## STEP 5B — Neighborhood Locations (Commerce)
+
+**Goal:** Create brand hub + sub-locations. Max 5 self-serve.
+
+### Fields
+
+* **Number of locations** *(required; 1–5)*
+
+Then repeatable **Location Cards** (1..N):
+
+* Location Name *(optional; defaults to Commerce Name + area)*
+* Address *(required)*
+* Neighborhood *(required; dropdown/search)*
+* Phone *(required)*
+* Hours *(optional)*
+* Location Email *(optional)*
+
+### System
+
+* 1 included location (Verified/Charter) / 2 included (Enhanced)
+* Additional locations billed as add-on quantity
+* Save `locationCount`
+* Create location records under parent brand hub
+
+---
+
+## STEP 6 — Stripe Annual Checkout (Commerce)
+
+**Goal:** Pay annual + location add-ons.
+
+### Line items
+
+* Charter annual OR Enhanced annual
+* * Additional location add-on quantity (if applicable)
+
+### Stored fields (webhook success)
+
+* `tier = CHARTER | ENHANCED`
+* `subscriptionId`
+* `priceIdUsed`
+* `status = ACTIVE`
+* `gracePeriodEndsAt` (per your existing logic)
+
+---
+
+# ORGANIZATION SUPPORTER FLOW (Invite Link)
+
+## Step S0 — Supporter Entry
+
+**Route:** `/support/:inviteToken`
+
+Fields:
+
+* Confirm organization name (read-only)
+* “Continue” button
+
+---
+
+## Step S1 — Supporter Identity
+
+Fields:
+
+* Full Name *(required)*
+* Phone *(required)*
+* Email *(required)*
+* Primary Neighborhood *(required)*
+
+Then:
+
+* Email/SMS verification (same Step 2 rules)
+* $1 verification (same Step 3)
+
+---
+
+## Step S2 — Supporter Commerce Hub Activation (Required)
+
+Fields:
+
+* Commerce Name *(required)* (can be “Name / Brand”)
+* Primary Category L2 *(required)*
+* Choose **Charter Commerce Hub** *(forced $99 for invited supporters)*
+
+Optional:
+
+* Website
+* Google profile
+
+---
+
+## Step S3 — Support the Organization (Required)
+
+Fields:
+None, Stripe annual item $199
+
+### Line items in one checkout (recommended)
+
+* Charter $99 (supporter)
+* Org Supporter Recognition $199
+
+---
+
+## Step S4 — Post-Checkout Outcomes
+
+System actions:
+
+* Supporter gets **Enhanced Commerce Hub (Gift)** while support active
+* Organization supporter count recalculated
+* If org supporters >= 3 → org gets **Enhanced (Gift)**
+
+---
+
+## Supporter reassignment (30-day)
+
+If supporter cancels org support:
+
+* Show: “Choose another organization to support to keep Enhanced”
+* List orgs or allow search
+* If reassigned within 30 days → keep Enhanced uninterrupted
+* Else → revert to Charter
+
+---
+
+# Regional Handoff (6+)
+
+**Step R — Regional Presence Request**
+
+Fields:
+
+* Name
+* Phone
+* Email
+* Commerce/Org name
+* Number of locations
+* Notes
+* Preferred contact method
+
+System:
+
+* Creates lead record for you
+* Does NOT allow checkout
+
+---
+
+If you want, I can now convert this into:
+
+1. a **UI stepper checklist** for the builder, and
+2. a **database field checklist** to ensure nothing is missed.

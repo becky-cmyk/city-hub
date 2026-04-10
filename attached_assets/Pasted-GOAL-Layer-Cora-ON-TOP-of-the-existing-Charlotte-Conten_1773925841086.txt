@@ -1,0 +1,240 @@
+GOAL:
+Layer Cora ON TOP of the existing Charlotte Content Engine and current app.
+DO NOT rebuild or replace the marketing engine.
+DO NOT break existing Charlotte functionality.
+
+This prompt adds:
+1) Cora Hats system
+2) Cora Chat + Admin Memory (knowledge, questions, suggestions)
+3) Scope-aware content (platform + metro)
+4) Cora → Charlotte Content Engine bridge
+5) Approval enforcement (no auto actions)
+
+--------------------------------------------------
+PART 1 — EXTEND EXISTING CONTENT STRUCTURE (NO DUPLICATION)
+--------------------------------------------------
+
+Locate existing deliverables / content tables.
+
+ADD FIELDS ONLY IF NOT PRESENT:
+
+- scope (enum: "platform", "metro") DEFAULT "metro"
+- metro_id (nullable)
+- persona_name (string: "charlotte", "cora")
+- generated_by (string: "charlotte", "cora")
+- approval_status (enum: "draft", "approved", "queued", "published") DEFAULT "draft"
+
+DO NOT create new parallel tables if these already exist.
+
+--------------------------------------------------
+PART 2 — CREATE CORA MEMORY TABLES (ADMIN WEDGE)
+--------------------------------------------------
+
+CREATE TABLE cora_knowledge:
+- id (uuid)
+- category (string)
+- key (string)
+- value (text)
+- confidence_level (enum: low, medium, high)
+- source (string: manual, inferred, system)
+- needs_review (boolean)
+- created_at
+- updated_at
+
+CREATE TABLE cora_questions:
+- id (uuid)
+- question (text)
+- context (string)
+- priority (enum: low, medium, high)
+- status (enum: pending, answered, ignored)
+- created_at
+
+CREATE TABLE cora_suggestions:
+- id (uuid)
+- suggestion (text)
+- context (string)
+- impact_level (string)
+- approved (boolean)
+- executed (boolean)
+- created_at
+
+--------------------------------------------------
+PART 3 — CREATE CORA HATS SYSTEM
+--------------------------------------------------
+
+Create file: cora_hats.ts
+
+Define Hats:
+- admin
+- cmo
+- cfo
+- cto
+- builder
+- debugger
+- operator
+- editor
+
+Create helper:
+resolveHat(inputText)
+
+Basic logic:
+- marketing/content → cmo/editor
+- pricing/revenue → cfo
+- system/build → cto/builder
+- errors/issues → debugger
+- default → admin
+
+Return:
+{
+  hat: "editor",
+  confidence: "medium"
+}
+
+--------------------------------------------------
+PART 4 — ENFORCE CORA BEHAVIOR RULES
+--------------------------------------------------
+
+Create shared rule layer:
+
+- Cora MUST:
+  - declare active hat in response
+  - suggest, not execute
+  - ask for approval before actions
+
+- Cora MUST NOT:
+  - publish content
+  - modify system state
+  - trigger external APIs
+
+--------------------------------------------------
+PART 5 — CREATE CORA CONTENT BRIDGE (KEY PIECE)
+--------------------------------------------------
+
+Create file: cora_content_bridge.ts
+
+Function:
+
+generateContentWithCora({
+  sourceId,
+  scope,
+  metroId,
+  persona
+})
+
+Behavior:
+
+1. determine persona:
+   if persona === "cora":
+     use platform/operator tone
+   if persona === "charlotte":
+     use existing Charlotte logic
+
+2. call EXISTING Charlotte Content Engine functions
+   DO NOT duplicate logic
+
+3. attach metadata:
+   - scope
+   - metro_id
+   - persona_name
+   - generated_by = persona
+   - approval_status = "draft"
+
+4. return deliverables
+
+--------------------------------------------------
+PART 6 — CREATE CORA CORE SERVICE
+--------------------------------------------------
+
+Create file: cora_service.ts
+
+Main function:
+
+handleCoraRequest({
+  userInput,
+  context (platform or metro),
+  metroId
+})
+
+Steps:
+
+1. resolve hat
+2. interpret intent
+3. if content request:
+   → call cora_content_bridge
+4. if question / missing data:
+   → log in cora_questions
+5. if suggestion:
+   → log in cora_suggestions
+6. return structured response:
+
+{
+  hat,
+  message,
+  suggestions,
+  requiresApproval: true/false
+}
+
+--------------------------------------------------
+PART 7 — ADD TEST ENDPOINTS
+--------------------------------------------------
+
+POST /cora/test
+body:
+{
+  "input": "Create 3 posts for Charlotte",
+  "scope": "metro",
+  "metroId": "clt"
+}
+
+POST /cora/test/platform
+body:
+{
+  "input": "Create a platform announcement post"
+}
+
+--------------------------------------------------
+PART 8 — APPROVAL GUARDRAIL (CRITICAL)
+--------------------------------------------------
+
+Ensure:
+
+- all generated content → status = "draft"
+- no auto-approval
+- no auto-queue
+- no auto-publish
+
+--------------------------------------------------
+PART 9 — DO NOT TOUCH EXISTING SYSTEMS
+--------------------------------------------------
+
+DO NOT:
+- rewrite Charlotte prompts
+- replace content engine
+- change UI yet
+- add social integrations
+- create new marketing tables if existing ones work
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+- Cora can receive a request
+- Hat is identified and returned
+- Content can be generated through EXISTING engine
+- Content is tagged with:
+  - persona (cora/charlotte)
+  - scope (platform/metro)
+- Content is saved as draft
+- No publishing occurs automatically
+- Questions and suggestions are logged
+
+--------------------------------------------------
+OUTPUT AFTER BUILD
+--------------------------------------------------
+
+Provide summary:
+1. which tables were extended
+2. which new tables were created
+3. where cora_content_bridge lives
+4. how existing content engine was reused
+5. confirmation no existing flows were broken

@@ -1,0 +1,230 @@
+PROMPT 6 (Replit) — Build “Request Your Intelligence Report” (Business + Multifamily) as a Metro-ready leverage funnel + start collecting per-listing intelligence for ALL listings
+
+GOAL
+Create a metro-ready, reusable “Request Your Intelligence Report” funnel (Option B) that works across all metros and for both:
+1) Businesses (listings)
+2) Multifamily / Apartment communities (properties)
+
+This is NOT a public dashboard. It is a lead-capture + leverage funnel:
+- We silently collect intelligence for every listing/property.
+- The front-end shows a CTA: “Request Your Intelligence Report”
+- Submitting the request creates an internal lead + triggers an automated email (or CRM handoff) and a private report placeholder page (not filled yet).
+
+This must be multi-tenant by metro_id and reusable across all future metros.
+
+NON-NEGOTIABLES
+- Collect intelligence events for ALL listings/properties (claimed or not).
+- Do not expose deep analytics publicly.
+- No manual operations required to function (requests routed into CRM/email automatically).
+- No scraping. No paid data feeds. Use our own logs + open data where available.
+- Respect privacy: no raw user PII stored in intelligence logs; only anonymized event logs.
+- Requests DO capture contact info (business user) into lead tables.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) intelligence_event_log  (unified per-entity behavioral ledger)
+- id (pk)
+- metro_id (fk)
+- entity_type (enum: "BUSINESS" | "MULTIFAMILY")
+- entity_id (string)                  // listingId or propertyId
+- event_type (enum)
+- zip_origin (string nullable)        // derived from user selected zip OR geo/IP if already available
+- language (enum: "en" | "es" nullable)
+- referrer (string nullable)
+- metadata_json (json nullable)       // optional: queryText, categoryId, etc.
+- created_at
+
+Event types include:
+- PROFILE_VIEW
+- WEBSITE_CLICK
+- CALL_CLICK
+- DIRECTIONS_CLICK
+- SAVE
+- LEAD_START
+- LEAD_SUBMIT
+- LEAD_ABANDON
+- DECISION_FACTOR
+- RSS_CLICK (optional if used as seed content)
+- SEARCH_RESULT_CLICK
+
+2) intelligence_report_requests  (the leverage funnel)
+- id (pk)
+- metro_id (fk)
+- entity_type (enum: "BUSINESS" | "MULTIFAMILY")
+- entity_id (string)
+- requester_name (string)
+- requester_email (string)
+- requester_phone (string nullable)
+- requester_role (enum: "OWNER" | "MANAGER" | "MARKETER" | "LEASING" | "VENDOR" | "OTHER")
+- preferred_language (enum: "en" | "es")
+- request_reason (enum: "GROW_SALES" | "GET_MORE_LEADS" | "UNDERSTAND_CUSTOMERS" | "LEASE_UP" | "NEW_OPENING" | "OTHER")
+- consent_to_contact (boolean default true)
+- status (enum: "NEW" | "IN_REVIEW" | "SENT" | "DECLINED" | "NEEDS_INFO" default "NEW")
+- notes (text nullable)
+- created_at, updated_at
+
+3) intelligence_report_tokens  (private access link tokens)
+- id (pk)
+- request_id (fk)
+- token (string unique)
+- expires_at (datetime nullable)       // optional
+- created_at
+
+4) intelligence_report_snapshots  (placeholder report content store; fill later)
+- id (pk)
+- request_id (fk)
+- metro_id
+- entity_type
+- entity_id
+- report_json (json nullable)          // later: computed summary
+- created_at, updated_at
+
+--------------------------------------------------
+PART B — EVENT COLLECTION (Start now)
+--------------------------------------------------
+
+Implement server endpoints to log events (fast, non-blocking):
+
+POST /api/intelligence/log
+Body:
+{
+  metroId,
+  entityType,      // BUSINESS or MULTIFAMILY
+  entityId,
+  eventType,
+  zipOrigin?,      // optional; derive if possible
+  language?,
+  referrer?,
+  metadata?
+}
+
+Integrate calls to this endpoint in the UI:
+- On business listing page load -> PROFILE_VIEW
+- On property page load -> PROFILE_VIEW
+- On click-to-call -> CALL_CLICK
+- On click-to-site -> WEBSITE_CLICK
+- On directions -> DIRECTIONS_CLICK
+- On save -> SAVE
+- On lead form open -> LEAD_START
+- On lead submission -> LEAD_SUBMIT
+- On lead abandon flow -> LEAD_ABANDON
+- On micro-pulse decision factor submit -> DECISION_FACTOR (metadata includes factor)
+
+NOTE: If existing analytics/event logging exists, reuse and extend.
+
+--------------------------------------------------
+PART C — “REQUEST YOUR INTELLIGENCE REPORT” FUNNEL (Option B)
+--------------------------------------------------
+
+1) Front-end CTA component:
+Add a CTA block on:
+- Business listing pages
+- Multifamily/property pages
+
+Text (simple):
+“Request Your Intelligence Report”
+Subtext:
+“Get a private snapshot of where interest is coming from and what matters most to people choosing you.”
+
+Button opens a modal form.
+
+2) Request form fields:
+- Name
+- Email
+- Phone (optional)
+- Role dropdown
+- Preferred language (default to current UI language)
+- Reason dropdown (pre-filled by entity_type)
+- Checkbox consent (default on)
+
+3) Submit endpoint:
+POST /api/intelligence/request-report
+Creates:
+- intelligence_report_requests (status NEW)
+- intelligence_report_tokens (generate token)
+- intelligence_report_snapshots (empty placeholder)
+
+Then:
+- Trigger notification email to internal ops address and/or push to CRM webhook
+- Send confirmation email to requester with a private link:
+  /intelligence/report/<token>
+
+4) Private report page (placeholder for now):
+Route:
+GET /intelligence/report/:token
+
+Display:
+- “Your report is being prepared.”
+- “We’ll email you when it’s ready.”
+- Optional: show 2–3 teaser stats (ONLY if safe):
+  - last 30d views count
+  - top zip origin
+  - language split
+These teaser stats are computed live from intelligence_event_log for that entity.
+
+NO deep charts yet.
+
+--------------------------------------------------
+PART D — AUTOMATION (No manual required)
+--------------------------------------------------
+
+Email + CRM handoff:
+- If we have Resend (or other) in the repo, use it.
+- Otherwise implement a generic webhook sender:
+  - INTELLIGENCE_WEBHOOK_URL
+Payload includes: request details + entity info + token link.
+
+Also send an internal email:
+Subject: “New Intelligence Report Request — <entityType>”
+Body includes: requester info + entity link + token link.
+
+--------------------------------------------------
+PART E — ADMIN INTERNAL VIEW
+--------------------------------------------------
+
+Add admin page:
+/admin/intelligence/requests
+
+Features:
+- List report requests with filters:
+  metro, entity_type, status, date range
+- Click a request to view details + quick link to entity page + token link
+- Button: “Mark Sent”, “Needs Info”, “Declined”
+- Notes field
+(We are not generating full reports yet; this is workflow-ready.)
+
+Admin protection:
+Use existing auth or ADMIN_SECRET gate.
+
+--------------------------------------------------
+PART F — MULTI-METRO READY
+--------------------------------------------------
+
+- Use metro_id everywhere.
+- entity_id is string to support different id types across metros.
+- Ensure all endpoints require metroId and validate it exists.
+
+Seed:
+- Add Charlotte + Indianapolis metros if not already present.
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------
+
+1) All listing/property pages log PROFILE_VIEW and click events into intelligence_event_log.
+2) CTA appears and request form submits successfully.
+3) Request creates DB records + token.
+4) Confirmation email OR webhook fires automatically.
+5) Private token page works and shows “preparing” state plus basic teaser stats.
+6) Admin can view and manage requests.
+7) Works for any metro by passing metro_id and entity ids.
+
+DELIVERABLES
+- DB migrations
+- API routes: /api/intelligence/log, /api/intelligence/request-report
+- UI CTA + modal
+- Token report page route
+- Admin requests page
+- Email/webhook integration

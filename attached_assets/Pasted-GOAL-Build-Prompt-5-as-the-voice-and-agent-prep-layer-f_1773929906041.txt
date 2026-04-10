@@ -1,0 +1,360 @@
+GOAL:
+Build Prompt 5 as the voice and agent-prep layer for Cora.
+
+This prompt is NOT for full autonomous calling yet.
+This prompt is to prepare the system so Cora can later become:
+1. Becky’s voice-enabled assistant
+2. an outbound prospecting agent
+3. an inbound answering agent for hubs / metros
+4. a structured voice workflow assistant tied to the existing Cora system
+
+IMPORTANT:
+- DO NOT enable live calling yet unless there is already a safe, existing voice stack in the app
+- DO NOT auto-dial anyone
+- DO NOT auto-answer public phone lines yet
+- DO NOT allow Cora to independently make business decisions
+- DO NOT bypass existing approval rules
+- build this as a safe preparation layer for future voice operations
+
+This prompt should focus on:
+- voice-ready architecture
+- call script preparation
+- voice persona configuration
+- inbound/outbound workflow structures
+- approval-first voice task staging
+
+==================================================
+PART 1 — CREATE CORA VOICE PROFILE SYSTEM
+==================================================
+
+Create a lightweight voice persona configuration table if one does not already exist:
+
+ai_voice_profiles
+- id
+- ai_name                  // cora, charlotte, future metro AI names
+- scope (platform / metro)
+- metro_id (nullable)
+- voice_provider (nullable)        // e.g. future provider
+- voice_id (nullable)
+- voice_name (nullable)
+- speaking_style
+- tone
+- intro_style
+- outro_style
+- pacing
+- pronunciation_notes (text, nullable)
+- is_active
+- created_at
+- updated_at
+
+Seed at least:
+- Cora platform voice profile
+- Charlotte metro voice profile (if not already represented elsewhere)
+
+This should be configuration only for now.
+Do NOT hardwire to a live calling provider yet unless already present in the system.
+
+==================================================
+PART 2 — CREATE VOICE TASK / CALL CAMPAIGN STAGING TABLES
+==================================================
+
+Create table: ai_call_campaigns
+- id
+- name
+- scope (platform / metro)
+- metro_id (nullable)
+- campaign_type (outbound_prospecting, crown_nomination, metro_operator_recruitment, follow_up, inbound_answering_prep)
+- persona_name
+- status (draft, approved, active, paused, archived)
+- goal
+- audience_type
+- notes
+- created_at
+- updated_at
+
+Create table: ai_call_tasks
+- id
+- campaign_id
+- contact_name (nullable)
+- business_name (nullable)
+- phone_number (nullable)
+- task_type (call, voicemail_script, sms_followup, answer_flow, callback)
+- script_id (nullable)
+- status (draft, approved, queued, completed, canceled)
+- outcome_notes (nullable)
+- created_at
+- updated_at
+
+IMPORTANT:
+These are preparation/staging tables.
+They do NOT place live calls yet.
+
+==================================================
+PART 3 — CREATE VOICE SCRIPT ASSET SUPPORT
+==================================================
+
+Extend the outreach/script system or create a compatible voice script asset structure if needed.
+
+Voice/call scripts should support:
+- opener
+- qualification question(s)
+- value proposition
+- objection handling
+- CTA / next step
+- close
+- voicemail version
+- SMS follow-up version (optional)
+
+If possible, reuse existing outreach_assets instead of duplicating.
+If reuse is possible, support type values like:
+- call_script
+- voicemail_script
+- follow_up_sms
+- inbound_answer_script
+
+If reuse is not practical, create a compatible linked structure.
+
+==================================================
+PART 4 — CORA VOICE MODES
+==================================================
+
+Add support for these Cora voice-related modes:
+
+1. Assistant Voice Mode
+- Becky speaks to Cora
+- Cora returns structured spoken-ready responses
+- still approval-first
+- no external action
+
+2. Outbound Voice Prep Mode
+- Cora prepares outbound campaigns, scripts, target lists, and tasks
+- no live calls yet unless explicitly approved and existing infrastructure is already present
+
+3. Inbound Answering Prep Mode
+- Cora prepares answer flows for hub/metro phone lines
+- greeting scripts
+- routing logic
+- FAQ responses
+- lead capture prompts
+- escalation rules
+
+4. Voice Review Mode
+- view and edit voice scripts
+- review proposed call flows
+- approve / reject before activation
+
+==================================================
+PART 5 — ADD CORA SUPPORT FOR VOICE-RELATED REQUESTS
+==================================================
+
+Extend the existing Cora service so requests like these are supported:
+
+Examples:
+- "Cora, draft a metro operator recruitment call script"
+- "Cora, prepare a Crown nomination outbound script"
+- "Cora, write an answering script for Charlotte hub calls"
+- "Cora, prepare a voicemail and follow-up text"
+- "Cora, help me talk through this by voice"
+
+Behavior:
+- resolve Hat as CMO / Editor / Operator depending on request
+- save outputs as drafts
+- store in outreach/script or voice staging system
+- require approval for any advancement beyond draft
+
+==================================================
+PART 6 — CREATE INBOUND ANSWERING FLOW STRUCTURE
+==================================================
+
+Create lightweight answer-flow support for future hub phone answering.
+
+Suggested table: ai_answer_flows
+- id
+- scope (platform / metro)
+- metro_id (nullable)
+- persona_name
+- flow_name
+- purpose                  // general info, lead capture, routing, faq, event inquiries
+- greeting_text
+- fallback_text
+- escalation_rule_text
+- capture_fields_json
+- status (draft, approved, active, archived)
+- created_at
+- updated_at
+
+This should support future use cases like:
+- answering a Charlotte hub line
+- answering a metro line
+- handling event questions
+- handling "how do I get listed?" questions
+- handling "I was nominated for Crown" questions
+
+Again:
+prepare only
+do not activate live phone answering in this prompt unless already safely supported
+
+==================================================
+PART 7 — CREATE OUTBOUND PROSPECTING FLOW SUPPORT
+==================================================
+
+Create a structured outbound call flow definition if one does not already exist.
+
+Suggested table: ai_outbound_flows
+- id
+- scope (platform / metro)
+- metro_id (nullable)
+- persona_name
+- flow_name
+- target_type              // business, metro_operator, micro_hub_operator, sponsor, creator
+- opening_script
+- qualification_logic
+- objection_notes
+- close_script
+- follow_up_action
+- status (draft, approved, active, archived)
+- created_at
+- updated_at
+
+This should support future outbound use cases:
+- recruiting metro operators
+- recruiting micro-hub operators
+- inviting businesses to claim or participate
+- Crown nomination outreach
+- sponsor outreach prep
+
+==================================================
+PART 8 — ADD VOICE / CALL APPROVAL RULES
+==================================================
+
+Global rules for this layer:
+
+- No auto-dialing
+- No auto-answering
+- No auto-sending follow-up SMS
+- No live activation without explicit approval
+- All voice scripts start as draft
+- All call campaigns start as draft
+- All answer flows start as draft
+- Cora may prepare and recommend, but not activate independently
+
+Make these rules explicit in service logic and UI response messages.
+
+==================================================
+PART 9 — PREP FOR FUTURE PROVIDER INTEGRATION
+==================================================
+
+Design this layer so it can later connect to:
+- text-to-speech
+- speech-to-text
+- voice provider / phone system
+- outbound dialer
+- inbound answering service
+
+BUT:
+do not hard-couple this build to one provider unless already used in the app
+
+Implementation request:
+- create provider-ready interfaces or config placeholders
+- keep provider code abstract and modular
+- no full integration required yet
+
+Suggested files:
+- ai_voice_service.ts
+- ai_voice_provider.ts (interface/adapter)
+- ai_call_campaign_service.ts
+- ai_answer_flow_service.ts
+
+==================================================
+PART 10 — ADD ADMIN UI FOR VOICE PREP
+==================================================
+
+Extend the existing /admin/cora (or equivalent Cora admin UI) with a lightweight Voice tab or section.
+
+Minimum sections:
+1. Voice Profiles
+2. Call Campaigns
+3. Draft Scripts
+4. Inbound Answer Flows
+5. Outbound Flows
+
+Each should allow:
+- view draft records
+- create/edit drafts
+- approve/reject
+- archive
+- copy/export script text
+
+Do NOT build a fancy call center interface.
+Keep it admin-first and practical.
+
+==================================================
+PART 11 — ADD "TALK TO CORA" PREP MODE
+==================================================
+
+Prepare the UI/service for future voice interaction with Becky.
+
+This does NOT need full voice integration now.
+
+Add a placeholder "Talk to Cora" mode that:
+- can be toggled in UI
+- stores whether response should be speech-ready
+- formats responses in a cleaner spoken structure when enabled
+
+Suggested support:
+conversation_mode values:
+- text
+- voice_prep
+
+When in voice_prep:
+- shorter paragraphs
+- clearer spoken phrasing
+- strong directness
+- easier read-aloud structure
+
+This is prep for future STT/TTS, not full implementation yet.
+
+==================================================
+PART 12 — DO NOT DUPLICATE EXISTING SYSTEMS
+==================================================
+
+DO NOT:
+- rebuild outreach if it already exists and can be extended
+- rebuild Cora chat
+- rebuild Prompt 3 workflow
+- add live calling if not already safely available
+- auto-connect public phone numbers
+- create autonomous call behavior
+
+DO:
+- extend the existing Cora system
+- reuse outreach/call script assets where possible
+- make voice and calling provider-ready
+- keep everything draft/approval-first
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+This prompt is successful if an admin can:
+
+1. configure a Cora voice profile
+2. draft outbound call campaigns
+3. draft inbound answer flows
+4. create and review call/voicemail/follow-up scripts
+5. see all voice-related records in Cora admin
+6. keep all voice activity in draft/approval mode
+7. prepare the system for future live voice integrations without enabling risky autonomous behavior now
+
+==================================================
+OUTPUT REQUIRED AFTER IMPLEMENTATION
+==================================================
+
+After implementation, provide a concise summary of:
+1. what tables were added or extended
+2. what admin UI sections were added
+3. how outreach was reused or extended
+4. how voice profiles are stored
+5. how inbound/outbound prep was structured
+6. what is ready now vs later
+7. confirmation that nothing live-calls or auto-answers yet

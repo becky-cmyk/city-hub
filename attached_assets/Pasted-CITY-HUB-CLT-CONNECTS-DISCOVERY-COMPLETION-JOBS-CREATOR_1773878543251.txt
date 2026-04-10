@@ -1,0 +1,217 @@
+CITY HUB / CLT CONNECTS
+DISCOVERY COMPLETION – JOBS + CREATORS + SOCIAL ACTIVITY
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Complete three small discovery integrations that improve platform visibility and activity signals without altering the core architecture.
+
+These features must rely ONLY on existing data structures and tables.
+
+Do NOT introduce new object tables.
+Do NOT rebuild discovery architecture.
+Do NOT change schema unless absolutely required.
+
+This is a DISCOVERY COMPLETION PASS.
+
+--------------------------------------------------
+
+SYSTEM FACTS (ALREADY TRUE)
+
+Creators
+Creators are NOT a separate table.
+Creators are businesses with creatorType set.
+
+Jobs
+Two job-related tables exist:
+- jobs (imported/seeded job sources)
+- job_listings (platform-native postings)
+
+Social Proof
+The system already tracks activity metrics including:
+- engagement signals
+- content posting
+- listings
+- events
+- Pulse activity
+
+These must be surfaced better.
+
+--------------------------------------------------
+
+PART 1 — JOBS DISCOVERY ALIGNMENT
+
+Ensure job listings behave like first-class discovery objects.
+
+Jobs should appear in:
+
+• search results
+• category filters
+• relevant business pages
+• location-aware discovery
+
+Requirements:
+
+1. Search Integration
+Jobs must appear in search results alongside:
+- businesses
+- events
+- articles
+- marketplace listings
+
+Ensure ranking does not bury jobs completely.
+
+2. Business Profile Integration
+If a business has job listings:
+- show a “Now Hiring” indicator
+- list active job openings on the profile
+
+3. Location Discovery
+Jobs must inherit location context from the host business or job metadata.
+
+Ensure they appear correctly in:
+- hub pages
+- neighborhood pages
+- category searches
+
+4. Category Mapping
+Ensure job categories align with existing taxonomy where possible.
+
+Do NOT introduce a separate taxonomy system.
+
+--------------------------------------------------
+
+PART 2 — CREATOR PROGRAM DISCOVERY
+
+Creators already exist as businesses.
+
+This prompt simply improves visibility.
+
+Implement:
+
+1. Creator Badge
+Businesses with creatorType set should display a creator badge on:
+- business profile
+- Pulse cards
+- discovery listings
+
+2. Creator Discovery
+Allow creators to be surfaced in discovery areas such as:
+
+- creator category filters
+- search results
+- Pulse content
+- contributor listings
+
+3. Creator Pulse Behavior
+Creators who post content should naturally appear in Pulse feeds.
+
+No separate creator feed should be built.
+
+4. Creator Profiles
+Ensure creator businesses highlight:
+
+- creator content
+- creator channels/posts
+- creator identity fields if present
+
+Do NOT create a new profile system.
+
+--------------------------------------------------
+
+PART 3 — SOCIAL PROOF / ACTIVITY LAYER
+
+Goal:
+Make the platform feel active using real platform data.
+
+DO NOT fabricate activity.
+
+Use real signals from:
+
+- new businesses added
+- recent events
+- job listings
+- new content/posts
+- marketplace listings
+- articles
+
+Implement lightweight UI signals such as:
+
+Examples:
+
+• “New this week”
+• “Recently added”
+• “Now hiring”
+• “Trending in [district]”
+• “Popular events this week”
+
+These can appear in:
+
+- discovery surfaces
+- Pulse
+- hub pages
+- category pages
+
+Activity indicators should rely on:
+
+- recency
+- engagement
+- tier boosts
+- proximity
+
+Avoid heavy ranking algorithms.
+
+--------------------------------------------------
+
+PERFORMANCE RULE
+
+All activity queries must remain efficient.
+
+Prefer:
+
+- simple recency windows
+- cached counts where appropriate
+- lightweight ranking logic
+
+Avoid heavy computation.
+
+--------------------------------------------------
+
+ARCHITECTURAL SAFETY RULES
+
+Do NOT:
+
+• create new core tables
+• duplicate objects
+• build separate creator architecture
+• rebuild the jobs engine
+• fabricate engagement data
+• alter Pulse architecture
+
+Everything must run through the existing object model.
+
+--------------------------------------------------
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. job listings appear naturally in discovery
+2. businesses with jobs show hiring signals
+3. creators are clearly visible in discovery and Pulse
+4. creator businesses display their identity properly
+5. activity indicators make the platform feel alive
+6. all activity uses real data
+7. no schema changes or architecture rebuilds were required
+
+--------------------------------------------------
+
+DELIVERABLE
+
+Return:
+
+1. brief implementation plan
+2. list of files/components changed
+3. queries used for activity signals
+4. any small follow-up improvements that should happen later

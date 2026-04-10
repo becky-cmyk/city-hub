@@ -1,0 +1,232 @@
+PROMPT 3 — Build a Unified CMS in the Admin Backend (Implement Now)
+
+AUTHORITY
+Implement exactly. Do not delete existing content. Migrate/bridge existing content tables into a unified CMS layer while preserving current pages/routes.
+
+GOAL
+Create a real CMS backend for City Hub that supports:
+- Multi-content types (Articles/Pulse, Press Releases, Shout-outs, Media Mentions, Digests, Curated Lists, Attractions, Pages)
+- Draft → Review → Published workflow
+- Scheduling (publish_at / unpublish_at)
+- Bilingual content (English + Spanish fields per item)
+- Media library with reusable assets
+- Revisions (append-only history; field-level old -> new)
+- Assignments (editor/reviewer) and editorial calendar
+
+SCOPE
+Admin-only. Must integrate with existing public routes and existing admin panels without breaking them. Prefer gradual adoption:
+- Phase 1: Create CMS core + bridge to Articles/Pulse first, then progressively wire other types.
+
+--------------------------------------------
+1) CMS CORE DATA MODEL (ADD TABLES)
+--------------------------------------------
+
+1A) cms_content_items (the universal content record)
+Fields:
+- id (uuid)
+- content_type enum:
+  - "article"
+  - "press_release"
+  - "shoutout"
+  - "media_mention"
+  - "digest"
+  - "curated_list"
+  - "attraction"
+  - "page"
+- title_en, title_es
+- slug (unique per content_type, scoped under /clt)
+- excerpt_en, excerpt_es
+- body_en (rich text / markdown), body_es
+- status enum: "draft" | "in_review" | "scheduled" | "published" | "archived"
+- publish_at (timestamp nullable)
+- unpublish_at (timestamp nullable)
+- published_at (timestamp nullable)
+- created_by_user_id
+- assigned_editor_user_id nullable
+- assigned_reviewer_user_id nullable
+- city_id (FK) default Charlotte
+- zone_id nullable (optional association)
+- category_id nullable (optional association)
+- language_primary enum: "en" | "es" default "en"
+- seo_title_en, seo_title_es
+- seo_description_en, seo_description_es
+- canonical_url nullable
+- hero_image_asset_id nullable
+- visibility enum: "public" | "unlisted" | "private" (default public)
+- allow_comments boolean default false
+- created_at, updated_at
+
+1B) cms_content_relations (link content to presences/events/organizations)
+Fields:
+- id
+- content_item_id
+- relation_type enum: "presence" | "event" | "organization" | "commerce" | "zone" | "category"
+- related_id (uuid)
+- created_at
+
+1C) cms_tags + cms_content_tags
+- tags: id, name, slug
+- content_tags: content_item_id, tag_id
+
+1D) cms_assets (media library)
+Fields:
+- id
+- file_url
+- file_type enum: "image" | "video" | "pdf" | "other"
+- mime_type
+- width, height nullable
+- alt_text_en, alt_text_es
+- caption_en, caption_es
+- uploaded_by_user_id
+- created_at
+
+1E) cms_revisions (append-only revision history)
+Fields:
+- id
+- content_item_id
+- actor_type enum: "admin" | "editor" | "reviewer" | "system"
+- actor_user_id
+- field_name text
+- old_value text/json
+- new_value text/json
+- reason text nullable
+- created_at
+
+RULE: No deletes. Every change to cms_content_items must create revision rows for changed fields.
+
+1F) cms_workflow_events (optional but useful)
+Fields:
+- id
+- content_item_id
+- event_type enum: "submitted_for_review" | "approved" | "rejected" | "scheduled" | "published" | "unpublished"
+- note text nullable
+- actor_user_id
+- created_at
+
+--------------------------------------------
+2) BRIDGE EXISTING CONTENT (NO BREAKING CHANGES)
+--------------------------------------------
+
+2A) Articles/Pulse
+- Keep existing articles table and routes working.
+- Add a bridge mapping table:
+  cms_bridge_articles(content_item_id, legacy_article_id)
+- Backfill:
+  - Create cms_content_items for every existing article:
+    content_type="article"
+    title_en/body_en from legacy
+    status="published" if legacy is published else draft
+    slug matches existing article slug
+  - Insert bridge rows
+- Update the admin “Articles (Pulse)” panel to read/write through cms_content_items going forward, while maintaining legacy table updates for compatibility until fully migrated.
+  (Write-through sync: when CMS item updates, update legacy row too.)
+
+2B) Attractions / Digests / Curated Lists / Press Release / Shoutout / Media Mention / Pages
+- Create CMS items for existing rows if tables exist.
+- For any type not currently functional in admin, still create CMS type so it’s usable immediately via CMS screens.
+
+--------------------------------------------
+3) CMS ADMIN UI (NEW SECTION: “CMS”)
+--------------------------------------------
+
+3A) CMS Dashboard
+- Counts by status (draft/in_review/scheduled/published)
+- “My assigned” queue (assigned_editor/reviewer)
+- Recently updated
+- Upcoming scheduled publications (next 7/30 days)
+
+3B) Content Library (single list view)
+Columns:
+- Title
+- Type
+- Status
+- Publish_at
+- Updated_at
+- Assigned editor/reviewer
+Filters:
+- Type, Status, Assigned to me, Language, City/Zone, Tag
+Bulk actions:
+- Move to review
+- Schedule
+- Archive
+
+3C) Content Editor (detail page)
+Tabs:
+- Content (EN/ES fields side-by-side toggle)
+- SEO (title/description/canonical)
+- Media (hero image + asset picker)
+- Relationships (link to businesses/orgs/events)
+- Schedule (publish_at/unpublish_at)
+- Revisions (timeline old->new)
+Actions:
+- Save draft
+- Submit for review
+- Approve & publish (reviewer/admin)
+- Schedule
+- Unpublish
+- Archive
+
+3D) Media Library
+- Upload
+- Search
+- Reuse assets
+- Set alt/caption in EN/ES
+- Select hero image for content
+
+3E) Editorial Calendar (simple)
+- Month/week view listing scheduled items by publish_at
+- Clicking item opens editor
+
+--------------------------------------------
+4) WORKFLOW RULES
+--------------------------------------------
+
+- draft -> in_review: editor submits
+- in_review -> scheduled/published: reviewer/admin approves
+- scheduled -> published: system publishes at publish_at
+- published -> archived: admin only
+- unpublish_at: system unpublishes (status becomes archived or draft? choose "archived" to keep clean)
+
+Scheduling job:
+- Add server cron/interval that checks every 1–5 minutes:
+  - publish items where status="scheduled" AND publish_at <= now
+  - unpublish items where status="published" AND unpublish_at <= now
+Log workflow events + revisions (system actor).
+
+--------------------------------------------
+5) PUBLIC SITE WIRING (MINIMUM)
+--------------------------------------------
+
+- For /clt/articles and /clt/articles/:slug:
+  - Prefer CMS items where content_type="article" and status="published"
+  - Keep legacy fallback until migration complete
+- For other pages (attractions, digests, lists):
+  - Create public endpoints that read from CMS items of those types (published only)
+  - Do not remove existing routes; add compatibility as needed
+
+Bilingual:
+- Respect existing language toggle on public site:
+  - If Spanish selected, render *_es fields; fallback to *_en if missing.
+
+--------------------------------------------
+6) PERMISSIONS
+--------------------------------------------
+
+- Admin: full CMS access
+- Editor: create/edit drafts, submit for review, upload assets
+- Reviewer: approve/reject/publish/schedule
+If you already have role system, map to it; otherwise add cms_role to admin users.
+
+--------------------------------------------
+7) ACCEPTANCE CHECKLIST
+--------------------------------------------
+
+- CMS section exists in admin with Content Library + Editor + Media Library + Calendar
+- Existing Articles continue to display publicly
+- Editing an Article in admin updates the CMS item and preserves legacy compatibility
+- Revisions log shows field-level old->new for each change
+- Scheduling publishes/unpublishes automatically
+- EN/ES fields are editable and render correctly via language toggle
+- No content is deleted during migration
+
+IMPLEMENT NOW.

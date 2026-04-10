@@ -1,0 +1,170 @@
+I need a FULL TECHNICAL ARCHITECTURE AUDIT of this project.
+
+Do NOT summarize.
+Do NOT explain in paragraphs.
+Do NOT omit fields.
+Output everything in structured sections.
+Return in ONE single response.
+
+FORMAT EXACTLY AS FOLLOWS:
+
+========================================================
+CITYCOREHUB / CLT CONNECTS — TECHNICAL AUDIT SNAPSHOT
+========================================================
+
+I. PROJECT STACK
+- Runtime:
+- Framework:
+- ORM:
+- Database:
+- Hosting:
+- Stripe Integration Location:
+- Email Provider:
+- SMS Provider:
+- File Storage:
+- Caching Layer:
+- Service Worker Present (Y/N):
+
+--------------------------------------------------------
+II. DATABASE SCHEMA (ALL TABLES)
+--------------------------------------------------------
+
+For EACH table output:
+
+TABLE: table_name
+
+Columns:
+- column_name | type | nullable | default | indexed (Y/N)
+
+Relationships:
+- foreign keys
+- cascade rules
+
+Indexes:
+- list all indexes
+
+Repeat for EVERY table in the database.
+
+--------------------------------------------------------
+III. MULTI-TENANCY STRUCTURE
+--------------------------------------------------------
+- Is cityId present on which tables?
+- Is zoneId present on which tables?
+- Are constraints enforced?
+- Any global-only tables?
+- Any data isolation gaps?
+
+--------------------------------------------------------
+IV. BUSINESS SYSTEM
+--------------------------------------------------------
+- Business table full schema
+- Claim-related fields present?
+- Google fields present?
+- Lead capture fields?
+- Status/moderation fields?
+- SEO slug field?
+- Tier field?
+- Entitlement relationship?
+
+--------------------------------------------------------
+V. EVENTS SYSTEM
+--------------------------------------------------------
+- Event table full schema
+- Owner type fields?
+- Stripe linkage fields?
+- Vendor package linkage?
+- Sponsor linkage?
+- Moderation fields?
+- Slug field?
+- Zone support?
+
+--------------------------------------------------------
+VI. ENTITLEMENT SYSTEM
+--------------------------------------------------------
+- Entitlement table schema
+- How Stripe updates it
+- Webhook endpoint location
+- How feature access is checked in code
+- Is feature gating centralized?
+
+--------------------------------------------------------
+VII. CRM SYSTEM
+--------------------------------------------------------
+- Contact table schema
+- Opportunity table schema
+- ActivityLog schema
+- Stage model
+- Stripe linkage
+- City/Zone support
+
+--------------------------------------------------------
+VIII. CONTENT SYSTEM
+--------------------------------------------------------
+- Content or Article table schema
+- type enum present?
+- contributorId?
+- category/tag support?
+- slug?
+- moderation fields?
+- featured fields?
+
+--------------------------------------------------------
+IX. GOOGLE PLACES
+--------------------------------------------------------
+- Is API integrated?
+- Where?
+- Fields stored in DB?
+- Manual refresh logic?
+- Is it cached in DB?
+
+--------------------------------------------------------
+X. CLAIM WORKFLOW
+--------------------------------------------------------
+- claimStatus present?
+- claimTokenHash?
+- claimTokenExpiresAt?
+- ownerEmail?
+- claimedAt?
+- Claim API routes?
+- Email trigger implemented?
+- Upgrade funnel linked?
+
+--------------------------------------------------------
+XI. STRIPE BILLING
+--------------------------------------------------------
+- Subscription products configured?
+- One-time checkout supported?
+- Webhook handling subscription updates?
+- Entitlement updates confirmed?
+- City-specific billing support?
+
+--------------------------------------------------------
+XII. MODERATION SYSTEM
+--------------------------------------------------------
+- Submission table?
+- Status enum?
+- Admin review flow?
+- Owner edit moderation flow?
+
+--------------------------------------------------------
+XIII. FRONTEND STRUCTURE
+--------------------------------------------------------
+- Public routes
+- Admin routes
+- Dynamic city routing?
+- Zone filtering?
+- Search implementation?
+- Mobile-first layout?
+- Service worker present?
+
+--------------------------------------------------------
+XIV. TECHNICAL RISKS
+--------------------------------------------------------
+List:
+- Schema risks
+- Scaling risks
+- Security risks
+- Revenue gating gaps
+- Multi-tenant isolation gaps
+
+END OF AUDIT.

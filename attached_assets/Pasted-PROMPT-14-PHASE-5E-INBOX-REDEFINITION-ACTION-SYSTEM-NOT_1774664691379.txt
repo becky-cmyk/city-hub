@@ -1,0 +1,239 @@
+PROMPT 14 — PHASE 5E: INBOX REDEFINITION (ACTION SYSTEM, NOT STORAGE)
+
+You are implementing ONLY Phase 5E.
+
+Prerequisite:
+- Capture system exists (Phase 5D)
+- Command Center backend/UI exists or is partially in place (5A/5B)
+- Entity resolution + proposal engine exists
+
+DO NOT implement:
+- new CRM
+- full messaging/email system
+- full redesign of admin
+- duplicate queues that already exist in Command Center
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Redefine the Inbox from:
+
+"random intake / storage of items"
+
+TO:
+
+"a structured triage + decision system that feeds the Command Center"
+
+The Inbox is where:
+- uncertainty lives
+- human decisions happen
+- low-confidence items get resolved
+- raw inputs become usable
+
+--------------------------------------------------
+CORE PRINCIPLE
+--------------------------------------------------
+
+Inbox is NOT a dumping ground.
+Inbox is NOT a second command center.
+
+Inbox = TRIAGE LAYER.
+
+--------------------------------------------------
+PART 1 — DEFINE INBOX ROLE
+--------------------------------------------------
+
+Inbox should ONLY contain:
+
+1) Needs Review
+- low confidence entity matches
+- unclear capture items
+- conflicts/duplicates
+- incomplete data
+
+2) Unprocessed Inputs (optional if needed)
+- fresh captures not yet processed
+- imports awaiting processing
+
+3) Exceptions
+- failed automations
+- errors
+- blocked actions
+
+DO NOT:
+- show action-ready items here
+- show opportunities here
+- duplicate Command Center queues
+
+--------------------------------------------------
+PART 2 — INBOX CATEGORIES / TABS
+--------------------------------------------------
+
+Create simple tabs or filters:
+
+- Needs Review
+- Exceptions
+- (Optional) Unprocessed
+
+Keep this minimal.
+
+--------------------------------------------------
+PART 3 — INBOX ITEM STRUCTURE
+--------------------------------------------------
+
+Each item should clearly show:
+
+- what this is (capture, entity, conflict, etc.)
+- why it is here
+- confidence level (if applicable)
+- suggested action from Charlotte
+- relevant data preview
+
+Example:
+"Business match unclear (62% confidence)"
+"Duplicate contact suspected"
+"Missing email for follow-up"
+
+--------------------------------------------------
+PART 4 — ACTIONS AVAILABLE IN INBOX
+--------------------------------------------------
+
+Every inbox item must have clear actions:
+
+- Approve / Confirm
+- Reject / Dismiss
+- Edit / Fix data
+- Merge (if duplicate)
+- Re-run processing
+
+Optional:
+- Send to Command Center (if appropriate after review)
+
+--------------------------------------------------
+PART 5 — INBOX → COMMAND CENTER FLOW
+--------------------------------------------------
+
+Critical rule:
+
+Inbox resolves uncertainty.
+Command Center executes.
+
+When an item is resolved:
+
+- it should:
+  → move into the appropriate Command Center queue
+    OR
+  → be dismissed completely
+
+Do NOT:
+- keep resolved items sitting in inbox
+
+--------------------------------------------------
+PART 6 — CAPTURE INTEGRATION
+--------------------------------------------------
+
+When capture processing is:
+
+LOW CONFIDENCE → goes to Inbox (Needs Review)
+
+HIGH CONFIDENCE → goes directly to Command Center (skip inbox)
+
+This is the split point.
+
+--------------------------------------------------
+PART 7 — ENTITY RESOLUTION IN INBOX
+--------------------------------------------------
+
+For entity conflicts:
+
+Show:
+- possible matches
+- confidence scores
+- key fields (name, business, email, etc.)
+
+Allow:
+- select correct match
+- create new entity
+- merge records
+
+After decision:
+→ re-run processing
+→ move forward
+
+--------------------------------------------------
+PART 8 — CLEAN UP EXISTING INBOX LOGIC
+--------------------------------------------------
+
+If current inbox contains:
+- mixed items
+- old unused logic
+- duplicate queues
+
+Then:
+
+- remove or simplify
+- align strictly to triage role
+- eliminate overlap with Command Center
+
+--------------------------------------------------
+PART 9 — UX RULES
+--------------------------------------------------
+
+Inbox should feel like:
+
+- quick decision center
+- minimal thinking required
+- clear “why am I seeing this?”
+- clear “what should I do?”
+
+Design:
+- list/card based
+- no heavy dashboards
+- no clutter
+
+--------------------------------------------------
+PART 10 — LIGHT METRICS (OPTIONAL)
+--------------------------------------------------
+
+At top, optionally show:
+
+- items needing review
+- items resolved today
+
+Keep simple.
+
+--------------------------------------------------
+PART 11 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1) Low-confidence capture → appears in Inbox
+2) User resolves item → moves to Command Center
+3) Duplicate entity → can merge/select
+4) Error/exception → visible and actionable
+5) Inbox does NOT contain action-ready items
+6) No duplication with Command Center queues
+
+--------------------------------------------------
+PART 12 — OUTPUT REQUIRED
+--------------------------------------------------
+
+OUTPUT A — UPDATED INBOX STRUCTURE
+OUTPUT B — TABS / CATEGORIES CREATED
+OUTPUT C — ACTIONS AVAILABLE PER ITEM
+OUTPUT D — FLOW: INBOX → COMMAND CENTER
+OUTPUT E — WHAT WAS REMOVED OR SIMPLIFIED
+OUTPUT F — HOW THIS DIFFERS FROM OLD INBOX
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 5E is complete.
+
+Do NOT:
+- expand into messaging system
+- create duplicate queue systems
+- overcomplicate UI

@@ -1,0 +1,318 @@
+THREAD TRANSFER — HUB TV / MICRO HUB TV / VENUE TV MEDIA NETWORK
+Scope: Add broadcast/media layer to the Hub ecosystem using YouTube streaming + hub-controlled discovery and monetization.
+
+⸻
+
+1. CORE CONCEPT
+
+The platform is evolving into a local media network organized by micro hubs.
+
+It is NOT a news organization and not a traditional media outlet.
+
+The focus is:
+
+• hyper-local storytelling
+• businesses
+• events
+• experts
+• venues
+• community activity
+
+Content is organized by place (micro hubs) rather than broad editorial categories.
+
+There are 75 micro hubs that represent geographic neighborhoods and communities.
+
+⸻
+
+2. MEDIA NETWORK STRUCTURE
+
+The system will operate three connected broadcast layers.
+	1.	Hub TV (City Network)
+	2.	Micro Hub TV (Neighborhood Channels)
+	3.	Venue TV (Location Channels)
+
+All three layers pull from the same content system but filter it differently.
+
+⸻
+
+3. HUB TV — CITY NETWORK
+
+Hub TV is the main city-wide broadcast channel.
+
+Primary characteristics:
+
+• streaming channel powered by YouTube Live
+• embedded on the hub platform
+• accessible through the hub website and micro hubs
+• programming rotates content from all micro hubs
+
+Purpose:
+
+• city-level media channel
+• distribution of local stories
+• platform for expert shows
+• live broadcast events
+• additional advertising inventory
+
+Revenue sources:
+
+• Hub TV ad placements
+• show sponsors
+• segment sponsors
+• expert show participation
+• social selling broadcasts
+
+Content examples:
+
+• business spotlight segments
+• event highlights
+• community interviews
+• expert segments
+• micro hub updates
+• venue highlights
+
+⸻
+
+4. MICRO HUB TV — NEIGHBORHOOD CHANNELS
+
+Each micro hub will have its own localized video stream.
+
+Example:
+
+South End Hub TV
+Matthews Hub TV
+Ballantyne Hub TV
+
+These channels only display content tied to that specific micro hub.
+
+Content sources:
+
+• local businesses
+• local events
+• local venues
+• local experts
+• local stories
+
+Purpose:
+
+• create hyper-local identity
+• strengthen neighborhood engagement
+• support local advertising opportunities
+
+Revenue sources:
+
+• micro hub sponsors
+• local ad placements
+• featured business segments
+• local expert shows
+
+Micro Hub TV appears directly on the micro hub page inside the platform.
+
+⸻
+
+5. VENUE TV — LOCATION CHANNELS
+
+Venue TVs are already part of the system and operate inside physical locations.
+
+Examples:
+
+bars
+restaurants
+gyms
+waiting rooms
+salons
+entertainment venues
+
+Venue screens display:
+
+• venue announcements
+• venue promotions
+• local content from the micro hub
+• hub programming segments
+• advertising
+
+Venues also include physical engagement through:
+
+• QR table tents
+• bathroom stall hangers
+• entry decals
+• counter cards
+
+These connect visitors to the hub platform.
+
+Revenue sources:
+
+• venue screen advertising
+• sponsor placements
+• social selling events
+• venue promotions
+
+⸻
+
+6. CONTENT DISTRIBUTION MODEL
+
+Content should be reusable across the entire network.
+
+Example:
+
+A restaurant interview in South End.
+
+It can appear in:
+
+South End Micro Hub TV
+Hub TV city stream
+Pulse feed
+restaurant profile page
+nearby venue screens
+YouTube replay
+
+This allows one piece of content to power multiple channels.
+
+⸻
+
+7. CONTENT TYPES
+
+The network will support several types of programming.
+
+Examples:
+
+business spotlight segments
+community interviews
+event coverage
+venue highlights
+expert shows
+social selling segments
+
+Experts may host short shows similar to radio programs that buy airtime.
+
+Example expert segments:
+
+real estate update
+health tips
+small business strategy
+local restaurant highlights
+
+These segments may appear on:
+
+Hub TV
+Micro Hub TV
+podcasts
+YouTube replays
+
+⸻
+
+8. PODCAST EXTENSION
+
+Every video segment can also become a podcast episode.
+
+Example workflow:
+
+record video interview
+→ broadcast on Hub TV
+→ publish replay on YouTube
+→ convert audio to podcast
+→ post clips in Pulse feed
+
+This creates a multimedia ecosystem using the same content source.
+
+⸻
+
+9. CONTENT ORGANIZATION
+
+Content is tagged with the following identifiers:
+
+cityId
+microHubId
+venueId (optional)
+contentType
+categoryTags (optional)
+
+These tags determine where content appears.
+
+Example logic:
+
+If microHubId = SouthEnd
+
+The content appears in:
+
+South End Micro Hub TV
+Hub TV city broadcast
+South End Pulse feed
+South End venue screens
+
+⸻
+
+10. PROGRAMMING LOOP
+
+Channels will run a continuous rotation.
+
+Typical programming order:
+
+story segment
+event highlight
+business spotlight
+venue segment
+expert show
+advertising block
+
+Then repeat.
+
+This is rotation-based programming, not algorithmic ranking.
+
+⸻
+
+11. DISTRIBUTION CHANNELS
+
+Content will be distributed across several surfaces:
+
+Hub TV stream
+Micro Hub TV streams
+Venue screens
+Pulse feed
+business pages
+micro hub pages
+YouTube replay library
+podcast feeds
+
+This creates multiple exposure layers.
+
+⸻
+
+12. STRATEGIC POSITION
+
+The hub becomes a community broadcast network.
+
+Not a directory.
+Not a traditional media outlet.
+
+Instead:
+
+a hyper-local multimedia network organized around neighborhoods.
+
+Components include:
+
+Pulse feed (social layer)
+Hub TV (city broadcast layer)
+Micro Hub TV (neighborhood channels)
+Venue screens (physical distribution layer)
+podcasts (audio distribution layer)
+marketplace / social selling (commerce layer)
+
+⸻
+
+13. IMPLEMENTATION PRIORITIES
+
+Initial build focus:
+	1.	Hub TV streaming infrastructure using YouTube Live
+	2.	Micro Hub TV pages embedded in each micro hub
+	3.	Content tagging for cityId / microHubId / venueId
+	4.	automated programming rotation
+	5.	ability to embed YouTube streams inside hub pages
+
+Venues already support screen distribution.
+
+This step extends the media network into city and neighborhood broadcast channels.
+
+⸻
+
+END TRANSFER

@@ -1,0 +1,136 @@
+PROMPT — CLT Connects | Build Lock Updates (Apply Now)
+
+GOAL
+Apply the following finalized “thread lock” decisions to the codebase and UI copy. These are authoritative and should replace any prior assumptions.
+
+SCOPE
+- Homepage modules: Wildcard section label + Weekend/Week cadence logic
+- Verification rules: User vs Commerce/Org presence, plus review notifications
+- Organization mission taxonomy (core presets)
+- Event support model: Microsite Underwriters vs Hub Event Partners (uncapped)
+- Notifications surfaces: in-app + Hub Message rotation (no email for now)
+
+1) HOMEPAGE WILDCARD SECTION LABEL
+- Set the rotating/wildcard homepage section title to:
+  "Across Your Hub"
+- Use this exact casing/punctuation.
+
+2) THIS WEEK vs THIS WEEKEND TIMING (ET)
+- Timezone rule: America/New_York (ET)
+- Weekend Mode ON: Thursday at 8:00 PM ET
+- Weekend Mode OFF: Sunday at 8:00 PM ET
+- At Sunday 8:00 PM ET, homepage should switch to “This Week” mode.
+Implementation requirements:
+- Do NOT use client timezone for deciding week/weekend mode.
+- Compute using server time in America/New_York.
+- If there is an existing helper for “isWeekendMode”, update it.
+- If not, create a single shared helper used by:
+  - homepage module selection
+  - event list labeling/cadence
+  - any future scheduled content features
+
+3) VERIFICATION RULES
+3A) Verified User Account (NO ADMIN)
+- “Verified” for a user account means:
+  - email_verified = true
+  - profile_complete = true
+- No admin approval required for user verification.
+- Add/ensure a computed boolean: user_is_verified = email_verified && profile_complete
+- UI: show “Verified” badge for users when true.
+
+3B) Verified Commerce Presence / Verified Organization Presence
+- Presences have two distinct statuses:
+  A) Baseline: “Claimed + Complete”
+  B) Charlotte Review: “Verified by Charlotte”
+Rules:
+- If presence is claimed AND profile is complete:
+  - mark presence_status = "pending_review" unless already reviewed
+- Only after manual review by Becky/admin:
+  - mark presence_status = "verified_by_charlotte"
+Badges:
+- pending_review => “Pending Review”
+- verified_by_charlotte => “Verified by Charlotte”
+Notifications:
+- When a presence becomes eligible for review (claimed + complete), notify Becky/admin in-app
+  - Create an admin notification item (or admin inbox item) with:
+    - presence type (commerce/org)
+    - presence id
+    - name
+    - submitted timestamp
+    - link to review screen
+- IMPORTANT: This is not public notification; it is an internal/admin notice.
+
+Data model guidance (use existing patterns if they exist):
+- presence.claimed_at (or claimed_by_user_id)
+- presence.profile_complete boolean (or computed)
+- presence.review_status enum: "unclaimed" | "draft" | "pending_review" | "verified_by_charlotte"
+If the app already has “verified”, migrate to this more explicit model without breaking UI.
+
+4) ORGANIZATION CAUSE / MISSION TAXONOMY (CORE PRESETS)
+- Organizations must select at least 1 mission from a fixed preset list (admin-controlled).
+- Allow a second optional mission selection (still from presets).
+- Do NOT allow public creation of new mission categories.
+Preset list to implement now (exact strings):
+- "Food Pantry / Hunger Relief"
+- "Animal Rescue / Pets"
+- "Homeless Support"
+- "Youth Programs"
+- "Veterans Support"
+- "Senior Services"
+- "Health & Wellness"
+- "Arts & Culture"
+- "Faith-Based"
+- "Education"
+Implementation requirements:
+- Store selected mission(s) on the organization presence record (array or mission_primary + mission_secondary).
+- Make mission searchable/filterable in global search and org directory filters.
+
+5) EVENT SUPPORT MODEL
+5A) Microsite Underwriters (STRUCTURAL)
+- Each organization microsite supports up to 3 underwriters (max=3).
+- Underwriters are annual ($199/yr) and appear on the organization microsite in a dedicated “Underwritten By” area.
+- Enforce max=3 (UI should prevent adding a 4th).
+
+5B) Hub Event Partners (SHORT-LIFE SUPPORT)
+- Hub Event Partners are event-specific supporters and are NOT capped (no max, no min).
+- They are not underwriters and should not occupy the underwriter slots.
+- UI should display Hub Event Partners as a rotational/scrollable/compact list on the event page and optionally on homepage modules.
+
+Data model guidance:
+- event_supporters table:
+  - event_id
+  - supporter_org_id (or supporter_presence_id)
+  - supporter_type enum: "hub_event_partner"
+  - start_date, end_date (optional)
+- org_underwriters table:
+  - org_id
+  - underwriter_name (or supporter_org_id)
+  - start_date
+  - end_date
+  - slot_number 1-3
+
+6) NOTIFICATIONS SURFACES (NO EMAIL YET)
+- Notifications delivery should be:
+  - In-app notifications
+  - “Hub Message” module (weekly rotation / highlights)
+- No email notification system in this phase.
+- Add/ensure ability for event supporters to optionally have a rotating spotlight placement in the Hub Message area.
+  - This is a rotation mechanism, not a broadcast email.
+
+7) UI COPY / LABELS TO ALIGN
+- “Verified” user badge only when email verified + profile complete.
+- “Verified by Charlotte” only after admin review.
+- “Pending Review” for eligible presences awaiting review.
+
+ACCEPTANCE CHECKLIST
+- Homepage shows “Across Your Hub”.
+- Week/weekend mode flips correctly at Thu 8 PM ET and Sun 8 PM ET (server-based).
+- User “Verified” badge appears automatically with email_verified + profile_complete.
+- Commerce/org presences show “Pending Review” when claimed+complete, and trigger admin notice.
+- Admin can mark “Verified by Charlotte”.
+- Org missions are selectable from preset list only; searchable/filterable.
+- Underwriters max=3 enforced on org microsite.
+- Hub Event Partners uncapped and display compactly; can rotate in Hub Message.
+- No email notification code added.
+
+DO NOT ASK QUESTIONS. IMPLEMENT EXACTLY.

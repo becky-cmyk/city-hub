@@ -1,0 +1,62 @@
+1) Update the CLT Metro Hub geography dataset to add neighborhoods for the newly added counties/towns (Anson NC, Cleveland NC, Catawba NC, Alexander NC, Burke NC, Caldwell NC, McDowell NC, Chesterfield SC).
+
+2) Data entry rules:
+- Do NOT change any existing counties/towns/neighborhoods already in the system.
+- Add ONLY the neighborhoods listed below.
+- Store neighborhoods as child records under the matching Town (and County).
+- If your schema supports it, set `type`/`kind` = "neighborhood" and `status` = "active".
+- If any Town is missing in the DB, create the Town first (under the correct County/State), then add neighborhoods.
+- Do not invent ZIPs for neighborhoods; keep ZIPs only at the Town level if needed.
+
+3) Add these neighborhoods exactly as written:
+
+A) Anson County, NC
+- Wadesboro: Downtown Wadesboro; Wadesboro Historic District; Ansonville Road Area; Morven Road Corridor
+- Polkton: Downtown Polkton; Polkton Historic Area; Brown Creek Area
+- Peachland: Downtown Peachland; Peachland Historic District
+- Morven: Downtown Morven; Morven Historic Area
+- Lilesville: Downtown Lilesville; Pee Dee River Area
+
+B) Cleveland County, NC
+- Shelby: Uptown Shelby; Shelby Historic District; Cleveland Country Club; West Shelby; East Shelby
+- Kings Mountain: Downtown Kings Mountain; Mountain View; Moss Lake Area; Dixon School Road Area
+- Boiling Springs: Gardner-Webb University Area; Boiling Springs Historic District; South Main Area
+- Lawndale: Downtown Lawndale; Lawndale Historic District
+
+C) Catawba County, NC
+- Hickory: Downtown Hickory; Viewmont; Oakwood Historic District; Highland; Mountain View; Kenworth
+- Newton: Downtown Newton; Newton Historic District; Startown Road Area
+- Conover: Downtown Conover; Rock Barn Area; Northwest Conover
+- Maiden: Downtown Maiden; Maiden Historic District; Buffalo Shoals Area
+
+D) Alexander County, NC
+- Taylorsville: Downtown Taylorsville; Taylorsville Historic District; Bethlehem Area
+- Hiddenite: Downtown Hiddenite; Hiddenite Gem District
+
+E) Burke County, NC
+- Morganton: Downtown Morganton; Historic Morganton District; Catawba Meadows; Drexel Area
+- Valdese: Downtown Valdese; Waldensian Historic District; Valdese Lakeside Area
+- Glen Alpine: Downtown Glen Alpine; Lake James Gateway Area
+
+F) Caldwell County, NC
+- Lenoir: Downtown Lenoir; Lower Creek; Whitnel; Gamewell
+- Granite Falls: Downtown Granite Falls; River Bend Park Area
+- Hudson: Downtown Hudson; Gunpowder Creek Area
+
+G) McDowell County, NC
+- Marion: Downtown Marion; Historic Main Street; Pleasant Gardens; Lake James Area
+- Old Fort: Downtown Old Fort; Old Fort Historic District; Gateway Trails Area
+
+H) Chesterfield County, SC
+- Cheraw: Downtown Cheraw; Cheraw Historic District; Riverside Park Area
+- Chesterfield: Downtown Chesterfield; Chesterfield Historic District
+- Pageland: Downtown Pageland; Pageland Historic District
+
+4) Implementation requirements:
+- Add a uniqueness constraint or duplicate-check on (townId, neighborhoodName) so re-running the script won’t create duplicates.
+- Provide a short console output summary after seeding: counts of neighborhoods added per town and total added.
+- Add a basic admin view (or extend existing) so these neighborhoods appear under each town in the UI.
+
+5) After implementation, run:
+- a seed/insert verification query showing each town and its neighborhoods for the towns listed above
+- a quick UI check note: where in the UI these appear and how to add/edit them.

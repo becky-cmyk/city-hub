@@ -1,0 +1,87 @@
+STOP. Do NOT modify webhook.
+Do NOT implement entitlement updates yet.
+
+GOAL:
+Add POST /api/stripe/checkout that creates a Stripe Checkout Session only.
+No entitlement writes.
+No feature gating yet.
+
+CONSTRAINTS:
+- Multi-tenant required (citySlug must resolve to city).
+- Zod validate request body.
+- Do not auto-create complex logic.
+- Use existing stripe_customers table.
+- Use priceMap.ts for product → price resolution.
+- Output code only.
+
+IMPLEMENT:
+
+1) Zod schema for request body:
+
+{
+  citySlug: string
+  subjectType: "BUSINESS" | "USER" | "ZONE" | "CITY"
+  subjectId: string
+  productType: "LISTING_TIER" | "FEATURED_PLACEMENT" | "SPOTLIGHT" | "SPONSORSHIP" | "CONTRIBUTOR_PACKAGE"
+  tier?: "VERIFIED" | "PREMIUM"
+  successPath?: string
+  cancelPath?: string
+}
+
+2) Resolve city by citySlug.
+If not found → 404.
+
+3) Determine priceId from priceMap:
+- If productType = LISTING_TIER:
+    require tier
+    use STRIPE_PRICE_LISTING_VERIFIED or STRIPE_PRICE_LISTING_PREMIUM
+- Else:
+    use mapped env price id
+If missing → 400 with clear error.
+
+4) Resolve customer email:
+- If subjectType = BUSINESS:
+    fetch business by id
+    require ownerEmail
+- If USER:
+    fetch user and use email
+Else → 400 for now (ZONE/CITY not supported yet)
+
+5) Create or reuse Stripe customer:
+- Look up stripe_customers by (cityId + email)
+- If not found:
+    create stripe customer via Stripe API
+    insert into stripe_customers
+- If found:
+    reuse stripe_customer_id
+
+6) Create Checkout Session:
+- mode:
+    LISTING_TIER → "subscription"
+    all others → "payment"
+- line_items: single price
+- success_url:
+    `${PUBLIC_APP_URL}/${citySlug}${successPath || "/owner"}`
+- cancel_url:
+    `${PUBLIC_APP_URL}/${citySlug}${cancelPath || "/owner"}`
+- metadata:
+    city_id
+    city_slug
+    subject_type
+    subject_id
+    product_type
+    tier (if present)
+
+7) Return:
+{ url: session.url }
+
+8) Mount route:
+app.post("/api/stripe/checkout", handler)
+
+DO NOT:
+- Write to entitlements table.
+- Modify businesses table.
+- Add feature gating.
+- Change owner dashboard yet.
+
+After implementation, print file paths changed only.

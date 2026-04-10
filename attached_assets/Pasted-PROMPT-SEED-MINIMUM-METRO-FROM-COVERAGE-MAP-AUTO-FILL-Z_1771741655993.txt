@@ -1,0 +1,145 @@
+PROMPT — SEED “MINIMUM METRO” (FROM COVERAGE MAP) + AUTO-FILL ZIP_GEOS VIA GOOGLE PLACES
+
+Do NOT delete anything.
+Add only what’s missing.
+Use existing GOOGLE_PLACES_API_KEY.
+Use server-only Google Places calls.
+Return a raw result summary at the end (counts + any failures).
+
+GOAL
+Seed Charlotte Metro coverage (minimum) so Places importer can run by ZIP immediately:
+- Create Regions: Metro + Counties (no hubs yet)
+- Populate zip_geos for the ZIPs shown on the coverage map using Google Places lookups
+- Keep this aligned with the “metro area” implied by the map
+
+------------------------------------------------------------
+1) SEED REGIONS (METRO + COUNTIES)
+------------------------------------------------------------
+
+1A) Insert Metro region (if not exists):
+- name: "Charlotte Metro"
+- region_type: "metro"
+- code: "CLT-METRO"
+
+1B) Insert Counties under Metro (if not exists), as region_type="county" with parent_region_id = Metro:
+- Mecklenburg
+- Cabarrus
+- Union
+- Gaston
+- Iredell
+- Lincoln
+- Lancaster
+
+Codes (use these):
+- MECK, CAB, UNION, GASTON, IREDELL, LINCOLN, LANCASTER
+
+NOTE:
+Do not create hub regions in this seed.
+
+------------------------------------------------------------
+2) SEED ZIP_GEOS USING GOOGLE PLACES (AUTO LOOKUP)
+------------------------------------------------------------
+
+2A) ZIP LIST (from the coverage map; minimum set)
+NC + SC ZIPs to seed:
+
+Iredell/Lake Norman:
+- 28046
+- 28126
+- 28225
+- 28211
+
+Lincoln:
+- 28053
+- 28055
+- 28056
+
+Mecklenburg/Charlotte core shown:
+- 28227
+- 28222
+- 28221
+- 28208
+- 28210
+- 28223
+- 28220
+- 28239
+
+Cabarrus/NE:
+- 28036
+- 28035
+- 28082
+- 28027
+- 28110
+
+Gaston:
+- 28016
+- 28036 (already included above; keep dedup)
+- 28027 (already included above; keep dedup)
+- 28024
+- 28230  (Charlotte-side ZIP shown on map)
+
+Lancaster (SC):
+- 29717
+- 29721
+- 29722
+- 29726
+- 29727
+- 29708
+
+2B) MAP TYPO FIXES (LOCKED IN THIS PROMPT)
+The map image shows “29220” and “29239” but those are Columbia-area ZIPs and appear to be typos.
+Seed:
+- 28220
+- 28239
+Do NOT seed 29220/29239.
+
+2C) Auto-lookup method
+For each ZIP:
+- If zip_geos already has that ZIP, skip.
+- Otherwise call Google Places Text Search with query:
+  "{ZIP} {STATE} postal code"
+  Example: "28210 NC postal code"
+- Take the first result’s geometry.location as lat/lng.
+- Insert into zip_geos:
+  - zip, city="Charlotte Metro", state=("NC" or "SC" based on ZIP list), lat, lng
+  - radius_meters default 3500 (allow later edit)
+  - created_at now
+
+If a ZIP lookup returns no results:
+- log it and continue
+- create an Admin Inbox item type="places_import_failed" with title "ZIP seed failed: {ZIP}"
+
+Rate limits:
+- Respect existing PLACES_IMPORT_RPM_LIMIT and daily caps.
+- This seed job must stop cleanly if daily caps are exceeded and report which ZIPs remain.
+
+------------------------------------------------------------
+3) OPTIONAL — CREATE ZIP REGIONS (OFF BY DEFAULT)
+------------------------------------------------------------
+
+Do NOT create region_type="zip" rows unless a constant is set:
+
+- SEED_ZIP_REGIONS=false (default)
+
+If SEED_ZIP_REGIONS=true:
+- For each seeded ZIP in zip_geos:
+  - create regions row:
+    - name = ZIP
+    - region_type = "zip"
+    - parent_region_id = matching county region (only if you later add county mapping)
+If county mapping is not known, do NOT guess. Leave parent_region_id null.
+
+------------------------------------------------------------
+4) OUTPUT (RAW, NO SUMMARY PARAPHRASING)
+------------------------------------------------------------
+
+Print:
+- Metro region id
+- County region ids created/skipped
+- ZIPs attempted count
+- ZIPs inserted count
+- ZIPs skipped count
+- ZIPs failed list
+- Remaining daily cap after run (textsearch and details counters)
+
+END.

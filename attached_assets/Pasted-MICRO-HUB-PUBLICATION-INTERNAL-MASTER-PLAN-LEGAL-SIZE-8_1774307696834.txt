@@ -1,0 +1,304 @@
+MICRO HUB PUBLICATION — INTERNAL MASTER PLAN (LEGAL SIZE 8.5” × 14”)
+
+==================================================
+CORE MODEL
+==================================================
+
+Product Type:
+- Hyper-local print publication (neon paper, B/W)
+- Paired with digital twin + platform (Hub)
+
+Purpose:
+- Drive awareness → engagement → conversion into app
+- Sell category ownership, not ads
+
+Core Structure:
+- 5 Sections (ALL nonprofit/story-led)
+- 5 Exclusive Sponsors (1 per section)
+- Community Ad Grid (overflow revenue)
+- Pickup Location Strip (distribution credibility)
+
+==================================================
+SECTIONS (ROTATING EACH ISSUE)
+==================================================
+
+1. Pets (rescue / animal nonprofit)
+2. Family (family services / programs)
+3. Senior (senior services / support)
+4. Events (local happenings / community)
+5. Arts & Entertainment (creators / culture)
+
+Rules:
+- ALL sections include a nonprofit or community angle
+- ALL sections have 1 exclusive sponsor
+- Sections rotate positions each issue
+- Sponsors move WITH their section
+
+==================================================
+LAYOUT (LOCKED GRID)
+==================================================
+
+Page Size:
+- 8.5” × 14” (Legal)
+- Printable: 8” W × 13.5” H
+
+Columns:
+- Left: 5” (Content)
+- Right: 3” (Sponsor Ads)
+
+----------------------
+FRONT (SIDE A)
+----------------------
+
+Header:
+- 8” × 1.25”
+
+Section 1:
+- Content: 5” × 5.75”
+- Sponsor: 3” × 5.75”
+
+Section 2:
+- Content: 5” × 5.75”
+- Sponsor: 3” × 5.75”
+
+Footer / QR:
+- 8” × 0.75”
+
+----------------------
+BACK (SIDE B)
+----------------------
+
+Section 3:
+- Content: 5” × 4”
+- Sponsor: 3” × 4”
+
+Section 4:
+- Content: 5” × 4”
+- Sponsor: 3” × 4”
+
+Section 5:
+- Content: 5” × 3.25”
+- Sponsor: 3” × 3.25”
+
+Community Ad Row:
+- 3 Ads
+- Each: 2.5” × 2”
+
+Pickup Strip:
+- 8” × 0.75”
+- Label: “Find Us At:”
+
+==================================================
+AD SPECS (PRINT + DIGITAL)
+==================================================
+
+FRONT (Sections 1–2):
+- Print: 3” × 5.75”
+- Digital: 300 × 575 px
+
+BACK STANDARD (Sections 3–4):
+- Print: 3” × 4”
+- Digital: 300 × 400 px
+
+BACK SMALL (Section 5):
+- Print: 3” × 3.25”
+- Digital: 300 × 325 px
+
+COMMUNITY ADS:
+- Print: 2.5” × 2”
+- Digital: 250 × 200 px
+
+RULE:
+- ALL sponsor ads = 3” width (no exceptions)
+
+==================================================
+OFFER STRUCTURE
+==================================================
+
+MONTHLY (ENTRY)
+- Print placement (exclusive per category)
+- Digital twin placement
+
+3-MONTH (CORE OFFER)
+- Print (3 issues)
+- Digital twin
+- Hub presence ($299 value)
+- Story placement (non-exclusive)
+
+12-MONTH (PREMIUM)
+- Everything in 3-month
+- “Local Expert” status in Hub
+- Priority category positioning
+- Prepay bonus: additional Hub upgrade ($250 value)
+
+==================================================
+PRICING
+==================================================
+
+MONTHLY:
+
+Front:
+- $450/month
+
+Back Standard:
+- $350/month
+
+Back Small:
+- $300/month
+
+Community Ads:
+- $125 per issue
+- $300 for 3 issues
+
+----------------------
+
+3-MONTH (same monthly × 3):
+
+Front:
+- $1,350
+
+Back:
+- $1,050
+
+Small:
+- $900
+
+----------------------
+
+12-MONTH:
+
+Example (Back Standard):
+- $350/month → $4,200/year
+- Discounted: ~$3,780 (10%)
+
+==================================================
+REVENUE MODEL
+==================================================
+
+Per Issue:
+
+Sponsors:
+- 2 Front ($450) = $900
+- 2 Back ($350) = $700
+- 1 Small ($300) = $300
+
+Total Sponsors:
+= $1,900
+
+Community:
+- 3 × $125 = $375
+
+TOTAL:
+= $2,275 per issue
+
+----------------------
+
+Costs:
+
+Printing:
+- ~$0.10 per copy × 1,000 = $100
+
+Delivery:
+- ~$60–$80
+
+Total Cost:
+= ~$180
+
+----------------------
+
+PROFIT:
+= ~$2,095 per issue
+
+==================================================
+CONTENT MODEL
+==================================================
+
+Each Section Includes:
+
+- Local nonprofit / cause story
+- Quick info (tips, highlights, events)
+- Sponsor integrated into section
+- QR code → digital twin / hub
+
+Goal:
+- Emotion (story)
+- Relevance (category)
+- Action (QR → app)
+
+==================================================
+DIGITAL LAYER
+==================================================
+
+Digital Twin:
+- Mirrors print layout
+- Clickable ads
+
+Hub:
+- 3-month presence (included in bundle)
+- Category-based visibility
+
+Story:
+- Online version of nonprofit feature
+- Sponsor included (non-exclusive)
+
+12-Month Upgrade:
+- “Local Expert” positioning
+- Authority status in category
+
+==================================================
+PICKUP STRIP (DISTRIBUTION LAYER)
+==================================================
+
+Placement:
+- Bottom of back page
+
+Size:
+- 8” × 0.75”
+
+Format:
+- Bullet or dot-separated list
+
+Example:
+Find Us At:
+• Coffee Shop • Library • Salon • Gym • Community Center
+
+Rules:
+- 5–8 locations max
+- Rotate locations each issue
+- No logos
+
+Purpose:
+- Social proof
+- Partner recognition
+- Future sponsor pipeline
+
+==================================================
+RULES (NON-NEGOTIABLE)
+==================================================
+
+- 1 sponsor per category per issue
+- No duplicate category sponsors
+- Sections rotate, sizes do NOT
+- Ads stay within fixed dimensions
+- Community ads never enter sections
+- Digital is value-add, not core cost
+
+==================================================
+FINAL POSITIONING
+==================================================
+
+You are NOT selling ads.
+
+You are selling:
+- Category ownership
+- Local authority
+- Multi-touch visibility (print + digital + platform)
+
+System = 
+Print (attention) →
+Twin (engagement) →
+Hub (conversion)
+
+==================================================
+END
+==================================================

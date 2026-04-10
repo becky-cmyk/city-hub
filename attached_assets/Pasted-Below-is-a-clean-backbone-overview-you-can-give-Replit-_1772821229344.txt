@@ -1,0 +1,398 @@
+Below is a **clean backbone overview** you can give Replit so it understands the system without over-engineering it.
+
+---
+
+# Venue Channel + Social Selling Backbone
+
+### For City Metro Hub Platform
+
+## 1. Core Concept
+
+Each **business can have a Venue Channel** inside the Hub.
+
+The Venue Channel is the business’s:
+
+* media channel
+* content hub
+* live stream location
+* venue screen feed
+* social selling entry point
+
+The Hub distributes that content across:
+
+* venue screens
+* venue channel pages
+* micro hubs
+* categories
+* pulse feeds
+* metro channel feeds
+
+---
+
+# 2. System Architecture
+
+## Main entities
+
+The platform revolves around these objects:
+
+```text
+City
+MicroHub
+Venue
+VenueChannel
+VideoContent
+LiveSession
+Offer
+Transaction
+PlaylistReference
+```
+
+Each item must include:
+
+```text
+cityId
+venueId (if applicable)
+microHubId
+categoryIds
+```
+
+This keeps the system scalable across cities.
+
+---
+
+# 3. Venue Channel
+
+Each venue receives a **Venue Channel record**.
+
+### VenueChannel fields
+
+```text
+id
+venueId
+cityId
+channelSlug
+channelTitle
+channelDescription
+youtubePlaylistId
+channelStatus
+```
+
+### Channel page sections
+
+```text
+Watch Channel (video player)
+Live Now (if active)
+Latest Videos
+Offers / Live Selling
+Events
+Pulse mentions
+Neighborhood highlights
+```
+
+---
+
+# 4. YouTube Integration
+
+YouTube is used only for **video hosting and streaming**.
+
+### Structure
+
+Use **one YouTube channel per city**.
+
+Example:
+
+```text
+CLT Metro Hub YouTube
+```
+
+Inside that channel create playlists:
+
+```text
+Metro Channel
+Venue Channels
+Neighborhood Channels
+Live Replays
+Categories
+```
+
+### Video workflow
+
+```text
+Content created
+↓
+Uploaded to YouTube
+↓
+Added to playlist
+↓
+YouTube URL stored in Hub database
+↓
+Hub embeds video
+```
+
+---
+
+# 5. VideoContent Object
+
+Each video stored in Hub references YouTube.
+
+### Fields
+
+```text
+id
+youtubeUrl
+youtubeVideoId
+youtubePlaylistId
+title
+description
+venueId
+cityId
+microHubId
+categoryIds
+screenEligible
+pulseEligible
+```
+
+---
+
+# 6. Live Streaming
+
+Live streams use **YouTube Live**.
+
+### LiveSession fields
+
+```text
+id
+venueId
+cityId
+youtubeLiveUrl
+startTime
+endTime
+status
+attachedOfferIds
+```
+
+### Flow
+
+```text
+Venue streams to YouTube
+↓
+Hub detects active live session
+↓
+Venue Channel switches to Live Mode
+↓
+Hub Live feed displays stream
+↓
+Venue screens display stream
+```
+
+After stream ends:
+
+```text
+YouTube saves replay
+Hub returns to programming loop
+```
+
+---
+
+# 7. Social Selling System
+
+Selling is **handled by the Hub**, not YouTube.
+
+### Offer object
+
+```text
+id
+title
+description
+price
+venueId
+cityId
+productType
+checkoutUrl
+liveSessionId
+active
+```
+
+### Product types
+
+```text
+product
+event
+bundle
+gift card
+reservation
+promotion
+```
+
+### Sales flow
+
+```text
+Viewer watches content
+↓
+QR code appears
+↓
+Viewer opens Hub page
+↓
+Offer page
+↓
+Checkout
+↓
+Transaction recorded
+```
+
+---
+
+# 8. Transaction Tracking
+
+Transactions must track the revenue source.
+
+### Transaction fields
+
+```text
+id
+offerId
+venueId
+cityId
+microHubId
+amount
+platformShare
+venueShare
+timestamp
+```
+
+Revenue splits can be defined later.
+
+---
+
+# 9. Pulse Integration
+
+Video and live sessions can generate Pulse content.
+
+Example:
+
+```text
+Upcoming Live Show
+Live Now
+Replay Available
+New Venue Video
+```
+
+Pulse entries reference:
+
+```text
+videoId
+liveSessionId
+venueId
+```
+
+---
+
+# 10. Screen System Integration
+
+Venue screens load a **Hub screen endpoint**.
+
+Example route:
+
+```text
+/screens/{venueSlug}
+```
+
+The screen feed may show:
+
+```text
+Venue videos
+Live stream
+Hub programming loops
+Neighborhood segments
+Sponsor placements
+```
+
+Videos are embedded from YouTube.
+
+---
+
+# 11. Channel Feed System
+
+Hub should provide channel endpoints:
+
+```text
+/live
+/metro-channel
+/micro/{slug}
+/venue/{slug}
+/category/{slug}
+```
+
+These feeds pull:
+
+```text
+videos
+live sessions
+pulse items
+offers
+```
+
+Filtered by city and category.
+
+---
+
+# 12. QR System
+
+QR codes should link to Hub routes, not YouTube.
+
+Example:
+
+```text
+/hub/offer/{offerId}
+/hub/live/{liveSessionId}
+/venue/{slug}
+```
+
+This keeps traffic inside the Hub.
+
+---
+
+# 13. Future Expansion
+
+System must support:
+
+```text
+multiple cities
+multiple micro hubs
+multiple venue channels
+multiple live streams
+```
+
+All records must be scoped by:
+
+```text
+cityId
+```
+
+---
+
+# 14. Core System Rule
+
+```text
+Hub = control + commerce + distribution
+YouTube = video hosting + streaming
+```
+
+---
+
+# 15. Key Outcome
+
+This system allows businesses to:
+
+* run a Venue Channel
+* broadcast live
+* upload videos
+* sell products
+* appear in local feeds
+* reach audiences through screens and online.
+
+The Hub becomes the **community media and commerce network** for the city.
+
+---
+
+If helpful, the next step I can produce is a **simple Replit prompt that will add the YouTube integration, LiveSession system, and Offer/Transaction models directly into your existing Venue Channel codebase without breaking what you already built.**

@@ -1,0 +1,311 @@
+Work inside the existing City Hub codebase.
+
+Goal:
+Build the FIRST foundation pass of the unified content funnel for RSS and imported content without flattening the existing architecture.
+
+This is NOT a Pulse rebuild.
+This is NOT a new duplicate content system.
+This is the intake → rewrite → classify → route → editorial control layer that feeds the existing discovery surfaces correctly.
+
+Core architectural rules:
+- Single source, multiple discovery surfaces
+- Objects are created once and surfaced across Pulse, hub pages, category pages, search, map, and profiles
+- Pulse is a discovery surface, not a separate content system
+- Imported RSS content must become standard content objects in the system
+- Do not create shadow systems or duplicate records just to display content elsewhere
+
+What we are building in Prompt 1:
+A strong RSS/content intake foundation with:
+1. full-article rewrite flow
+2. multi-layer classification
+3. geo-first routing
+4. hybrid review/publish queue
+5. post-publish editorial control
+6. routing confirmation visibility
+
+--------------------------------------------------
+PART 1 — RSS ITEM PROCESSING FOUNDATION
+--------------------------------------------------
+
+Audit the current RSS/content pipeline and refactor it into a clean staged processing flow for RSS/imported content.
+
+Required staged flow:
+RSS source
+→ raw ingest
+→ normalization
+→ AI rewrite
+→ classification
+→ geo assignment
+→ policy check
+→ queue decision
+→ publish eligibility
+→ distribution eligibility
+
+Create or refactor the pipeline so each RSS/imported item has explicit processing stages and status tracking.
+
+At minimum support statuses like:
+- INGESTED
+- NORMALIZED
+- AI_REWRITTEN
+- CLASSIFIED
+- GEO_ASSIGNED
+- REVIEW_NEEDED
+- APPROVED
+- PUBLISHED
+- SUPPRESSED
+- UNPUBLISHED
+- ARCHIVED
+
+Do not remove historical data.
+Do not break existing records.
+
+--------------------------------------------------
+PART 2 — FULL ARTICLE GENERATION RULE
+--------------------------------------------------
+
+For RSS/imported story content:
+Charlotte AI must ALWAYS generate a full local article, not just an excerpt.
+
+Requirements:
+- generate a real article body in local/story format
+- target approximately 400–700 words unless existing app logic requires slight variation
+- article should feel original and locally useful
+- article should include source attribution
+- article should include original source URL
+- article should support image/source credit metadata
+- do NOT simply store a teaser plus outbound link as the main output
+- do NOT copy/paste source text verbatim into the public article body
+
+Store source metadata cleanly, including:
+- source publication / source name
+- original source URL
+- source image URL if available
+- image credit / image source if available
+- ingestion timestamp
+
+If the current pipeline only stores summary/excerpt behavior, refactor it so the system stores and exposes the fuller article output.
+
+--------------------------------------------------
+PART 3 — MULTI-LAYER CLASSIFICATION
+--------------------------------------------------
+
+Every imported content object must support MULTIPLE routing layers, not single-tag classification.
+
+Required classification dimensions:
+1. content_type
+   - story
+   - event
+   - job
+   - marketplace
+   - business update
+   - community update
+   - other supported type
+
+2. category_core
+   - top-level category
+
+3. category_sub
+   - one level deeper than core
+
+4. geo_primary
+   - where this belongs first
+
+5. geo_secondary
+   - where else this is relevant
+   - always include metro relationship when appropriate
+
+6. related_entity
+   - business / organization / venue / person if confidently detected
+
+7. source_type
+   - rss / imported / ai-assisted / etc.
+
+Do not flatten category and geography into one tag system.
+Keep topic/category separate from geography.
+
+--------------------------------------------------
+PART 4 — GEO-FIRST ROUTING
+--------------------------------------------------
+
+Geo precision matters more than broad generic placement.
+
+Implement routing support for:
+- exact location if available
+- venue-based location
+- hub / micro hub
+- county
+- metro fallback
+
+Rules:
+- every eligible imported item must end with a geo_primary
+- if exact hub cannot be resolved, use county
+- if county cannot be resolved, use metro fallback
+- geo_secondary should support broader relevance where appropriate
+- do not leave imported items as location-null if routing can infer a broader geography
+
+This system must support the later local-first Pulse behavior where current location and radius determine visibility.
+
+Do not build radius ranking yet in this prompt.
+Just make the content object geo-ready.
+
+--------------------------------------------------
+PART 5 — POLICY / SUPPRESSION LAYER
+--------------------------------------------------
+
+Build a content policy routing layer for imported/RSS content.
+
+We are NOT building a generic newspaper stream.
+The platform is a local information and discovery ecosystem.
+
+Imported content should be classifiable into:
+- ALLOW
+- REVIEW_NEEDED
+- SUPPRESS
+
+At minimum, support policy handling for content like:
+- politics
+- crime
+- violence
+- non-local filler
+- low-value generic news clutter
+
+Do not hard-delete suppressed items.
+Keep them in the system with policy status and reason.
+
+--------------------------------------------------
+PART 6 — HYBRID REVIEW QUEUE
+--------------------------------------------------
+
+Build a hybrid queue model.
+
+Not all RSS/imported content should auto-publish.
+Not all content should require manual review.
+
+Support queue decisions like:
+- AUTO_PUBLISH
+- REVIEW_REQUIRED
+- SUPPRESS
+
+Send to REVIEW_REQUIRED if any of these are missing or weak:
+- no usable category
+- no usable geo
+- low rewrite confidence
+- missing source attribution
+- missing image/source credit where required
+- policy ambiguity
+- low local relevance
+- unclear entity/venue match
+
+Allow auto-publish only when the item passes minimum routing confidence.
+
+Important:
+RSS/imported items must no longer silently skip the inbox/queue if they need review.
+We need visibility into where they are landing.
+
+--------------------------------------------------
+PART 7 — POST-PUBLISH EDITORIAL CONTROL
+--------------------------------------------------
+
+Build admin editing controls for AI-generated/imported content after publish.
+
+Admin must be able to:
+- edit title
+- edit body
+- edit summary/excerpt
+- change core category
+- change subcategory
+- change geo_primary
+- change geo_secondary
+- update related entity
+- replace/remove image
+- update source credit / image credit
+- unpublish
+- archive
+- suppress from Pulse only
+- fully suppress from public surfaces
+- send back to review
+
+Do not destroy version history.
+Track:
+- original imported version
+- AI-generated version
+- latest edited version
+- who changed it
+- when it changed
+
+--------------------------------------------------
+PART 8 — ROUTING CONFIRMATION PANEL
+--------------------------------------------------
+
+Build a clear admin-facing routing confirmation view for imported/RSS content.
+
+For each item, show:
+- source name
+- original URL
+- content type
+- core category
+- subcategory
+- geo_primary
+- geo_secondary
+- related entity
+- queue status
+- publish status
+- Pulse eligible: yes/no
+- stories/article page eligible: yes/no
+- hub page eligible: yes/no
+- category page eligible: yes/no
+- map eligible: yes/no if enough geo exists
+- reason if not eligible
+
+This is required so the operator can verify exactly where content is landing and why.
+
+--------------------------------------------------
+PART 9 — DISTRIBUTION READINESS, NOT FULL DISTRIBUTION REBUILD
+--------------------------------------------------
+
+Do NOT rebuild all discovery surfaces in this prompt.
+
+This prompt should make imported content READY to distribute correctly through existing surfaces by ensuring:
+- full article exists
+- category exists
+- subcategory exists
+- geo exists
+- policy exists
+- queue exists
+- post-publish editing exists
+- routing confirmation exists
+
+Do NOT create duplicate records for Pulse, hubs, categories, or map.
+
+--------------------------------------------------
+PART 10 — SAFETY / GUARDRAILS
+--------------------------------------------------
+
+Do not:
+- create a new standalone CMS
+- create duplicate Pulse-only records
+- flatten all content into a simplistic one-tag model
+- remove source metadata
+- auto-publish everything blindly
+- break existing content tables without migration notes
+- rebuild the entire app
+
+Do:
+- work with the current codebase
+- refactor carefully
+- isolate changes where possible
+- preserve source-of-truth architecture
+- prepare for future Pulse/local-first ranking without implementing all of it yet
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary of changes
+2. any schema/migration changes
+3. any new statuses/fields added
+4. what admin controls were added
+5. what queue logic now exists
+6. what routing confirmation view now exists
+7. what still remains for Prompt 2

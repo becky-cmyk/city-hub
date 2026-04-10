@@ -1,0 +1,129 @@
+Refine the Hub Screens TV system to support a stronger WEEKEND EVENTS EXPERIENCE across metro, micro hub, and venue screens.
+
+GOAL
+Build a weekend-focused content layer centered on "things happening this weekend" so venue screens become highly useful from Thursday through Sunday.
+
+This is NOT a long-form event page.
+This is a TV-first, glanceable, rotating slide experience.
+
+==================================================
+A) WEEKEND LOGIC LAYER
+==================================================
+
+Add weekend-awareness to the TV engine.
+
+Weekend window:
+- Friday 5:00 PM through Sunday 11:59 PM local timezone
+
+Pre-weekend promotion window:
+- Thursday 12:00 AM through Friday 4:59 PM
+
+Behavior:
+- On Thursday + Friday daytime:
+  prioritize "This Weekend" preview-style slides
+- On Friday evening + Saturday:
+  prioritize active/high-interest weekend events
+- On Sunday:
+  still show weekend events but taper toward "Today / Tonight" logic
+
+==================================================
+B) NEW AUTO-GENERATED WEEKEND CONTENT RULES
+==================================================
+
+Use existing event data to automatically generate TV items for weekend promotion.
+
+Create or refine support for these weekend slide variants:
+1. this_weekend
+2. weekend_tonight (optional reuse of tonight_around_you if architecture prefers)
+3. weekend_countdown
+4. weekend_qr_cta
+
+If you do not want to add extra templates, at minimum:
+- fully support this_weekend
+- generate qr_cta_simple slides linked to weekend filtered pages
+- optionally generate event_countdown slides for featured weekend events
+
+==================================================
+C) WEEKEND EVENT SELECTION RULES
+==================================================
+
+When selecting events for weekend promotion:
+- prefer events in current hub first
+- then metro fallback
+- rank by:
+  1. featured/promoted events
+  2. date proximity
+  3. image quality if available
+  4. venue relevance to current screen location if possible
+- exclude expired events
+- exclude low-quality/incomplete events if possible
+
+Support optional event tags if available:
+- Live Music
+- Family
+- Food
+- Festival
+- Networking
+- Free
+- Sports
+- Nightlife
+
+==================================================
+D) WEEKEND QR DESTINATIONS
+==================================================
+
+Every weekend-oriented slide should be able to point to a filtered hub page, such as:
+- events this weekend in the current micro hub
+- featured weekend events
+- tonight’s events
+
+Generate QR URLs dynamically based on:
+- metroSlug
+- hubSlug
+- locationSlug if relevant
+
+==================================================
+E) PLAYLIST BEHAVIOR
+==================================================
+
+Update playlist generation so weekend content is not random.
+
+Required behavior:
+- Thursday: include at least one weekend-focused item every loop
+- Friday/Saturday: include at least two weekend-focused items every loop
+- Sunday: include at least one weekend-focused item every loop, favoring same-day relevance
+
+Weekend-focused items can include:
+- this_weekend
+- event_countdown
+- qr_cta_simple to weekend events page
+- featured hub_event slides for weekend events
+
+Keep the playlist balanced so it still feels like entertainment + local discovery, not a wall of event ads.
+
+==================================================
+F) ADMIN / BACK OFFICE
+==================================================
+
+In /admin/tv add a simple weekend tools area or extend current controls to allow:
+- preview "This Weekend" slide for any hub
+- preview weekend QR CTA
+- optionally pin a featured weekend event
+- optionally mark an event as "TV weekend priority"
+
+If there is already an event admin UI, add:
+- Include in TV
+- TV weekend priority
+- Featured on weekend screens
+
+==================================================
+G) DEV OUTPUT REQUIRED
+==================================================
+
+1. Add weekend-aware selection logic
+2. Make "This Weekend" a first-class recurring TV item
+3. Ensure QR destinations filter correctly by weekend + hub
+4. Update playlist generator with weekday/weekend priority rules
+5. Add preview/admin support where appropriate
+
+Before coding, inspect the current Hub Screens TV implementation and integrate cleanly into the existing architecture rather than building parallel logic.

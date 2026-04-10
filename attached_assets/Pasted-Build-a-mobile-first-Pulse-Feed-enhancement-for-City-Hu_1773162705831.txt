@@ -1,0 +1,207 @@
+Build a mobile-first Pulse Feed enhancement for City Hub that combines:
+
+A) rotating instructional / discovery cards inside the feed
+B) related search suggestions attached to Pulse items
+
+Goal:
+Train users to understand that they can use Pulse and search more intelligently than just typing one keyword. The experience should teach discovery behavior inside the normal mobile feed without feeling like a help page.
+
+Core concept:
+- Pulse Feed = discovery
+- Search = exploration
+- The feed should educate users how to use Pulse, how to search more naturally, and how to go deeper into local content by tapping suggested searches.
+
+What to build:
+
+1) Instructional Pulse Cards
+Create reusable inline “Pulse Tip” / “Did You Know?” / “Explore Near You” cards that can be inserted between feed items.
+These should appear naturally inside the feed every X number of posts and rotate from a library of card types.
+
+Card goals:
+- educate users how to use Pulse
+- show that they can search with longer phrases and questions
+- reinforce neighborhood / micro hub discovery
+- surface timely and local behaviors
+- feel native to the feed, not like a pop-up or tutorial wall
+
+Card types to support:
+- Did You Know?
+- Pulse Tip
+- Explore Near You
+- Trending Searches
+- What’s Happening Right Now
+- Community Discovery
+- Micro Hub Discovery
+
+Each card should support:
+- title
+- short body copy
+- 3 to 5 tappable example searches
+- optional CTA button
+- optional location context
+- optional time context
+
+Example instructional copy patterns:
+- “Did you know? You can search the hub like Google.”
+- “Try searches like: live music tonight in NoDa”
+- “Explore your area through events, businesses, and stories”
+- “See what’s happening around you right now”
+- “Search by neighborhood, category, or what you need”
+
+2) Related Searches Under Pulse Items
+For every Pulse item, render 3 to 5 related search suggestions under the post.
+These should be generated from the post’s:
+- category
+- tags
+- title
+- neighborhood / micro hub
+- city / county
+- event date or time context when available
+- business type if applicable
+
+Examples:
+For an event post:
+- events this weekend in South End
+- live music tonight in Charlotte
+- things to do this weekend
+- festivals near me
+
+For a restaurant / food post:
+- restaurants in NoDa
+- brunch near me
+- happy hour in Charlotte
+- new restaurants in Plaza Midwood
+
+For a nonprofit / community post:
+- volunteer opportunities in Charlotte
+- nonprofits near me
+- community events this week
+- local organizations in Ballantyne
+
+For a business / service post:
+- marketing companies in Charlotte
+- local business services near me
+- small business resources in Charlotte
+- networking groups in Charlotte
+
+For neighborhood-specific posts:
+- things to do in South End
+- South End events
+- South End businesses
+- restaurants in South End
+
+3) Mobile-First UI Rules
+This feature is primarily for mobile.
+Requirements:
+- compact cards that fit naturally in a mobile scroll experience
+- no large desktop-heavy layouts
+- tappable chips / pills for suggested searches
+- clean spacing and readable text
+- lightweight visual hierarchy
+- fast interaction
+- should look native within Pulse content cards
+
+4) Search Education Behavior
+The system should teach these behaviors:
+- search by question
+- search by neighborhood
+- search by category + location
+- search by need + time
+- search by discovery phrase, not just single keywords
+
+Examples to educate toward:
+- where can I network tonight
+- family things to do this weekend
+- nonprofits needing volunteers
+- live music tonight in NoDa
+- events in Ballantyne this week
+- new restaurants in Charlotte
+
+5) Rotation Logic for Instructional Cards
+Implement logic so instructional cards are inserted every configurable number of posts.
+Requirements:
+- configurable frequency, default every 8 to 12 posts
+- rotate card types so the feed does not feel repetitive
+- avoid showing the same card too often in one session
+- allow future admin control for card activation/deactivation
+
+6) Data / Content Model
+Create a simple structure for:
+- instructional card templates
+- related search chips
+- Pulse items with category and location metadata
+- optional trending search terms
+- optional “near you” or current micro hub context
+
+Suggested fields for Pulse items if not already present:
+- id
+- title
+- excerpt
+- category
+- tags[]
+- city
+- county
+- microHub
+- neighborhood
+- venueName
+- eventDate
+- eventType
+- businessType
+
+Suggested fields for instructional cards:
+- id
+- type
+- title
+- body
+- sampleSearches[]
+- ctaLabel
+- ctaQuery
+- active
+- sortOrder
+
+7) Search Suggestion Generation Logic
+Create a deterministic related-search builder that generates suggestions from available metadata.
+Prioritize:
+- neighborhood + category
+- category + time
+- city + activity
+- user-friendly long-tail phrases
+
+Rules:
+- do not generate awkward robotic phrases
+- keep suggestions natural and readable
+- cap at 3 to 5 suggestions
+- avoid duplicates
+- prefer local phrasing
+- support future AI enhancement later, but implement rule-based generation first
+
+8) Trending / Discovery Layer
+Add optional support for a “Trending Searches” instructional card.
+This can initially be mocked from a static or admin-defined list, but structure it so it can later pull from real search logs.
+
+9) CTA Behavior
+When a user taps:
+- an instructional example search
+- a related search chip
+- a trending search item
+
+It should immediately launch the existing hub search using that exact query and show results.
+
+10) Deliverables
+Please implement:
+- components for instructional cards
+- components for related search chips under Pulse items
+- insertion logic for the feed
+- seed data for multiple card examples
+- rule-based related search generator
+- mobile-friendly styling
+- clean reusable architecture
+
+Also provide:
+- where in the current Pulse feed this should hook in
+- any schema additions needed
+- any sample seed content needed for launch
+- notes for future admin controls and analytics
+
+Create this as a practical production-ready enhancement, not just mock text.
+Keep it lightweight, scalable, and easy to evolve.

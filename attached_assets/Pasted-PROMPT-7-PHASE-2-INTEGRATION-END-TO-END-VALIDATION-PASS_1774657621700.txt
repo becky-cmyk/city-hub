@@ -1,0 +1,200 @@
+PROMPT 7 — PHASE 2 INTEGRATION / END-TO-END VALIDATION PASS
+
+You are NOT building a new phase here.
+
+You are doing a controlled integration and validation pass for the work already completed in:
+- Phase 1
+- Phase 2A
+- Phase 2B
+- Phase 2C
+- Task #173 field capture workflow
+- the recent refinement pass
+
+GOAL
+
+Validate that the Charlotte connection layer works end-to-end across the major real-world flows, identify any broken links, and apply only small integration fixes where needed.
+
+This is a testing + wiring + refinement pass.
+Do NOT start Phase 3 behavior/sales/lifecycle work yet.
+Do NOT redesign UI.
+Do NOT create new engines.
+
+--------------------------------------------------
+SCOPE
+--------------------------------------------------
+
+Test and validate these end-to-end flows:
+
+1. FIELD CAPTURE / EXPO FLOW
+capture session
+→ add items
+→ process batch
+→ entity resolution
+→ proposal generation
+→ optional execution
+→ low-confidence items to inbox
+
+2. OPERATOR FLOW
+natural language command
+→ orchestrator parse
+→ entity resolve
+→ route to existing tool/flow
+→ action execution
+→ result returned cleanly
+
+3. PROPOSAL FLOW
+proposal-mode request
+→ proposal engine
+→ action templates
+→ confirmation handling
+→ proposal execution
+→ results + pending confirmations
+
+4. SEARCH / CONCIERGE FLOW
+search / concierge ask
+→ recommendation connector
+→ trust / geo-aware results
+→ resolved next-step routes
+→ usable structured response
+
+5. NO RESULT / LOW CONFIDENCE FLOW
+weak or empty search
+→ recommendation gap inbox item
+OR unresolved entity
+→ inbox/review path
+
+6. HOUSING / RELOCATION FLOW
+relocation-style query
+→ housing results
+→ marketplace housing supply/demand
+→ zone activity summary
+→ useful structured answer
+
+7. NEXT-STEP ROUTING FLOW
+follow-on actions returned by Charlotte
+→ route resolver
+→ concrete URLs/actions for:
+- profile
+- story
+- map
+- booking
+- Becky handoff
+- claim flow
+- listing/event/job routes where applicable
+
+--------------------------------------------------
+RULES
+--------------------------------------------------
+
+1. DO NOT create:
+- new engines
+- new scoring
+- new recommendation systems
+- new tables
+- large refactors
+
+2. ONLY fix:
+- broken connections
+- missing wiring
+- mismatched return shapes
+- route/action resolution bugs
+- integration test failures
+- obvious small gaps blocking end-to-end flow
+
+3. Prefer:
+- small targeted fixes
+- adapter cleanup
+- guardrails
+- error handling
+over broad rewrites
+
+4. If something is already working, leave it alone.
+
+--------------------------------------------------
+PART 1 — INTEGRATION TEST MATRIX
+--------------------------------------------------
+
+Create or extend tests to cover the full journey for each of the 7 flows above.
+
+Tests should verify:
+- mode detection
+- entity resolution outcome
+- proposal generation
+- action routing
+- structured response shape
+- inbox fallback when applicable
+- route resolution output
+- no-result handling
+
+Keep tests targeted and readable.
+Do not create giant brittle test suites.
+
+--------------------------------------------------
+PART 2 — END-TO-END FLOW VALIDATION
+--------------------------------------------------
+
+For each flow, verify:
+- what inputs are required
+- what service/module handles each step
+- what output shape is returned
+- whether any step silently fails
+- whether any route/adapter mismatch exists
+
+If a mismatch exists:
+- fix it minimally
+- document it
+
+--------------------------------------------------
+PART 3 — ERROR / EDGE CASE HARDENING
+--------------------------------------------------
+
+Add light hardening for:
+- unresolved entities
+- medium/low confidence matches
+- empty batch items
+- empty recommendations
+- invalid action route resolution
+- missing city/geo context where required
+
+Do not overbuild.
+Just prevent breakage.
+
+--------------------------------------------------
+PART 4 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FLOWS TESTED
+List all end-to-end flows validated
+
+OUTPUT B — FILES MODIFIED
+Only files changed during this integration pass
+
+OUTPUT C — ISSUES FOUND
+Broken links, mismatches, or gaps discovered
+
+OUTPUT D — FIXES APPLIED
+Small fixes made to make flows run cleanly
+
+OUTPUT E — REMAINING RISKS
+Anything still deferred to Phase 3 or later
+
+OUTPUT F — READINESS ASSESSMENT
+For each flow:
+- WORKING
+- WORKING WITH MINOR GAPS
+- NOT READY
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after the integration pass is complete.
+
+Do NOT begin:
+- Phase 3 conversational/sales behavior
+- lifecycle engine
+- command center UI
+- inbox redesign
+- follow-up cadence automation

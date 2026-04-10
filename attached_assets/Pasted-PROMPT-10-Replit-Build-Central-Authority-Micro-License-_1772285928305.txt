@@ -1,0 +1,157 @@
+PROMPT 10 (Replit) — Build Central Authority + Micro License Operator Layer (RBAC, scope gating, centralized payments, audit)
+
+GOAL
+Implement a governance model where:
+- SUPER_ADMIN (Becky) controls the “talent layer” (data ingestion, scoring, pricing, payments).
+- Licensees operate on top of it within strict scope (metro + micro niche boundaries).
+- All payments flow through a single Stripe account owned by SUPER_ADMIN.
+- Every action is audited, and licenses can be suspended/revoked instantly.
+
+NON-NEGOTIABLES
+- Deny-by-default access control.
+- Licensees cannot edit connectors, metro_sources, scoring rules, pricing/products, or global templates.
+- Licensees can only view/manage entities within their assigned scope.
+- All paid conversions must be attributed to a licensee but paid to central Stripe.
+
+A) DATABASE (Drizzle + migrations)
+Create tables:
+
+1) users (if exists, reuse)
+- ensure: id, email, role
+
+2) roles/permissions (minimal RBAC)
+- user_role enum: SUPER_ADMIN | LICENSEE_OPERATOR
+(If you already have auth roles, extend.)
+
+3) micro_licenses
+- id (pk)
+- metro_id (fk)
+- name (string)                     // "CLT Pet Micro - South End"
+- status (enum: ACTIVE|SUSPENDED|REVOKED) default ACTIVE
+- operator_user_id (fk users)
+- starts_at, ends_at (nullable)
+- created_at, updated_at
+
+4) license_scopes
+- id (pk)
+- license_id (fk)
+- scope_type (enum: ZIP|CATEGORY|POLYGON)
+- scope_value (string or json)      // ZIP: "28203"; CATEGORY: "pets"; POLYGON: geojson
+- created_at
+
+5) entity_license_map (assign entities to micro scope)
+- id (pk)
+- license_id (fk)
+- entity_type (enum: BUSINESS|ORG|MULTIFAMILY)
+- entity_id (string)
+- created_at
+Unique: (license_id, entity_type, entity_id)
+
+6) conversion_attribution
+- id (pk)
+- metro_id
+- license_id (fk)
+- operator_user_id (fk)
+- entity_type
+- entity_id
+- stripe_checkout_session_id (string nullable)
+- stripe_customer_id (string nullable)
+- plan_tier (enum: VERIFIED|CHARTER|ENHANCED)
+- status (enum: INITIATED|PAID|FAILED|REFUNDED) default INITIATED
+- created_at, updated_at
+
+7) payout_rules
+- id (pk)
+- license_id (fk)
+- share_percent (int)               // e.g., 15
+- payout_frequency (enum: MONTHLY|QUARTERLY) default QUARTERLY
+- created_at, updated_at
+
+8) payout_ledger
+- id (pk)
+- license_id (fk)
+- period_start, period_end
+- gross_revenue_cents
+- share_percent
+- payout_due_cents
+- status (enum: OPEN|APPROVED|PAID) default OPEN
+- created_at, updated_at
+
+9) audit_log
+- id (pk)
+- actor_user_id (fk users)
+- action (string)
+- entity_type (string nullable)
+- entity_id (string nullable)
+- license_id (fk nullable)
+- metadata_json (json nullable)
+- created_at
+
+B) RBAC MIDDLEWARE
+Create /server/auth/rbac.ts
+- requireRole(SUPER_ADMIN)
+- requireLicenseScope(): checks operator’s license + scope for entity access
+- deny-by-default for /api/admin/* and /admin/* routes.
+
+C) CENTRAL CONTROL PLANE (SUPER_ADMIN ONLY)
+Lock down:
+- metro_sources admin UI and endpoints
+- job runner triggers
+- scoring configuration (if any)
+- pricing/product management routes (Stripe)
+
+Only SUPER_ADMIN can edit these.
+
+D) OPERATOR PORTAL (LICENSEE_OPERATOR)
+Create routes:
+- /operator (home)
+- /operator/micro/:licenseId/dashboard
+- /operator/micro/:licenseId/entities
+- /operator/micro/:licenseId/requests
+
+Operator can:
+- View entities assigned to their license (entity_license_map)
+- Create outreach tasks/notes (if you already have task table; else create operator_tasks table)
+- Trigger “Request Intelligence Report” follow-ups for entities in scope
+- View report requests for entities in scope
+
+Operator cannot:
+- Change pricing
+- Create sources
+- Run global ingestion jobs
+- Edit other licenses
+- Access other metros/entities
+
+E) CENTRALIZED PAYMENTS + ATTRIBUTION
+When operator shares an upgrade link or triggers checkout:
+- Checkout URL must include:
+  ?licenseId=<id>&operatorId=<userId>&entityType=BUSINESS&entityId=<id>&tier=CHARTER
+- On checkout session creation, write conversion_attribution INITIATED.
+- On Stripe webhook payment success:
+  - update conversion_attribution to PAID
+  - accrue revenue into payout_ledger for that license’s period
+
+F) LICENSE KILL SWITCH
+If micro_licenses.status != ACTIVE:
+- block operator access immediately (RBAC)
+- hide operator portal for that license
+- log audit event
+
+G) ADMIN PAGES (SUPER_ADMIN)
+- /admin/licenses: create/edit/suspend/revoke licenses, set scopes, assign operator
+- /admin/payouts: view payout ledger, mark approved/paid
+- /admin/audit: filter audit logs
+
+H) ACCEPTANCE CRITERIA
+1) Operator cannot access admin control plane routes.
+2) Operator can only see entities assigned to their license.
+3) Checkout attribution records license/operator/entity and updates via webhook.
+4) License suspension instantly blocks access.
+5) Audit logs capture key actions (license changes, entity assignments, payout changes, checkout initiated).
+
+DELIVERABLES
+- migrations + schema
+- RBAC middleware
+- operator portal pages
+- admin license/payout/audit pages
+- checkout attribution + webhook handling

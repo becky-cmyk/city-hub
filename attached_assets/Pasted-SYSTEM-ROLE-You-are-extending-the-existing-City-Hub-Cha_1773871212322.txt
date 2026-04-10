@@ -1,0 +1,349 @@
+SYSTEM ROLE
+You are extending the existing City Hub / Charlotte Hub codebase to implement the Crown Program Analytics, Growth, and Performance Engine.
+
+IMPORTANT CONTEXT
+The Crown system already exists and now includes:
+
+• candidate discovery
+• hub readiness and activation
+• claim / invite outreach
+• marketing / campaign engine
+• retention / title transfer lifecycle
+• voting infrastructure
+• admin dashboard
+• Pulse / creator / venue TV integrations
+
+DO NOT rebuild Crown.
+DO NOT create a separate BI platform.
+Use the existing platform architecture and admin surfaces.
+
+--------------------------------------------------
+
+OBJECTIVE
+
+Create an analytics and growth engine that measures how the Crown Program is performing across hubs, categories, campaigns, business activation, and community participation.
+
+The system should help answer:
+
+• Which hubs are ready?
+• Which hubs are growing fastest?
+• Which categories perform best?
+• Which invitations convert best?
+• Which nominees drive the most voting?
+• Which campaign assets drive the most engagement?
+• Which winners generate the most downstream visibility and business activation?
+
+--------------------------------------------------
+
+STEP 1 — CORE METRICS MODEL
+
+Track Crown metrics across these layers:
+
+A. Discovery Metrics
+• businesses scanned
+• candidates identified
+• qualified candidates
+• categories ready
+• hubs ready for Crown
+
+B. Outreach Metrics
+• invitations generated
+• invitations sent
+• invitations opened
+• claims started
+• claims completed
+• participants activated
+
+C. Competition Metrics
+• nominees per category
+• votes per category
+• votes per nominee
+• finalists qualified
+• winners declared
+• categories vacant / transferred / expired
+
+D. Campaign Metrics
+• launch announcements generated
+• voting campaign assets generated
+• winner announcements generated
+• campaign statuses by hub
+
+E. Visibility / Engagement Metrics
+• Pulse story impressions if available
+• creator feature assignments
+• venue TV payloads generated
+• QR vote scans if available
+• click-throughs to voting pages if available
+
+F. Growth Metrics
+• new Hub Presences tied to Crown
+• category expansions over time
+• hubs launched over time
+• businesses retained after Crown activation
+• winners retained vs relinquished
+
+--------------------------------------------------
+
+STEP 2 — HUB-LEVEL ANALYTICS
+
+For each hub return a Crown performance summary.
+
+Fields should include:
+
+• hub_name
+• crown_status
+• categories_ready
+• categories_active
+• candidates_identified
+• invitations_sent
+• claims_completed
+• nominees_active
+• total_votes
+• winners_declared
+• active_awards
+• expiring_awards
+• transferred_awards
+• category_growth_over_time
+• top-performing categories
+• top-converting outreach channels
+
+Include a computed field:
+
+hub_growth_score
+
+Use configurable weighting from:
+• business activation
+• vote participation
+• category expansion
+• retention
+
+--------------------------------------------------
+
+STEP 3 — CATEGORY-LEVEL ANALYTICS
+
+For each category across hubs track:
+
+• number_of_hubs_running_category
+• total_candidates
+• total_nominees
+• total_votes
+• average_votes_per_nominee
+• average_conversion_to_claim
+• average_audience_strength if available
+• average_retention_rate of winners
+• number_of_transfers
+• number_of_expired_cycles
+• current_status distribution
+
+This helps identify strongest categories to launch in future hubs.
+
+--------------------------------------------------
+
+STEP 4 — NOMINEE / WINNER PERFORMANCE
+
+Track participant-level metrics.
+
+For each nominee / winner track:
+
+• candidate_score
+• invite_priority
+• invitation_status
+• claim_completed
+• nominee_status
+• vote_count
+• ranking
+• winner_status
+• retention_status
+• title_transfer_history
+• campaign assets assigned
+• creator feature assigned
+• venue TV assigned
+• profile views if available
+• downstream engagement if available
+
+This should support identifying businesses that drive the most ecosystem participation.
+
+--------------------------------------------------
+
+STEP 5 — OUTREACH CONVERSION ANALYTICS
+
+Measure which outreach methods perform best.
+
+Track by invitation channel:
+
+• email
+• SMS
+• admin manual outreach
+• QR invite
+• printed letter
+• creator referral
+• event outreach
+
+For each channel track:
+
+• invitations_sent
+• open_rate
+• claim_start_rate
+• claim_complete_rate
+• nominee_conversion_rate
+
+This should help determine which channels work best by category and by hub.
+
+--------------------------------------------------
+
+STEP 6 — MARKETING / CAMPAIGN ANALYTICS
+
+Track campaign asset usage and engagement.
+
+Metrics include:
+
+• hub launch stories created
+• claim invitation templates used
+• voting campaign templates used
+• winner announcements published
+• creator coverage requested / completed
+• venue TV messages generated
+• print package assignments if applicable
+• perk / promo packages assigned
+
+If engagement data is available, include:
+• clicks
+• scans
+• views
+• conversions
+
+--------------------------------------------------
+
+STEP 7 — OPPORTUNITY RADAR SUPPORT
+
+Use analytics to improve Opportunity Radar.
+
+Generate insights such as:
+
+• hubs likely ready within 30 days
+• categories likely ready soon
+• hubs underperforming and needing more seeded candidates
+• categories with weak engagement
+• categories performing strongly and recommended for expansion
+
+Create analytics-driven recommendation outputs such as:
+
+RECOMMEND_OPEN_CATEGORY
+RECOMMEND_DELAY_CATEGORY
+RECOMMEND_RELAUNCH_HUB
+RECOMMEND_EXPAND_HUB
+RECOMMEND_OUTREACH_PUSH
+
+--------------------------------------------------
+
+STEP 8 — ADMIN DASHBOARD VIEWS
+
+Add a Crown Analytics section in admin with views for:
+
+1. Program Overview
+2. Hub Performance
+3. Category Performance
+4. Outreach Conversion
+5. Winner Retention
+6. Campaign Performance
+7. Upcoming Expirations / Reopens
+8. Opportunity Recommendations
+
+Each view should support sorting and filtering by:
+• city
+• hub
+• category
+• time window
+• status
+
+--------------------------------------------------
+
+STEP 9 — TIME WINDOWS
+
+Support analytics for:
+
+• last 7 days
+• last 30 days
+• last 90 days
+• year to date
+• all time
+• per award cycle
+
+Because Crown is rolling per hub, analytics must not assume a shared citywide annual cycle.
+
+--------------------------------------------------
+
+STEP 10 — SCORECARDS / HEALTH FLAGS
+
+Create simple program health indicators.
+
+Examples:
+
+Hub Health
+• STRONG
+• GROWING
+• EARLY
+• STALLED
+
+Category Health
+• READY
+• GROWING
+• WEAK
+• SATURATED
+
+Outreach Health
+• HIGH_CONVERSION
+• MODERATE_CONVERSION
+• LOW_CONVERSION
+
+Winner Stability
+• STABLE
+• AT_RISK
+• TRANSFERRED
+• EXPIRED
+
+These should be based on configurable thresholds.
+
+--------------------------------------------------
+
+STEP 11 — OUTPUT STRUCTURES
+
+Return reusable analytics payloads for:
+
+A. overall program summary
+B. hub summary
+C. category summary
+D. outreach channel summary
+E. participant / winner summary
+F. recommendation summary
+
+Make outputs admin-friendly and usable in charts/tables later, but do not spend time building elaborate chart UI right now.
+
+--------------------------------------------------
+
+STEP 12 — CONFIGURATION
+
+Allow admin-configurable weighting / thresholds for:
+
+• hub_growth_score
+• outreach conversion benchmarks
+• hub health flags
+• category health flags
+• recommendation triggers
+• retention risk thresholds
+
+--------------------------------------------------
+
+FINAL TASK
+
+Implement the Crown Analytics / Growth / Performance Engine so the platform can:
+
+1. measure Crown growth across hubs
+2. identify strongest hubs and categories
+3. track outreach conversion and participation
+4. evaluate marketing and campaign performance
+5. monitor winner retention and transfer behavior
+6. feed Opportunity Radar with better launch recommendations
+7. support scaling Crown across many hubs with one operator
+
+This must support rolling, hub-by-hub Crown launches where each award lasts one year from the time it is issued.

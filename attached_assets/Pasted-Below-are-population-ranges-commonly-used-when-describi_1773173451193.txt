@@ -1,0 +1,114 @@
+Below are population ranges commonly used when describing the Charlotte region, depending on how wide the footprint is defined. These numbers help position the scale of your CLT City Hub coverage.
+
+⸻
+
+Charlotte Region Population Levels
+
+1. City Population
+
+Charlotte
+
+Approximate population:
+
+~910,000 people
+
+This is just the city limits.
+
+⸻
+
+2. Mecklenburg County
+
+Mecklenburg County
+
+Population:
+
+~1.17 million
+
+This includes Charlotte plus towns like:
+	•	Cornelius
+	•	Davidson
+	•	Huntersville
+	•	Mint Hill
+	•	Matthews
+	•	Pineville
+
+⸻
+
+3. Official Charlotte Metro (MSA)
+
+Charlotte–Concord–Gastonia Metropolitan Statistical Area
+
+Population:
+
+~2.8 million
+
+Counties included in the official metro:
+
+NC
+	•	Mecklenburg
+	•	Cabarrus
+	•	Union
+	•	Gaston
+	•	Iredell
+	•	Lincoln
+	•	Rowan
+	•	Anson
+
+SC
+	•	York
+	•	Lancaster
+	•	Chester
+
+⸻
+
+4. Greater Charlotte Regional Economy
+
+When you include surrounding counties like you are doing with your hub system (Catawba, Burke, Caldwell, etc.), the population grows to roughly:
+
+3.2M – 3.4M people
+
+⸻
+
+5. Population Inside Your Hub Footprint
+
+Your hub network spans about a 75-mile radius and includes 19 counties.
+
+Estimated population coverage:
+
+≈ 3.3 million residents
+
+⸻
+
+Population Context (Why This Matters)
+
+Area	Population
+Charlotte city	~910K
+Mecklenburg County	~1.17M
+Charlotte metro	~2.8M
+Your hub footprint	~3.3M
+
+
+⸻
+
+Simple Way to Describe It Publicly
+
+You can confidently say:
+
+“The CLT City Hub covers the greater Charlotte region across 19 counties, connecting communities representing over 3 million residents.”
+
+⸻
+
+Why This Is Powerful
+
+A 3M population regional hub is comparable to:
+	•	Nashville region
+	•	Portland region
+	•	Indianapolis region
+
+So your platform is operating at the scale of a major U.S. metro ecosystem, not just a city directory.
+
+⸻
+
+If you’d like, I can also show you something very useful for selling micro hubs:
+
+The estimated number of small businesses across the entire Charlotte region (it’s far larger than most people think).

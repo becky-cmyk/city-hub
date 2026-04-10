@@ -1,0 +1,194 @@
+Work inside the existing City Hub codebase.
+
+This is Prompt 8.
+Build Charlotte’s LEARNING LAYER from editorial behavior.
+
+Do NOT modify:
+- ingestion pipeline
+- routing engine
+- Pulse scoring
+- category system
+
+This is a learning/feedback system ONLY.
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+
+Enable Charlotte to improve over time by learning from:
+
+- human edits
+- human overrides
+- routing corrections
+- suppression decisions
+
+Charlotte should get better at:
+- category selection
+- geo assignment
+- routing decisions
+- content formatting
+
+--------------------------------------------------
+PART 1 — CAPTURE EDIT DELTAS
+--------------------------------------------------
+
+You already store edit history.
+
+Extend it to structured learning signals.
+
+For every edit, capture:
+
+{
+  item_id,
+  field,
+  original_value,
+  ai_value (if exists),
+  final_value,
+  editor_id,
+  timestamp,
+  edit_type
+}
+
+edit_type examples:
+- category_correction
+- geo_correction
+- routing_override
+- title_edit
+- summary_edit
+- suppression
+- publish_override
+
+--------------------------------------------------
+PART 2 — BUILD LEARNING SIGNAL TABLE
+--------------------------------------------------
+
+Create:
+
+charlotte_learning_signals
+
+Fields:
+- id
+- item_id
+- signal_type
+- field
+- from_value
+- to_value
+- context:
+    - source
+    - content_type
+    - geo
+    - category
+- confidence_weight
+- created_at
+
+This is NOT raw logs — this is structured learning data.
+
+--------------------------------------------------
+PART 3 — PATTERN DETECTION (LIGHTWEIGHT)
+--------------------------------------------------
+
+Build simple aggregation logic:
+
+Examples:
+
+- “Events RSS → often corrected from ‘news’ → ‘events’”
+- “NoDa mentioned → geo corrected to noda hub repeatedly”
+- “Certain source → frequently suppressed”
+
+Store patterns as:
+
+charlotte_learning_patterns:
+- pattern_type
+- trigger_condition
+- suggested_action
+- frequency
+- confidence
+
+Do NOT build heavy ML.
+Keep this rule/pattern based for now.
+
+--------------------------------------------------
+PART 4 — APPLY LEARNING DURING INGESTION
+--------------------------------------------------
+
+During ingestion (after Prompt 6 logic):
+
+Before finalizing:
+
+- check patterns
+- apply suggestion if:
+    - confidence above threshold
+    - no strong conflicting signal
+
+Examples:
+
+- auto-correct category if strong pattern exists
+- boost geo assignment confidence
+- flag known problematic sources earlier
+
+Always allow override.
+
+--------------------------------------------------
+PART 5 — CONFIDENCE WEIGHTING
+--------------------------------------------------
+
+Weight signals based on:
+
+- number of repeated corrections
+- recency
+- editor consistency
+
+Example:
+
+10+ consistent corrections → high confidence  
+1–2 corrections → low confidence
+
+Do NOT overfit to one edit.
+
+--------------------------------------------------
+PART 6 — NO AUTO-OVERRIDE OF HUMAN CONTROL
+--------------------------------------------------
+
+Rules:
+
+- Charlotte suggests or pre-adjusts
+- NEVER locks decisions
+- editorial layer always wins
+
+--------------------------------------------------
+PART 7 — VISIBILITY (MINIMAL)
+--------------------------------------------------
+
+In editorial panel (light touch):
+
+Show:
+
+“Charlotte suggestion applied”
+or
+“Based on prior edits”
+
+Do NOT build a full dashboard.
+
+--------------------------------------------------
+PART 8 — DO NOT TOUCH
+--------------------------------------------------
+
+Do NOT:
+- retrain external models
+- introduce heavy ML pipelines
+- slow down ingestion significantly
+- override admin edits
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+
+1. how edit signals are captured
+2. learning signal structure
+3. pattern detection logic
+4. how learning is applied during ingestion
+5. confidence rules
+6. examples of learned behavior
+7. what requires future ML upgrade

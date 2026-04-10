@@ -1,0 +1,114 @@
+You are auditing the Charlotte City Hub codebase.
+
+I need a full verification that Hub Presence pages (Charter + Expanded) are structured for:
+
+1) Strong traditional search engine visibility (Google, Bing)
+2) AI search discovery (LLM-based search, answer engines, semantic retrieval)
+
+DO NOT give generic SEO advice.
+Audit what is actually implemented in this codebase.
+
+DELIVERABLES:
+
+A) Crawl the Hub Presence page template(s) and report:
+
+1. Page-Level Structure
+- Unique title tag per presence (dynamic with business name + town)
+- Meta description dynamically generated
+- Canonical URL properly set
+- Clean URL structure (no query junk)
+- H1 / H2 hierarchy correct and semantic
+- No duplicate H1 tags
+
+2. Structured Data (Schema Markup)
+Confirm whether the following are implemented:
+- LocalBusiness schema (or Organization where applicable)
+- Address structured correctly
+- Geo coordinates (if available)
+- Review schema
+- Event schema (if events attached)
+- FAQ schema (for Expert Q&A block)
+- Article schema (for Pulses/profile articles)
+- Breadcrumb schema
+
+Output:
+- Where schema is defined
+- Which fields are populated
+- Which are missing
+
+3. Internal Linking Structure
+- Does each presence link back to:
+  - Its Local Hub page
+  - Its category pages
+  - Related Pulses
+  - Events
+- Are anchor texts meaningful?
+- Is there contextual linking or only navigation linking?
+
+4. Long-Tail Capture (Expert Q&A)
+Verify:
+- Each Q&A is indexable HTML (not hidden in JS-only render)
+- Each question has its own anchor link
+- Questions are crawlable
+- Proper heading structure used (H2/H3)
+- FAQ schema attached to questions
+
+5. AI Discoverability Readiness
+Check for:
+- Clean semantic HTML (not div soup)
+- Proper section labeling
+- Structured blocks for:
+  - Services
+  - Specialties
+  - Trust signals
+  - Contact info
+- No content hidden behind interaction walls
+- Content rendered server-side or pre-rendered (important)
+
+6. Content Depth Signals
+Verify that:
+- Specialty sections expand keyword footprint
+- Town/ZIP context appears naturally in content
+- No thin-page issues for Charter
+- Expanded pages have meaningful additional depth
+
+7. Multi-Language Structure
+- Is English/Spanish using proper hreflang?
+- Are alternate language versions indexed?
+- Is content truly separate or dynamically translated?
+
+8. Performance Factors
+- Page load time (rough estimate from build)
+- Image optimization
+- Lazy loading used correctly
+- No blocking scripts above the fold
+
+---
+
+B) After audit, provide:
+
+1. A score (0–100) for:
+   - Traditional SEO readiness
+   - AI answer-engine readiness
+
+2. A gap list grouped by:
+   - Critical (must fix)
+   - High impact
+   - Nice to have
+
+3. Specific implementation instructions tied to file paths:
+   - What file
+   - What needs to change
+   - Suggested implementation pattern
+
+4. Confirm whether Hub Presence pages can realistically:
+   - Compete with basic WordPress sites
+   - Compete with Google Business Profile visibility
+   - Be cited in AI answer results
+
+IMPORTANT:
+Do not assume. Inspect the code.
+If something is missing, say clearly: "Not implemented."
+If partially implemented, explain what is incomplete.
+
+Return findings in structured markdown.

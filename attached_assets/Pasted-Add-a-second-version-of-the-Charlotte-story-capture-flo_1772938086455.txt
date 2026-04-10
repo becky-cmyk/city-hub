@@ -1,0 +1,116 @@
+Add a second version of the Charlotte story capture flow called “Recognition First” and make it available as an alternate opening mode for outreach where we are reaching out to a business, organization, or local voice we have already noticed.
+
+PURPOSE
+This version should feel more personal and more human because it starts with recognition instead of request.
+
+The emotional shift should be:
+not “please answer questions”
+but
+“we noticed you, and we’d like to feature what you bring to the community”
+
+POSITIONING
+Charlotte is still the editorial/community voice.
+Do not use AI language.
+Do not use chatbot language.
+Do not make it sound salesy.
+
+OPENING SCREEN COPY — RECOGNITION FIRST VERSION
+Headline:
+We’d Love to Spotlight Your Story
+
+Subheadline:
+We recently came across your business / organization / community presence and would love to learn more about what you bring to the community.
+
+Support line:
+Charlotte is gathering short stories to help highlight the people and places shaping the Metro Hub.
+
+Estimated time:
+4–5 minutes
+
+OPENING MESSAGE INSIDE THE FLOW
+Use this as the starting tone:
+
+Hi — I’m Charlotte.
+
+As we’ve been building out local spotlights for the Metro Hub, your name came up as someone we’d love to feature.
+
+I’d love to learn a little more about what you do, what makes it meaningful, and what you’d want the community to know.
+
+Let’s start here —
+
+STEP FLOW — RECOGNITION VERSION
+STEP 1
+Prompt:
+Tell me a little about what you do and what first led you into it.
+
+STEP 2
+Acknowledgment:
+Thank you — I’m glad to hear that.
+
+Prompt:
+What do you think people appreciate most about what you bring to the community?
+
+STEP 3
+Acknowledgment:
+That helps a lot.
+
+Prompt:
+What makes your business, organization, or work stand out in a way people might not see at first glance?
+
+STEP 4
+Acknowledgment:
+That kind of detail matters.
+
+Prompt:
+What do you enjoy most about serving this area, neighborhood, or city?
+
+STEP 5
+Acknowledgment:
+I appreciate you sharing that.
+
+Prompt:
+Is there anything current, new, or upcoming that would be helpful for people to know about right now?
+
+STEP 6
+Acknowledgment:
+One last thing —
+
+Prompt:
+If someone discovered you for the first time through this spotlight, what would you want them to take away?
+
+UX / PRODUCT REQUIREMENTS
+1. Add this as an alternate configurable mode:
+   - standard story flow
+   - recognition-first story flow
+
+2. Make it easy to switch between the two in code/configuration.
+
+3. If templates or seed sources already exist, allow the recognition-first version to be triggered for:
+   - seeded listings
+   - noticed businesses
+   - manual editorial invites
+   - outreach-based invite links
+
+4. Keep all styling aligned with the updated editorial / community-centered Charlotte experience.
+
+5. Remove any language that makes this feel like:
+   - lead capture
+   - automated intake
+   - AI conversation
+   - support chat
+
+COMPLETION STATE
+Use this ending:
+
+Thank you for taking a few moments to share this.
+
+We’ll use what you shared to help shape a local spotlight for the Metro Hub.
+
+If anything needs to be clarified, someone from our side may follow up.
+
+DELIVERABLES
+Implement the alternate mode and then give me:
+- the config or logic used to switch between Standard and Recognition First
+- the final copy for both openings
+- the final copy for each step in the Recognition First flow
+- any old wording replaced or removed

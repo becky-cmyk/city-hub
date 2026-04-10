@@ -1,0 +1,458 @@
+TRUST SYSTEM — CITY HUB / CHARLOTTE AI
+VERSION: V1
+PURPOSE: Build the Trust System layer that sits on top of existing Hub Presence, Story Builder, reviews, badges, and recommendation logic.
+
+IMPORTANT:
+- Do not replace existing verification, Story Builder, Ask an Expert, Crown, review, or badge logic.
+- Build this as a unifying trust layer that organizes, scores, displays, and enforces trust signals already present in the platform.
+- Preserve existing architecture: Hub Presence = identity layer, objects = created once, surfaced across multiple discovery surfaces.
+- No duplicate trust records disconnected from Hub Presence.
+- No single public “trust score” shown to users.
+- Public trust should be shown as stacked signals / badges / statuses, not one numeric score.
+- Keep stars for reviews. Do not remove star ratings.
+- Add structured trust layers around them.
+
+==================================================
+A. GOAL
+==================================================
+
+Build a TRUST SYSTEM that:
+1. Organizes all visible and internal trust signals
+2. Supports public trust display on businesses / creators / experts / organizations
+3. Feeds Charlotte recommendations
+4. Supports Trusted Network eligibility
+5. Tracks trust decay / needs-attention / at-risk states
+6. Allows recovery, not just punishment
+7. Works across micro hubs / neighborhoods / community contexts
+
+This Trust System must support:
+- general businesses
+- restaurants
+- service providers
+- creators
+- experts / Ask an Expert
+- nonprofits / organizations
+- event organizers
+- Crown participants / winners
+
+==================================================
+B. EXISTING TRUST SIGNALS TO PRESERVE
+==================================================
+
+You must preserve and support these existing signals:
+
+1. Verified badge
+- existing verified flow already exists
+- this is currently the low-cost verification tied to community fund
+- do not break this
+
+2. Star reviews
+- keep stars
+- keep review counts
+- do not replace with some abstract trust-only display
+
+3. Ask an Expert badge / role
+- preserve and support this as an authority signal
+
+4. Crown statuses
+- nominee
+- finalist
+- winner
+- retain / revoke / transfer support later
+
+5. Existing activity / participation signals
+- stories
+- events
+- marketplace
+- jobs
+- Pulse activity
+- community participation
+
+6. Story Builder / onboarding interview outputs
+- use these as trust data inputs, not just marketing content
+
+==================================================
+C. TRUST STACK (PUBLIC)
+==================================================
+
+Build public trust as stacked layers, not one score.
+
+PUBLIC TRUST LAYERS TO SUPPORT:
+
+1. Identity / Reality Layer
+- Verified badge
+- claim status
+- owner confirmed
+
+2. Experience Layer
+- star rating
+- review count
+- optionally “recent reviews”
+
+3. Activity Layer
+- Active
+- Growing
+- Needs Attention
+- dormant/inactive should affect visibility internally
+
+4. Authority Layer
+- Ask an Expert
+- Creator
+- Organizer
+- Nonprofit / Community
+- role-based authority indicators
+
+5. Recognition Layer
+- Crown Nominee
+- Crown Finalist
+- Crown Winner
+
+6. Context Layer
+Support contextual trust labels such as:
+- Trusted Locally
+- Family Favorite
+- Event Leader
+- Community Active
+- Popular in [Hub]
+- Known for [Category]
+
+Important:
+Do NOT hardcode all contextual labels yet.
+Build structure to support contextual/local labels later.
+
+==================================================
+D. INTERNAL TRUST LEVELS
+==================================================
+
+Create INTERNAL trust levels/states used for:
+- recommendation logic
+- ranking
+- eligibility
+- visibility decisions
+- warning / recovery / removal
+
+Suggested internal ladder:
+
+T0 = Unverified
+T1 = Verified only
+T2 = Verified + Reviews
+T3 = Active / Participating
+T4 = Authority / Role-based trust
+T5 = Recognized / Crown / highly trusted
+
+Also support operational states:
+- eligible
+- qualified
+- recommended
+- performing
+- needs_attention
+- at_risk
+- paused
+- removed
+
+Do not expose T0-T5 publicly unless explicitly needed later.
+
+==================================================
+E. TRUST SIGNAL INPUTS
+==================================================
+
+Build support for these signal sources.
+
+1. Verification
+- existing verified system
+
+2. Reviews
+- stars
+- count
+- review recency
+- review sentiment if already available or easily added later
+- City Hub reviews
+- optionally external review summary fields later
+
+3. Story Builder / Interview
+- use answers from existing story builder / onboarding flow
+- derive trust-related structured outputs
+- examples:
+  - service clarity
+  - local relevance
+  - experience expectations
+  - community participation
+  - confidence of profile completeness
+
+4. Activity / Participation
+- recent posts
+- events
+- listings
+- updates
+- engagement activity
+- participation in ecosystem
+
+5. Authority / Role
+- Ask an Expert
+- creator role
+- organizer role
+- organization role
+- other role badges already present or planned
+
+6. Recognition
+- Crown statuses
+- any future awards / curated recognitions
+
+7. Responsiveness / Recommendation Outcomes
+Support later-phase hooks for:
+- response time
+- missed lead follow-up
+- negative experience confirmations
+- successful referrals
+Do not overbuild if these are not fully in place yet, but create hooks in data model.
+
+==================================================
+F. TRUST PROFILE FROM STORY BUILDER
+==================================================
+
+Do NOT build a separate trust questionnaire system.
+
+Instead:
+- use existing Story Builder / onboarding interview flow as trust input
+- derive structured trust fields from story/interview answers
+
+Build support for storing derived fields like:
+- primary services / what they are known for
+- who they serve most
+- type of experience they provide
+- community involvement
+- operating style
+- proof / example story present
+- trust profile completion percentage
+
+These should help:
+- trust display
+- Ask Charlotte recommendations
+- AEO answers
+- category / positioning support
+
+==================================================
+G. TRUST DISPLAY UI
+==================================================
+
+Build a reusable Trust Card / Trust Summary component for public profiles / listings.
+
+It should support showing combinations like:
+
+- Verified
+- 4.7 stars (82 reviews)
+- Active
+- Ask an Expert
+- Crown Winner
+- Trusted Locally
+
+Design requirement:
+- keep it clean, not cluttered
+- badge row + ratings + simple status
+- mobile friendly
+
+Also support smaller trust summary display for:
+- search results
+- recommendation cards
+- listing previews
+- map drawers
+- Ask Charlotte recommendation cards
+
+==================================================
+H. TRUST EFFECTS ON PLATFORM BEHAVIOR
+==================================================
+
+The Trust System must affect:
+1. recommendations
+2. ranking / surfacing
+3. eligibility for Trusted Network
+4. contextual visibility
+5. public confidence
+
+At minimum support:
+- verified should boost trust
+- active + reviewed should outrank inactive + unreviewed
+- authority badges should influence matching
+- Crown should influence trust and visibility
+- at-risk / paused / removed should suppress recommendation eligibility
+
+==================================================
+I. TRUSTED NETWORK RELATIONSHIP
+==================================================
+
+The Trusted Network already exists conceptually and should NOT be treated as the same thing as the Trust System.
+
+Relationship:
+- Trust System = broader trust layer across platform
+- Trusted Network = smaller recommendation-access layer for selected participants
+
+Build data hooks so Trusted Network eligibility can depend on Trust System signals.
+
+Examples:
+- verified required
+- minimum review / profile / activity thresholds
+- not at risk
+- not paused
+- authority / role qualification where relevant
+
+Do not fully rebuild Trusted Network here.
+Just make trust data compatible with it.
+
+==================================================
+J. RECOVERY / SUPPORT MODEL
+==================================================
+
+Do NOT make trust purely punitive.
+
+Build support for recovery states.
+
+Suggested flow:
+- eligible
+- recommended
+- needs_attention
+- at_risk
+- paused
+- removed
+
+And allow:
+- recovery steps
+- trust improvement suggestions
+- regain eligibility after corrective action
+
+Support future prompts/messages like:
+- get more reviews
+- update profile
+- answer expert questions
+- add recent activity
+- respond faster
+
+==================================================
+K. BADGE MODEL
+==================================================
+
+Create a flexible badge model that supports:
+
+REQUIRED BADGES
+- Verified
+
+ROLE BADGES
+- Ask an Expert
+- Creator
+- Organizer
+- Nonprofit
+- Employer
+- etc.
+
+STATUS BADGES
+- Active
+- Growing
+- Needs Attention
+
+RECOGNITION BADGES
+- Crown Nominee
+- Crown Finalist
+- Crown Winner
+
+CONTEXTUAL BADGES
+- Trusted Locally
+- Family Favorite
+- Community Active
+- Event Leader
+- Popular in [Hub]
+- etc.
+
+Badge system should be data-driven and extendable.
+
+==================================================
+L. DATA MODEL
+==================================================
+
+Build trust-related structures attached to Hub Presence or listing identity.
+
+Suggested entities (adapt to existing schema rather than duplicating):
+- trust_profile
+- trust_signal_snapshot
+- trust_badges
+- trust_status_history
+- trust_context_labels
+- trust_review_summary
+- trust_activity_summary
+
+If these can be represented inside existing profile/listing tables cleanly, do so.
+Do NOT create unnecessary duplication.
+
+Need support for:
+- current trust state
+- current trust badges
+- trust history changes
+- review aggregates
+- activity aggregates
+- derived story/trust data
+- recommendation eligibility hooks
+
+==================================================
+M. ADMIN / OPERATOR SUPPORT
+==================================================
+
+Add simple admin/operator visibility for trust state.
+
+At minimum:
+- current trust status
+- current badges
+- review summary
+- activity summary
+- warning / paused / removed state
+- reason fields or change notes if trust state changes
+
+No need for a full giant admin dashboard in this prompt unless already easy.
+Basic visibility + hooks is enough.
+
+==================================================
+N. DO NOT DO THESE
+==================================================
+
+- Do not remove star reviews
+- Do not replace all trust with one public numeric trust score
+- Do not create separate identity systems outside Hub Presence
+- Do not create a separate trust questionnaire flow disconnected from Story Builder
+- Do not make trust purchasable directly
+- Do not overcomplicate UI with too many visible labels at once
+- Do not break current verified or Ask an Expert badge behavior
+
+==================================================
+O. BUILD OUTPUT REQUIRED
+==================================================
+
+Please implement:
+
+1. Trust data model / schema updates
+2. Trust status service / calculation layer
+3. Badge assignment logic
+4. Public Trust Card component
+5. Compact trust display for cards/results
+6. Story Builder trust-field integration hooks
+7. Review + activity aggregation hooks
+8. Recommendation-eligibility compatibility hooks
+9. Recovery / needs-attention state support
+10. Basic admin visibility for trust state
+
+Also provide:
+- short changelog
+- files changed
+- migrations / notes
+- placeholders / TODOs for later phases
+
+==================================================
+P. SUCCESS DEFINITION
+==================================================
+
+The Trust System is successful if:
+- a business/profile can show multiple trust signals at once
+- stars still exist
+- verified still exists
+- Ask an Expert still exists
+- Crown still exists
+- trust is broader than reviews
+- trust can affect recommendations and visibility
+- trust can decay and recover
+- story/interview data contributes to trust without creating a separate system

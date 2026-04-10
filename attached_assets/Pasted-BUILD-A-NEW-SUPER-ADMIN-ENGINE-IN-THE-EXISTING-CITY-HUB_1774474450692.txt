@@ -1,0 +1,730 @@
+BUILD A NEW SUPER ADMIN ENGINE IN THE EXISTING CITY HUB PLATFORM CALLED:
+
+Public-facing name:
+Enter to Win
+
+Admin / internal name:
+Enter to Win Engine
+
+PLACE IT UNDER:
+Super Admin → Engagement Hub → Enter to Win
+
+IMPORTANT:
+This is NOT a lightweight MVP. Build the full backend/admin engine discussed below so it can support Hub-owned giveaways, business/client giveaways, recurring fishbowl-style QR campaigns, weighted bonus entries, automated Charlotte-driven winner workflows, previews, publishing, updates, and reusable QR infrastructure.
+
+The build must follow the City Hub architectural rule:
+single source of truth → multiple discovery surfaces
+Do NOT create disconnected giveaway tools, duplicate objects, or one-off form systems.
+
+==================================================
+1. HIGH-LEVEL PURPOSE
+==================================================
+
+Build a full Super Admin giveaway / lead capture / engagement / winner follow-up engine that allows:
+
+- CLT City Hub to run its own giveaways
+- businesses/clients to use the same engine as an add-on later
+- recurring “fishbowl” QR entries at stores/events without replacing QR signage
+- one entry per email per giveaway
+- Reader membership matching/creation
+- Charlotte as the voice of the full automation process
+- controlled business lead-sharing only when the entrant explicitly opts in
+- weighted/stackable bonus entries defined per giveaway by admin
+- visual wheel-based winner selection
+- public results pages with masked names by default
+- automatic content/story upgrades after winner consent/approval
+- full backend previews before publish
+- full update controls after publish
+- issue handling routed to the admin inbox
+
+==================================================
+2. ADMIN NAVIGATION / BACKEND STRUCTURE
+==================================================
+
+Create the following backend structure:
+
+Super Admin
+→ Engagement Hub
+  → Enter to Win
+    - Dashboard
+    - Giveaways
+    - Templates
+    - QR / Sources
+    - Entries
+    - Draw Center
+    - Winners
+    - Public Pages
+    - Automations
+    - Reports / Exports
+    - Issue Inbox
+    - Settings
+
+Enter to Win must remain its own engine/module.
+Do NOT merge it into polls/quizzes/surveys tables even though it sits under the Engagement Hub family.
+
+==================================================
+3. CORE GIVEAWAY LIFECYCLE / STATES
+==================================================
+
+Support these giveaway statuses:
+
+- draft
+- scheduled
+- live
+- closed
+- draw_pending
+- completed
+- archived
+
+Behavior:
+- all setup begins in draft
+- nothing public is live until published
+- no draw before giveaway ends
+- entries stop at close/end
+- timezone stays local to the business or metro
+- no advanced timezone conversion logic needed
+
+==================================================
+4. GIVEAWAY TYPES
+==================================================
+
+Support both:
+- one-time giveaway
+- recurring / reusable giveaway
+
+Recurring / reusable giveaway behavior:
+- same QR can stay in place at a business/location
+- admin can reuse the giveaway setup/campaign shell
+- admin can reattach or roll the recurring campaign without replacing physical QR signage
+- QR continuity must be preserved where recurring toggle is enabled
+
+==================================================
+5. SUPER ADMIN GIVEAWAY BUILDER
+==================================================
+
+Create a full Giveaway Builder with these sections/tabs:
+
+A. CORE
+- public title
+- internal name
+- slug
+- owner type (hub_owned, business_owned)
+- assigned business/client nullable
+- giveaway type (one_time, recurring)
+- start date/time
+- end date/time
+- status
+- internal admin notes
+
+B. PRIZE SETUP
+- one or many prizes
+- prize title
+- description
+- image
+- quantity
+- value estimate optional
+- associated business/location if relevant
+
+C. ENTRY RULES
+Locked rules:
+- one entry per email per giveaway
+- full name required
+- email required
+- phone required
+- zip optional
+- Reader membership required
+- if existing Reader found by email, match account and prompt login
+- if no Reader exists, create/match free Reader flow
+- email verification required for valid entry
+- honeypot enabled
+- terms text required
+- giveaway detail text visible on giveaway page and form
+- explicit opt-in toggle for sharing with business/store (NOT automatic)
+
+D. BONUS ENTRY RULES
+Each giveaway must have a configurable bonus section:
+- enable bonus entries yes/no
+- admin can add any number of bonus actions
+- each action has:
+  - action name
+  - description
+  - weight / extra entry value
+  - stackable yes/no
+  - active yes/no
+  - internal verification/notes field
+- stacking allowed across actions
+- admin controls weights per action/tier
+- if a user has already entered, they should be shown ways to earn bonus entries
+- duplicate entries are void if there is no valid bonus path attached
+
+E. QR / SOURCE RULES
+Important locked rule:
+- the giveaway QR is the only QR for entry to that giveaway
+- no multi-QR duplicate entry paths for the same giveaway entry
+- QR is generated when giveaway is published
+- QR must always remain accessible from the giveaway record
+- QR must be downloadable
+- QR link must be copyable
+- QR preview must be visible in admin
+- QR branding required:
+  - include CLT logo
+  - include CLTCityHub.com under the code
+- support recurring/reusable QR behavior when recurring toggle is on
+
+F. DRAW RULES
+- visual wheel enabled
+- supports:
+  - single winner
+  - multiple winners
+  - alternates
+  - redraws
+- 48-hour claim window
+- no auto-promote final public change without admin review
+- no drawing before giveaway end
+- weighted entries must be respected
+- draw pool only includes valid eligible entries
+
+G. WINNER CONTENT / PERMISSION RULES
+- default public display: first name + last initial only
+- after winner gives permission and admin approves, auto-upgrade public display to:
+  - full name
+  - quote
+  - image / likeness if provided
+- support collection of:
+  - permission to use name
+  - permission to use quote
+  - permission to use photo/likeness
+  - permission to tag/mention business/location
+- support optional review/comment about the location/business/event they won from
+
+H. AUTOMATIONS
+Charlotte is the voice of the entire process.
+
+Automation toggles/templates for:
+- verification email
+- winner congratulations email
+- reminder 1
+- reminder 2 / final notice
+- alternate notification
+- winner content request / claim form intro
+- admin draw summary
+- issue alerts routed to inbox
+
+==================================================
+6. DATA MODEL / OBJECTS
+==================================================
+
+Build/extend the backend with clean relational objects. Use sensible names if needed, but support these structures:
+
+A. giveaways
+Fields should include at minimum:
+- id
+- public_title
+- internal_name
+- slug
+- owner_type
+- business_id nullable
+- giveaway_type
+- status
+- starts_at
+- ends_at
+- timezone_label/locality
+- short_description
+- full_details
+- terms_text
+- share_with_business_opt_in_enabled boolean
+- reader_membership_required boolean
+- email_verification_required boolean
+- honeypot_enabled boolean
+- qr_reusable boolean
+- show_in_pulse boolean default false
+- pulse_headline nullable
+- pulse_short_text nullable
+- pulse_image nullable
+- created_by
+- created_at
+- updated_at
+- archived_at nullable
+
+B. giveaway_prizes
+- id
+- giveaway_id
+- title
+- description
+- image
+- quantity
+- value_estimate optional
+- sort_order
+
+C. giveaway_bonus_actions
+- id
+- giveaway_id
+- title
+- description
+- weight
+- stackable
+- active
+- internal_notes
+
+D. giveaway_qr_sources
+Even though one giveaway has one entry QR path, keep a dedicated QR/source object so recurring reuse and recordkeeping are possible:
+- id
+- giveaway_id
+- qr_code_asset_url
+- entry_url
+- branded_qr_image_url
+- active
+- reusable
+- created_at
+- updated_at
+
+E. giveaway_entries
+- id
+- giveaway_id
+- full_name
+- email
+- phone
+- zip_code nullable
+- reader_user_id nullable
+- contact_id nullable
+- status enum:
+  - pending_verification
+  - verified
+  - duplicate
+  - blocked
+  - void
+- business_opt_in boolean
+- honeypot_triggered boolean
+- verification_sent_at nullable
+- verified_at nullable
+- duplicate_reason nullable
+- weighted_entry_total numeric/int default 1
+- submitted_at
+- notes nullable
+
+F. giveaway_entry_bonus_events
+Track awarded bonuses:
+- id
+- giveaway_entry_id
+- giveaway_bonus_action_id
+- awarded_weight
+- awarded_by_system_or_admin
+- created_at
+- notes
+
+G. giveaway_draws
+- id
+- giveaway_id
+- draw_type (initial, redraw)
+- eligible_pool_count
+- weighted_pool_count optional
+- ran_by_user_id
+- started_at
+- completed_at
+- redraw_reason nullable
+- draw_log_json / structured log
+
+H. giveaway_draw_results
+- id
+- giveaway_draw_id
+- giveaway_entry_id
+- result_type (winner, alternate)
+- rank_order
+- public_masked_name
+- approved_for_public boolean default false
+- contacted_at nullable
+- response_status nullable
+- admin_review_status nullable
+
+I. giveaway_winner_content
+- id
+- draw_result_id
+- permission_use_name boolean
+- permission_use_quote boolean
+- permission_use_photo boolean
+- permission_tag_business boolean
+- winner_quote nullable
+- winner_review nullable
+- photo_url nullable
+- social_handle nullable
+- submitted_at nullable
+- approved_at nullable
+- approved_by nullable
+
+J. giveaway_automation_logs
+- id
+- giveaway_id
+- related_entry_id nullable
+- related_draw_result_id nullable
+- automation_type
+- status
+- sent_at nullable
+- error_message nullable
+
+K. giveaway_issue_inbox_items
+- id
+- giveaway_id nullable
+- issue_type
+- severity
+- status
+- summary
+- details
+- related_entry_id nullable
+- related_draw_id nullable
+- related_automation_log_id nullable
+- created_at
+- resolved_at nullable
+- assigned_to nullable
+
+L. giveaway_page_records
+Track generated pages/views:
+- id
+- giveaway_id
+- page_type (landing, entry, results, spotlight, archived)
+- slug/path
+- status
+- preview_url
+- public_url nullable
+- last_published_at nullable
+
+M. giveaway_permission_profiles
+For future business/client access control:
+- id
+- giveaway_id or business_id
+- can_view
+- can_edit
+- can_publish
+- can_export
+- can_run_draw
+- can_review_winners
+- can_manage_content
+
+==================================================
+7. ENTRY FLOW / READER MATCH LOGIC
+==================================================
+
+Locked entry behavior:
+
+Public form fields:
+- full name
+- email
+- phone
+- zip optional
+
+Flow:
+1. user lands on giveaway entry page from the giveaway QR / page
+2. minimal form shown
+3. honeypot checked server-side
+4. email is checked against existing Reader/member/contact
+5. if existing Reader account is found:
+   - prompt login / match account
+   - attach entry to existing Reader/contact
+6. if no Reader exists:
+   - create/match free Reader flow
+   - send verification email
+7. only after email verification is completed does the entry become valid/verified
+8. one entry per email per giveaway
+9. if duplicate attempt and no valid bonus path is configured, mark duplicate/void and do not count
+10. if already entered and bonus actions are enabled, show “ways to earn bonus entries”
+
+Locked identity rule:
+- email is the primary unique key for entry enforcement
+- phone is secondary/supporting validation only
+
+==================================================
+8. BUSINESS SHARING RULE
+==================================================
+
+Locked rule:
+- Hub always retains the data in the platform
+- business/client only receives shared access if:
+  - the giveaway is configured for sharing
+  - and the entrant explicitly opts in on entry
+
+This must NOT be automatic.
+
+Need admin-side ability to:
+- enable/disable business sharing per giveaway
+- export only opt-in eligible records
+- keep hub-owned Reader/contact data intact
+
+==================================================
+9. PREPOPULATED ENTRY / SCAN-MY-CODE SUPPORT
+==================================================
+
+Support a prepopulated entry path where applicable:
+
+If a person is already known / has a Reader account / shared their code:
+- prepopulate their entry info
+- show the entry review/consent step
+- require them to submit to win and grant permission
+
+Do not create raw unconfirmed auto-entries without consent.
+
+==================================================
+10. DRAW ENGINE / WHEEL
+==================================================
+
+Build a Draw Center per giveaway.
+
+Requirements:
+- visual spinning wheel UI
+- support single or multiple winners
+- support alternates
+- support redraws
+- support weighted entries from bonus actions
+- only eligible verified entries included
+- display pool count before draw
+- log all draw events
+- allow preview/test view before committing actual draw
+- actual committed draw should save results
+
+Winner selection must support:
+- winner(s)
+- alternate(s)
+- redraw reason logging
+- admin review stage before final public update
+
+48-hour claim window:
+- after winner is contacted, 48-hour response window applies
+- if no response or issue, send to admin review
+- admin decides:
+  - approve winner
+  - move to alternate
+  - redraw
+
+==================================================
+11. WINNER AUTOMATION FLOW
+==================================================
+
+After draw:
+1. Charlotte sends congratulations email
+2. winner receives claim/content form link
+3. reminder emails sent during 48-hour window
+4. no-response / issue routes to admin review
+5. alternate email can be sent after admin action
+6. all failures/errors route to Issue Inbox
+
+==================================================
+12. WINNER CLAIM + CONTENT FORM
+==================================================
+
+Build winner follow-up/claim form with these sections:
+
+A. claim/confirm
+- confirm they are accepting the prize
+- confirm contact info if needed
+
+B. permissions
+- permission to use name
+- permission to use quote
+- permission to use photo
+- permission to mention/tag business/location
+
+C. content
+- short excitement quote
+- optional longer review/comment about the place/event/business
+- optional photo upload
+- optional social handle
+
+Behavior:
+- if permission + content submitted and admin approves, auto-update public results/spotlight views
+- default public display remains first name + last initial until approval happens
+
+==================================================
+13. PUBLIC PAGE GENERATION + PREVIEW
+==================================================
+
+Even though current focus is backend, create page records and previewable outputs for:
+
+- giveaway landing page
+- entry page
+- results page
+- winner spotlight page
+- archived/ended page
+
+Need full preview controls before publish:
+- desktop preview
+- mobile preview
+- open preview in new tab
+
+Need ability to update after publish.
+Need page history / update log.
+
+==================================================
+14. OPTIONAL PULSE INTEGRATION
+==================================================
+
+Per giveaway, allow admin toggle:
+- show_in_pulse yes/no
+
+If enabled:
+- giveaway can create/surface a Pulse card/story block
+- preview it in admin before publish
+- do not create a disconnected promo object
+- reference the giveaway object/page
+
+Also support eventual winner-announced Pulse output if content is approved.
+
+==================================================
+15. QR PREVIEW / DOWNLOAD / REUSE
+==================================================
+
+When giveaway is published:
+- generate branded QR
+- store QR asset on the giveaway record
+- always show:
+  - preview
+  - copy link
+  - download image
+- if recurring/reusable toggle is on, keep QR active across cycles and allow giveaway reassignment/reuse without needing a new printed code
+
+After giveaway is closed:
+- QR should not lead to active entry
+- support rerouting to ended/results page or next recurring instance based on giveaway settings
+
+==================================================
+16. TEMPLATE SYSTEM
+==================================================
+
+Build reusable admin templates:
+- business expo fishbowl
+- in-store recurring giveaway
+- hub-owned giveaway
+- event giveaway
+- article/promotional giveaway
+- review booster / bonus-entry giveaway
+
+Templates should save settings, rules, automations, page sections, and bonus frameworks.
+
+==================================================
+17. REPORTS / EXPORTS
+==================================================
+
+Need:
+- total entries
+- verified entries
+- duplicate/void entries
+- bonus usage
+- weighted totals
+- opt-in eligible for business
+- winner/contact status
+- recurring cycle history if applicable
+
+Exports:
+- verified entries
+- business-opt-in entries only
+- all eligible entries
+- winners/alternates
+- filtered exports as needed
+
+==================================================
+18. ISSUE INBOX
+==================================================
+
+Anything wrong must route to admin inbox.
+
+Create Issue Inbox with items for:
+- failed email sends
+- verification issues
+- duplicate flags
+- blocked/honeypot flags
+- draw issues
+- QR issues
+- publish/update issues
+- automation failures
+- winner response problems
+
+Each issue item should link directly to the related giveaway/record for quick resolution.
+
+==================================================
+19. ACCESS CONTROL / CLIENT FUTURE-PROOFING
+==================================================
+
+Support both managed and self-serve architecture, but admin remains in control.
+
+Need permission controls so Super Admin can selectively allow business/client users to:
+- view giveaway
+- edit giveaway
+- publish
+- export
+- run draw
+- review winners
+- manage content
+
+Default should be admin-controlled/restricted until intentionally enabled.
+
+==================================================
+20. PREVIEW / PUBLISH / UPDATE RULES
+==================================================
+
+Everything should support:
+- draft creation
+- full preview before publish
+- intentional publish
+- ongoing updates after publish
+- archive/reuse
+
+Need update log/history:
+- changed by
+- changed when
+- what changed
+
+Warn if admin tries to change critical draw/entry logic after entries already exist.
+
+==================================================
+21. PERFORMANCE / SCALE
+==================================================
+
+Design for thousands of entries max, but most campaigns likely smaller.
+Do not overbuild large-scale infra, but do not assume only tiny entry counts.
+Wheel and reports should remain usable with this scale.
+
+==================================================
+22. COMPLIANCE / GIVEAWAY DETAILS
+==================================================
+
+Each giveaway page and entry form must support:
+- giveaway details
+- basic terms text
+- “no purchase necessary” language support
+- consent capture logging
+- business sharing opt-in language
+
+==================================================
+23. CHARLOTTE VOICE
+==================================================
+
+Charlotte is the voice of this entire process.
+
+Use Charlotte’s tone/content layer for:
+- verification email
+- congratulations email
+- reminders
+- alternate notification
+- claim page intro
+- quote/review request
+- optional winner spotlight draft copy
+
+Need admin preview/edit ability before sending templates live.
+
+==================================================
+24. FINAL BUILD REQUIREMENT
+==================================================
+
+This must be built as a real backend workflow engine inside Super Admin, not a temporary form builder.
+
+Priority requirements:
+- Super Admin creation and control
+- full previews before publish
+- ability to update as needed
+- ability to see/manage generated pages
+- reusable recurring QR campaigns
+- Charlotte-driven automation
+- issue handling
+- future business/client add-on readiness
+
+Implement this cleanly inside the existing codebase, using the current admin patterns, permission structure, and page-generation patterns where possible.
+
+Do NOT shortcut this into a simple CRUD tool.
+Build the operational engine.

@@ -1,0 +1,77 @@
+#75 - Unified Platform Discovery Map
+What & Why
+The platform currently has two disconnected maps — a neighborhood map locked inside the relocation page and a separate events-only map. Neither covers the full ecosystem. This task builds a single unified discovery map at /:citySlug/map that acts as a "Local Google Maps" — a full-featured geographic discovery surface covering every engine in the platform (businesses, events, creators, jobs, marketplace, attractions, Crown program, organizations). It also introduces monetizable sponsored map placements and embedded directions so users never leave the platform.
+
+The map stays on Leaflet/react-leaflet for now (the existing stack), built with clean layer/data abstractions so Phase 2 can swap to Mapbox GL / MapLibre for full 3D without rewriting data flow.
+
+Done looks like
+Core Map Experience
+A new "Map" route at /:citySlug/map accessible from the main navigation (both mobile and desktop)
+All object types with location data appear as categorized markers: businesses, events, creators, attractions, jobs, marketplace listings, organizations, Crown campaigns
+Markers are color-coded and icon-differentiated by object type
+Clustering reduces visual clutter at zoomed-out levels with cluster counts
+Dark-themed tiles matching the platform aesthetic (CartoDB Dark Matter)
+City context is dynamic (not hardcoded to Charlotte) — respects the citySlug
+Both geographic hierarchies preserved: regions (territory/sales) and zones (discovery/content)
+Filtering & Discovery
+Filter panel lets users toggle object types on/off (businesses, events, creators, jobs, marketplace, attractions, organizations, Crown)
+Neighborhood/district filter to scope to a specific area
+Category filter for businesses (food, nightlife, wellness, etc.)
+Search-within-map input to find specific places
+All filter labels use the existing i18n translation system (English/Spanish)
+Marker Popups & Detail
+Clicking any marker opens a popup/card with summary info (name, type badge, category, neighborhood, photo if available, featured/verified indicator)
+Popup includes a link to the real detail page (business page, event page, job listing, etc.)
+Popup includes a "Get Directions" button
+Embedded Directions
+"Get Directions" opens an embedded directions panel within the map page (using Google Maps Embed API or similar) so users stay in the platform
+User can enter their starting location or use device geolocation
+Directions display route, distance, and estimated travel time within the app
+Fallback "Open in Google Maps / Apple Maps" link for users who prefer native navigation
+Architecture supports future upgrade to full in-app turn-by-turn
+Sponsored Map Placements (Revenue Layer)
+Promoted Pins — Businesses with a sponsored placement get a larger, visually elevated pin with a glow/badge effect (like Google Maps promoted pins). These render on top of standard markers.
+Sponsored Zone Overlays — Bigger sponsors can buy a branded overlay on a map zone/neighborhood area. Renders as a subtle branded boundary with sponsor name/logo at appropriate zoom levels.
+Business Card Ads — Mini ad units that appear in the sidebar or bottom panel when a user is browsing a specific zone. Shows sponsor name, logo, tagline, and CTA.
+Crown Program Placements — Crown participants earn map visibility through the Crown program. Their markers get a Crown badge and slight visual priority over standard listings.
+Admin panel section to manage map sponsorships — assign promoted pins, zone overlays, and business card ad slots to businesses with start/end dates.
+Sponsorship data stored in a lightweight map_placements table (type, business_id, zone_id if overlay, start_date, end_date, active flag).
+Mobile Experience
+Mobile-first responsive design — map fills the screen with a collapsible filter drawer (bottom sheet style)
+Popups/cards are touch-friendly with large tap targets
+Directions panel works well on mobile
+"Get Directions" button prominent on every popup
+Device geolocation for "Near Me" functionality
+Preserved Behavior
+Existing neighborhood map on relocation page continues to work (not broken)
+Existing events map continues to work (not broken)
+Out of scope
+3D rendering, tilt, pitch, building extrusions (Phase 2)
+Swapping Leaflet for Mapbox GL / MapLibre (Phase 2)
+Density heatmaps or hex-bin visualization (Phase 2)
+Guided flyover/tour mode (Phase 2)
+Full in-app turn-by-turn navigation with voice (future)
+Creating map-only business records or duplicate data
+Rebuilding the underlying data model
+Transit route line rendering
+Stripe payment flow for purchasing map placements (uses existing entitlements/admin assignment)
+Tasks
+Create a unified map API endpoint (GET /api/cities/:citySlug/map) that returns all mappable objects in a normalized shape — each item has type, id, slug, title, lat, lng, category, zone, featured/verified/sponsored flags, and image URL. Businesses and attractions use their own coordinates; events resolve via host business; jobs and marketplace resolve via their business or zone centroid; Crown campaigns resolve via neighborhood zone.
+Create a map_placements table and admin API for sponsored map placements — supports promoted pins, sponsored zone overlays, and business card ad slots with business association, zone targeting, date ranges, and active/inactive status. Add a simple admin UI panel to manage placements.
+Build the UnifiedDiscoveryMap component using Leaflet/react-leaflet with CartoDB Dark tiles, marker clustering, and color-coded/icon-differentiated markers per object type. Structure the component with clean layer abstractions so each object type is a toggleable layer. Promoted/sponsored pins render larger and on top. Crown badges render on Crown participant markers.
+Build the filter panel UI — object type toggles, neighborhood/district dropdown, business category filter, search-within-map, and "Near Me" geolocation button. Collapsible bottom-sheet style on mobile. All labels bilingual via i18n.
+Implement marker popups with object summary (name, photo, type badge, category, neighborhood, featured/verified/Crown indicator) plus "View Details" link to the real page and "Get Directions" button.
+Build the embedded directions panel — uses Google Maps Embed API to show route/distance/time within the app when "Get Directions" is clicked. Includes origin input with geolocation auto-fill and a fallback "Open in Google Maps / Apple Maps" link.
+Implement sponsored zone overlays — render branded boundary polygons for zones with active overlay sponsorships. Show business card ad units in the sidebar/bottom panel when browsing a sponsored zone.
+Add the /:citySlug/map route to the app router and add a "Map" navigation item to the public nav (mobile bottom bar and desktop header). Use the Map icon from lucide-react.
+Ensure city context is dynamic via citySlug, mobile responsiveness is solid, and bilingual labels work correctly across all map UI.
+Relevant files
+client/src/components/neighborhood-map.tsx
+client/src/pages/events-map.tsx
+client/src/components/public-layout.tsx:483-530
+client/src/App.tsx:600-740
+server/routes.ts:1827-1900
+server/event-discovery-routes.ts:222-280
+shared/schema.ts
+client/src/lib/i18n.tsx
+server/storage.ts

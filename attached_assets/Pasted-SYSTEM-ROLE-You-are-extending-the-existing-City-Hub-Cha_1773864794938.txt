@@ -1,0 +1,237 @@
+SYSTEM ROLE
+You are extending the existing City Hub / Charlotte Hub codebase to implement the Crown Program Hub Readiness and Activation Engine.
+
+IMPORTANT CONTEXT
+The Crown system infrastructure already exists in the codebase, including:
+
+• crown_categories
+• crown_participants
+• crown_votes
+• crown_winners
+• crown_hub_category_assignments
+• crown_invitations
+• crown_events
+• voting_campaigns
+• polls
+• quizzes
+• surveys
+• profile_badges
+
+DO NOT rebuild Crown from scratch.
+DO NOT create a new awards platform.
+
+Your job is to add the **readiness detection and activation layer** that determines when a hub is ready to launch Crown.
+
+--------------------------------------------------
+
+OBJECTIVE
+
+Create a system that:
+
+1. evaluates whether a hub is ready for Crown
+2. identifies which categories are viable
+3. triggers an Opportunity Radar alert
+4. allows admin to activate Crown for that hub
+5. prepares the hub for nominations and voting
+
+--------------------------------------------------
+
+STEP 1 — HUB READINESS EVALUATION
+
+For each hub, evaluate readiness using these signals.
+
+Signals to calculate:
+
+• total businesses in hub radius
+• total businesses per category
+• claimed Hub Presences
+• platform engagement signals
+• events within hub
+• creator/media coverage
+
+Store results in a hub readiness object.
+
+--------------------------------------------------
+
+STEP 2 — CATEGORY VIABILITY RULES
+
+For each hub and category calculate:
+
+• total businesses found
+• qualified businesses (after candidate scoring filters)
+• population support if available
+
+Category minimum thresholds:
+
+Coffee
+minimum 6 businesses
+
+Restaurant
+minimum 10 businesses
+
+Fitness Studio
+minimum 5 businesses
+
+Salon / Barber
+minimum 6 businesses
+
+Boutique Retail
+minimum 5 businesses
+
+Realtor
+minimum 6 businesses
+
+Mortgage Broker
+minimum 4 businesses
+
+If threshold not met:
+
+category_status = NOT_READY
+
+If threshold met:
+
+category_status = READY
+
+--------------------------------------------------
+
+STEP 3 — HUB ACTIVATION CONDITIONS
+
+A hub becomes Crown eligible when:
+
+• at least 3 categories are READY
+AND
+• at least 15 qualified businesses exist across those categories
+
+When these conditions are met:
+
+hub_crown_status = READY_FOR_ACTIVATION
+
+--------------------------------------------------
+
+STEP 4 — OPPORTUNITY RADAR INTEGRATION
+
+Create a new opportunity type:
+
+CROWN_HUB_READY
+
+When a hub meets activation conditions, generate an Opportunity record with:
+
+• hub_name
+• ready_categories
+• qualified_business_count
+• recommended_launch_categories
+• recommended_businesses_to_invite
+
+This opportunity should appear in:
+
+• admin dashboard
+• opportunity radar list
+
+--------------------------------------------------
+
+STEP 5 — ADMIN ACTIVATION CONTROL
+
+Add a Crown activation control in the admin panel.
+
+Admin action:
+
+Activate Crown Program for Hub
+
+When triggered the system should:
+
+1. create Crown campaign instance for the hub
+2. assign launch categories
+3. generate candidate invite list
+4. open nomination stage
+5. prepare voting stage
+
+--------------------------------------------------
+
+STEP 6 — HUB CROWN STATUS STATES
+
+Add hub crown lifecycle states.
+
+Possible states:
+
+INACTIVE
+SCANNING
+READY_FOR_ACTIVATION
+NOMINATIONS_OPEN
+VOTING_OPEN
+WINNERS_DECLARED
+ARCHIVED
+
+Store state in a hub_crown_status field.
+
+--------------------------------------------------
+
+STEP 7 — CATEGORY ACTIVATION
+
+When Crown activates for a hub:
+
+• only READY categories are enabled
+• others remain inactive until thresholds met
+
+Each category should have its own lifecycle.
+
+--------------------------------------------------
+
+STEP 8 — HUB SUMMARY OUTPUT
+
+Return structured hub readiness data.
+
+Example structure:
+
+hub_name
+hub_id
+total_businesses_detected
+total_qualified_businesses
+categories_scanned
+categories_ready
+categories_not_ready
+recommended_launch_categories
+recommended_invite_businesses
+hub_crown_status
+
+--------------------------------------------------
+
+STEP 9 — ADMIN VIEW
+
+Add a Crown Readiness section to admin dashboard showing:
+
+Hub Name
+Crown Status
+Categories Ready
+Qualified Businesses
+Launch Recommendation
+
+Include button:
+
+Activate Crown
+
+--------------------------------------------------
+
+STEP 10 — CONFIGURATION
+
+Make category thresholds configurable.
+
+Allow admin to modify:
+
+• minimum businesses per category
+• minimum categories for launch
+• minimum qualified businesses
+
+--------------------------------------------------
+
+FINAL TASK
+
+Implement:
+
+1. hub readiness scanner
+2. category viability detection
+3. Opportunity Radar Crown alerts
+4. admin activation control
+5. hub crown lifecycle states
+6. structured readiness reporting
+
+The system must support rolling Crown launches across multiple hubs independently.

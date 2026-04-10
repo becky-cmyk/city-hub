@@ -1,0 +1,302 @@
+PROMPT 9 — PHASE 3B: LIFECYCLE + ONBOARDING EXECUTION HOOKS
+
+You are implementing ONLY Phase 3B.
+
+Prerequisite:
+- Phase 3A (Charlotte behavior system) is complete
+- Phase 2 systems (orchestrator, proposal, templates, batch, recommendations) are working
+
+DO NOT implement:
+- full billing/payment systems (Stripe deep integration)
+- command center UI
+- full retention engine
+- new CRM systems
+- new scoring/recommendation systems
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Connect Charlotte’s conversation flow to real execution steps so she can:
+
+1. move a user from conversation → action
+2. trigger onboarding steps (verify, story, setup)
+3. create real objects (or call existing flows)
+4. schedule, outreach, and follow up
+5. escalate to Becky when needed
+
+This is the bridge from:
+**conversation → real-world execution**
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1. DO NOT rebuild:
+- CRM
+- pipelines
+- outreach/email systems
+- story generator
+- claim flow
+- calendar/scheduling integrations
+- Stripe (only hook, not build)
+
+2. DO NOT create:
+- new lifecycle engines
+- duplicate onboarding systems
+
+3. REUSE:
+- existing pipelines
+- existing inbox
+- existing automation/triggers
+- existing contact/business linking
+
+4. KEEP LIGHT:
+- this is wiring and hooks, not full systems
+
+--------------------------------------------------
+PART 1 — ONBOARDING STATE TRACKING (LIGHT)
+--------------------------------------------------
+
+Create a lightweight state tracker (no heavy system).
+
+File:
+charlotte-onboarding-state.ts (or similar)
+
+Track per entity/contact:
+
+{
+  verified?: boolean,
+  storyCreated?: boolean,
+  storyApproved?: boolean,
+  goalsCaptured?: boolean,
+  recommendationGiven?: boolean,
+  onboardingStage: "verify" | "story" | "align" | "recommend" | "close" | "complete"
+}
+
+Rules:
+- store minimally (can be attached to existing entity metadata if possible)
+- do NOT create a large new table unless necessary
+
+--------------------------------------------------
+PART 2 — VERIFY STEP HOOK
+--------------------------------------------------
+
+When Charlotte completes VERIFY step:
+
+Trigger:
+- existing claim/verification flow
+
+Also:
+- attach note/context explaining:
+  - prevents spam/content theft
+  - activates participation
+  - $1 → community fund
+
+Return:
+- verification link or execution result
+
+--------------------------------------------------
+PART 3 — STORY STEP HOOK
+--------------------------------------------------
+
+When Charlotte reaches STORY step:
+
+Trigger:
+- existing story generator (or story flow)
+
+Then:
+- send/return story preview
+- prompt for:
+  - corrections
+  - missing details
+  - personal story (why they started, etc.)
+
+If edits received:
+- update story via existing system (do not rebuild editor)
+
+--------------------------------------------------
+PART 4 — ALIGN STEP (GOALS CAPTURE)
+--------------------------------------------------
+
+Capture structured goals from conversation:
+
+Examples:
+- visibility
+- local audience
+- authority
+- participation
+- leads
+
+Store:
+- as simple structured data on entity/contact (reuse existing fields if possible)
+
+Charlotte should:
+- reflect goals back
+- confirm alignment before moving forward
+
+--------------------------------------------------
+PART 5 — RECOMMENDATION → ACTION HOOK
+--------------------------------------------------
+
+When Charlotte gives a recommendation:
+
+Bridge to:
+- proposal engine (from Phase 2)
+
+Then:
+- map to action templates
+
+Allow:
+- immediate execution OR
+- confirmation-required execution
+
+Example:
+- “We’ll get your story live, activate your presence, and start your visibility across the hub”
+
+--------------------------------------------------
+PART 6 — CLOSE STEP (SETUP TRIGGER)
+--------------------------------------------------
+
+At close:
+
+Charlotte should:
+- move to setup state
+- trigger:
+  - onboarding checklist
+  - required steps (verify, story, activation)
+
+If pricing involved:
+- return link / reference to existing pricing setup (do NOT build Stripe logic)
+
+--------------------------------------------------
+PART 7 — DOWNSELL / HANDOFF HOOK
+--------------------------------------------------
+
+If user:
+- hesitates
+- asks for help
+- requests human
+
+Then:
+
+Trigger:
+- Becky handoff
+
+Implementation:
+- send notification
+- create CRM task
+- optionally generate scheduling link
+
+No delay — immediate escalation
+
+--------------------------------------------------
+PART 8 — FOLLOW-UP / TASK CREATION
+--------------------------------------------------
+
+Hook into existing automation system:
+
+When:
+- onboarding incomplete
+- story not approved
+- verification pending
+
+Create:
+- follow-up tasks
+- reminders
+- outreach triggers
+
+Use:
+- existing scheduler/automation system
+
+Do NOT build a new one
+
+--------------------------------------------------
+PART 9 — EXPO / FIELD CAPTURE HOOK (IMPORTANT)
+--------------------------------------------------
+
+Extend batch processor behavior:
+
+When batch items processed:
+
+For each item:
+- generate proposal
+- optionally:
+  - create story
+  - queue outreach
+  - schedule follow-up
+
+If low confidence:
+- route to inbox (existing system)
+
+Ensure:
+- output is usable for real-world expo follow-up
+
+Do NOT build UI yet
+
+--------------------------------------------------
+PART 10 — ORCHESTRATOR UPDATE
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts to:
+
+- maintain onboarding state
+- trigger correct hooks at each stage
+- prevent skipping steps unintentionally
+- allow manual override if needed
+
+--------------------------------------------------
+PART 11 — SAFETY + FALLBACKS
+--------------------------------------------------
+
+Add safeguards:
+
+- do not execute actions without sufficient confidence
+- require confirmation where needed
+- handle missing data cleanly
+- allow safe exits
+
+--------------------------------------------------
+PART 12 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1. Full onboarding:
+business → verify → story → align → recommend → close
+
+2. Partial onboarding:
+user drops after story → follow-up created
+
+3. Objection:
+user declines → downsell → handoff
+
+4. Expo batch:
+10 leads processed → proposals + follow-ups created
+
+5. Concierge crossover:
+user asks for help → transitions into onboarding naturally
+
+--------------------------------------------------
+PART 13 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — ONBOARDING FLOW EXECUTION SUMMARY
+OUTPUT C — HOOKS IMPLEMENTED (verify, story, align, recommend, close, handoff)
+OUTPUT D — SAMPLE END-TO-END FLOW
+OUTPUT E — HOW EXISTING SYSTEMS WERE REUSED
+OUTPUT F — WHAT WAS NOT BUILT (to confirm scope control)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 3B is complete.
+
+Do NOT begin:
+- retention engine
+- content cadence engine
+- command center UI

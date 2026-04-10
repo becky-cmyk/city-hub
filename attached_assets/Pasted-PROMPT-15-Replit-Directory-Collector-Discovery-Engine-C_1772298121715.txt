@@ -1,0 +1,186 @@
+PROMPT 15 (Replit) — Directory/Collector Discovery Engine (Crawl + Detect + Extract Territory/Niche + Micro License Prospect Pipeline)
+
+GOAL
+Add a system that:
+1) Identifies “directory-like” sites and local list/collection operators from what we already have (seeded entities + websites).
+2) Crawls those sites (lightly) to extract:
+   - the niche/category focus (food, pets, senior, contractors, neighborhoods, etc.)
+   - the territory they cover (Charlotte-wide, specific neighborhoods, specific counties, specific zip clusters)
+   - their business model signals (ads, sponsorships, memberships, “submit event”, “list your business”)
+3) Buckets them as HIGH-VALUE micro license prospects and surfaces them in an Operator/Admin pipeline.
+
+CONSTRAINTS
+- Use our existing website crawl infrastructure and throttling.
+- No new external data sources required.
+- Admin-only by default; can optionally show to licensees later.
+- Do not scrape deeply: max 5 pages per site for this engine.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) directory_prospects
+- id (pk)
+- metro_id
+- entity_id (nullable)                 // link to entities if it started as a seeded listing
+- root_domain (string)
+- website_url (string)
+- crawl_status (enum: PENDING|SUCCESS|FAILED|BLOCKED) default PENDING
+- directory_score (int 0-100)
+- territory_json (json nullable)       // inferred areas: neighborhoods, cities, counties, zips
+- niche_tags_json (json nullable)      // inferred verticals: pets, food, senior, events, etc.
+- monetization_signals_json (json)     // ads, sponsorship, membership, “advertise”, etc.
+- contact_methods_json (json)          // email/form/social/phone if found
+- evidence_json (json)                 // why we classified as directory
+- bucket (enum: MICRO_LICENSE_TARGET|PARTNER_TARGET|IGNORE) default MICRO_LICENSE_TARGET
+- computed_at (datetime)
+- created_at, updated_at
+Unique: (root_domain)
+
+2) directory_site_pages (optional, for traceability)
+- id (pk)
+- directory_prospect_id (fk)
+- url
+- page_type (enum: HOME|ABOUT|ADVERTISE|SUBMIT|LISTINGS|CONTACT|EVENTS|BLOG|OTHER)
+- title (nullable)
+- text_excerpt (nullable, short)
+- fetched_at
+
+--------------------------------------------------
+PART B — CANDIDATE GENERATION (WHERE DO WE GET SITES?)
+--------------------------------------------------
+
+Create a job:
+ /server/intelligence/directoryProspects/generateDirectoryCandidates.ts
+
+Candidate inputs (no new sources):
+- entities with website present (especially those categorized as: media, marketing, community org, tourism, “events”, “guide”, “magazine”)
+- previously bucketed CONTENT_SOURCE_ONLY domains (from prior prompts)
+- sites where crawl detected RSS/feed links, “submit event”, “advertise”, “directory”, “sponsor”
+
+Store unique root domains into directory_prospects (PENDING) if not present.
+
+--------------------------------------------------
+PART C — DIRECTORY DETECTION + EXTRACTION CRAWL
+--------------------------------------------------
+
+Create:
+ /server/intelligence/directoryProspects/directoryCrawler.ts
+
+For each directory_prospect:
+- fetch homepage
+- auto-discover and fetch up to 4 additional pages by prioritizing links containing:
+  - directory, listings, businesses, places, members
+  - submit, add listing, claim, get listed
+  - advertise, sponsor, media kit
+  - events, calendar
+  - neighborhoods, areas we serve, locations
+
+Extraction logic (lightweight, deterministic):
+1) DIRECTORY SIGNALS (increase directory_score)
+- page contains keywords: “directory”, “listings”, “get listed”, “add your business”, “businesses”, “members”, “sponsors”, “advertise with us”
+- presence of category navigation like “Restaurants / Shopping / Services”
+- URL patterns: /directory, /businesses, /listings, /members, /places
+- structured repeating “card” elements with names + addresses (detect via DOM repetition heuristic)
+
+2) NICHE INFERENCE (niche_tags_json)
+- Map keyword clusters to tags:
+  - pets, groomer, vet -> PETS
+  - restaurants, brunch, bars -> FOOD
+  - senior, assisted living -> SENIOR
+  - contractors, roofing -> HOME_SERVICES
+  - apartments, leasing -> MULTIFAMILY
+  - events, calendar -> EVENTS
+  - “Charlotte” + “neighborhood” -> NEIGHBORHOODS
+Store top 3 tags with confidence.
+
+3) TERRITORY INFERENCE (territory_json)
+- Extract mentions of:
+  - city names (Charlotte, Huntersville, etc.)
+  - neighborhood names (South End, NoDa, etc.)
+  - county names (Mecklenburg, Gaston, etc.)
+  - zip codes (regex \b\d{5}\b)
+Store:
+  { cities:[], neighborhoods:[], counties:[], zips:[] }
+Keep it “inferred”, not authoritative.
+
+4) MONETIZATION SIGNALS (monetization_signals_json)
+Detect:
+- ads/sponsorship: “sponsor”, “advertise”, “media kit”, “partners”
+- paid listings: “get listed”, “pricing”, “membership”
+- newsletter: “subscribe” + “sponsored”
+- affiliate: “coupon”, “deals”, “promo code” (optional)
+
+5) CONTACT METHODS (contact_methods_json)
+From crawl:
+- business/public email
+- contact form URL
+- phone
+- socials
+Store best outreach path.
+
+Update directory_prospects:
+- crawl_status
+- directory_score
+- territory_json, niche_tags_json, monetization_signals_json, contact_methods_json, evidence_json
+- computed_at
+
+Scoring example:
+- +25 “get listed/add listing/claim listing”
+- +20 directory/listings pages detected
+- +15 monetize signals (advertise/sponsor)
+- +15 territory explicit (cities/neighborhoods/zips)
+- +10 niche clarity (top tag confidence > threshold)
+Cap at 100.
+
+Bucket rules:
+- MICRO_LICENSE_TARGET if directory_score >= 60
+- PARTNER_TARGET if 40–59
+- IGNORE if < 40
+
+--------------------------------------------------
+PART D — MICRO LICENSE SALES PIPELINE VIEW
+--------------------------------------------------
+
+Admin-only page:
+ /admin/intelligence/micro-license-prospects
+
+Tabs:
+1) MICRO_LICENSE_TARGET (score desc)
+2) PARTNER_TARGET
+Columns:
+- domain
+- inferred niche
+- inferred territory
+- monetization signals
+- best contact method
+Actions:
+- “Create Outreach Task”
+- “Generate Pitch Link” (pre-filled micro license landing link with niche/territory params)
+- “Add Notes”
+- “Mark Contacted / Follow-up date”
+
+(Optional) operator view later if desired.
+
+--------------------------------------------------
+PART E — SAFETY + COST CONTROLS
+--------------------------------------------------
+- max 5 pages/site
+- throttle 1 request/3s/domain
+- global concurrency 2–3
+- cache robots decisions
+- re-crawl interval 60 days unless manually triggered
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+1) System generates candidate domains from existing entities/content sources.
+2) Crawler classifies directory-like sites with a clear score and evidence.
+3) Territory + niche are inferred and visible in admin pipeline.
+4) Admin can quickly see which sites are best micro license prospects and how to contact them.
+
+DELIVERABLES
+- migrations: directory_prospects (+ optional directory_site_pages)
+- candidate generator job
+- directory crawler + extractor
+- admin pipeline UI
+- task hooks (reuse your outreach task table if present; otherwise create simple admin_tasks)

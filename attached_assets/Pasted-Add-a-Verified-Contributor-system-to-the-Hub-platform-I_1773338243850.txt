@@ -1,0 +1,247 @@
+Add a “Verified Contributor” system to the Hub platform.
+
+IMPORTANT CONTEXT
+This already exists conceptually as a community-support and anti-spam layer. Do NOT reposition it as a fee-based feature. The purpose is:
+- reduce spam and junk submissions
+- create a light identity/trust layer
+- support the Community Fund
+- allow optional higher contribution levels
+- keep basic community participation open
+
+This is NOT about changing the community philosophy.
+This is about building the product structure around Verified Contributor status.
+
+CORE MODEL
+There should be two main contributor states:
+
+1. Contributor (free)
+- can submit content
+- may enter moderation/review
+- lower trust level
+- limited posting / lower priority
+
+2. Verified Contributor
+- receives verified badge/status
+- unlocked by successful contribution / verification checkout
+- eligible for faster publishing / higher trust handling / better visibility
+- contribution supports the Community Fund
+
+OPTIONAL CONTRIBUTION TIERS
+Keep the base verification accessible, but allow optional higher contribution levels.
+
+Example tiers:
+- $1 Standard Verification
+- $5 Community Supporter
+- $10 Community Builder
+- $15 Community Champion
+
+IMPORTANT:
+All paid tiers unlock the SAME Verified Contributor status.
+Do NOT create a class divide in publishing rights based on amount.
+Higher tiers are voluntary community support levels, not better editorial power.
+
+GOAL
+Build the structure so the platform can:
+- mark someone as a Verified Contributor after successful payment
+- store the contribution amount and tier
+- display verification status where appropriate
+- use verification status in moderation/trust logic
+- surface Community Fund metrics
+- optionally encourage larger support without making it feel pushy
+
+DATA MODEL
+Add or extend contributor/user-related data with fields like:
+
+User / Contributor
+- id
+- displayName
+- slug
+- email
+- profileImageUrl
+- bio
+- isContributor
+- isVerifiedContributor
+- contributorStatus (free / verified / trusted / admin if needed later)
+- verificationTier (standard / supporter / builder / champion)
+- verificationAmount
+- verificationPaymentProvider
+- verificationPaymentId
+- verificationCompletedAt
+- verificationExpiresAt (nullable; probably null for one-time)
+- moderationTrustScore (default low, increase later)
+- firstVerifiedSubmissionAt (nullable)
+- cityId / microHubId context if relevant
+- createdAt
+- updatedAt
+
+ContributorSubmissionStats
+- id
+- userId
+- totalSubmissions
+- approvedSubmissions
+- rejectedSubmissions
+- flaggedSubmissions
+- pendingSubmissions
+- autoPublishedCount
+- lastSubmissionAt
+- createdAt
+- updatedAt
+
+CommunityFundLedger
+- id
+- userId (nullable if anonymous support later)
+- sourceType (verified_contributor / extra_support / listing_verification / event_submission / other)
+- sourceEntityId (nullable)
+- contributionTier
+- grossAmount
+- processingFeeAmount (nullable if available)
+- netAmount (nullable)
+- paymentProvider
+- paymentId
+- paymentStatus
+- recordedAt
+- notes
+
+FEATURE / PERMISSION IDEAS
+Build the structure so verified status can influence behavior in a flexible way.
+
+Free Contributor ideas:
+- submit stories/events/tips/business suggestions
+- moderation queue required
+- lower daily submission limits
+- no badge
+- less weight in ranking
+
+Verified Contributor ideas:
+- verified badge on profile and submissions
+- faster publishing path
+- lighter moderation
+- higher daily submission limits
+- ability to have byline shown publicly
+- eligible for featured contributor profile later
+- trusted signal in search / contributor pages
+
+Do NOT hardcode all moderation rules permanently.
+Create a configurable policy layer if possible.
+
+UX / PRODUCT IDEAS
+Create a clean verification experience.
+
+Verified Contributor entry points:
+- contributor profile page
+- after first approved submission
+- after a submission is pending review
+- community page
+- “Support the Hub” block
+- callout on story/event submission pages
+
+Suggested UX copy patterns:
+- “Become a Verified Contributor”
+- “Support the Community Fund and verify your contributor profile”
+- “Help keep the Hub trusted, local, and spam-resistant”
+
+IMPORTANT:
+Do not call it a fee in the product UI.
+Treat it as verification / community support.
+
+VERIFICATION FLOW
+Build the structure for this flow:
+
+1. User clicks Become Verified Contributor
+2. User sees optional contribution levels
+3. User selects amount
+4. Stripe Checkout opens
+5. Successful webhook / confirmation marks user verified
+6. User profile updates with verified status
+7. Confirmation screen explains impact and next benefits
+
+Store:
+- amount selected
+- tier selected
+- payment success state
+- verified status
+- timestamp
+
+COMMUNITY FUND IDEAS
+Create structure for future Community Fund visibility.
+
+Potential UI blocks:
+- total verified contributors
+- total contributions raised
+- breakdown by tier
+- recent supporters count
+- what the fund supports
+- community projects / improvements supported
+
+Need not be fully public yet, but the architecture should support it.
+
+ADMIN / MODERATION IDEAS
+Add admin capabilities to:
+- view all verified contributors
+- filter by tier
+- view total contributions
+- view contributor trust/submission stats
+- manually grant/revoke verified status if needed
+- inspect payment references
+- see moderation performance by contributor
+
+CONTENT / TRUST IDEAS
+Verified status should be usable by the moderation system.
+
+Examples:
+- free contributors always require moderation
+- verified contributors may qualify for light moderation
+- trusted contributors (future level) may auto-publish
+- flags/reports can lower trust score even if verified
+
+The point:
+verification is a trust input, not the only trust signal
+
+PROFILE / DISPLAY IDEAS
+Create reusable display patterns:
+- verified contributor badge
+- contributor card with tier label if desired
+- byline badge on stories/events
+- contributor profile page
+- small “supports the Community Fund” marker if appropriate
+
+Keep visuals clean and community-oriented, not gamified in a tacky way.
+
+OPTIONAL FUTURE IDEAS
+Architect for later expansion:
+- trusted contributor earned status
+- local reporter / neighborhood correspondent levels
+- anonymous community support donations
+- recurring supporter mode
+- contributor spotlight pages
+- contributor portfolio / archive page
+- badges by hub or neighborhood
+- “support another $5” after verification
+
+DO NOT overbuild the future pieces now.
+Just leave room for them.
+
+TECHNICAL EXPECTATIONS
+Implement the product structure cleanly in the existing Hub codebase.
+
+Need:
+- schema updates
+- verification tier config
+- reusable verification CTA component
+- verified contributor state on user profile
+- community fund ledger recording
+- admin reporting basics
+- hooks for moderation logic
+- reusable verified badge component
+
+If Stripe already exists in the app, reuse current payment/webhook patterns from business listing verification where appropriate.
+Do not break existing verification flows.
+This should be extendable and modular.
+
+DELIVERABLES
+At the end provide:
+- what models/fields were added
+- what UI components/pages were added
+- what admin/reporting views were added
+- what moderation hooks were prepared
+- what assumptions/placeholders remain

@@ -1,0 +1,48 @@
+import { useRef, useCallback, useState } from "react";
+import { createRecorderWithFallback } from "@/lib/audio-mime";
+
+export type RecordingState = "idle" | "recording" | "stopped";
+
+export function useVoiceRecorder() {
+  const [state, setState] = useState<RecordingState>("idle");
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const mimeRef = useRef<string>("audio/webm");
+
+  const startRecording = useCallback(async (): Promise<void> => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const { recorder, mimeType } = createRecorderWithFallback(stream);
+    mimeRef.current = mimeType;
+
+    mediaRecorderRef.current = recorder;
+    chunksRef.current = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunksRef.current.push(e.data);
+    };
+
+    recorder.start(100);
+    setState("recording");
+  }, []);
+
+  const stopRecording = useCallback((): Promise<Blob> => {
+    return new Promise((resolve) => {
+      const recorder = mediaRecorderRef.current;
+      if (!recorder || recorder.state !== "recording") {
+        resolve(new Blob());
+        return;
+      }
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: mimeRef.current });
+        recorder.stream.getTracks().forEach((t) => t.stop());
+        setState("stopped");
+        resolve(blob);
+      };
+
+      recorder.stop();
+    });
+  }, []);
+
+  return { state, startRecording, stopRecording };
+}

@@ -1,0 +1,172 @@
+Build a reusable “Micro Hub Pulse Issue Page” template inside the existing City Hub / Charlotte Hub codebase.
+
+GOAL
+Create one standard, reusable issue-page template that can be used for any micro hub print issue and its matching online edition. This page is the digital twin of the printed Hub Pulse piece. It should be easy to duplicate/populate for each new issue, mobile-friendly, clean, readable, and built for local discovery and conversion.
+
+IMPORTANT POSITIONING
+This page is not a blog post template, not a dashboard, and not a generic marketing landing page.
+It should feel like:
+- a local media / community pulse page
+- an online edition of the printed issue
+- a bridge into the micro hub ecosystem
+
+DESIGN INTENT
+- clean white or very light background
+- use brand colors as accents only
+- minimal visual clutter
+- strong typography
+- clear spacing
+- readable on mobile first
+- simple editorial feel
+- not overly graphic-heavy
+- not card spam
+- not tile directory feel
+
+ARCHITECTURE RULE
+Follow the existing City Hub architecture:
+Hub Presence / existing objects / discovery surfaces.
+Do not create a separate disconnected system if the page can be driven by existing data structures or a simple issue object.
+If a new issue object is needed, keep it lean and reusable.
+
+BUILD A REUSABLE TEMPLATE WITH THESE SECTIONS
+
+1. HERO
+- micro hub / district name
+- issue title
+- short intro / issue summary
+- optional issue date or issue number
+- primary CTA button
+
+2. FEATURED STORY
+- headline
+- optional image
+- expanded story body
+- clean readable text width
+- optional secondary CTA
+
+3. QUICK HITS
+- short local bullets / trivia / did-you-know / local snapshots
+- should support 3 to 6 items
+- keep visually compact and skimmable
+
+4. FEATURED BUSINESSES
+- top placements / premium businesses
+- each should support:
+  - business name
+  - short description
+  - image/logo optional
+  - CTA button
+  - link target
+
+5. BUSINESS / AD GRID
+- reusable grid for standard advertiser cards
+- each card should support:
+  - business name
+  - short line
+  - image/logo optional
+  - CTA button
+  - link target
+- grid should be clean and responsive
+- this is the online counterpart to print ad placements
+
+6. GIVEAWAY / ENGAGEMENT BLOCK
+- optional section
+- supports:
+  - title
+  - short instructions
+  - CTA button / form link
+
+7. CONVERSION BLOCK
+- “Want to be featured?” / “Claim your listing” / “Join the next issue”
+- reusable CTA section that can be edited per issue
+
+8. FOOTER
+- light branded footer
+- optional link back to main hub or district page
+
+REUSABILITY REQUIREMENT
+Build this so a new issue can be created quickly by changing content/data only.
+Do not require layout rebuilding every time.
+
+PREFERRED IMPLEMENTATION
+Create:
+- one reusable page template
+- one issue data model or config object
+- one featured business component
+- one advertiser card/grid component
+- one quick hits component
+- one CTA block component
+
+MINIMUM ISSUE DATA FIELDS
+Support these fields at minimum:
+- slug
+- districtName
+- issueNumber
+- issueTitle
+- intro
+- heroCTA
+- featuredStory:
+  - title
+  - image
+  - body
+  - ctaText
+  - ctaLink
+- quickHits[]
+- featuredBusinesses[]
+- advertisers[]
+- giveaway:
+  - enabled
+  - title
+  - text
+  - ctaText
+  - ctaLink
+- conversionBlock:
+  - title
+  - text
+  - ctaText
+  - ctaLink
+
+URL STRUCTURE
+Support clean issue URLs like:
+- /pineville/pulse/001
+- /southend/pulse/002
+
+or a similarly clean scalable pattern already aligned to the app’s routing.
+
+CHARLOTTE WORKFLOW PREP
+Prepare this template so Charlotte can later generate/populate a new issue from a structured admin task or content object.
+That means:
+- keep fields clearly named
+- keep content sections easy to populate
+- avoid hardcoded district-specific content
+- make it easy to create a new issue entry and publish
+
+ADMIN / OPERATOR USABILITY
+If practical, create a simple way for an operator to:
+- duplicate a prior issue
+- update text
+- swap featured businesses
+- swap advertiser cards
+- update CTA links
+without rebuilding the page structure
+
+RESPONSIVE RULES
+- mobile first
+- desktop still polished
+- clean vertical stacking on mobile
+- featured businesses and advertiser grid should gracefully collapse
+
+DO NOT
+- do not make this look like a dashboard
+- do not overuse cards or heavy shadows
+- do not make this feel like a social feed
+- do not create unnecessary duplicate systems
+- do not build a complicated CMS if a lean reusable structure works
+
+OUTPUT NEEDED
+Implement the reusable issue-page template in the current codebase and provide:
+1. the new route/path structure
+2. the template/component files created
+3. the data structure used for each issue
+4. a simple example issue populated for testing
+5. a short note on how Charlotte/admin can create the next issue quickly

@@ -1,0 +1,325 @@
+You are working INSIDE the existing Charlotte / City Hub app codebase.
+
+This is Prompt 3.
+
+The entitlement framework and operational gating layer are already being added.
+Now map the actual business packages, feature levels, add-ons, and credit usage rules so the system reflects how the City Hub is sold in real life.
+
+IMPORTANT:
+Do NOT build a new app.
+Do NOT rebuild modules.
+Do NOT create fake placeholder packaging disconnected from the current ecosystem.
+This prompt is about turning the real sales structure into enforceable package logic inside the existing app.
+
+GOAL:
+Define the package matrix so the platform knows:
+- what each level includes
+- what is gated
+- what is optional via add-on
+- what can be done with credits as one-off usage
+- what gets broader distribution or visibility
+- what should remain admin/operator managed
+
+==================================================
+PRIMARY PRINCIPLE
+==================================================
+
+The City Hub is sold as a layered ecosystem.
+
+That means:
+- some things are included in the base level
+- some things are recurring add-ons for people who want ongoing use
+- some things can be done occasionally with credits
+- some things are premium visibility/distribution opportunities
+- some things are internal/operator-only functions
+
+The system must support all of these without requiring custom handling every time.
+
+==================================================
+PART 1 — PACKAGE / PLAN LEVELS
+==================================================
+
+Set up the package structure so it can be enforced in the entitlement layer.
+
+Use these working levels unless the existing app already has near-equivalent names that should be preserved:
+
+- Free
+- Verified
+- Charter
+- Enhanced
+- Enterprise
+
+If the existing app already has “Business Presence” language or a current pricing/tier model, preserve the app’s current naming where possible, but structure it so these levels are clearly mapped.
+
+==================================================
+PART 2 — PACKAGE INTENT
+==================================================
+
+Use the following business intent for each level.
+
+FREE
+Purpose:
+- basic discovery presence or participation entry
+- low-friction entry into the hub
+- mostly viewing / limited participation
+- does not unlock serious commercial use
+
+VERIFIED
+Purpose:
+- entry paid presence
+- verified participation
+- can begin using selected posting and visibility functions
+- includes limited usage / limited credits
+
+CHARTER
+Purpose:
+- stronger business/brand presence
+- more visibility
+- more participation rights
+- better placement / better inclusion in hub activity
+- includes more credits and better distribution eligibility
+
+ENHANCED
+Purpose:
+- serious active participants using the hub as an ongoing channel
+- more tools, more visibility, more distribution
+- suitable for businesses/brands/operators wanting stronger recurring use
+
+ENTERPRISE
+Purpose:
+- top-tier presence or partner-level usage
+- broad access, expanded rights, premium visibility, multi-location or more advanced network use where appropriate
+
+==================================================
+PART 3 — CORE MODULES TO MAP
+==================================================
+
+Map package logic across these existing ecosystem areas:
+
+- hub presence / business listing
+- creator presence
+- expert presence
+- employer/jobs
+- events
+- marketplace / classifieds / selling
+- pulse / story / content participation
+- featured placement / boosts
+- media participation
+- social distribution eligibility
+- video / podcast / broader content distribution
+- multi-hub or broader footprint if already supported
+- analytics / reporting if available
+- admin/operator capabilities (not customer package items)
+
+==================================================
+PART 4 — PACKAGE MAPPING RULES
+==================================================
+
+Apply this logic as the starting framework.
+
+A. FREE
+Should generally allow:
+- basic profile/presence if already supported
+- limited discoverability
+- view hub content
+- possibly submit/request participation where moderation exists
+- no major commercial posting rights by default
+
+Should generally NOT include:
+- unlimited event posting
+- unlimited job posting
+- storefront/marketplace selling
+- premium placement
+- broad media distribution
+- advanced boosts
+
+B. VERIFIED
+Should generally allow:
+- verified listing/presence
+- access to selected publishing/posting actions
+- limited event/job/marketplace actions depending on module
+- small monthly credit allocation
+- low-to-moderate visibility participation
+
+Should not automatically include all premium placements or expanded media distribution.
+
+C. CHARTER
+Should generally allow:
+- stronger presence
+- more included actions
+- higher posting limits
+- more credits
+- better placement eligibility
+- eligibility for stronger pulse/content exposure
+- stronger promotional participation
+
+D. ENHANCED
+Should generally allow:
+- larger included action set
+- broader recurring usage rights
+- stronger visibility/distribution
+- more advanced promotional/feature tools
+- larger credit pool
+- broader module access
+
+E. ENTERPRISE
+Should generally allow:
+- highest visibility and inclusion rights
+- expanded distribution eligibility
+- advanced placement options
+- multi-location / multi-entity support where relevant
+- top analytics/reporting access if supported
+- premium handling paths if already present in the app
+
+==================================================
+PART 5 — ADD-ON STRATEGY
+==================================================
+
+Add-ons are for users who want a function as an ongoing lane, not just a one-time use.
+
+Build package mapping to support add-ons such as:
+- job board access / recurring job posting
+- marketplace storefront
+- event host / recurring event posting
+- expert profile
+- creator network / creator tools
+- featured distribution
+- premium placement
+- video channel
+- podcast channel
+- multi-hub presence
+
+Important business rule:
+A user may not need the recurring add-on if they only want occasional use.
+That is where credits come in.
+
+So:
+- add-on = ongoing functional lane
+- credit = occasional action or one-time use
+
+==================================================
+PART 6 — CREDIT LOGIC FOR PACKAGES
+==================================================
+
+Map credits as flexible one-time usage.
+
+Examples of actions that may be credit-eligible:
+- post one event
+- post one job
+- list one classified
+- add one marketplace listing
+- push content into a featured lane
+- boost a story/post
+- request social distribution
+- unlock one premium placement action
+- request video/podcast distribution if allowed
+
+Important rule:
+Credits should allow occasional access without forcing the user into a recurring add-on.
+
+Example:
+- business does not subscribe to Job Board add-on
+- business can still use credits to post a one-off job
+
+Example:
+- seller does not subscribe to Marketplace Storefront
+- seller can still spend credits to post a one-time item
+
+Use this framework throughout the package mapping.
+
+==================================================
+PART 7 — VISIBILITY / PLACEMENT / DISTRIBUTION
+==================================================
+
+Map which levels are eligible for stronger visibility.
+
+Possible visibility/distribution states:
+- standard listing/discovery
+- priority placement
+- featured placement
+- pulse inclusion
+- stronger pulse placement
+- social distribution eligibility
+- hub TV / venue TV eligibility
+- hub radio / podcast / video eligibility
+- newsletter inclusion eligibility
+- multi-hub distribution eligibility
+
+Not every tier should receive every destination automatically.
+Build the package logic so each level has a controlled visibility ladder.
+
+==================================================
+PART 8 — ACTION MATRIX
+==================================================
+
+Create a readable business-rule matrix in code/config for each important action.
+
+For each action define:
+- included tiers
+- eligible add-on
+- credit-eligible yes/no
+- credit cost
+- approval required yes/no
+- visibility/distribution side effects
+
+At minimum create mappings for:
+- create/edit business presence
+- create/edit creator presence
+- create/edit expert presence
+- post event
+- post job
+- create marketplace/classified listing
+- submit story/content
+- boost feature/premium placement
+- request social distribution
+- request video/podcast distribution
+- access advanced analytics if present
+- access multi-hub support if present
+
+==================================================
+PART 9 — UI / UX OUTPUTS
+==================================================
+
+Make sure the package mapping can power simple UI outputs such as:
+- Included in Verified
+- Included in Charter and above
+- Requires Event Host add-on
+- Use 1 credit to post this event
+- Upgrade to Enhanced for broader distribution
+- Enterprise only
+- Operator approval required
+
+Keep this simple and clean.
+
+==================================================
+PART 10 — ADMIN / SALES READABILITY
+==================================================
+
+Structure the package definitions so they are readable by humans later.
+
+Need a clear place where I can later review:
+- what each level includes
+- what each add-on unlocks
+- what credits can be used for
+- what content gets better distribution
+- what upgrade path to show
+
+This should not be buried in scattered conditionals.
+
+==================================================
+PART 11 — DELIVERABLES
+==================================================
+
+Implement and return:
+
+1. package/tier mapping definitions
+2. add-on mapping definitions
+3. credit-eligible action mapping
+4. visibility/distribution rights mapping
+5. upgrade-path outputs for blocked actions
+6. any modules needing business-rule confirmation
+7. a readable summary of the package matrix that was encoded into the app
+
+If some package decisions still need manual final pricing or naming confirmation, structure the logic anyway and clearly mark the adjustable points.
+
+Build this as the pricing/package governance layer for the existing City Hub app so the app understands how what I sell actually works together.

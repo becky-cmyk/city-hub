@@ -1,0 +1,56 @@
+Refine the Hub Screens / TV programming engine with stronger anti-fatigue and channel-behavior rules.
+
+GOAL
+Make the channel feel like a real local station that evolves throughout the day and does not numb venue owners or staff.
+
+ADD / ENFORCE THESE RULES
+
+1. LOOP REPETITION RULES
+- Never repeat the same full loop back-to-back unless there are no other eligible loops.
+- Prefer at least 2 other loops before replaying the same loop again.
+- Track recently played loop IDs per screen.
+
+2. ITEM REPETITION RULES
+- Do not replay the exact same narrated segment within 30 minutes unless inventory is low.
+- Do not replay the exact same venue insert within 20 minutes unless the venue has very little content.
+- Do not replay the exact same support local placement too close together.
+- Spread out paid/community placements naturally.
+
+3. VOICE FATIGUE RULES
+- Do not place spoken segments too close together.
+- Default minimum gap between spoken segments: 3 minutes.
+- Allow screen-level override.
+- Vary host intro phrases so the same phrase does not repeat often.
+
+4. CHANNEL BALANCE RULES
+Maintain approximate balance targets over time:
+- narrated segments: limited and spaced
+- venue content: visible but not overwhelming
+- support local / community placements: editorial feel, not ad spam
+- real-time useful info: weather/traffic/sports updates
+- entertainment / social / dynamic visual content for attention
+
+5. TIME-OF-DAY BEHAVIOR
+Allow schedule weighting by time of day:
+- daytime: more community/info
+- happy hour: more venue + events
+- evening/night: more nightlife / social / sports / entertainment
+- weekend: more weekend happenings and event countdowns
+
+6. FAILSAFE
+If content inventory is too low:
+- use metro fallback
+- use evergreen support-local/community items
+- use real-time items
+- do not let the player stall or show blank state
+
+7. ADMIN VISIBILITY
+In /admin/tv preview, show:
+- current selected loop
+- next eligible loops
+- recent loops played
+- recent spoken items played
+- estimated fatigue warnings if content pool is too small
+
+Implement this by extending the existing channel engine and admin preview.
+Do not replace current work—refine it.

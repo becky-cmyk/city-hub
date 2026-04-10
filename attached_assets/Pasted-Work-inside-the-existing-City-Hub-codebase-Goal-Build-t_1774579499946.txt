@@ -1,0 +1,301 @@
+Work inside the existing City Hub codebase.
+
+Goal:
+Build the distribution, ranking, and feed weighting system that determines:
+- what content is shown
+- where it is shown
+- in what order it appears
+
+This applies to:
+- Pulse (primary discovery feed)
+- Hub pages
+- Category pages
+- Future surfaces (map, search, etc.)
+
+This is NOT an intake task.
+This is NOT an editorial UI task.
+This is NOT a schema rebuild.
+
+This is the logic that turns routed content into a structured, high-quality, local-first experience.
+
+--------------------------------------------------
+CRITICAL GUARDRAIL — LOCAL-FIRST, MULTI-LAYER ROUTING
+--------------------------------------------------
+
+The system MUST respect:
+- categoryCoreSlug + categorySubSlug
+- geoPrimarySlug + geoSecondarySlug
+- hubSlug + countySlug
+- contentType
+- pulseEligible
+- publishStatus
+- policyStatus
+
+Do NOT:
+- flatten geo into one field
+- flatten category into one tag
+- sort purely by date
+- treat all content equally regardless of location relevance
+
+This is a weighted system, not a chronological list.
+
+--------------------------------------------------
+PART 1 — BASE ELIGIBILITY FILTER (ALL SURFACES)
+--------------------------------------------------
+
+Before ranking, enforce eligibility:
+
+Only include items where:
+- publishStatus = PUBLISHED
+- policyStatus = ALLOW
+
+For Pulse specifically:
+- pulseEligible = true
+
+Do NOT include:
+- REVIEW_NEEDED
+- SUPPRESS
+- ARCHIVED
+
+This applies globally across feed queries.
+
+--------------------------------------------------
+PART 2 — GEO PRIORITY STACK (CORE OF SYSTEM)
+--------------------------------------------------
+
+Ranking must prioritize geographic relevance.
+
+Define geo weighting tiers:
+
+Tier 1:
+- geoPrimarySlug matches user context (location or selected hub)
+
+Tier 2:
+- geoSecondarySlug matches user context
+
+Tier 3:
+- same hubSlug (if user is in a hub context)
+
+Tier 4:
+- same countySlug
+
+Tier 5:
+- same metro
+
+Scoring must reflect:
+Tier 1 > Tier 2 > Tier 3 > Tier 4 > Tier 5
+
+Rules:
+- never treat all items equally if geo differs
+- do not allow metro-wide content to overpower local content
+- preserve multi-geo (do not collapse primary/secondary)
+
+--------------------------------------------------
+PART 3 — CONTEXT-AWARE FEEDS
+--------------------------------------------------
+
+Build feed logic based on context:
+
+A. Pulse (default/global feed)
+- location-based (user or default city)
+- radius-aware
+- mix of categories and content types
+- favors nearby + relevant
+
+B. Hub page
+- hubSlug is dominant signal
+- content tied to that hub ranks highest
+- secondary geo still allowed but lower priority
+
+C. Category page
+- filter by categoryCoreSlug or categorySubSlug
+- still apply geo weighting within category
+- do NOT show irrelevant distant content above local content
+
+D. Future (map/search)
+- must reuse same scoring logic
+
+--------------------------------------------------
+PART 4 — CONTENT TYPE BALANCING
+--------------------------------------------------
+
+Prevent feed domination by one content type.
+
+Content types include:
+- story
+- event
+- job
+- business update
+- marketplace
+- etc.
+
+Implement soft balancing:
+- no single contentType should dominate feed
+- distribute types across scroll
+
+Do NOT hard-cap strictly.
+Use weighting to reduce clustering (e.g., 10 events in a row).
+
+--------------------------------------------------
+PART 5 — CATEGORY MIX BALANCING
+--------------------------------------------------
+
+Prevent feed domination by one category.
+
+Example:
+- not all “news”
+- not all “food”
+- not all “events”
+
+Use soft diversity:
+- encourage mix across categoryCoreSlug
+- avoid repeating same category excessively in sequence
+
+--------------------------------------------------
+PART 6 — RECENCY (BUT NOT DOMINANT)
+--------------------------------------------------
+
+Recency should matter but NOT override geo.
+
+Rules:
+- newer items rank higher within same geo tier
+- older local items can still beat newer distant items
+
+Do NOT:
+- sort purely by createdAt
+- allow recent but irrelevant items to dominate
+
+--------------------------------------------------
+PART 7 — BASIC SCORING MODEL
+--------------------------------------------------
+
+Implement a simple scoring formula combining:
+
+- geo score (highest weight)
+- recency score
+- content diversity adjustment
+- optional light randomness (to avoid static feeds)
+
+Example concept (not exact code):
+score =
+  geoWeight
++ recencyWeight
++ diversityAdjustment
++ smallRandomFactor
+
+Keep it simple and tunable.
+
+--------------------------------------------------
+PART 8 — PULSE-SPECIFIC LOGIC
+--------------------------------------------------
+
+Pulse should feel like:
+“what’s happening around me”
+
+So:
+- prioritize geoPrimary + proximity
+- maintain category mix
+- maintain contentType mix
+- respect pulseEligible strictly
+
+Also:
+- avoid showing identical or near-duplicate items back-to-back
+
+--------------------------------------------------
+PART 9 — HUB PAGE LOGIC
+--------------------------------------------------
+
+Hub page should feel like:
+“everything relevant to this place”
+
+So:
+- hubSlug match = dominant weight
+- geoPrimary within hub > secondary
+- allow spillover from nearby hubs but lower priority
+
+--------------------------------------------------
+PART 10 — CATEGORY PAGE LOGIC
+--------------------------------------------------
+
+Category pages should:
+- filter first by category
+- then rank by geo relevance
+- then recency
+
+Do NOT:
+- show distant items above local ones just because they match category
+
+--------------------------------------------------
+PART 11 — NO DUPLICATION / SINGLE SOURCE
+--------------------------------------------------
+
+Continue using rss_items as source.
+
+Do NOT:
+- duplicate items into multiple tables for feeds
+- create separate Pulse-specific records
+
+All feeds must read from same source and apply different ranking logic.
+
+--------------------------------------------------
+PART 12 — PERFORMANCE + PAGINATION
+--------------------------------------------------
+
+Ensure:
+- queries are paginated
+- ranking can scale (avoid loading entire dataset into memory if possible)
+- indexes support:
+  - geoPrimarySlug
+  - geoSecondarySlug
+  - hubSlug
+  - countySlug
+  - categoryCoreSlug
+  - publishStatus
+  - policyStatus
+  - pulseEligible
+
+--------------------------------------------------
+PART 13 — CONFIGURABILITY (LIGHT)
+--------------------------------------------------
+
+Make weights adjustable via config (not hardcoded deep in logic).
+
+Example:
+- geo weight multiplier
+- recency decay
+- diversity strength
+
+Do NOT build a full admin control panel yet.
+Just centralize constants.
+
+--------------------------------------------------
+PART 14 — SAFETY / GUARDRAILS
+--------------------------------------------------
+
+Do NOT:
+- revert to chronological feed
+- flatten geo hierarchy
+- flatten categories
+- ignore pulseEligible
+- over-engineer ML ranking
+
+Do:
+- prioritize local relevance
+- preserve multi-layer routing
+- maintain diversity in feed
+- keep system understandable and tunable
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary of changes
+2. where scoring logic lives
+3. how geo weighting is implemented
+4. how Pulse feed differs from hub/category feeds
+5. how contentType balancing works
+6. how category balancing works
+7. indexes added for performance
+8. config points for tuning weights
+9. known limitations / next improvements

@@ -1,0 +1,174 @@
+CITYCOREHUB / CLT CONNECTS
+PACK ZERO — MASTER VISION (AMENDED)
+
+I. CORE IDENTITY
+
+CityCoreHub is Local Business Operating Infrastructure.
+
+It is not:
+- Just a directory
+- Just a content site
+- Just a CRM
+- Just a Chamber
+- Just a review system
+
+It is a hybrid infrastructure platform combining:
+
+• Visibility Engine
+• Authority Engine
+• Membership / Chamber Layer
+• Lead Generation Layer
+• Micro-Site Layer
+• Community Engagement Layer
+• Event Monetization Layer
+• Relationship Integration Layer (via Living Contacts)
+• Referral Activation Layer (ReferMe)
+
+------------------------------------------------------------
+
+II. STRATEGIC REPLACEMENT INTENT
+
+CityCoreHub aims to reduce dependency on:
+
+• Google Business Profiles
+• Yelp-style review systems
+• Basic local websites
+• Lightweight CRMs for local sellers
+• One-off landing builders
+• Fragmented survey tools
+• Disconnected local marketing
+• Traditional Chamber of Commerce models
+
+------------------------------------------------------------
+
+III. TWO-SIDED ECOSYSTEM
+
+Side A — Businesses / Nonprofits / Volunteers
+- Listings
+- Reputation presence
+- Survey participation
+- Nominations & voting
+- Lead intake
+- Micro-site hosting
+- Membership tiers
+- Event participation
+- Managed marketing extension
+
+Side B — Community
+- Discovery by zone
+- Discovery by category
+- Nominations (including write-in)
+- Voting campaigns
+- Local authority recognition
+- Curated content
+- Nonprofit and volunteer spotlighting
+
+------------------------------------------------------------
+
+IV. LIVING CONTACTS INTEGRATION MODEL
+
+Living Contacts remains standalone.
+
+Architecture model:
+
+Living Contacts = Relationship Spine
+CityCoreHub = Authority + Visibility Module (Hat)
+ReferMe = Referral Activation Layer
+
+Integration via:
+- API bridge
+- Deep link
+- Optional future SSO
+- No database merging
+- No schema duplication
+
+CityCoreHub generates:
+- Leads
+- Visibility
+- Event participation
+- Community authority
+
+Living Contacts manages:
+- Follow-up
+- Relationships
+- Referrals
+- Context (Hats)
+- Conversion lifecycle
+
+------------------------------------------------------------
+
+V. CHAMBER-STYLE EXPANSION INTENT
+
+CityCoreHub will function as a modern digital Chamber replacement including:
+
+• Membership tiers
+• Authority positioning
+• Networking infrastructure
+• Event hosting
+• Community endorsements
+• Recognition campaigns
+• Marketing infrastructure for members
+
+------------------------------------------------------------
+
+VI. NOMINATIONS + VOTING (PLANNED)
+
+• Campaign-based awards
+• Write-in nominations
+• Moderation-first approval
+• Device-based vote controls (Phase 1)
+• Result snapshots
+• Monetizable sponsorship layers
+
+------------------------------------------------------------
+
+VII. MICRO-SITE LAYER (PREMIUM TIERS)
+
+Premium listings evolve into:
+
+• Expanded profile
+• Structured SEO
+• Media blocks
+• Event feed
+• Lead routing
+• Award badges
+• Survey display
+• Managed content options
+
+Revenue model:
+- Recurring subscription
+- Setup fee
+- Managed marketing add-ons
+
+------------------------------------------------------------
+
+VIII. INTERNAL SALES CAPTURE LAYER
+
+Internal mobile-first intake for:
+- Business prospects
+- Sponsors
+- Contributors
+- Vendors
+- Zone operators
+- Volunteers
+
+Includes:
+- Quick capture form
+- Follow-up tracking
+- Assignment
+- Conversion pathways
+- Attribution tracking
+
+------------------------------------------------------------
+
+IX. GUARDRAILS
+
+• Revenue-first sequencing
+• Multi-tenant architecture
+• No rebuild
+• No schema drift
+• No service workers
+• No heavy caching
+• Modular integration only
+• Living Contacts remains separate system
+• Feature creep prohibited mid-phase

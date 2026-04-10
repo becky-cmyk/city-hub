@@ -1,0 +1,337 @@
+SYSTEM ROLE
+You are building the Crown candidate discovery engine for the City Hub platform.
+
+OBJECTIVE
+For a given micro hub, identify the strongest businesses to invite into the Crown Program by combining:
+
+• category density
+• Google reputation
+• review count
+• social following
+• posting activity
+• hub relevance
+• existing platform presence
+
+DO NOT build the full UI.
+DO NOT redesign the Crown system.
+ONLY define and implement the discovery logic, scoring rules, and output structure so admin can review candidate lists per hub and per category.
+
+--------------------------------------------------
+PRIMARY GOAL
+
+Given a hub and category, produce a ranked shortlist of businesses that are most qualified to receive a Crown invitation.
+
+Examples:
+- NoDa + Best Coffee
+- Ballantyne + Best Realtor
+- South End + Best Fitness Studio
+
+--------------------------------------------------
+STEP 1 — INPUTS
+
+The engine should accept:
+
+1. hub_id
+2. hub_name
+3. hub_center_coordinates if available
+4. hub_radius_miles
+5. category_name
+6. category_type
+7. city_id
+
+--------------------------------------------------
+STEP 2 — CATEGORY SEARCH SOURCES
+
+Pull candidate businesses from available sources such as:
+
+• imported Google Places / seeded businesses
+• claimed business listings
+• existing Hub Presences
+• review-linked businesses
+• businesses already tied to events or content
+• businesses with creator or media mentions if relevant
+
+If Google-specific fields already exist in the codebase or DB, use them.
+If not, use existing business records and any stored review/rating fields.
+
+--------------------------------------------------
+STEP 3 — CATEGORY MATCH RULE
+
+A business should only be considered if it clearly matches the category.
+
+Examples:
+Best Coffee
+→ coffee shop, cafe, espresso bar
+
+Best Restaurant
+→ restaurant, dining, food venue
+
+Best Realtor
+→ realtor, real estate agent, real estate office
+
+Best Mortgage Broker
+→ mortgage broker, lender, loan officer
+
+Best Fitness Studio
+→ gym, yoga studio, pilates studio, training studio
+
+Use:
+• primary category
+• secondary category
+• keywords in business name
+• keywords in description
+• linked taxonomy / subcategory if available
+
+Return a category_match_reason for each candidate.
+
+--------------------------------------------------
+STEP 4 — HUB RELEVANCE RULE
+
+A business must be relevant to the hub.
+
+Hub relevance may be based on:
+
+• coordinates within hub radius
+• mapped neighborhood / zone
+• business address
+• zip code
+• service area if category supports service-area businesses
+
+Return:
+• distance_from_hub_center
+• hub_relevance_score
+
+--------------------------------------------------
+STEP 5 — MINIMUM CATEGORY VIABILITY CHECK
+
+Before opening a category, calculate:
+
+1. eligible_business_count
+2. qualified_business_count
+3. estimated_population_support if available
+4. estimated_voter_support if available
+
+Default category viability minimums:
+
+Coffee:
+- minimum 6 qualified businesses
+
+Restaurant:
+- minimum 10 qualified businesses
+
+Fitness:
+- minimum 5 qualified businesses
+
+Salon / Barber:
+- minimum 6 qualified businesses
+
+Boutique:
+- minimum 5 qualified businesses
+
+Realtor:
+- minimum 6 qualified businesses
+
+Mortgage:
+- minimum 4 qualified businesses
+
+If category does not meet viability, return:
+category_status = NOT_READY
+
+If it meets viability:
+category_status = READY
+
+--------------------------------------------------
+STEP 6 — CANDIDATE QUALIFICATION SIGNALS
+
+For each business, calculate these scores.
+
+A. Reputation Score
+Use available signals such as:
+• google_rating
+• google_review_count
+• internal reviews
+• neighborhood reviews
+• business rating signals
+
+Suggested logic:
+- rating under 4.0 lowers score heavily
+- strong review count increases score
+- no reviews should not rank highly unless there are strong alternate signals
+
+B. Audience Score
+Use available signals such as:
+• Instagram followers
+• Facebook followers
+• TikTok followers
+• YouTube subscribers
+• newsletter audience
+• platform audience indicators if stored
+
+If exact follower counts are unavailable, estimate from any existing social metadata fields and mark as estimated.
+
+C. Activity Score
+Use available signals such as:
+• posts in last 90 days
+• events hosted
+• recent content mentions
+• recent engagement in platform
+• recent business updates
+• active social links
+
+D. Platform Readiness Score
+Use:
+• claimed Hub Presence
+• profile completeness
+• badge presence
+• active status
+• existing business page completeness
+• media assets present
+• contact fields present
+
+--------------------------------------------------
+STEP 7 — CROWN CANDIDATE SCORE
+
+Calculate final score using this weighting:
+
+CROWN_CANDIDATE_SCORE =
+(reputation_score * 0.40)
++ (audience_score * 0.25)
++ (activity_score * 0.15)
++ (platform_readiness_score * 0.20)
+
+Also return the raw component scores.
+
+--------------------------------------------------
+STEP 8 — HARD FILTERS
+
+By default, use these minimum standards before inviting a business:
+
+Primary rule:
+• rating >= 4.0
+• review_count >= 15
+
+AND one of:
+• combined_social_followers >= 1000
+OR
+• review_count >= 50
+OR
+• internal community nominations >= 10
+OR
+• strong platform engagement signal
+
+These should be configurable by category.
+
+Example stricter categories:
+Realtor / Mortgage
+• rating >= 4.5 preferred
+• review_count >= 20 preferred
+
+If a business fails hard filters but still appears strong locally, mark:
+manual_review_required = true
+
+--------------------------------------------------
+STEP 9 — INVITATION TIERS
+
+Classify candidates into tiers.
+
+Tier 1 — Anchor Candidate
+High reputation, strong audience, strong activity
+
+Tier 2 — Strong Candidate
+Good reputation, moderate audience, solid activity
+
+Tier 3 — Emerging Candidate
+Strong local signs but weaker reach or incomplete profile
+
+Return invite_priority:
+HIGH / MEDIUM / LOW
+
+--------------------------------------------------
+STEP 10 — OUTPUT FORMAT
+
+For each hub + category return:
+
+1. category readiness summary
+2. total businesses found
+3. total qualified businesses
+4. category status (READY / NOT_READY / MANUAL_REVIEW)
+5. top 10 candidates ranked by Crown Candidate Score
+
+For each candidate return:
+
+• business_id
+• business_name
+• category_name
+• hub_name
+• category_match_reason
+• address
+• distance_from_hub_center
+• claimed_status
+• profile_completeness_percent
+• google_rating
+• google_review_count
+• internal_review_count
+• social_followers_combined
+• activity_last_90_days
+• reputation_score
+• audience_score
+• activity_score
+• platform_readiness_score
+• crown_candidate_score
+• invite_priority
+• manual_review_required
+• notes
+
+--------------------------------------------------
+STEP 11 — MARKETING READINESS FLAGS
+
+Add boolean flags for:
+
+• ready_for_claim_invite
+• ready_for_voting_campaign
+• ready_for_venue_tv
+• ready_for_creator_feature
+• ready_for_winner_spotlight
+
+Logic examples:
+ready_for_claim_invite = category_status READY and candidate passes hard filters
+ready_for_venue_tv = audience_score high OR activity_score high
+ready_for_creator_feature = strong story potential or strong local relevance
+
+--------------------------------------------------
+STEP 12 — HUB-LEVEL OUTPUT
+
+For each hub, provide a final hub summary:
+
+• hub_name
+• categories_scanned
+• categories_ready
+• categories_not_ready
+• best launch categories
+• recommended first 5 categories
+• recommended first 10 businesses to invite overall
+• whether hub is ready for Crown activation
+
+Hub is ready for Crown activation if:
+• at least 3 categories are READY
+• at least 15 qualified businesses total across launch categories
+
+--------------------------------------------------
+IMPORTANT RULES
+
+• Do not guess fake data
+• If a field is missing, mark it null and continue
+• Prefer ranked recommendations over broad dumps
+• Make logic configurable by category
+• Keep output structured and admin-friendly
+• Build for Charlotte first, but reusable for Indianapolis and other metros
+
+--------------------------------------------------
+FINAL TASK
+
+Implement the discovery logic and return:
+1. the scoring/threshold rules
+2. the query plan
+3. the functions/modules to add or update
+4. the exact output structure
+5. any missing fields that should be added later for better Crown candidate scoring

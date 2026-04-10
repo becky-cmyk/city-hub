@@ -1,0 +1,201 @@
+CLT CITY HUB — COMMERCE TAXONOMY (3 LEVELS)
+Format:
+L1 = Category (Top-Level)
+  L2 = Subcategory (Second-Level)
+    L3 = Micro Categories (Service/Focus Tags — searchable, used heavily in Enhanced)
+
+GLOBAL RULES (Architect)
+- L1/L2 are stable (rare changes). L3 is flexible (search tags).
+- Verified: 1 L2 + 0–3 L3 (or 0 L3 if you prefer)
+- Charter: 1 L2 + up to 3 L3
+- Enhanced: up to 3 L2 + up to 12 L3 (hard cap)
+- Voting/Reviews attach to a Commerce Entity AND optionally to a specific L2 (so “Best Roofer” works).
+- Awards/Top-10 are NOT categories; they are campaigns that reference L1/L2 + neighborhood + year.
+
+────────────────────────────────────────────
+L1. FOOD & DRINK
+  L2. Restaurants
+    L3. New openings, Date night, Brunch, Lunch specials, Late night, Outdoor patio, Rooftop, Private dining, Family-friendly, Vegan/vegetarian, Gluten-free, Local favorites
+  L2. Coffee & Tea
+    L3. Espresso bar, Roastery, Drive-thru, Study-friendly, Latte art, Pastries, Tea house, Boba
+  L2. Bars, Breweries & Wine
+    L3. Craft beer, Sports bar, Cocktail lounge, Wine bar, Live music nights, Trivia nights, Dog-friendly, Happy hour
+  L2. Bakeries & Desserts
+    L3. Custom cakes, Donuts, Ice cream, Gluten-free, Vegan, Late-night sweets
+  L2. Catering
+    L3. Corporate catering, Weddings, Drop-off, Full service, BBQ, Charcuterie
+  L2. Food Trucks & Pop-Ups
+    L3. Weekly schedule, Private events, Street festivals, Late-night
+  L2. Specialty Food & Markets
+    L3. International market, Butcher, Seafood, Gourmet, Meal prep
+
+────────────────────────────────────────────
+L1. HOME & PROPERTY
+  L2. Cleaning
+    L3. Deep clean, Move-in/out, Vacation rental, Post-construction, Carpet, Window cleaning, Organizing
+  L2. Landscaping & Lawn
+    L3. Hardscaping, Irrigation, Tree service, Mulch/pine straw, Drainage, Turf, Seasonal cleanup
+  L2. HVAC
+    L3. Repair, Replacement, Maintenance plans, Indoor air quality, Duct cleaning
+  L2. Plumbing
+    L3. Water heater, Drain cleaning, Leak detection, Sewer line, Fixtures, Emergency service
+  L2. Electrical
+    L3. Panel upgrade, EV charger, Lighting, Ceiling fans, Smart home, Generator
+  L2. Roofing & Exterior
+    L3. Roof repair, Roof replacement, Gutters, Siding, Storm damage, Insurance claim help
+  L2. Remodeling & Construction
+    L3. Kitchen, Bath, Additions, Decks/porches, Flooring, Painting, Drywall, Handyman
+  L2. Pest Control
+    L3. Termites, Mosquito, Rodents, Wildlife, Quarterly plans
+  L2. Moving & Storage
+    L3. Local moves, Long distance, Packing, Storage units, Junk removal
+  L2. Pressure Washing & Surface Care
+    L3. Roof cleaning, Sidewalks, Driveways, Decks, Soft wash, Concrete sealing
+  L2. Pools & Outdoor Living
+    L3. Pool service, Install, Repairs, Outdoor kitchens, Firepits, Pergolas
+
+────────────────────────────────────────────
+L1. HEALTH & WELLNESS
+  L2. Fitness & Training
+    L3. Personal training, Group classes, Strength, HIIT, CrossFit-style, Women’s fitness, Senior fitness
+  L2. Yoga, Pilates & Mobility
+    L3. Hot yoga, Reformer Pilates, Prenatal, Recovery, Breathwork
+  L2. Chiropractic & Physical Therapy
+    L3. Sports rehab, Injury recovery, Post-op, Manual therapy, Dry needling
+  L2. Medical & Dental
+    L3. Primary care, Pediatrics, Urgent care, Dental, Ortho, Cosmetic dentistry
+  L2. Mental Health
+    L3. Therapy, Couples counseling, Psychiatry, Teen counseling, Addiction support
+  L2. Nutrition & Coaching
+    L3. Weight loss, Sports nutrition, Meal planning, Diabetes support
+  L2. Pharmacy & Wellness Shops
+    L3. Compounding, Supplements, Immunizations
+  L2. Veterinary & Pet Health
+    L3. Grooming, Emergency, Holistic, Boarding-daycare health
+  L2. Alternative & Holistic
+    L3. Acupuncture, Massage therapy, IV therapy, Sauna/cryotherapy
+
+────────────────────────────────────────────
+L1. BEAUTY & PERSONAL CARE
+  L2. Hair
+    L3. Color specialist, Extensions, Curly hair, Barber fades, Blowouts, Bridal
+  L2. Nails
+    L3. Gel, Acrylic, Nail art, Pedicures
+  L2. Skincare & Aesthetics
+    L3. Facials, Waxing, Lashes, Brows, Microneedling, Injectables
+  L2. Spa & Massage
+    L3. Deep tissue, Sports massage, Prenatal, Couples
+  L2. Tattoo & Piercing
+    L3. Fine line, Traditional, Cover-ups, Jewelry
+  L2. Personal Styling
+    L3. Wardrobe, Makeup artist, Bridal glam
+
+────────────────────────────────────────────
+L1. RETAIL & LIFESTYLE
+  L2. Apparel & Accessories
+    L3. Boutique, Men’s, Women’s, Kids, Streetwear, Formal
+  L2. Home Decor & Furniture
+    L3. Vintage, Custom furniture, Lighting, Art prints
+  L2. Gifts & Specialty
+    L3. Local makers, Personalization, Subscription boxes
+  L2. Electronics & Tech Retail
+    L3. Repairs, Phone accessories, Gaming
+  L2. Grocery & Markets
+    L3. Organic, International, Farmers market vendors
+  L2. Pet Supplies
+    L3. Raw food, Grooming supplies, Specialty treats
+  L2. Automotive Retail
+    L3. Parts, Tires, Accessories, Detailing products
+  L2. Hobby & Collectibles
+    L3. Comics, Cards, Board games, Music gear
+
+────────────────────────────────────────────
+L1. ENTERTAINMENT & EXPERIENCES
+  L2. Music & Nightlife (Commerce)
+    L3. Live music venue, DJs, Late-night, Dance nights, Open mic
+  L2. Arts & Culture
+    L3. Galleries, Museums, Theater, Comedy
+  L2. Family Fun
+    L3. Indoor play, Trampoline, Mini golf, Arcades, Birthday parties
+  L2. Parks & Outdoors (Guides/Services)
+    L3. Outdoor rentals, Guided tours, Hiking groups, Paddle sports
+  L2. Sports & Athletics
+    L3. Leagues, Training facilities, Youth sports, Adult rec
+  L2. Classes & Workshops
+    L3. Cooking classes, Art classes, Dance, DIY workshops
+
+────────────────────────────────────────────
+L1. EVENTS & WEDDINGS
+  L2. Venues
+    L3. Wedding venues, Corporate venues, Outdoor venues, Private rooms
+  L2. Planning & Coordination
+    L3. Wedding planner, Corporate planner, Day-of coordination
+  L2. Catering & Bar Service (if not under Food)
+    L3. Bartenders, Mobile bar, Beverage packages
+  L2. Photography & Video
+    L3. Wedding, Corporate, Drone, Reels/short-form
+  L2. Music & Entertainment (Events)
+    L3. DJs, Bands, MCs, Photo booths
+  L2. Decor, Florals & Rentals
+    L3. Florist, Balloons, Lighting, Linens, Tents, Furniture rentals
+  L2. Beauty (Events)
+    L3. Bridal hair, Bridal makeup
+  L2. Printing & Signage
+    L3. Invitations, Menus, Banners
+
+────────────────────────────────────────────
+L1. PROFESSIONAL & BUSINESS SERVICES (B2B2C SUPPORT)
+  L2. Accounting & Tax
+    L3. Bookkeeping, Payroll, Small business, Personal tax, Audit help
+  L2. Legal
+    L3. Business law, Family law, Real estate law, Estate planning, Immigration
+  L2. Insurance (EXAMPLE YOU GAVE)
+    L3. Personal (auto/home/renters), Business (general liability/work comp), Life, Health, Medicare, Disability
+  L2. Financial Services
+    L3. Financial planning, Investments, Credit repair, Lending/mortgage
+  L2. Marketing & Advertising
+    L3. SEO, Paid ads, Branding, Social media, Video marketing, PR
+  L2. Graphic Design & Web
+    L3. Logo, Website, UX, Copywriting
+  L2. IT & Technology
+    L3. Managed IT, Cybersecurity, Cloud, Phone systems, POS
+  L2. HR, Staffing & Recruiting
+    L3. Temp staffing, Hiring, Resume services, Background checks
+  L2. Business Coaching & Consulting
+    L3. Leadership coaching, Sales coaching, Operations, Fractional exec
+  L2. Coworking & Office Space
+    L3. Hot desk, Dedicated office, Meeting rooms, Virtual office
+  L2. Print, Copy & Mail
+    L3. Flyers, Business cards, Signs, Direct mail
+  L2. Shipping, Logistics & Couriers
+    L3. Local courier, Freight, Packing, Storage
+  L2. Networking Groups & Business Communities
+    L3. Referral groups, Chambers, Industry meetups, Women’s networks, Young professionals, Nonprofit boards (service-oriented)
+
+────────────────────────────────────────────
+L1. REAL ESTATE & LOCAL LIVING
+  L2. Residential Real Estate
+    L3. Buyer agent, Seller agent, Luxury, First-time buyers
+  L2. Commercial Real Estate
+    L3. Leasing, Investment, Tenant rep
+  L2. Property Management
+    L3. Rentals, HOA/community mgmt
+  L2. Mortgage & Lending
+    L3. Pre-approval, Refi, VA/FHA
+  L2. Home Inspection & Appraisal
+    L3. Pre-listing inspection, New construction
+  L2. Title & Closing
+    L3. Settlement services, Notary
+
+────────────────────────────────────────────
+L1. COMMUNITY & CIVIC (PUBLIC-FACING SERVICE ONLY)
+  L2. Community Organizations
+    L3. Food pantry, Youth mentoring, Outreach, Community events, Mutual aid
+  L2. Senior Services (Community)
+    L3. Transportation, Meal support, Caregiver support, Activities
+  L2. Youth Programs
+    L3. After-school, Sports programs, Tutoring, Arts programs
+  L2. Civic & Advocacy
+    L3. Neighborhood associations, Public campaigns, Volunteer drives
+  L2. Faith-Based Services (Service Programs)
+    L3. Food distribution, Shelter support, Community clinics, Clothing drives

@@ -1,0 +1,41 @@
+Yes, that split makes sense.
+
+Proceed in this order:
+
+Task A: Orchestrator core (Parts 1, 2, 3)
+Task B: Opportunity + proposal engine with action templates and batch processing (Parts 4, 5, 6, 7)
+Task C: Search/recommendation connections, trust/geo hooks, inbox redefinition, command center + sales hooks (Parts 8, 9, 10, 11, 12)
+
+Important instructions:
+
+1. Extend the existing charlotte-chat-routes.ts pattern; do not replace it. The new charlotte-orchestrator.ts should become the brain and existing routes should delegate to it.
+
+2. Do NOT create another recommendation engine or another scoring engine.
+There should already be recommendation/scoring behavior in the trust engine and related systems. I want Charlotte to reuse that as the source of truth.
+
+3. What I want in Task C is a Charlotte-facing orchestration/recommendation layer that calls the existing trust/recommendation/scoring logic and uses it in conversation, with geo/context/intent layered on top where needed.
+
+So:
+- reuse existing trust engine
+- reuse existing scoring
+- reuse existing recommendation logic where it exists
+- do not duplicate or fork it
+
+If something is missing, extend the existing system carefully rather than creating a parallel one. Charlotte should be an access/orchestration layer over the existing recommendation/trust/scoring logic, not a separate recommendation engine.
+
+4. For action templates, wire into existing systems. Do not rebuild claim flow, CRM, outreach, story generation, Crown, TV/venue, radio, jobs, events, or marketplace systems. I want orchestration and reusable templates that connect those existing engines.
+
+5. Priority should be on real-world capture and expo processing first. Weight Task A + Task B highest.
+
+Priority order inside that:
+- intent parser
+- entity resolution
+- orchestrator routing
+- proposal engine
+- batch/directive processing
+- action templates
+
+6. Important guardrail:
+Do not let Task C become a detached recommendation engine. Charlotte recommendations must remain tied to real platform objects, discovery surfaces, and the existing trust/geo logic already in the system. This is a curated ecosystem recommendation layer, not a generic assistant search layer.
+
+Proceed in that order.

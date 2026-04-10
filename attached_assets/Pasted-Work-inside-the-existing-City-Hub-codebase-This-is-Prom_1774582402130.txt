@@ -1,0 +1,244 @@
+Work inside the existing City Hub codebase.
+
+This is Prompt 5.
+Do NOT rebuild the geo scoring work already completed.
+Do NOT rework the hub/category geo precedence logic that is now functioning correctly.
+
+Goal:
+Build the operator/editorial control layer for imported and AI-generated content so admin can:
+1. see where content landed
+2. see why it landed there
+3. correct it after publish
+4. unpublish/suppress/archive it
+5. manage review-needed items through a real queue
+
+This prompt is about editorial control and routing visibility, not feed scoring.
+
+--------------------------------------------------
+PART 1 — BUILD A REAL CONTENT REVIEW / EDITORIAL QUEUE
+--------------------------------------------------
+
+Create or refactor an admin queue for imported / AI-generated / RSS-derived content.
+
+Support at minimum these queue states:
+- REVIEW_REQUIRED
+- READY_TO_PUBLISH
+- PUBLISHED
+- PULSE_SUPPRESSED
+- UNPUBLISHED
+- ARCHIVED
+- SUPPRESSED
+
+The queue must no longer allow review-needed imported content to disappear silently.
+
+Admin must be able to view:
+- all review-needed items
+- all published imported items
+- all suppressed items
+- all unpublished items
+- all archived items
+
+Queue filters should include:
+- source
+- content type
+- core category
+- subcategory
+- geo primary
+- geo secondary
+- status
+- date created
+- last updated
+- policy state
+
+--------------------------------------------------
+PART 2 — POST-PUBLISH EDITORIAL CONTROL
+--------------------------------------------------
+
+For imported / AI-generated content, build admin editing controls after publish.
+
+Admin must be able to:
+- edit title
+- edit full article body
+- edit summary/excerpt
+- edit core category
+- edit subcategory
+- edit geo_primary
+- edit geo_secondary
+- edit related entity / venue / business linkage
+- replace or remove image
+- update image credit
+- update source credit
+- change queue/publish state
+- unpublish
+- archive
+- suppress from Pulse only
+- suppress from all public discovery surfaces
+- send back to review
+
+Important:
+Do not destroy history when edits happen.
+
+Track and preserve:
+- original imported version
+- AI-generated version
+- latest edited version
+- editor/admin who changed it
+- timestamp of change
+
+--------------------------------------------------
+PART 3 — ROUTING CONFIRMATION PANEL
+--------------------------------------------------
+
+For every imported / AI-generated item, build a routing confirmation view in admin.
+
+Show clearly:
+- source name
+- original source URL
+- content type
+- core category
+- subcategory
+- geo_primary
+- geo_secondary
+- related entity
+- policy status
+- queue status
+- publish status
+
+And show destination eligibility / landing status for:
+- Pulse
+- story/article surface
+- hub page
+- category page
+- map
+- search
+
+For each destination, show:
+- YES / NO
+- reason if NO
+- reason/logic if YES
+
+Examples:
+- Pulse: YES — published, allowed, active visibility window
+- Hub page: NO — no matching primary or secondary geo
+- Category page: YES — core category = family
+- Map: NO — insufficient location precision
+
+This panel must help the operator confirm exactly where content is surfacing and why.
+
+--------------------------------------------------
+PART 4 — POLICY VISIBILITY AND CONTROL
+--------------------------------------------------
+
+Expose content policy status in admin.
+
+Support:
+- ALLOW
+- REVIEW_REQUIRED
+- SUPPRESS
+
+Admin must be able to override policy status manually.
+
+Do not delete suppressed items.
+Keep them available in admin with:
+- suppression reason
+- source metadata
+- current public visibility status
+
+--------------------------------------------------
+PART 5 — SOURCE / IMAGE ATTRIBUTION CONTROL
+--------------------------------------------------
+
+For imported content, surface source and image credit fields clearly in admin.
+
+Admin must be able to review and edit:
+- source publication name
+- original source URL
+- source attribution text
+- image source URL
+- image credit text
+- whether the image is allowed / retained / removed
+
+If source imagery is missing or inappropriate, admin should be able to:
+- remove it
+- replace it
+- keep article live without image if needed
+
+--------------------------------------------------
+PART 6 — LIFECYCLE CONTROLS
+--------------------------------------------------
+
+Expose lifecycle state in admin for imported content and related objects.
+
+At minimum:
+- stories rotate by editorial window
+- events stay active until event date/end
+- jobs stay active until expiration or filled
+- marketplace stays active while valid
+- evergreen items remain searchable and optionally rotatable later
+
+For now, build the admin controls/visibility for lifecycle state.
+Do not redesign the full rotation engine in this prompt.
+
+Admin should be able to see:
+- active until date
+- expired status
+- evergreen flag if present
+- archived state
+
+--------------------------------------------------
+PART 7 — AUDIT / HISTORY PANEL
+--------------------------------------------------
+
+Add a lightweight item history panel showing:
+- when ingested
+- when AI-generated
+- when published
+- when edited
+- when unpublished/suppressed/archived
+- who performed admin edits
+
+This does not need to be a huge standalone audit subsystem.
+It does need to preserve operator trust and traceability.
+
+--------------------------------------------------
+PART 8 — UI / ADMIN PLACEMENT
+--------------------------------------------------
+
+Place these controls in the existing admin in the most appropriate editorial/content workflow area.
+
+Do NOT create a random new disconnected admin section.
+Keep it aligned with:
+- content sources / intake
+- editorial workflow
+- feed/content management
+
+--------------------------------------------------
+PART 9 — GUARDRAILS
+--------------------------------------------------
+
+Do NOT:
+- rebuild feed scoring
+- rewrite Pulse logic already fixed
+- create duplicate content records
+- create a separate CMS unrelated to current architecture
+- remove source metadata
+- hard-delete imported items when suppressing
+
+Do:
+- build editorial control on top of the current architecture
+- preserve single-source / multi-surface behavior
+- make operator visibility much stronger
+- make corrections possible after publish
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. file-by-file summary
+2. admin screens/components added or changed
+3. queue states implemented
+4. routing confirmation logic implemented
+5. post-publish controls implemented
+6. history/versioning behavior implemented
+7. any remaining gaps for Prompt 6

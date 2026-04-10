@@ -1,0 +1,133 @@
+CITY HUB / CLT CONNECTS — ADMIN SCOPE SEPARATION AUDIT + FOUNDATION
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Establish the correct separation between PLATFORM ADMIN and METRO / CITY ADMIN before deeper feature work continues.
+
+This is a SURGICAL STRUCTURE PASS.
+Do NOT rebuild the entire admin system.
+Do NOT rebuild all permissions from scratch unless absolutely necessary.
+Do NOT break current CLT operations.
+Do NOT assume CLT is the platform layer.
+
+LOCKED ADMIN HIERARCHY
+
+Platform Admin
+- manages the overall platform
+- creates and manages metro hubs
+- owns platform-wide settings, platform-wide models, and cross-metro systems
+
+Metro Hub Admin
+- manages a specific metro hub such as Charlotte
+- manages that metro’s content, geography, operations, and local systems
+- must NOT function as the platform owner admin
+
+Micro Hub Admin
+- manages neighborhoods, districts, or smaller local hub layers inside a metro
+
+IMPORTANT RULE
+
+The platform must have an admin layer ABOVE all metro hubs.
+Charlotte / CLT must be treated as a METRO, not as the platform itself.
+
+CURRENT REALITY TO EXPECT
+
+The codebase may currently behave more like:
+- super admin
+- reader profile
+
+If so, do not force a dangerous rewrite.
+Instead:
+- inspect what exists
+- identify the current permission model
+- identify where CLT-specific assumptions are acting like platform scope
+- add the smallest stable foundation for platform-vs-metro separation
+
+FIRST TASK — AUDIT
+
+Inspect the current codebase and report:
+
+1. What roles currently exist?
+2. Is there only a super admin / global admin pattern right now?
+3. What parts of the code assume Charlotte / CLT is the top-level owner scope?
+4. Are there existing concepts for metro, city, hub, or tenant scope already in the code?
+5. What routes, models, services, or admin pages are currently global when they should really be metro-scoped?
+6. What objects/settings truly belong at platform scope versus metro scope?
+7. What is the safest low-risk path to establish Platform Admin and Metro Admin separation now?
+
+Return the audit findings first in a concise implementation note before major changes.
+
+IMPLEMENTATION GOAL
+
+Create a stable foundation so the platform can support:
+
+- Platform Admin scope
+- Metro Admin scope
+- later Micro Hub Admin scope
+
+without forcing a full admin rebuild yet.
+
+TARGET OUTCOME
+
+After this prompt, the system should clearly support:
+
+PLATFORM ADMIN
+- platform-level ownership
+- platform-wide settings
+- metro creation / management
+- cross-metro oversight
+- future platform-wide billing / permissions / system controls
+
+METRO ADMIN
+- city/metro-specific management for CLT
+- local content and discovery management
+- local geography management
+- local operations
+- local users / contributors / workflows where appropriate
+
+IMPORTANT IMPLEMENTATION RULES
+
+1. Prefer role + scope separation over massive admin UI rebuild.
+2. Reuse the current auth model if possible.
+3. Add a scoped permission foundation that later prompts can build on.
+4. Keep migrations light.
+5. Do not break current CLT usage.
+6. Do not require multi-metro completion right now.
+7. The goal is structural separation first, not polished final admin UX.
+
+SPECIFIC THINGS TO LOOK FOR
+
+Please inspect whether these are currently behaving as platform-level when they should be metro-level:
+- CLT-specific content
+- CLT-specific geography
+- local categories or listings management
+- local discovery surfaces
+- local moderation
+- local editorial/admin tools
+
+Please also inspect which of these should remain platform-level:
+- platform-wide role management
+- metro creation
+- global defaults
+- global system settings
+- future billing / licensing / ownership logic
+- cross-metro reporting foundations
+
+MINIMUM SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. The current admin/permission structure has been audited
+2. Platform scope and Metro scope are clearly separated in the codebase foundation
+3. CLT is no longer implicitly treated as the platform owner layer
+4. The current system still works
+5. The result creates a stable base for later admin reorganization
+
+DELIVERABLE
+
+Please:
+1. audit the current permission/admin setup first
+2. explain briefly what you found
+3. implement the smallest stable change set to establish Platform Admin vs Metro Admin separation
+4. list what should wait for later admin prompts

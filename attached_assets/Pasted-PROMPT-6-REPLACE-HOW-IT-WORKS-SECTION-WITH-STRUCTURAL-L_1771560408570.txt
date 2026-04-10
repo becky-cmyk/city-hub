@@ -1,0 +1,85 @@
+PROMPT 6 — REPLACE “HOW IT WORKS” SECTION WITH STRUCTURAL LAYERS
+
+OBJECTIVE:
+Remove the existing “How It Works” section (Search / Discover / Connect).
+Replace it with a structured section titled “The Layers of Charlotte City Hub.”
+
+Do NOT change routing.
+Do NOT change search functionality.
+Do NOT modify hero or SEO snapshot system.
+Only replace this section’s JSX + styling.
+
+----------------------------------------
+SECTION TITLE
+----------------------------------------
+
+Replace current section heading with:
+
+The Layers of Charlotte City Hub
+
+Under it, add a single bridging line:
+
+Search the Hub and explore how Charlotte is structured across four layers.
+
+Style:
+- Centered title
+- Slightly smaller, muted paragraph under it
+- Calm institutional tone (not bold marketing)
+
+----------------------------------------
+FOUR LAYER BLOCKS
+----------------------------------------
+
+Replace the three feature cards with four structured blocks:
+
+1) Commerce
+Text:
+Where local business gains structured visibility and opportunity.
+
+2) Leadership
+Text:
+Where influence and direction remain visible and accountable.
+
+3) Neighborhoods
+Text:
+Where place-based activity and identity take shape.
+
+4) Community Organizations
+Text:
+Where missions, service, and civic participation are seen and supported.
+
+----------------------------------------
+LAYOUT
+----------------------------------------
+
+Desktop:
+- 4-column grid
+- Even spacing
+- No icons
+- No illustrations
+- Clean typography
+- Slight vertical spacing between heading and paragraph
+
+Mobile:
+- Stack vertically
+- Maintain strong spacing between blocks
+
+----------------------------------------
+VISUAL STYLE
+----------------------------------------
+
+- White or very subtle off-white background
+- No gradient
+- No large shadows
+- Optional thin divider line above section (subtle, not heavy)
+- Typography should feel structured, not playful
+
+----------------------------------------
+DELIVERABLE
+----------------------------------------
+
+Show updated JSX for this section only.
+Show any Tailwind or CSS adjustments.
+Do not summarize.
+Do not explain.
+Just provide updated code.

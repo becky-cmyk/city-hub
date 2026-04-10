@@ -1,0 +1,195 @@
+Update Charlotte’s story flow so it no longer feels like a chatbot or AI interview. Keep the existing Charlotte concept and story workflow, but refactor the experience to feel like a short, formal-but-warm neighborhood editorial conversation.
+
+GOAL
+Turn the current “question at a time” experience into a guided story interview that feels human, local, and editorial — not techy, robotic, or survey-like.
+
+CORE POSITIONING
+Charlotte is not presented as an AI assistant, chatbot, guide, or tech tool.
+Charlotte should be framed as:
+- Neighborhood Story Editor
+- Community Story Editor
+- Editorial voice for local spotlights
+
+The experience should feel like:
+- a short local interview
+- a community feature intake
+- a warm editorial conversation
+
+It should NOT feel like:
+- a chatbot
+- a support chat
+- an AI prompt flow
+- a form disguised as chat
+
+KEEP
+- Existing Charlotte entry point
+- Existing basic story capture goal
+- Existing one-topic-at-a-time structure if technically needed
+
+CHANGE THE EXPERIENCE LAYER
+Even if the backend still works one question at a time, change the front-end wording, pacing, and structure so it feels like a guided editorial interview.
+
+REWRITE THE OPENING SCREEN
+Replace tech/chat framing with editorial framing.
+
+Use this structure:
+
+Headline:
+Share Your Story With Charlotte
+
+Subheadline:
+Charlotte is gathering short conversations with local businesses, organizations, and community voices to help spotlight the people who make this community special.
+
+Support line:
+This only takes a few minutes.
+
+If there is any wording like:
+- chat with Charlotte
+- AI guide
+- no login needed
+- start chatting
+replace it with more natural editorial/community wording.
+
+Add a small label above or near the start area:
+Estimated time: 4–5 minutes
+
+CONVERSATION STYLE RULES
+Charlotte’s voice must be:
+- warm
+- polished
+- human
+- community-centered
+- lightly formal
+- not overly casual
+- not corporate
+- not techy
+
+Charlotte should never sound like a bot. Avoid:
+- “I am here to assist”
+- “Please provide”
+- “Based on your response”
+- “Thank you for that information”
+- “Let’s proceed”
+- “I can help generate”
+- “I’m an AI”
+- “chat”
+- “conversation flow”
+- “prompt”
+
+Instead use natural editorial phrasing like:
+- “I’d love to learn a little about your story.”
+- “Let’s start with something simple.”
+- “Thanks for sharing that.”
+- “Now tell me a little about…”
+- “Last thing…”
+- “That helps paint a picture.”
+
+NEW FLOW STRUCTURE
+Do NOT present Charlotte as firing off blunt direct questions.
+Instead, each step should feel like a topic-led prompt with a short human transition.
+
+Implement this story sequence as the default:
+
+STEP 1
+Charlotte intro message:
+Hi — I’m Charlotte.
+
+I help gather stories about the people, businesses, and community voices that make this area what it is.
+
+I’d love to learn a little about your story so we can spotlight it in a more personal way.
+
+Let’s start with something simple —
+
+Prompt:
+Tell me a little about how this began and what inspired it.
+
+STEP 2
+Acknowledgment:
+Thanks for sharing that.
+
+Prompt:
+Now I’d love to hear what makes your business, organization, or work feel special to the people around you.
+
+STEP 3
+Acknowledgment:
+That helps paint a fuller picture.
+
+Prompt:
+What do you enjoy most about being part of this community or neighborhood?
+
+STEP 4
+Acknowledgment:
+That’s wonderful to hear.
+
+Prompt:
+Is there anything people might not know about what you do that you wish they did?
+
+STEP 5
+Acknowledgment:
+Thank you — that’s exactly the kind of detail that matters.
+
+Prompt:
+Do you have anything current or upcoming that the community should know about?
+
+STEP 6
+Acknowledgment:
+Last thing —
+
+Prompt:
+If someone came across your story today, what would you want them to remember most?
+
+UI / UX CHANGES
+1. Keep the experience clean and minimal.
+2. Make the screen feel more like an editorial interview than a messaging app.
+3. If message bubbles are used, make them soft and clean — not support-chat style.
+4. Replace the input placeholder:
+   - from: “Type your answer...”
+   - to one of:
+     - “Share your thoughts here”
+     - “Tell Charlotte a little about this”
+     - “Write your response here”
+   Pick the one that best fits the existing design.
+
+5. Add a simple progress indicator:
+   Story Interview — Step X of 6
+
+6. After each response, show a short human acknowledgment before moving to the next step.
+
+ACKNOWLEDGMENT BANK
+Use a rotating set of short acknowledgments so it does not feel repetitive:
+- Thanks for sharing that.
+- That’s helpful to know.
+- I appreciate that.
+- That gives a clearer picture.
+- That’s good to hear.
+- Thank you — that matters.
+- That really helps tell the story.
+
+Do not overuse exclamation marks.
+
+OUTPUT / END STATE
+At the end of the story flow, replace any robotic completion language with:
+
+Thank you for sharing your story.
+
+We’ll use what you shared to help shape a community spotlight for the Metro Hub.
+
+If anything needs to be clarified, someone from our side may follow up.
+
+DESIGN NOTES
+- Keep the current Charlotte branding and visual identity if already in place.
+- Preserve the calm, welcoming tone.
+- Remove anything that visually or verbally over-signals “AI.”
+- This should feel like local editorial outreach, not software.
+
+IMPLEMENTATION REQUEST
+1. Update the wording throughout the full Charlotte story flow.
+2. Update the opening screen copy.
+3. Update placeholders, labels, and completion state.
+4. Keep the current functionality intact unless a small structural improvement is needed.
+5. If there are old strings still using AI/chatbot language, replace them globally in this story flow.
+
+At the end, give me:
+- a brief list of all updated text strings
+- the final step-by-step Charlotte script as implemented
+- any UI labels/placeholders changed

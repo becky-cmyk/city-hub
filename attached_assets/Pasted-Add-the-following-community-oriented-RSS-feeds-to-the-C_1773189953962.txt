@@ -1,0 +1,159 @@
+Add the following community-oriented RSS feeds to the CLT Hub / City Hub Pulse Feed system.
+
+Goal:
+These feeds should provide neighborhood activity, community stories, nonprofit updates, local lifestyle, and hyper-local news across counties surrounding Charlotte. Avoid school-heavy filtering and ignore categories related to school calendars or education boards.
+
+Create a seed list called:
+
+community_rss_sources
+
+Fields per source:
+- name
+- site_url
+- rss_url
+- region
+- category
+- priority
+
+Add the following sources:
+
+[
+{
+"name": "Cornelius Today",
+"site_url": "https://corneliustoday.com",
+"rss_url": "https://corneliustoday.com/feed/",
+"region": "Lake Norman",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Davidson News",
+"site_url": "https://www.davidsonnews.net",
+"rss_url": "https://www.davidsonnews.net/feed/",
+"region": "Lake Norman",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Mooresville Tribune",
+"site_url": "https://mooresvilletribune.com",
+"rss_url": "https://mooresvilletribune.com/feed/",
+"region": "Iredell County",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Lake Norman Citizen",
+"site_url": "https://lakenormancitizen.com",
+"rss_url": "https://lakenormancitizen.com/feed/",
+"region": "Lake Norman",
+"category": "community_news",
+"priority": "medium"
+},
+{
+"name": "Fort Mill Times",
+"site_url": "https://www.fortmilltimes.com",
+"rss_url": "https://www.fortmilltimes.com/news/local/?service=rss",
+"region": "York County",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Shelby Star",
+"site_url": "https://www.shelbystar.com",
+"rss_url": "https://www.shelbystar.com/rss",
+"region": "Cleveland County",
+"category": "community_news",
+"priority": "medium"
+},
+{
+"name": "Hickory Daily Record",
+"site_url": "https://hickoryrecord.com",
+"rss_url": "https://hickoryrecord.com/search/?f=rss&t=article&l=25&s=start_time&sd=desc",
+"region": "Catawba County",
+"category": "community_news",
+"priority": "medium"
+},
+{
+"name": "Independent Tribune",
+"site_url": "https://independenttribune.com",
+"rss_url": "https://independenttribune.com/search/?f=rss&t=article&l=25&s=start_time&sd=desc",
+"region": "Cabarrus County",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "South Charlotte Weekly",
+"site_url": "https://www.southcharlotteweekly.com",
+"rss_url": "https://www.southcharlotteweekly.com/feed/",
+"region": "South Charlotte",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Matthews Mint Hill Weekly",
+"site_url": "https://www.matthewsminthillweekly.com",
+"rss_url": "https://www.matthewsminthillweekly.com/feed/",
+"region": "Matthews / Mint Hill",
+"category": "community_news",
+"priority": "high"
+},
+{
+"name": "Ballantyne Magazine",
+"site_url": "https://www.ballantynemagazine.com",
+"rss_url": "https://www.ballantynemagazine.com/feed/",
+"region": "Ballantyne",
+"category": "community_lifestyle",
+"priority": "medium"
+},
+{
+"name": "Charlotte Is Creative",
+"site_url": "https://www.charlotteiscreative.com",
+"rss_url": "https://www.charlotteiscreative.com/feed/",
+"region": "Charlotte Metro",
+"category": "arts_community",
+"priority": "medium"
+},
+{
+"name": "Charlotte Center City Partners",
+"site_url": "https://www.charlottecentercity.org",
+"rss_url": "https://www.charlottecentercity.org/feed/",
+"region": "Center City",
+"category": "community_org",
+"priority": "medium"
+},
+{
+"name": "Unpretentious Palate",
+"site_url": "https://unpretentiouspalate.com",
+"rss_url": "https://unpretentiouspalate.com/feed/",
+"region": "Charlotte Metro",
+"category": "food_local",
+"priority": "medium"
+},
+{
+"name": "Off The Eaten Path",
+"site_url": "https://offtheeatenpathblog.com",
+"rss_url": "https://offtheeatenpathblog.com/feed/",
+"region": "Charlotte Metro",
+"category": "food_local",
+"priority": "medium"
+}
+]
+
+Filtering rules for ingestion:
+- Skip categories containing: school, district, education_board, PTA, classroom.
+- Prioritize tags like: events, community, nonprofit, local business, festivals, neighborhood, arts, music, food.
+- Deduplicate against existing feeds in the app.
+- Assign content to micro hubs by geographic keyword matching.
+
+Example mapping rules:
+
+Lake Norman → Cornelius, Davidson, Huntersville
+South Charlotte → Ballantyne, Pineville
+Union County → Matthews, Mint Hill, Waxhaw
+York County → Fort Mill, Rock Hill
+Gaston County → Gastonia, Belmont
+Cabarrus County → Concord, Kannapolis
+Catawba County → Hickory
+
+Insert these feeds into the RSS ingestion scheduler so they refresh every 60 minutes and populate the Pulse feed.

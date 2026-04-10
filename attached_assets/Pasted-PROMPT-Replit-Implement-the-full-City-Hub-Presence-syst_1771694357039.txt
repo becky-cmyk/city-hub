@@ -1,0 +1,321 @@
+PROMPT (Replit): Implement the full City Hub “Presence” system (free/paid), claiming + ownership + permissions, AI microsites, content attachments, plans/pricing, domain mapping, enterprise gates, and immutable history — based on what already exists in this repo.
+
+IMPORTANT INSTRUCTIONS
+- Do NOT reinvent architecture. First inspect the repo to find what already exists (listings/presences, hubs/communities, events, articles, auth, admin, payments, routing, DB patterns). Implement by extending existing patterns with minimal disruption.
+- Do NOT use “business directory” language. Use: Presence, Hub, Microsite, Ownership Account, Team/Manager, In the Hub, Other News.
+- Do NOT show multiple candidate listings during claim. Use clarifying questions, then show ONE result.
+- Nothing is truly deleted. All edits are versioned with audit trail and rollback capability.
+
+========================
+A) CORE CONCEPTS TO IMPLEMENT
+========================
+1) Presence = a location-level entity (one physical address/service-area anchor = one Presence).
+2) Each Presence renders as an AI Microsite (a micro website) on a permanent URL (SEO-compounding). Plans unlock features; URLs do not disappear on downgrade.
+3) Multi-location owners can have multiple Presences under one Ownership Account. Each Presence has its own managers/team and permissions.
+4) Region app model: This repo is the “Charlotte region app” (regional hub). Inside it are many local hubs/communities (Monroe, Matthews, etc.) and nitro niches. Do NOT build separate apps per hub.
+5) Content (articles, events, mentions) attaches to presences/brands and becomes a living archive/journal.
+
+========================
+B) GENERIC QR “CONFIRM PRESENCE” FLOW (PUBLIC)
+========================
+Create a public route:
+- /confirm (or /presence/confirm)
+
+UI copy (use this tone; no directory wording):
+- Title: “Confirm Your Hub Presence”
+- Subtext: “We’ve created public presences across the Charlotte Metro. Let’s make sure yours is accurate.”
+Form fields:
+- Business/Organization Name (required)
+- City (required)
+- Your Name (required)
+- Email (required)
+- Website or Social Link (optional; single input)
+CTA: “Find My Presence”
+
+Backend logic on submit (non-negotiable):
+- Attempt to match an existing Presence.
+- NEVER show a list of multiple candidates.
+- If match confidence is high: return ONE Presence preview.
+- If confidence is medium/low: ask 1–2 clarifying questions inline (no candidate list), then retry and return ONE preview.
+  Example clarifiers (use minimally):
+  - “Is this a storefront, service, or organization?”
+  - “What neighborhood or major road are you near?”
+  - “Do you have a website we should check?”
+- If still no confident match: auto-generate a Presence immediately and return that ONE preview.
+- Never display “Not found.” Always end with “Here’s Your Presence”.
+
+Presence preview screen:
+- Show: name, city, best-guess category, neutral short description, logo/image if available
+Buttons:
+- “Yes, This Is Mine”
+- “Make Adjustments”
+
+========================
+C) CLAIMING + OWNERSHIP ACCOUNT + ROLE GATING
+========================
+After “Yes, This Is Mine”:
+Show role selection:
+“How are you connected?”
+- Owner
+- Manager
+- Team Member
+
+Owner path:
+- Show “Create Your Ownership Account”
+- Fields: email (prefill), password + confirm (eye toggle), DOB (legal age gate), accept terms
+- Create account and attach user to presence as OWNER (initially unverified owner ok).
+- Do not call it “free account”; call it “Ownership Account”.
+
+Manager path:
+- Create their own login (email/password/DOB/terms) OR use existing auth pattern.
+- Collect Owner Name + Owner Email (required).
+- Create presence_user record as manager, status = pending.
+- They can view and submit suggestions; cannot publish high-impact changes or billing until approved by owner.
+- Notify owner to approve and set permissions.
+
+Team Member path:
+- Similar to manager but more limited; status = pending.
+- Collect Owner Name + Owner Email (required).
+- View/share/suggest only.
+- Notify owner.
+
+========================
+D) PER-PRESENCE TEAM ACCESS + PERMISSION TOGGLES
+========================
+Implement per-presence access controls:
+- Roles: owner | manager | team
+- Status: pending | active
+- Permissions are toggle-based and controlled by the Owner for each presence_user.
+
+Owner UI:
+Presence admin area -> “Team & Access”
+- List all users with role + status
+- For each user: “Manage Permissions” (toggle panel)
+- Managers can invite others ONLY if owner enables “invite_users”
+
+Minimum permission keys (implement server-side enforcement):
+Business details:
+- edit_details
+- upload_photos
+Events/community:
+- post_events
+- edit_events
+- cancel_events
+- post_community_updates
+Reviews:
+- respond_reviews
+- flag_reviews
+Social (future-proof; can be links-only now):
+- manage_social_links
+- post_social (optional future)
+Visibility/placements (future-proof):
+- purchase_visibility (NOT dedicated placement; just upgrades)
+Billing:
+- view_billing
+- update_payment
+Team:
+- invite_users
+- manage_permissions
+- remove_users
+
+Hard rules:
+- Owner cannot be removed by others.
+- Ownership transfer is NOT self-serve (admin mediated; see section K).
+- Actions must be logged (audit).
+
+========================
+E) IMMUTABLE HISTORY / AUDIT TRAIL (PRESENCES)
+========================
+Implement versioning:
+- Every create/update/archive/permission change produces a revision record:
+  presence_id, changed_by_user_id, changed_at, change_type, and snapshot/diff
+- “Delete” becomes archive/inactive only; keep history.
+- Add “Activity Log” UI on presence admin page showing who did what and when (clickable details).
+
+Keep history even if subscription lapses.
+Do NOT wipe data.
+
+========================
+F) AI MICROSITES (PRESENCE + BRAND)
+========================
+Presence (location) microsite = permanent micro website:
+Tabs/sections (implement based on existing UI patterns):
+- Overview (intro, services, contact, map, hours)
+- Gallery (photos/media)
+- Events (upcoming + past if events exist)
+- Reviews (hub-native ratings/reviews; future aggregated ok)
+- “In the Hub” (internal content archive)
+- “Other News” (external link-outs; start manual)
+
+“In the Hub” definition:
+- Internal ecosystem items tied to this presence/brand across hubs within this region app:
+  founder spotlight, features, mentions in other articles, event recaps, list inclusions, community posts.
+- Each item labeled with Hub + Niche + Type.
+- This is a history/journal, not an algorithmic rotation feed.
+
+“Other News” definition:
+- External mentions: show title/source/date/snippet + link-out only (no republishing).
+- Start with manual “Submit a link” for owners/managers (permission-controlled) + admin approval queue.
+
+Brand microsite (multi-location):
+- Enabled when an ownership account has 2+ presences (or use existing brand construct if present).
+- Sections:
+  Overview, Locations grid (cards linking to each presence), In the Hub (aggregated), Other News (aggregated).
+- Domain option: brand domain can point to brand microsite (see domain section).
+
+========================
+G) PRICING/PLANS + FEATURE FLAGS (FREE / $99 / $299)
+========================
+Implement plan system with feature flags (do not hardcode into pages):
+- Free: basic presence microsite (default theme), basic fields, no boosted rotation.
+- Charter: $99/year
+- Expanded: $299/year
+
+Both paid tiers include microsite (microsite is always present; tiers unlock enhancements).
+
+Key differences (implement as flags; choose best mapping to existing code):
+Charter ($99/year):
+- Boosted rotational visibility weight (non-dedicated)
+- Founder intro article eligibility (content attachment)
+- Optional custom domain add-on ($29 one-time)
+- Limited social links (e.g., 2–3)
+- Limited gallery (set sensible cap)
+- Standard microsite template (no color customization)
+
+Expanded ($299/year):
+- Higher rotational weight (still capped; no domination)
+- Microsite customization: allow color/theme customization (simple but meaningful)
+- Unlimited social links
+- Larger gallery cap
+- Custom domain INCLUDED (no $29 setup fee)
+- Stronger “featured” eligibility within rotation (still rotational)
+
+Dedicated placements / sponsorship ads are NOT part of these tiers (do not implement now).
+
+========================
+H) HUB / ZONE / REGION COVERAGE (ROTATIONAL ONLY)
+========================
+Each Presence automatically has:
+- 1 Primary Hub included (based on physical address OR billing ZIP/service area anchor).
+
+Upgrades (rotational coverage expansion; no domination):
+- Additional Hub add-on
+- Zone add-on (bundle of hubs)
+- Region add-on (entire metro region app)
+
+Implement as coverage flags/records:
+- presence_primary_hub_id
+- presence_coverage: [hub_ids / zone_ids / region_bool]
+Ensure:
+- Primary hub businesses retain priority within their own hub vs outsiders.
+- Expanded coverage never grants guaranteed top placement.
+
+Multi-location owners:
+- Each presence has its own coverage settings.
+
+========================
+I) MULTI-LOCATION / “ENTERPRISE” GATING (5+)
+========================
+We allow onboarding for multi-location accounts, but introduce a human-review gate once they exceed 5 locations OR exceed a spend threshold.
+
+Behavior:
+- Users can add locations 1–5 self-serve.
+- When attempting to add location 6+:
+  show message (tone friendly):
+  “We normally onboard up to five locations online. Please continue — this will be reviewed by an admin and we’ll contact you to finish onboarding.”
+- Do NOT auto-charge large amounts for 6+ locations.
+- Create an admin review record and notify admins.
+- Optional: allow them to continue adding locations but set checkout to “manual review / invoice” for the additional locations.
+
+Also implement a “Learn about more opportunities” post-purchase CTA that routes to a contact/appointment flow (no self-serve high-dollar upsells yet).
+
+========================
+J) RENEWAL / GRACE PERIOD / FOUNDER RATE RULES
+========================
+Grace period:
+- 30 days after expiration.
+- During grace: keep enhanced features active and preserve founder-rate eligibility to renew.
+
+Founder/Charter continuity rule:
+- If they renew continuously, they keep their charter/founding rate.
+- If they lapse beyond grace, they lose founding rate and renew at current pricing.
+- If they do not renew: revert to Free feature flags (but keep microsite URL and all content/history visible).
+
+Downgrade rules:
+- Never delete.
+- Revert microsite theme/customizations to free defaults (but keep content).
+- Remove boosted rotation/coverage upgrades.
+- Keep “In the Hub” / “Other News” archives intact.
+
+========================
+K) ADMIN-MEDIATED OWNERSHIP TRANSFER
+========================
+Ownership transfer is NOT self-serve.
+Implement:
+- “Request Ownership Transfer” in owner tools
+- Collect: new owner name/email, reason (optional)
+- Create transfer_request status = pending_admin_review
+- Admin panel to approve/deny
+- On approval: invite new owner to create/accept Ownership Account; on acceptance switch primary owner
+- Log everything in audit trail
+
+========================
+L) CONTENT ATTACHMENT / JOURNALING FOR PRESENCES (FOUNDERS + EVERYTHING)
+========================
+Implement linkage so that any:
+- Article/publication
+- Event (and event recap if you have it)
+- Mention in another article
+- List inclusion (Top 10/Top 50/etc.)
+is attached to the Presence (and to Brand where applicable).
+
+Presence microsite must show this under:
+- “In the Hub” (internal)
+And optionally:
+- “Other News” (external link-outs; approved only)
+
+Nothing publishes without admin approval.
+Implement admin approval gates for content if not already present.
+
+FOUNDERS BATCH PUBLISH MODEL (light implementation; future-proof):
+- Support “monthly batch” concept:
+  signups in a window -> published/featured in a batch on a specific date
+- Create a category/tag for batch month (e.g., “March Founders”)
+- Ensure those articles attach to presence automatically.
+
+========================
+M) DOMAIN CONNECT (CUSTOM DOMAIN)
+========================
+Rules:
+- One custom domain per Presence.
+- Optional brand-level domain can point to Brand microsite (if multi-location).
+- Charter: domain is add-on with $29 one-time setup fee.
+- Expanded: domain included.
+- Domain ownership always belongs to business; we do not own their domain.
+
+Implementation:
+- Provide DNS record instructions (CNAME/A) consistent with current hosting approach.
+- Provide “Verify DNS” flow that checks propagation and marks domain as connected.
+- On lapse: keep domain connected; microsite reverts to basic (do NOT break SEO).
+- Grace period applies.
+
+(If Replit/domain limitations exist, implement the UI/data model now and stub verification behind current deployment constraints; do not block other work.)
+
+========================
+DELIVERABLES
+========================
+1) /confirm flow end-to-end: single result only + clarify questions + auto-generate presence.
+2) Claiming: role selection + Ownership Account creation + pending manager/team flows.
+3) Team & Access: per-presence users + permission toggles + enforcement.
+4) Immutable revisions/audit trail + Activity Log UI.
+5) Presence microsite upgraded into full micro website with “In the Hub” + “Other News”.
+6) Brand microsite for multi-location accounts.
+7) Plan system: Free / Charter $99 yearly / Expanded $299 yearly + feature gating.
+8) Hub/Zone/Region rotational coverage model (primary hub included).
+9) Enterprise gating at 6th location + admin review workflow + prevent large automatic charges.
+10) Renewal/grace/founder-rate continuity rules implemented.
+11) Admin-mediated ownership transfer implemented.
+12) Domain connect UI + data model + verification approach aligned with current hosting.
+
+FINAL NOTE
+Do not respond with a generic plan only. Inspect the repo, identify what exists, and implement the smallest set of extensions consistent with the current architecture and UI patterns.

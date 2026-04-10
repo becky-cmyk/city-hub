@@ -1,0 +1,109 @@
+Work inside the existing City Hub / Charlotte AI codebase.
+
+This is Prompt 10.
+
+This builds the CONTENT OUTPUT ENGINE.
+Turn content into usable distribution assets.
+
+Do NOT rebuild:
+- editorial system
+- ingestion
+- routing
+- capture flow
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+
+For every story/content item, generate:
+
+1. Social posts (multiple variations)
+2. Email/newsletter-ready content
+3. Short-form snippets (Pulse-friendly)
+4. Optional video/script prompts
+
+--------------------------------------------------
+PART 1 — CONTENT DELIVERABLES TABLE
+--------------------------------------------------
+
+Create:
+
+content_deliverables
+
+Fields:
+- id
+- content_item_id
+- type (social, email, snippet, script)
+- platform (facebook, instagram, linkedin, newsletter, etc.)
+- variant
+- text
+- status (draft, approved, published)
+- created_at
+
+--------------------------------------------------
+PART 2 — GENERATION ENGINE
+--------------------------------------------------
+
+For each approved/published content item:
+
+Generate:
+
+SOCIAL:
+- 3–5 variations
+- short, medium, long
+
+EMAIL:
+- newsletter block version
+- subject line + preview
+
+SNIPPETS:
+- 1–2 sentence Pulse-ready blurbs
+
+OPTIONAL:
+- short video/script prompts
+
+--------------------------------------------------
+PART 3 — TONE RULES
+--------------------------------------------------
+
+- human-first
+- local
+- non-generic
+- no “AI sounding” language
+
+--------------------------------------------------
+PART 4 — TRIGGER POINTS
+--------------------------------------------------
+
+Generate on:
+- publish
+- manual “generate content” action
+
+--------------------------------------------------
+PART 5 — EDIT + APPROVAL
+--------------------------------------------------
+
+Allow:
+- edit
+- approve
+- regenerate
+
+Do NOT auto-publish externally.
+
+--------------------------------------------------
+PART 6 — FUTURE HOOK
+--------------------------------------------------
+
+Leave structure for:
+- auto posting later
+- scheduling
+
+--------------------------------------------------
+DELIVERABLES
+--------------------------------------------------
+
+Return:
+1. deliverables structure
+2. generation logic
+3. output examples
+4. how it connects to content items

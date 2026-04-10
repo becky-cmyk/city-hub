@@ -1,0 +1,76 @@
+PROMPT: Add “seed content ingestion” for Charlotte Metro using ONLY plug-and-play public RSS/Atom + iCal (.ics) feeds below.
+
+GOAL
+- Create a small ingestion module that can fetch these feeds on a schedule, normalize items into our existing “Pulses/Events” content tables (or create minimal tables if missing), dedupe, tag by metro=Charlotte, and make them available for front-end rotations.
+- This is “invisible collection” mode: ingest + store + display in rotations, without any manual curation.
+
+FEEDS TO ADD (Charlotte Metro) — plug-and-play URLs
+A) RSS / Atom (content/news + “what to do”)
+1) Charlotte On The Cheap (RSS): https://www.charlotteonthecheap.com/feed/
+2) Scoop Charlotte (RSS): https://www.scoopcharlotte.com/feed/
+3) Queen City Nerve (RSS): https://qcnerve.com/feed/
+4) WFAE Podcasts (RSS XML)
+   - Charlotte Talks: https://www.wfae.org/podcast/charlotte-talks-with-mike-collins/rss.xml
+   - FAQ City: https://www.wfae.org/podcast/faq-city/rss.xml
+   - SouthBound: https://www.wfae.org/podcast/southbound/rss.xml
+   - Work It: https://www.wfae.org/podcast/work-it/rss.xml
+   - WFAE Studios: https://www.wfae.org/podcast/wfae-studios/rss.xml
+   - Amplifier: https://www.wfae.org/podcast/amplifier/rss.xml
+   - Still Here: https://www.wfae.org/podcast/still-here/rss.xml
+   - Inside Politics: https://www.wfae.org/podcast/inside-politics/rss.xml
+
+B) Events calendars (iCal / .ics endpoints)
+5) QC Community Connect Events (iCal): https://qccommunityconnect.org/events/list/?ical=1
+6) Sustain Charlotte Events (iCal): https://sustaincharlotte.org/events/photo/?hide_subsequent_recurrences=1&ical=1
+7) Network Charlotte Events (iCal): https://networkcharlotte.org/events/month/?ical=1
+
+IMPLEMENTATION REQUIREMENTS
+1) Create a config file (e.g., /server/ingest/feeds.charlotte.ts) exporting an array of feed objects:
+   - id, name, type: "rss" | "ical"
+   - url
+   - defaultTags: ["metro:charlotte", "source:<id>"]
+   - contentType: "pulse" | "event" | "podcast"
+   - optional category (things-to-do, business, community, etc.)
+
+2) Add ingestion services:
+   - RSS: use a lightweight parser (e.g., rss-parser).
+   - iCal: use ical.js OR node-ical to parse events.
+   - Normalize each item into a common shape:
+     { sourceId, externalId, title, summary, url, imageUrl?, publishedAt?, startAt?, endAt?, venueName?, venueAddress?, tags[], rawJson }
+
+3) Dedupe rules (must be deterministic):
+   - externalId if available; else hash(sourceId + title + (publishedAt||startAt) + url).
+   - Upsert by (sourceId, externalId/hash).
+
+4) Database:
+   - If we already have tables for articles/events, map into them.
+   - If not, create minimal tables:
+     - ingested_items (id, source_id, external_id, type, title, summary, url, image_url, published_at, start_at, end_at, venue_name, venue_address, tags jsonb, raw jsonb, created_at, updated_at)
+   - Add indexes for (source_id, external_id), (type, published_at), (type, start_at).
+
+5) Scheduler:
+   - Add a server cron job (or a simple interval runner) to fetch feeds every 6 hours.
+   - Add an admin-only endpoint to “Run ingestion now” and show counts per feed (fetched, inserted, updated, skipped).
+
+6) Front end wiring (minimal):
+   - Add API endpoints:
+     - GET /api/metro/charlotte/pulses?limit=...
+     - GET /api/metro/charlotte/events?start=...&end=...&limit=...
+   - Update existing rotation components to optionally pull from ingested_items where tags include metro:charlotte.
+   - Rotation must be randomized per page load.
+
+7) Safety / limits:
+   - Respect reasonable timeouts and user-agent headers.
+   - Cache feed fetch results for the run so we don’t re-fetch the same URL multiple times.
+   - Log failures per feed but do not fail the whole run.
+
+DELIVERABLES
+- New config file with the feed list above.
+- Ingestion service + scheduler + endpoints.
+- DB migration (if needed).
+- Minimal UI hook for rotations (use existing components).
+
+DO NOT
+- Do not add paid APIs.
+- Do not add any manual workflows.
+- Do not require authentication for public reading endpoints; admin is only for “run now/diagnostics”.

@@ -1,0 +1,158 @@
+PROMPT: Implement “Presence” claiming + ownership accounts + role/permissions + immutable history/audit + admin-mediated ownership transfer.
+
+NON-NEGOTIABLES
+- Do NOT use “business directory” language.
+- Use “Presence” and “Hub” language (e.g., “Confirm Your Hub Presence”, “Ownership Account”, “Becky’s Hub”).
+- QR flow must be GENERIC (same QR for everyone).
+- When finding a presence: DO NOT show multiple candidate results. Use clarifying questions instead, then show ONE result.
+- Nothing is truly deleted. All changes are versioned with full audit trail (who/what/when). Deletions become “archived” or “inactive” with recoverable history.
+
+GOAL A — GENERIC QR “CONFIRM PRESENCE” GENERATOR FLOW
+1) Create public route: /confirm (or /presence/confirm)
+   UI:
+   - Headline: “Confirm Your Hub Presence”
+   - Subtext: “We’ve created public presences across the Charlotte Metro. Let’s make sure yours is accurate.”
+   - Fields (required): Business/Organization Name, City, Your Name, Email
+   - Field (optional): Website or Social Link (single input)
+   - CTA: “Find My Presence”
+
+2) Backend behavior when CTA clicked:
+   - Attempt match using signals (name+city, optional website/social, any existing data).
+   - NEVER present multiple matches to user.
+   - If confidence is high: return a single presence preview.
+   - If confidence is medium/low: ask 1–2 clarifying questions inline (do not show any candidate list), e.g.:
+     - “Is this a storefront, service, or organization?”
+     - “What neighborhood or major road are you near?”
+     - “Do you have a website we should check?”
+     Then re-run match and return one presence preview.
+   - If still not confident or no match: auto-generate a presence immediately and return that single presence preview.
+   - Never display “Not found.” Always display a single “Here’s Your Presence” result.
+
+3) Presence preview screen:
+   - Show: Name, City, Category (best guess), Short description (neutral), image/logo if available
+   - Buttons:
+     - “Yes, This Is Mine”
+     - “Make Adjustments”
+
+GOAL B — CLAIMING REQUIRES AN “OWNERSHIP ACCOUNT” (AFTER THEY SEE THE PRESENCE)
+1) After clicking “Yes, This Is Mine”, show role selection:
+   “How are you connected?”
+   - Owner
+   - Manager
+   - Team Member
+
+2) Owner path:
+   - Show: “Create Your Ownership Account”
+   - Fields: Email (prefilled), Password + Confirm (eye toggle), DOB (age gate), Accept Terms
+   - Create account, then attach as OWNER (status: claimed_unverified initially)
+   - Do NOT call it “free account”; call it “Ownership Account”
+
+3) Manager path:
+   - Allow them to create their own login (email + password + DOB + terms) OR send a request link (choose simplest with existing auth).
+   - Ask for Owner Name + Owner Email (required)
+   - Create user as MANAGER_PENDING on that presence; they can VIEW + suggest changes but cannot publish or do billing until approved.
+   - Notify owner via email to approve and set permissions.
+
+4) Team Member path:
+   - Same as Manager but more limited:
+   - Ask Owner Name + Owner Email (required)
+   - Create TEAM_PENDING; view + share + submit suggestions only.
+   - Notify owner.
+
+GOAL C — PERMISSION TOGGLES (OWNER CONTROL) + EVENTS + SOCIAL + REVIEWS
+1) Implement presence access model:
+   - Base roles: owner | manager | team
+   - Status: pending | active
+   - Each non-owner user has granular permission toggles controlled by owner.
+
+2) Owner Dashboard area for a presence: “Team & Access”
+   - List users (name/email/role/status)
+   - For each user: “Manage Permissions” panel with toggles.
+   - Managers can invite others ONLY if the owner enables “invite_users”.
+
+3) Permission keys (minimum):
+   Business details:
+   - edit_details
+   - upload_photos
+   Events & community:
+   - post_events
+   - edit_events
+   - cancel_events
+   - post_community_updates
+   Reviews:
+   - respond_reviews
+   - flag_reviews
+   Social:
+   - connect_social_accounts
+   - post_social
+   - schedule_social
+   - respond_social_comments
+   Visibility/placement (if exists later):
+   - purchase_visibility
+   Billing:
+   - view_billing
+   - update_payment
+   Team:
+   - invite_users
+   - manage_permissions
+   - remove_users
+
+4) Optional safety toggles for owner:
+   - require_event_approval (if ON, manager-posted events go to pending until owner approves)
+
+5) Hard rules (never bypassed):
+   - No one can remove the owner.
+   - No one can transfer ownership except via admin-mediated process (see Goal E).
+   - Even with all toggles, managers cannot delete/erase history.
+
+GOAL D — IMMUTABLE HISTORY + AUDIT TRAIL (LISTING/PRESENCE)
+1) Implement event-sourced or versioned updates:
+   - Every change to a presence creates a new revision record:
+     - presence_id
+     - revision_id
+     - changed_by_user_id
+     - changed_at
+     - change_type (create/update/archive/permission_change/etc.)
+     - diff or full snapshot (prefer snapshot for reliability, diff optional)
+   - Presence “current state” can be a materialized view/latest snapshot.
+
+2) For any “delete” actions:
+   - Replace with “archive” or “inactive”
+   - Keep all history and allow admin restore.
+
+3) Add “Activity Log” UI on the presence admin screen:
+   - Shows who did what and when, linked to revision details.
+
+GOAL E — OWNERSHIP TRANSFER IS ADMIN-MEDIATED
+1) Ownership transfer cannot be self-serve.
+2) Implement “Request Ownership Transfer” button for current verified owner (or current owner):
+   - Collect:
+     - New owner name
+     - New owner email
+     - Reason (optional)
+3) System creates a transfer request record (pending_admin_review) and notifies City Hub admins.
+4) Admin must approve transfer in admin panel; on approval:
+   - New owner must accept invitation + create ownership account (if not existing) and accept terms/DOB gate.
+   - After acceptance, system switches primary_owner_user_id.
+   - All actions are logged in audit trail.
+
+IMPLEMENTATION ORDER
+1) Add DB tables/models:
+   - presences
+   - presence_revisions (immutable history)
+   - presence_users (role/status)
+   - presence_permissions (toggles)
+   - ownership_transfer_requests
+2) Build /confirm flow end-to-end (single result only).
+3) Build role selection + ownership account creation and attaching.
+4) Build Team & Access UI + permission enforcement checks server-side.
+5) Build Activity Log UI from presence_revisions.
+6) Build admin panel for ownership transfer requests + approval workflow.
+
+ACCEPTANCE CHECKLIST
+- Generic QR route works for anyone; never shows multiple candidates.
+- If no match, a presence is generated and displayed as “Here’s Your Presence.”
+- Claiming always ends with account creation (owner/manager/team) after viewing the presence.
+- Owner can approve manager/team and toggle granular permissions including events/social/reviews.
+- Every change produces a revision and appears in Activity Log; nothing is hard-deleted.
+- Ownership transfer requires admin review/approval and is fully audited.

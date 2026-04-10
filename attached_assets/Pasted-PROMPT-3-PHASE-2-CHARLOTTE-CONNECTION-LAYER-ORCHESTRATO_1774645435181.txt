@@ -1,0 +1,597 @@
+PROMPT 3 — PHASE 2: CHARLOTTE CONNECTION LAYER / ORCHESTRATOR / PROPOSAL ENGINE
+
+You are building Phase 2 for Charlotte AI.
+
+Phase 1 handled:
+- prompt registry
+- dedupe
+- Charlotte vs Cora boundary
+
+Phase 2 is NOT a visual redesign.
+Phase 2 is the connection layer that makes Charlotte operational across the ecosystem.
+
+GOAL
+
+Build the Charlotte connection/orchestration layer so Charlotte can:
+1. understand user/admin intent
+2. route that intent to the correct ecosystem engine
+3. propose actions before execution when appropriate
+4. execute multi-step workflows across existing systems
+5. work across businesses, creators, organizations, venues, events, jobs, marketplace, media, and discovery
+6. support batch processing from capture / intake
+7. support search / recommendation / concierge behavior grounded in real platform data
+
+IMPORTANT
+Do NOT build a new duplicate platform.
+Do NOT create shadow records.
+Do NOT create separate AI-only objects where existing Hub Presence / object systems already exist.
+
+Preserve:
+Hub Presence → Objects → Discovery Surfaces :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+
+Charlotte is not a generic chatbot.
+Charlotte is a metro-level ecosystem operator, editor, organizer, concierge, and local search/recommendation layer tied to real platform objects and workflows. Charlotte already has an automation/operator role in source doctrine and this phase extends that into full orchestration. :contentReference[oaicite:2]{index=2}
+
+--------------------------------------------------
+PHASE 2 SCOPE
+--------------------------------------------------
+
+IN SCOPE
+- Charlotte orchestrator
+- intent parser / command router
+- proposal engine
+- action templates
+- batch + directive processing
+- connection layer across existing engines
+- opportunity engine
+- search / recommendation routing
+- trust-aware / geo-aware prioritization hooks
+- inbox as exception/review layer, not universal bottleneck
+- admin command-center behavior foundations
+
+OUT OF SCOPE
+- full visual redesign
+- deep pricing/product redesign
+- final cadence/follow-up rules
+- final inventory caps
+- full Phase 3 lifecycle engine
+- replacing existing content engines
+- replacing existing CRM
+- creating duplicate event/job/marketplace systems
+
+--------------------------------------------------
+PART 1 — BUILD CHARLOTTE ORCHESTRATOR
+--------------------------------------------------
+
+Create a central orchestration service/module for Charlotte.
+
+Suggested name:
+- charlotte-orchestrator.ts
+or equivalent
+
+Purpose:
+- accept natural language requests or structured directives
+- classify intent
+- identify entities involved
+- determine the correct engine(s)
+- either:
+  A. propose an action plan
+  B. execute allowed actions directly
+- log actions and outcomes
+
+The orchestrator must support these broad operating modes:
+
+1. OPERATOR MODE
+Examples:
+- “Start a TV venue for ABC Coffee in Pineville”
+- “Create a story for these expo leads”
+- “Set this up as a radio partner”
+
+2. PROPOSAL MODE
+Examples:
+- “What should we do with these?”
+- “Process these and tell me what actions make sense”
+
+3. SEARCH / DISCOVERY MODE
+Examples:
+- “Best brunch in Ballantyne”
+- “Who should I talk to for a mortgage in Pineville?”
+- “What are good things to do this weekend?”
+
+4. CONCIERGE / NAVIGATION MODE
+Examples:
+- housing
+- jobs
+- services
+- events
+- marketplace guidance
+- relocation-style flows
+
+5. BRAINSTORM / CREATIVE MODE
+Examples:
+- “Give me newsletter ideas for girls night out”
+- “What content should we create this week?”
+
+Do NOT make these five separate AI systems.
+Use one orchestrator with mode detection and routing.
+
+--------------------------------------------------
+PART 2 — BUILD INTENT PARSER / COMMAND ROUTER
+--------------------------------------------------
+
+Create an intent parser that converts natural language into structured internal commands.
+
+For each request, identify at minimum:
+- mode
+- primary intent
+- target entity/entities
+- target engine(s)
+- location / geo context
+- desired action(s)
+- whether proposal is required first
+- confidence
+
+Example:
+
+Input:
+“Start a TV venue for ABC Coffee on Main Street in Pineville”
+
+Should resolve approximately to:
+- mode: operator
+- entity_type: business
+- entity_name: ABC Coffee
+- geo: Pineville
+- action: ACTIVATE_TV_VENUE
+- engines: Hub Presence + media network + CRM note/log
+- proposal_required: false or true depending on confidence / missing data
+
+Support both:
+- single-item commands
+- multi-item/batch commands
+
+--------------------------------------------------
+PART 3 — BUILD ENTITY RESOLUTION LAYER
+--------------------------------------------------
+
+Charlotte must work across all major entity types in the ecosystem.
+
+Support these base entity types:
+- business
+- creator
+- artist
+- organization
+- networking group
+- venue
+- event
+- job
+- marketplace listing
+- contributor / expert where applicable
+
+All must resolve back to Hub Presence or appropriate existing object structures.
+Do not introduce parallel identity systems. :contentReference[oaicite:3]{index=3}
+
+Implement entity resolution with practical matching rules:
+
+High-confidence matching signals:
+- same business/person name
+- same phone
+- same email
+
+If low/ambiguous confidence:
+- send to inbox / review queue for manual override
+- do NOT merge recklessly
+
+Support confidence classes:
+- HIGH
+- MEDIUM
+- LOW
+
+Behavior:
+- HIGH → safe auto-link or auto-use existing
+- MEDIUM → suggest / review depending on action
+- LOW → create new draft candidate or queue review
+
+--------------------------------------------------
+PART 4 — BUILD OPPORTUNITY ENGINE
+--------------------------------------------------
+
+For any resolved entity, Charlotte should evaluate:
+“What roles / opportunities exist for this entity inside the ecosystem?”
+
+This is not a new data silo.
+This is a recommendation layer over existing systems.
+
+Evaluate opportunities such as:
+- claim listing
+- story feature
+- Pulse feature
+- event host
+- job poster
+- marketplace seller
+- speaker / expert profile
+- creator collaboration
+- TV venue
+- radio partner
+- print distribution location
+- fishbowl / giveaway location
+- Crown candidate
+- nonprofit upgrade where applicable
+- service booking candidate where applicable
+- housing / relocation support surfaces where relevant
+- affiliate / outbound monetization possibilities where relevant
+
+For creators/artists also evaluate:
+- creator profile activation
+- sponsored story opportunities
+- event coverage
+- media network participation
+- marketplace / asset selling
+- Crown creator category participation
+- collaboration opportunities
+
+For organizations/networking groups:
+- event listing
+- recurring event support
+- Crown community category
+- claim/activation flow
+- speaker/community visibility
+
+Output should be structured recommendations, not just prose.
+
+--------------------------------------------------
+PART 5 — BUILD PROPOSAL ENGINE
+--------------------------------------------------
+
+This is one of the most important parts.
+
+Charlotte should process inputs first, then propose actions, then let admin/user confirm when needed.
+
+Build a proposal engine that:
+- groups related actions
+- summarizes findings
+- recommends next steps
+- can run on one item or batches
+
+Example output concept:
+
+“12 items processed:
+- 12 Hub Presence matches/creations
+- 12 story opportunities
+- 8 strong Crown candidates
+- 5 likely hiring candidates
+- 3 possible TV/radio/print locations
+
+Recommended actions:
+- run story + outreach for all
+- queue Crown review for 8
+- create hiring follow-up prompts for 5”
+
+The inbox should become:
+- exception layer
+- conflict layer
+- review layer
+not the mandatory first stop for everything
+
+Support:
+- proposal-first workflows
+- direct execution workflows
+- mixed workflows
+
+--------------------------------------------------
+PART 6 — BUILD ACTION TEMPLATES
+--------------------------------------------------
+
+Create reusable action templates Charlotte can call.
+
+At minimum create these templates:
+
+1. CLAIM_LISTING_TEMPLATE
+- create/update Hub Presence draft
+- generate intro/claim outreach
+- add CRM record/update
+- schedule follow-up placeholder/log
+- attach proposal notes
+
+2. STORY_TEMPLATE
+- generate story/article draft
+- request missing details/quotes if needed
+- link to Pulse/editorial flow
+- optionally generate social draft hooks
+
+3. EXPO_FOLLOWUP_TEMPLATE
+- process captured expo leads
+- story draft
+- intro outreach
+- scheduling ask
+- CRM update
+
+4. NONPROFIT_UPGRADE_TEMPLATE
+- apply nonprofit logic
+- prepare/update presence
+- generate congratulatory enhanced-presence message
+- explain unlocks/benefits
+
+5. ADVERTISER_CONVERSION_TEMPLATE
+- process captured competitor ad/business
+- identify likely contact path
+- classify as active advertiser opportunity
+- generate conversion outreach draft
+- note local multi-channel value prop
+
+6. TV_VENUE_TEMPLATE
+- activate/evaluate venue media role
+- connect to venue media logic
+- CRM/log notes
+- identify next setup requirements
+
+7. RADIO_PARTNER_TEMPLATE
+- activate/evaluate radio role
+- support both:
+  A. hub/master radio participation
+  B. custom venue/channel participation
+- note next setup requirements
+
+8. PRINT_DISTRIBUTION_TEMPLATE
+- mark location as physical distribution point candidate/active point
+- log real-world distribution role
+
+9. CROWN_CANDIDATE_TEMPLATE
+- flag candidate
+- connect to Crown logic/readiness flow
+- generate claim/invite recommendation if appropriate
+
+10. SEARCH_RECOMMENDATION_TEMPLATE
+- produce trust-aware, geo-aware recommendations using real data
+- not generic AI web-style results
+
+Each template should call existing systems where possible, not rebuild them.
+
+--------------------------------------------------
+PART 7 — BUILD BATCH + DIRECTIVE PROCESSING
+--------------------------------------------------
+
+Charlotte must support:
+“do this to all of these”
+
+Create a batch/directive processing layer.
+
+It should support:
+- grouping uploads/captures into a batch
+- attaching a shared directive
+- applying default actions to all
+- applying item-level overrides
+
+Examples:
+- “These are expo leads — write stories, reach out, and schedule”
+- “These are advertiser opportunities — identify contact paths and generate conversion outreach”
+- “These all need claim listing invites”
+- “This whole set needs stories, but ABC Coffee also needs TV venue setup”
+
+Batch behavior:
+1. ingest items
+2. resolve entities
+3. classify batch type when possible
+4. build proposal
+5. allow confirm/execute
+6. track per-item status
+
+Support mixed results gracefully.
+
+--------------------------------------------------
+PART 8 — BUILD SEARCH / RECOMMENDATION / CONCIERGE CONNECTIONS
+--------------------------------------------------
+
+Charlotte must act as:
+- local search engine
+- recommendation layer
+- concierge
+
+But responses must be grounded in platform data, not generic internet-style filler.
+
+Search/recommendation mode should pull from:
+- Hub Presence data
+- participation/trust signals
+- Pulse activity/story presence
+- geo proximity
+- category relevance
+- claim/verification/engagement where available
+- real object data from jobs/events/services/marketplace
+
+This aligns with the global search, location-aware discovery, and Pulse ecosystem rules. :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5} :contentReference[oaicite:6]{index=6}
+
+Support recommendation areas such as:
+- housing / relocation discovery
+- jobs
+- marketplace
+- services
+- creators
+- experts
+- events
+- things to do
+- local businesses by category
+
+Response logic:
+1. detect ask type
+2. apply geo-first logic
+3. apply trust/participation/activity signals
+4. return concise, practical recommendations
+5. optionally route into:
+   - story
+   - profile
+   - map
+   - booking
+   - event
+   - outreach
+   - claim activation
+   - scheduling with Becky where appropriate
+
+Do not let Charlotte sound like Yelp/Google/ChatGPT.
+She should feel like a real local guide who knows what is actually active.
+
+--------------------------------------------------
+PART 9 — TRUST + GEO AWARENESS HOOKS
+--------------------------------------------------
+
+Do not fully redesign ranking here, but wire Charlotte’s logic to use existing/future hooks for:
+
+A. GEO FIRST
+Geo decides inclusion before level boosts. :contentReference[oaicite:7]{index=7}
+
+B. TRUST / PARTICIPATION / QUALITY SIGNALS
+Use available signals such as:
+- verified/claimed/active status
+- platform participation
+- story/activity presence
+- category fit
+- community relevance
+- Crown-related strength where available
+- creator/business engagement where available
+
+Charlotte should be able to say things like:
+- “These are stronger local options based on activity and presence”
+without inventing unsupported claims
+
+--------------------------------------------------
+PART 10 — INBOX ROLE REDEFINITION
+--------------------------------------------------
+
+Do NOT remove the inbox.
+
+Instead redefine inbox usage for Charlotte workflows as:
+- low-confidence entity match
+- merge conflict
+- unclear classification
+- exception handling
+- human review items
+- important proposed actions pending decision
+
+Do not route every capture there by default if Charlotte has enough confidence to process and propose.
+
+This should still respect the field-capture principle of frictionless intake while making the system more operational. :contentReference[oaicite:8]{index=8}
+
+--------------------------------------------------
+PART 11 — COMMAND CENTER FOUNDATIONS
+--------------------------------------------------
+
+Without doing a full UI redesign, add the backend/service foundations for a future Charlotte command center.
+
+Charlotte should be able to support questions/commands like:
+- “What should I focus on this week?”
+- “Where are the best advertiser opportunities?”
+- “Which hubs are most ready for Crown?”
+- “Who are strong story candidates from yesterday’s capture?”
+- “What should we do with these expo leads?”
+- “Set up ABC Coffee as a radio partner and distribution point”
+- “Give me newsletter ideas for girls night out”
+- “Show me good local options for brunch in Ballantyne”
+- “Who is a strong local creator to collaborate with?”
+
+This means the orchestrator should support:
+- cross-system querying
+- proposal building
+- actionable summaries
+- follow-on actions
+
+--------------------------------------------------
+PART 12 — SALES / ONBOARDING AWARENESS HOOKS
+--------------------------------------------------
+
+Do NOT build the full Phase 3 lifecycle engine yet.
+
+But make Phase 2 aware of the onboarding/sales logic already defined so later phases can plug in cleanly.
+
+Charlotte should preserve this conversation flow concept:
+Verify → Story → Align → Recommend → Close → Downsell/Handoff
+
+And should support the concept that:
+- yearly is the default first recommendation
+- monthly is a fallback
+- custom package handoff can go to Becky
+- verification/community fund and 10% community contribution messaging are part of the value story
+- Hub Presence is required for deeper ecosystem participation
+- Charlotte acts like editor + organizer + consultative guide, not pushy seller
+
+Do not overbuild this here; just create clean integration points.
+
+--------------------------------------------------
+PART 13 — IMPLEMENTATION RULES
+--------------------------------------------------
+
+1. Reuse existing working systems.
+Do not rebuild jobs/events/marketplace/content engines if connectors can call them.
+
+2. Maintain single source of truth.
+No duplicate AI-only entities. :contentReference[oaicite:9]{index=9}
+
+3. Preserve story-first ecosystem behavior.
+Pulse is a story layer, not a social feed or listing grid. Charlotte should route content accordingly. :contentReference[oaicite:10]{index=10}
+
+4. Respect creator/business unified architecture.
+Creators are Hub Presences too. :contentReference[oaicite:11]{index=11}
+
+5. Respect event architecture as relational, not simple posting. :contentReference[oaicite:12]{index=12}
+
+6. Respect jobs as structured local workforce layer, not generic spam board. :contentReference[oaicite:13]{index=13}
+
+7. Keep physical/media roles attached to the entity model, not separate islands.
+
+8. Prefer additive integration over destructive refactors.
+
+9. Log what the orchestrator decides and does.
+
+10. Mark any unclear existing integrations as TODO/FOLLOW-UP rather than guessing.
+
+--------------------------------------------------
+PART 14 — OUTPUT REQUIRED
+--------------------------------------------------
+
+When complete, return:
+
+OUTPUT A — CHANGED FILES
+- all files created/modified
+
+OUTPUT B — ORCHESTRATOR MAP
+- main modules/services created
+- responsibilities of each
+
+OUTPUT C — SUPPORTED INTENTS / MODES
+- operator
+- proposal
+- search
+- concierge
+- brainstorm
+with example commands for each
+
+OUTPUT D — ACTION TEMPLATE MAP
+- template name
+- purpose
+- engines touched
+
+OUTPUT E — BATCH PROCESSING MAP
+- how batches are created, processed, proposed, executed
+
+OUTPUT F — INBOX ROLE UPDATE
+- what now routes to inbox vs what does not
+
+OUTPUT G — OPEN GAPS / DEFERRED ITEMS
+- inventory caps
+- follow-up cadence
+- product IDs/pricing gaps
+- anything deferred to later phase
+
+--------------------------------------------------
+FINAL INSTRUCTION
+--------------------------------------------------
+
+Build the connection layer cleanly.
+
+This phase should make Charlotte able to:
+- understand
+- connect
+- propose
+- route
+- act across the ecosystem
+
+without turning her into a fake chatbot or creating duplicate systems.
+
+Stop after Phase 2 foundations are implemented and report back with the required outputs.

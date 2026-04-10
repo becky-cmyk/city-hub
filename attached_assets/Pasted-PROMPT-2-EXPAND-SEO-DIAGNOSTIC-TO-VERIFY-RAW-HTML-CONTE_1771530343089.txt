@@ -1,0 +1,91 @@
+PROMPT 2 — EXPAND SEO DIAGNOSTIC TO VERIFY RAW HTML CONTENT QUALITY
+
+OBJECTIVE:
+Upgrade the SEO diagnostic to verify whether public pages are truly crawlable without client-side JS execution.
+
+DO NOT change any routing.
+DO NOT change token logic.
+DO NOT change entitlement logic.
+Only extend diagnostic analysis.
+
+-------------------------------------------------
+STEP 1 — FOR EACH TESTED PAGE, ADD:
+-------------------------------------------------
+
+1) rawHtmlLength (number)
+2) titleTag (string or null)
+3) metaDescription (string or null)
+4) canonicalHref (string or null)
+5) hasJsonLd (boolean)
+6) h1Text (string or null)
+7) containsBusinessName (boolean)  // only for business detail pages
+8) containsCategoryName (boolean)  // for category hubs
+9) containsZoneName (boolean)      // for zone filters
+
+-------------------------------------------------
+STEP 2 — RAW HTML CHECK (CRITICAL)
+-------------------------------------------------
+
+After fetch(url):
+
+const html = await response.text();
+
+Use string-based parsing (no heavy DOM libraries needed):
+
+- Extract <title>
+- Extract <meta name="description">
+- Extract <link rel="canonical">
+- Detect <script type="application/ld+json">
+- Extract first <h1>...</h1>
+- Check html.includes(businessName)
+- Check html.includes(categoryName)
+- Check html.includes(zoneName)
+
+If rawHtmlLength < 1500 characters:
+  flag thinHtml: true
+
+-------------------------------------------------
+STEP 3 — RETURN STRUCTURE
+-------------------------------------------------
+
+Each page result should now include:
+
+{
+  url,
+  status,
+  rawHtmlLength,
+  thinHtml,
+  titleTag,
+  metaDescription,
+  canonicalHref,
+  hasJsonLd,
+  h1Text,
+  containsBusinessName,
+  containsCategoryName,
+  containsZoneName
+}
+
+-------------------------------------------------
+STEP 4 — DO NOT CHANGE:
+-------------------------------------------------
+
+- resolveBaseUrl()
+- token endpoint
+- admin endpoint
+- existing structure; extend only.
+
+-------------------------------------------------
+ACCEPTANCE
+-------------------------------------------------
+
+Re-run:
+
+/api/seo-diagnostic?token=<token>
+
+Paste FULL JSON output.
+
+We are verifying whether this is SPA-thin or SEO-solid.
+
+-------------------------------------------------
+END PROMPT
+-------------------------------------------------

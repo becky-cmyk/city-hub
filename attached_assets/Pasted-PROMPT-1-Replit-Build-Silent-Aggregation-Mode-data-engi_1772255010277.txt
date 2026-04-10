@@ -1,0 +1,202 @@
+PROMPT 1 (Replit) — Build “Silent Aggregation Mode” data engine: Business Filings + Multifamily/Apartments + Language/Demand overlay + Lead lists (internal only)
+
+CONTEXT / GOAL
+We are building the Metro Intelligence Engine in “silent aggregation mode” (no public dashboards, no selling yet). This system must:
+1) Collect + normalize data for:
+   A) Business Filings (NC focus first; structure supports any state later)
+   B) Multifamily / Apartment communities
+   C) Language/Demand overlay (English vs Spanish usage + search intent)
+2) Turn these into internal “lead lists” and a unified “Signals” feed for later monetization.
+3) Be multi-tenant by metro_id and zip_id (licensable).
+4) Collect quietly now; expose only a private admin page and internal APIs.
+
+NON-NEGOTIABLES
+- Do NOT build public dashboards yet.
+- Do NOT change existing public UX.
+- Build as a modular data spine that can be duplicated for other metros/states.
+- Capture data even if site traffic is low; log consistently.
+- All new tables must include: id, metro_id, zip_id (if applicable), source, source_url (nullable), created_at, updated_at.
+
+PHASE 1 SCOPE (Build Now)
+A) DATABASE (Drizzle schema + migrations)
+Create these tables (names exact):
+
+1) metros
+- id (pk)
+- name
+- state_code
+- is_active
+
+2) zips
+- id (pk)
+- metro_id (fk)
+- zip_code (string, unique within metro)
+- neighborhood_name (nullable)
+- is_active
+
+3) business_filings_log
+- id (pk)
+- metro_id (fk)
+- state_code (string, default "NC")
+- filing_external_id (string, nullable, unique where present)
+- business_name (string)
+- filing_date (date)
+- status (string; e.g. "active", "dissolved", "pending", nullable)
+- industry_code (string, nullable)
+- organizer_name (string, nullable)
+- registered_agent (string, nullable)
+- registered_address (string, nullable)
+- mailing_address (string, nullable)
+- zip_id (fk nullable if zip unknown; if known, link)
+- source (string; e.g. "manual", "state_registry", "third_party")
+- source_url (string nullable)
+- outreach_status (enum: "uncontacted","attempted","connected","not_interested","converted"; default "uncontacted")
+- notes (text nullable)
+- created_at, updated_at
+
+4) multifamily_log
+- id (pk)
+- metro_id (fk)
+- property_name (string)
+- address (string)
+- city (string nullable)
+- state_code (string default "NC")
+- zip_id (fk nullable if unknown; if known, link)
+- unit_count (int nullable)
+- developer (string nullable)
+- management_company (string nullable)
+- completion_date (date nullable)
+- lease_up_status (enum: "planning","under_construction","lease_up","stabilized","unknown"; default "unknown")
+- rent_low (int nullable)
+- rent_high (int nullable)
+- website (string nullable)
+- phone (string nullable)
+- source (string)
+- source_url (string nullable)
+- partner_status (enum: "uncontacted","attempted","connected","not_interested","partnered"; default "uncontacted")
+- qr_installed_flag (boolean default false)
+- hub_integrated_flag (boolean default false)
+- notes (text nullable)
+- created_at, updated_at
+
+5) language_usage_log  (aggregate-friendly event log)
+- id (pk)
+- metro_id (fk)
+- zip_id (fk nullable)
+- page_type (string; e.g. "home","neighborhood","listing","event","search")
+- page_ref_id (string nullable; e.g. listingId/neighborhoodId)
+- language (enum: "en","es")
+- event_type (enum: "page_view","toggle_language","search_submit","filter_apply")
+- query_text (text nullable)  // only for search_submit
+- category_id (string nullable) // inferred category if available
+- source (string default "site")
+- created_at
+
+6) signals_feed (unified normalized signal stream for internal use)
+- id (pk)
+- metro_id (fk)
+- zip_id (fk nullable)
+- signal_type (enum: "business_filing","multifamily","language_spike","search_spike")
+- title (string)
+- summary (text nullable)
+- related_table (string nullable)
+- related_id (string nullable)
+- signal_date (date nullable)
+- score (int default 0)
+- created_at, updated_at
+
+B) INGESTION (Manual-first, automation-ready)
+Create server routes + services:
+
+1) POST /api/admin/ingest/business-filings
+- Accepts an array of filings (manual import for now)
+- Normalizes: trims names, uppercases state_code, parses dates, resolves zip -> zip_id when possible
+- Upserts by filing_external_id when provided; otherwise insert with best-effort dedupe (business_name + filing_date + registered_address)
+- Also writes a signals_feed record per new filing
+
+2) POST /api/admin/ingest/multifamily
+- Accepts an array of multifamily properties
+- Normalizes address, parses unit_count/rent ranges, resolves zip -> zip_id
+- Upserts by (property_name + address) as a composite dedupe
+- Also writes a signals_feed record per new property
+
+3) Background job hooks (implement job scaffolding, but do not scrape yet)
+- Create a jobs folder + placeholders:
+  - job_pull_business_filings_nc.ts (disabled)
+  - job_pull_multifamily_listings.ts (disabled)
+Include environment flags to enable later:
+- ENABLE_FILINGS_PULL=false
+- ENABLE_MULTIFAMILY_PULL=false
+
+C) DATA CAPTURE FROM SITE (Language/Demand overlay)
+Implement lightweight logging middleware:
+
+1) On page view events (server-rendered or API called on client):
+- POST /api/log/page-view
+Body: { metroId, zipCode(optional), pageType, pageRefId(optional), language }
+
+2) On language toggle:
+- POST /api/log/language-toggle
+Body: { metroId, zipCode(optional), pageType, pageRefId(optional), language }
+
+3) On search submit (if search exists):
+- POST /api/log/search
+Body: { metroId, zipCode(optional), language, queryText, categoryId(optional) }
+
+All three write to language_usage_log. Keep it fast (no blocking UX).
+
+D) INTERNAL ADMIN UI (Simple, private)
+Create a minimal admin-only page:
+- /admin/intelligence
+
+Sections:
+1) “New Business Filings”
+- table view + filters: zip, outreach_status, date range, industry_code
+- button: “Import CSV” (upload) OR “Paste JSON” (textarea) for manual ingestion
+2) “Multifamily / Apartments”
+- table view + filters: zip, lease_up_status, partner_status
+- “Import CSV / Paste JSON”
+3) “Signals Feed”
+- unified list sorted by created_at desc
+- filter by signal_type and zip
+
+Admin protection:
+- Reuse the existing admin/auth approach in this repo.
+- If no auth exists, implement a basic admin gate using an ADMIN_SECRET in env:
+  - require header X-ADMIN-SECRET for all /api/admin/* routes
+  - and require it to view /admin/intelligence (simple server check)
+Do NOT expose publicly.
+
+E) EXPORTS (for lead list usage)
+Add:
+- GET /api/admin/export/business-filings.csv
+- GET /api/admin/export/multifamily.csv
+Applies current filters via query params; outputs CSV.
+
+F) SEED DATA
+Create a seed script:
+- metro: "Charlotte" NC
+- import the 60 zip codes (if we already have them in DB, do not duplicate; otherwise create)
+If zip list exists elsewhere, reuse.
+
+ACCEPTANCE CRITERIA
+1) Migrations run cleanly.
+2) Manual ingestion works via admin page for both filings and multifamily.
+3) Signals feed populates automatically after ingestion.
+4) Language usage logging writes events without breaking UX.
+5) Admin page is private (ADMIN_SECRET gate).
+6) Export endpoints download valid CSV.
+
+DELIVERABLE
+- Implement all above with clean file structure:
+  /server/routes/adminIngest.ts
+  /server/routes/logging.ts
+  /server/services/normalize.ts
+  /db/schema.ts (Drizzle)
+  /admin/pages/Intelligence.tsx (or equivalent)
+  /jobs/* (disabled stubs)
+  /scripts/seed-metro-charlotte.ts
+
+IMPORTANT
+Keep everything “quiet” and internal. No public UI changes.
+Build for licensing: metro_id scoping everywhere.

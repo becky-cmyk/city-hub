@@ -1,0 +1,110 @@
+PROMPT 1 — ENTITLEMENT-DRIVEN FEATURE GATING (FOUNDATION)
+
+CONTEXT (DO NOT CHANGE):
+- This is the existing CityCoreHub Replit project.
+- Stripe webhooks are already working at: POST /api/stripe/webhook
+- Entitlements are already upserting from Stripe (do not alter webhook behavior).
+- Multi-tenant cityId isolation is app-level (do not add RLS).
+- No service worker. No heavy caching.
+- We are NOT renaming files, moving folders, or refactoring structure.
+
+OBJECTIVE:
+Create a single, centralized entitlement “resolver” and “gate” used by the backend and frontend so that:
+1) The app can answer: “What tier is this business currently entitled to?”
+2) The app can enforce: “This business cannot access premium features unless entitled”
+3) All checks are time-aware (end_at) and status-aware
+4) The app stops using any boolean flags (e.g., featured=true) as the source of truth for entitlement behavior (we can leave existing booleans in place for now, but gating must NOT depend on them).
+
+SCOPE FOR THIS PROMPT (FOUNDATION ONLY):
+A) Backend:
+   - Add ONE reusable function that returns ACTIVE entitlements for a given (cityId, businessId)
+   - Add ONE reusable function that answers hasEntitlement(productType)
+   - Add ONE reusable function that derives tier: FREE | BASIC | PREMIUM | CHAMBER
+   - Add ONE middleware (or equivalent gate helper) that can protect routes
+
+B) Wire it into ONE existing route (minimum surface area) as proof:
+   - Choose ONE route that is clearly premium-gated (examples: “edit listing extended fields”, “upload gallery media”, “set featured placement”, or similar existing route).
+   - Enforce: if not entitled -> return 403 with a clear JSON error that includes requiredProductType + currentTier.
+
+C) Frontend:
+   - Expose tier + allowedCapabilities to the UI in a way the frontend can use.
+   - Implement ONE UI proof: hide/disable ONE premium-only UI control and show “Upgrade to unlock” text (no hype).
+
+FORENSIC RULES:
+- Do NOT change Stripe price IDs, checkout session logic, webhook mounting, or entitlement upsert schema.
+- Do NOT add new tables.
+- Do NOT require new environment variables.
+- Do NOT add file paths in your explanation; just implement in-place.
+- Keep all logic city-aware (cityId must be enforced).
+
+DEFINITION: “ACTIVE ENTITLEMENT”
+An entitlement is active if:
+- status indicates active access (use the statuses currently in your entitlements table; include at least: 'active' and 'trialing' if present)
+AND
+- (end_at is NULL OR end_at > now())
+AND
+- city scope matches the business’s cityId.
+
+IMPLEMENTATION DETAILS (REQUIRED):
+1) Entitlement Resolution:
+   - Implement a single query that fetches all entitlements for the business scoped to cityId.
+   - Filter to active using the rules above.
+   - The resolver must be callable from routes without duplicating query logic.
+
+2) Tier Derivation:
+   - Derive tier from product_type values in active entitlements.
+   - If multiple, highest wins. Use this strict precedence:
+     CHAMBER > PREMIUM > BASIC > FREE
+   - If your system uses different product_type strings, map them, but DO NOT rename product types in DB.
+
+3) Capability Map (returned to frontend):
+   Return an object like:
+   {
+     tier: "FREE|BASIC|PREMIUM|CHAMBER",
+     capabilities: {
+       canUseGallery: boolean,
+       canUseMediaBlocks: boolean,
+       canShowBadges: boolean,
+       canPriorityRank: boolean
+     }
+   }
+   The exact capabilities can be adjusted to match existing features, but must include at least 2 capabilities that are currently present in the UI.
+
+4) Gate Helper:
+   - Create a reusable gate:
+     requireEntitlement(productType)
+   - On failure, respond with:
+     HTTP 403
+     { error: "ENTITLEMENT_REQUIRED", requiredProductType, tier, businessId, cityId }
+
+5) Proof Wiring (Backend):
+   - Apply the gate to ONE real route.
+   - Ensure the route still works for entitled businesses.
+   - Ensure it blocks non-entitled.
+
+6) Proof Wiring (Frontend):
+   - Fetch tier/capabilities for the current business (wherever the listing editor loads data).
+   - Disable/hide one premium UI control based on capabilities.
+   - Display a small text line: “Upgrade to unlock this feature.”
+
+ACCEPTANCE CHECKS (YOU MUST MAKE THESE PASS):
+1) Non-entitled business:
+   - Hit the gated route -> returns 403 with ENTITLEMENT_REQUIRED payload.
+2) Entitled business:
+   - Hit the same route -> succeeds as before.
+3) Frontend:
+   - The premium UI control is disabled/hidden when not entitled.
+4) No regression:
+   - Stripe webhook still responds 200 on valid events.
+   - Entitlements still upsert as before.
+
+STRIPE TEST / VERIFICATION (NO NEW SETUP REQUIRED):
+- Do NOT change Stripe mode.
+- For verification, use the existing checkout flow already in the app:
+  1) Start a checkout for a tier that should grant the required entitlement.
+  2) Complete checkout.
+  3) Confirm entitlement row exists and is active (status + end_at).
+  4) Confirm gated route passes.
+
+DELIVERABLE:
+Implement the resolver + gate + tier/capabilities exposure, and wire it into 1 backend route + 1 frontend control as proof, with zero schema changes.

@@ -1,0 +1,371 @@
+REPLIT PROMPT — BUILD TWO SEPARATE QR-LINKED LANDING PAGE SYSTEMS
+PROJECT: CLT City Hub / City Hub
+PURPOSE: Micro Publications + Kids Menus Digital Twin Pages
+PRIORITY: Build as clean internal systems that can scale by district and issue/month without changing the public QR URL
+
+==================================================
+GOAL
+==================================================
+
+Build TWO SEPARATE SYSTEMS inside the existing City Hub app:
+
+1. MICRO PUBLICATION LANDING PAGE SYSTEM
+2. KIDS MENU LANDING PAGE SYSTEM
+
+These are NOT the same system and should not be merged into one content type.
+They may share reusable components, but they must be modeled as separate systems in admin, storage, and routing.
+
+The purpose is to support printed pieces that have QR codes pointing to dedicated online “digital twin” landing pages.
+
+Each printed piece should have a stable QR URL that does NOT change over time.
+When a new issue/version is published, that same URL should automatically resolve to the newest live version.
+Older versions must remain archived and accessible internally (and optionally publicly through archive links).
+
+==================================================
+CORE REQUIREMENT — STABLE QR URL
+==================================================
+
+The public QR URL for a district/system must remain constant.
+
+Example concept only:
+- /pineville-local-core/publication
+- /pineville-local-core/kids
+- /district-slug/publication
+- /district-slug/kids
+
+Behavior:
+- QR always points to the same stable public URL
+- public URL always resolves to the CURRENT / most recent published version
+- previous versions are archived, not overwritten
+- admin can view archive history and switch what is “current”
+- archive system must preserve prior sponsor layouts/content records for reference
+
+Do NOT create a system where every new month requires a brand-new QR or a changed public URL.
+
+==================================================
+SYSTEM 1 — MICRO PUBLICATION LANDING PAGE SYSTEM
+==================================================
+
+Build a dedicated publication system for the 6 district publications.
+
+Districts currently in use:
+1. Pineville Local Core
+2. Pineville Service Corridors
+3. Ballantyne / Blakeney
+4. Carmel / Sharon Corner
+5. SouthPark Retail / Luxury
+6. Quail Hollow / South Residential
+
+Each district publication needs:
+
+A. Stable public landing page URL
+B. Versioned issues/archive
+C. Ability to publish a newest/current issue
+D. Sponsor placement areas that mirror print
+E. Ability to add online-only upgrade content for sponsors
+F. CTA / lead / offer / QR-connected digital actions
+G. Admin page to create, duplicate, publish, archive, and edit
+
+----------------------------------
+MICRO PUBLICATION PAGE CONTENT
+----------------------------------
+
+Each issue/page should support fields such as:
+- district name
+- district slug
+- issue title
+- issue month / cycle / date
+- status (draft, published, archived)
+- hero image or publication cover
+- PDF/image preview or page images if used
+- sponsor slots matching publication structure
+- community ad slots
+- optional featured business blocks
+- optional article/story links
+- optional offer buttons
+- optional lead capture or CTA buttons
+- optional “visit website / call / map / offer” sponsor actions
+- optional online-only upgrade sections for specific sponsors
+- archive metadata
+- published_at
+- current_live flag
+
+Publication sponsor records should support:
+- sponsor business name
+- sponsor category
+- sponsor placement type
+- sponsor image/logo
+- sponsor headline
+- sponsor short description
+- sponsor CTA text
+- sponsor CTA link
+- sponsor phone
+- sponsor offer text
+- sponsor upgraded digital section toggle
+- sponsor online-only media/gallery/video if enabled
+
+==================================================
+SYSTEM 2 — KIDS MENU LANDING PAGE SYSTEM
+==================================================
+
+Build a dedicated kids menu system, separate from publications.
+
+Purpose:
+Each printed kids menu (by district) has a QR code that opens its online digital twin.
+
+This page should allow the printed menu to extend online with:
+- sponsor continuation
+- family fun offers
+- digital activities
+- online-only sponsor upgrades
+- giveaway tie-ins
+- future kids/family content expansion
+
+The kids menu system must also use stable QR URLs per district.
+
+Example concept only:
+- /pineville-local-core/kids
+- /carmel-sharon-corner/kids
+
+Behavior:
+- same QR always stays valid
+- newest published kids menu page is the live page
+- older versions archived behind the scenes
+- admin can publish new monthly/seasonal versions without changing the QR
+
+----------------------------------
+KIDS MENU PAGE CONTENT
+----------------------------------
+
+Each kids menu issue/page should support:
+- district name
+- district slug
+- issue title / cycle name / date
+- status (draft, published, archived)
+- print image/preview of kids menu if desired
+- top sponsor (exclusive)
+- bottom sponsor row
+- optional family fun sponsor blocks
+- digital-only sponsor upgrades
+- optional giveaway block
+- optional family activities links
+- optional “things to do” links
+- optional downloadable coloring page or second activity page
+- optional future kids content modules
+- published_at
+- current_live flag
+
+Kids sponsor records should support:
+- sponsor business name
+- sponsor category
+- sponsor placement type (top sponsor, bottom sponsor, other)
+- logo/image
+- CTA text
+- CTA link
+- offer text
+- optional coupon / reward text
+- optional “family fun” upgrade section
+- optional image gallery / carousel
+- optional video embed or future content slot
+- optional lead form or giveaway connection
+
+==================================================
+URL / ROUTING RULES
+==================================================
+
+Build two routing layers:
+
+1. STABLE PUBLIC ROUTE
+This route never changes and is what the QR points to.
+
+2. VERSIONED / ARCHIVE ROUTE
+Each version should have its own internal or public issue slug/ID for archive reference.
+
+Examples of desired behavior:
+- /pineville-local-core/publication -> resolves to latest current published publication issue
+- /pineville-local-core/kids -> resolves to latest current published kids issue
+- archive page available internally and optionally publicly:
+  - /pineville-local-core/publication/archive
+  - /pineville-local-core/kids/archive
+
+Optional individual issue route examples:
+- /pineville-local-core/publication/issues/2026-04
+- /pineville-local-core/kids/issues/2026-04
+
+But again:
+THE QR SHOULD ALWAYS USE THE STABLE PUBLIC ROUTE.
+
+==================================================
+ADMIN REQUIREMENTS
+==================================================
+
+Need a clean admin workflow for both systems.
+
+For Publications:
+- list all district publication records
+- filter by district
+- create new issue
+- duplicate previous issue
+- edit sponsor content
+- set one issue as current live
+- archive old issue automatically when new one goes live
+- preview page before publish
+
+For Kids Menus:
+- list all district kids menu records
+- filter by district
+- create new issue
+- duplicate previous issue
+- edit sponsor content
+- set one issue as current live
+- archive old issue automatically when new one goes live
+- preview page before publish
+
+Need clear separation in admin between:
+- Publications
+- Kids Menus
+
+Do NOT combine them into one ambiguous object without distinction.
+
+==================================================
+DATA MODEL REQUIREMENTS
+==================================================
+
+Create separate data models/tables for:
+- publication_issues
+- publication_sponsors
+- kids_menu_issues
+- kids_menu_sponsors
+
+Also create any needed helper/reference tables such as:
+- districts or publication_districts
+- sponsor placement enums
+- archive history/audit fields
+
+Each issue record should support:
+- id
+- district_slug
+- district_name
+- title
+- cycle_date or issue_month
+- status
+- is_current_live
+- published_at
+- archived_at
+- created_at
+- updated_at
+- created_by
+- optional notes/internal_notes
+
+Each sponsor record should support:
+- issue_id
+- sponsor_name
+- sponsor_category
+- placement_type
+- display_order
+- logo_url/image_url
+- headline
+- body
+- cta_text
+- cta_link
+- offer_text
+- phone
+- email if needed
+- online_upgrade_enabled
+- online_upgrade_content
+- active/inactive
+
+Important:
+When a new issue is published for a district/system, the previous issue should automatically lose current_live status and move to archived.
+
+==================================================
+UI / PAGE RULES
+==================================================
+
+Public pages should be clean, mobile-first, QR-friendly, and fast.
+
+Because these come from print:
+- page must load quickly
+- primary sponsor and CTAs must be visible fast
+- district identity must be clear
+- digital twin should feel like an extension of the printed piece, not a random generic page
+
+Publication pages should feel:
+- local
+- district-specific
+- sponsor-supportive
+- useful beyond print
+
+Kids pages should feel:
+- family-friendly
+- simple
+- mobile-first
+- sponsor-friendly without clutter
+- expandable later for more kids/family content
+
+==================================================
+ARCHIVE LOGIC
+==================================================
+
+Archive logic must be intentional:
+
+When publishing a new issue:
+- old issue remains stored
+- old issue is marked archived
+- stable QR route points to new issue
+- admin can still view/edit archive records if needed
+- archived issue should not be deleted
+
+Optional:
+- public archive page can show previous issues for district
+- if omitted for now, still preserve full archive internally
+
+==================================================
+DUPLICATION / TEMPLATE WORKFLOW
+==================================================
+
+Need a duplicate-from-previous feature for both systems.
+
+Common workflow:
+- open district
+- duplicate previous issue
+- replace sponsor content / images / dates / offers
+- preview
+- publish
+- stable URL updates automatically
+
+This is important for speed and repeatability.
+
+==================================================
+IMPLEMENTATION RULES
+==================================================
+
+- Reuse existing City Hub design system where appropriate
+- Do not break existing routing
+- Keep this modular and scalable
+- No unnecessary complexity
+- No service worker / no caching behavior that risks stale QR pages
+- Stable URLs must always resolve to the newest live issue
+- Archive must be preserved
+- Systems must remain separate
+
+==================================================
+DELIVERABLES
+==================================================
+
+Implement:
+1. Data models
+2. Admin CRUD for both systems
+3. Stable public routes
+4. Publish/archive logic
+5. Duplicate previous issue workflow
+6. Public mobile-friendly landing pages
+7. Archive handling
+8. District support for all 6 current districts
+
+At the end, provide:
+- summary of files/components created
+- route map
+- data model summary
+- admin workflow summary
+- any assumptions made

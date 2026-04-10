@@ -1,0 +1,125 @@
+PROMPT (Replit): Tighten + implement Organizations + “Across Your Hub” wildcard + weekly/weekend modules + supporters/underwriters — based on existing code
+
+INSTRUCTIONS
+- Extend what already exists in this repo. Do not redesign the app or introduce a new stack.
+- Implement the rules below exactly; do not “improve” them with extra weighting, priority scoring, or daily rotation logic.
+- Avoid “featured/spotlight/premium/directory” language in UI. Use Hub language.
+
+============================================================
+A) COMMUNITY ORGANIZATIONS (FREE BASE + OPTIONAL SUPPORT LAYERS)
+============================================================
+1) Community Organization Presence Type
+- Add/confirm presence_type supports: commerce | organization
+- Organizations are discoverable via global search like everything else.
+- Organizations can be categorized/tagged by mission/cause (e.g., animals, pantry, housing, youth, etc.) for filtering and discoverability.
+
+2) Organization Microsite
+- Approved organizations get a verified microsite (free base) with:
+  - Overview / mission
+  - Contact + links (including Donate link that goes directly off-platform to their donation URL)
+  - Events section (if events exist)
+  - “In the Hub” internal mentions (if content system exists; otherwise scaffold)
+  - Support sections (see below)
+
+3) Underwriters (Annual)
+- Each organization can have MAX 3 annual underwriters.
+- Name: “Hub Underwriter”
+- Price: $199/year per underwriter
+- Eligibility: the underwriter must be a VERIFIED paid commerce presence (either $99 or $299 plan active).
+- Display on org page as:
+  “Supported in the Hub by: [Business Name]” (link to supporter’s presence)
+- Also show reciprocal section on supporter business page:
+  “Support in the Hub” listing supported organizations.
+
+4) Hub Event Partner (One-time per event)
+- Event-level support is separate from underwriters.
+- Name: “Hub Event Partner”
+- Pricing:
+  - Nonprofit events: $25 or $50 one-time
+  - Private/business events: $100 one-time
+- This support attaches to a specific event_id and expires automatically when the event ends.
+- Display on event page as:
+  “Supported in the Hub by: [Business Name]” (link to business presence)
+- Do NOT convert Hub Event Partners into org underwriters automatically; keep distinct.
+
+============================================================
+B) CONTENT LIFECYCLE + “NO MISSED EVENTS” RULE
+============================================================
+5) Event Expiration Rule (non-negotiable)
+- An event must stop appearing on ALL “live” surfaces at the event end time on the event date.
+- No grace period. No “ended 48 hours ago” surfacing.
+- After end time: event becomes archived (still accessible via the org/event history pages, but NOT in:
+  - Across Your Hub wildcard
+  - This Week in Your Hub
+  - This Weekend in Your Hub
+  - Any “In Motion/Active” modules)
+
+6) Archive vs Live Surfaces
+- Live surfaces show ONLY:
+  - Evergreen items (presences, org pages, static pages), and
+  - Current/active items (events within their date/time window)
+- Archived items never appear in wildcard or week/weekend modules.
+
+============================================================
+C) “ACROSS YOUR HUB” WILDCARD (TRULY RANDOM, PER LOAD)
+============================================================
+7) Across Your Hub = Wildcard Feed
+- This is a wildcard mix of different types of items (events + presences + orgs + etc.) based on what’s already available in repo.
+- RULE: There is NO importance ranking. No scoring. No proximity ranking. No preference weighting.
+- Selection/shuffle happens ONLY on page load (or explicit user refresh).
+- Do NOT rotate daily. Do NOT reorder over time while the user is on the page.
+
+8) Movement/UX
+- Do NOT autoplay sliders or carousels.
+- Implement as an endless scroll feed that loads batches (e.g., 8–12 items at a time) as the user scrolls.
+- The “mix” is randomized per page load; after load, the order is stable for that session.
+
+============================================================
+D) “THIS WEEK IN YOUR HUB” + “THIS WEEKEND IN YOUR HUB”
+============================================================
+9) This Week in Your Hub (Monday–Sunday)
+- Weekly cycle is Monday through Sunday.
+- Generation occurs Sunday evening for the upcoming week.
+- Keep it simple: pull a randomized selection of eligible “live” items for that week.
+- Do NOT apply ranking/importance.
+- Order can be randomized at generation time and remain fixed for the week.
+
+10) This Weekend in Your Hub (Fri–Sun overlay)
+- Activates Thursday evening.
+- Covers Friday/Saturday/Sunday.
+- Contents are a randomized selection (lottery) from eligible weekend items (mainly events within Fri–Sun window).
+- Not ranked. Not weighted. Not “algorithmic.”
+
+============================================================
+E) SUBMISSIONS + GOVERNANCE DISCLAIMERS
+============================================================
+11) Submissions are always admin reviewed
+- Add/confirm submission flow supports:
+  - Submit a Local Business (fork: owner/manager/team -> confirm presence flow; citizen -> lightweight submission)
+  - Submit a Community Organization (same fork logic)
+  - Submit a Press Release (uploads + links)
+  - Hub Shout-Out
+  - Submit a Community Event
+  - Share a Media Mention (“Other News” link-out)
+- All are status=pending_review until admin approval.
+
+12) Required confirmations
+- On owner/manager/team claim/confirm flows, require checkbox confirmations:
+  - “I confirm I have authority to represent this business/organization.”
+  - “I agree to have this information publicly displayed in the Hub.”
+  - “I understand all submissions are reviewed and publication decisions are made at the Hub’s discretion.”
+
+============================================================
+DELIVERABLES
+============================================================
+- Community Organization presence type + cause tagging + org microsite sections
+- Hub Underwriters (max 3) with eligibility enforcement + reciprocal linking
+- Hub Event Partner support attached to events with correct pricing and automatic expiration
+- Event lifecycle: ends exactly at event end time; remove from all live surfaces immediately
+- Across Your Hub wildcard: random per load, endless scroll, stable per session, no daily rotation
+- This Week in Your Hub: Monday–Sunday, generated Sunday evening, randomized selection, fixed for week
+- This Weekend in Your Hub: randomized “lottery” selection activated Thursday evening, Fri–Sun focus, no weighting
+- Submission page updates + admin review requirement + required confirmations
+
+IMPLEMENTATION NOTE
+If any of the above conflicts with existing structures, do the smallest schema/UI extension consistent with current repo patterns; do not create parallel systems.

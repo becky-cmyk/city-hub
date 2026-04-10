@@ -1,0 +1,136 @@
+You are Replit AI working inside our existing CityCoreHub / CLT Connects codebase.
+
+CONTEXT / PIVOT
+We originally built this as a directory + publication. We are pivoting the EXPERIENCE to feel like a geo-structured social discovery app (TikTok/Instagram/Nextdoor vibe) BUT it is not open social. Users can submit content, but NOTHING goes live without moderation by the Metro owner. No comments. Likes/follows exist (1 per user per item). Public-facing metrics (like counts, follower counts, etc.) must be HIDDEN for now. Track everything privately for admin/analytics; we can turn on public display later.
+
+NON-NEGOTIABLES (LOCKED)
+- Multi-metro ready: we must be able to launch any city and it “auto runs” with the same product. City-specific setup is data/config driven (not code forks).
+- Account required for: like, follow, submit, inquire. (Like “any social app”.)
+- There is a hidden “ghost submit” path (backdoor button/URL) allowed for special use; still must capture email/phone and ALWAYS goes to moderation; lower trust score.
+- No comments, no DMs. Instead, later we’ll offer an “Inquiry/Request Gateway” (structured request form) as a monetized layer. For now only scaffold it lightly if easy; do not overbuild.
+- Hashtag model: ALL categories, zips, neighborhoods, businesses/orgs are represented internally as structured tags. Frontend shows only a few clean tags; backend stores the full tag set (micro depth).
+- Geo-first: Metro always present. The more micro geo we can store (county/zip/neighborhood + lat/lng) the better. Also store submitter location (lat/lng) when user grants permission.
+- Feed is mixed content (events + businesses + orgs + pulses/articles + user submissions + sponsored placements as feed cards). Ads/sponsored are feed-native (labeled) and tag+geo targeted; advanced sponsor logic can be deferred but we must store sponsored metadata now.
+- Each Business/Org profile page must have “their feed” (their approved posts/updates/events) so they can share content and get adoption.
+
+GOAL (PHASE 1)
+Implement the foundational backend + minimal frontend wiring for:
+A) normalized tags + geo model
+B) content submission + moderation workflow
+C) unified feed query (tag-driven) for home feed + per-business feed
+D) engagement signals (likes + follows) with 1 click per user per object
+E) multi-metro “bootstrap config” so we can spin new metros by data
+
+PLEASE DO THIS IN ORDER
+
+1) AUDIT CURRENT STATE (NO SUMMARIES; ACTIONABLE OUTPUT ONLY)
+- Identify existing tables/models for: metro/city, zip, neighborhood, categories, businesses, orgs, events, articles/pulses.
+- Identify how current routes render directory/publication pages.
+- Identify current auth/user model.
+- Identify existing SEO/canonical system so we don’t break it.
+
+2) DATA MODEL ADDITIONS (SAFE, ADDITIVE)
+Add these tables (or equivalent in our ORM) WITHOUT deleting existing columns:
+- metros: id, slug, name, state, country, isActive, defaultGeoCenterLat, defaultGeoCenterLng, createdAt
+- tags: id, metroId (nullable for global tags), slug, label, type ENUM('location','topic','entity','status'), parentTagId nullable, isPublicVisible boolean, createdAt
+- content_tags: id, contentType ENUM('event','business','org','pulse','post','sponsored'), contentId, tagId
+- posts (user submissions / curated feed items):
+  id, metroId, authorUserId, sourceType ENUM('user','staff','import'), title, body, mediaUrl(s), coverImageUrl,
+  status ENUM('draft','pending','approved','rejected','published'),
+  submittedAt, approvedAt, publishedAt,
+  submitterLat, submitterLng (nullable),
+  createdAt, updatedAt
+- moderation_queue:
+  id, contentType, contentId, metroId, status ENUM('pending','approved','rejected'), reviewerUserId, reviewerNotes, reviewedAt
+- likes:
+  id, userId, contentType, contentId, createdAt
+  UNIQUE(userId, contentType, contentId)
+- follows:
+  id, userId, followType ENUM('tag','business','org','author'), followId, createdAt
+  UNIQUE(userId, followType, followId)
+- sponsored_placements (light scaffolding):
+  id, metroId, targetType, targetId, coverImageUrl, title, ctaLabel, ctaUrl,
+  startAt, endAt, weight, isActive, createdAt
+
+IMPORTANT: metrics must be tracked but NOT shown publicly yet. Store counts via queries or materialized counters later; no UI display required.
+
+3) TAG BACKFILL / NORMALIZATION (MINIMUM VIABLE)
+- Create a safe script/job to backfill tags from existing fields:
+  - Metro tags (e.g., #Charlotte)
+  - County tags if we have them
+  - ZIP tags (#28277)
+  - Neighborhood tags (#SouthPark)
+  - Topic tags from existing categories (#Food, #Events, #Business, etc.)
+  - Entity tags per business/org (slugged, but mark isPublicVisible=false by default)
+- For each existing record (business/org/event/pulse), create content_tags links for its geo + topic tags.
+- Keep the legacy category/zip fields untouched.
+
+4) MULTI-METRO BOOTSTRAP
+- Implement a “Create Metro” admin action (or seed command) that:
+  - Creates metro record + default global tags + standard topic tags
+  - Sets up minimum location tags (at least metro-level)
+  - Leaves room for later import of zips/neighborhoods
+- This must be data-driven so we can launch any city quickly.
+
+5) FEED PROJECTION + API (TAG-DRIVEN)
+Create a unified feed projection that merges:
+- posts (approved/published)
+- events (active/upcoming)
+- businesses/orgs (featured/verified/charter/enhanced if those flags exist)
+- pulses/articles (if exist)
+- sponsored placements (active window)
+
+Implement:
+- GET /api/feed
+  Params: metroSlug, geoTagSlug (optional), topicTagSlug (optional), context ('new'|'trending'|'nearby'), page, limit
+  Behavior:
+   - Default geoTag: metro tag if nothing else
+   - Filter items to those tagged with geoTag (or descendant) AND (if provided) topicTag
+   - Mix content types in results (not separate sections)
+   - Return each item with: type, id, title, image, primaryTopicTag (display), geoDisplayTag (display), deepLinkUrl, sponsored boolean
+- GET /api/business/:id/feed
+  Returns approved/published items tagged to that business entity tag (and metro)
+- GET /api/tags/chips
+  Params: metroSlug, geoTagSlug
+  Returns visible topic tags relevant to that geo (for the chip row)
+
+Ranking (simple-smart hybrid; configurable constants):
+- Geo relevance: exact zip/neighborhood > metro
+- Recency: upcoming events soon; posts recent
+- Quality: verified/charter/enhanced boosts (if data exists)
+- Sponsored insertion: allow sponsored items but keep minimal (e.g., 1 per N); just store logic constants; can refine later
+
+6) MODERATION WORKFLOW (METRO OWNER ONLY)
+- Any user submission creates a post with status=pending and a moderation_queue entry.
+- Only the Metro owner/admin can approve/reject/publish.
+- No self-approval by businesses or authors at this stage.
+- Add a minimal admin screen to review pending items and approve/reject with notes.
+
+7) ENGAGEMENT (PRIVATE METRICS)
+- Likes: implement endpoints to like/unlike. Enforce one like per user per item.
+- Follows: implement follow/unfollow tags/business/org/author.
+- Store all engagement for admin analytics; DO NOT display counts publicly yet.
+- Add admin analytics endpoints minimally if easy (counts by metro/tag), otherwise defer.
+
+8) FRONTEND (MINIMAL WIRING; DO NOT REDESIGN EVERYTHING)
+- Implement the new home experience skeleton:
+  - Sticky header showing current geo tag (metro by default) with selector
+  - Horizontal tag chips row (topics)
+  - Feed list rendering from /api/feed
+  - Each feed item shows: image + small tag badges + actions (like, save, share) BUT no public counts
+  - Map mode can be a placeholder toggle for now; actual map UI can be Phase 2
+- Business profile page:
+  - Add “Updates” tab/section powered by /api/business/:id/feed
+
+SEO NOTE
+We already have SEO foundation. Do not break existing canonical/meta system. If we add tag routes later, make them consistent; but Phase 1 can keep current routes and add this as the primary homepage experience.
+
+OUTPUT REQUIREMENTS
+- Implement code changes with clear commits or a concise change list.
+- Provide the exact DB migration steps.
+- Provide the backfill/seed command(s).
+- Provide any env var additions needed.
+- Provide a short “How to launch a new metro” note for me inside the repo.
+
+START NOW
+Begin with the audit: list the current tables/models and where they live in the codebase, then implement the additive tables + feed API.

@@ -1,0 +1,346 @@
+You are working INSIDE the existing Charlotte / City Hub app codebase.
+
+IMPORTANT:
+Do NOT build a separate new app.
+Do NOT rebuild modules that already exist.
+Do NOT create a generic SaaS abstraction first.
+This task is to add a structured entitlement + gating layer across the current app so existing features know:
+- who can access them
+- what tier unlocks them
+- what requires an add-on
+- what can be used via credits
+- what should be operator/admin only
+- how features connect to one another inside the current hub ecosystem
+
+GOAL:
+Turn the existing app from a collection of built modules into a governed system where participation type, plan level, add-ons, credits, and admin/operator roles control behavior consistently across the product.
+
+==================================================
+PRIMARY OBJECTIVE
+==================================================
+
+Create a centralized Access & Entitlements Framework for the existing City Hub app.
+
+This framework must:
+1. define participation/profile types
+2. define tier levels
+3. define add-ons
+4. define credits / one-time usage actions
+5. define operator/admin roles
+6. define entitlement resolution logic
+7. gate existing modules consistently
+8. expose readable admin configuration so this can evolve later without rewriting the whole app
+
+==================================================
+DO NOT
+==================================================
+
+- do not redesign the public UI unless needed for gating states
+- do not remove or rewrite existing modules if they already work
+- do not hardcode random one-off rules across components
+- do not create duplicate permission logic in multiple places
+- do not assume all features are included in all plans
+- do not break existing data
+- do not create a second billing system if one already exists
+
+==================================================
+CONCEPTUAL MODEL
+==================================================
+
+Everything in the app must map to one of these access models:
+
+1. INCLUDED IN TIER
+2. UNLOCKED BY ADD-ON
+3. UNLOCKED BY CREDIT / ONE-TIME USE
+4. ADMIN / OPERATOR ONLY
+
+If a feature does not map clearly to one of those four models, flag it for review.
+
+==================================================
+PART 1 — NORMALIZE CORE TYPES
+==================================================
+
+Create or extend a centralized definitions layer for:
+
+A. profileType
+Possible starting values:
+- resident
+- business
+- creator
+- expert
+- employer
+- organization
+
+These determine:
+- what dashboard modules are visible
+- what flows a user can enter
+- what actions are relevant to them
+
+B. tierLevel
+Possible starting values:
+- free
+- verified
+- charter
+- enhanced
+- enterprise
+
+These determine baseline included access and limits.
+
+C. addOnType
+Possible starting values:
+- job_board
+- marketplace_storefront
+- event_host
+- video_channel
+- podcast_channel
+- social_seller
+- creator_network
+- expert_profile
+- multi_hub_presence
+- featured_distribution
+- premium_placement
+
+Only implement the structure in a way that is easy to expand later.
+
+D. creditActionType
+Possible starting values:
+- post_job
+- post_event
+- marketplace_listing
+- classified_listing
+- feature_to_pulse
+- story_boost
+- social_push
+- video_distribution
+- podcast_distribution
+- premium_placement_boost
+
+Credits represent one-time actions or one-time promotional pushes.
+
+E. operatorRole
+Possible starting values:
+- city_operator
+- metro_manager
+- micro_hub_operator
+- venue_partner
+- ambassador
+- moderator
+- admin
+
+These determine management permissions.
+
+==================================================
+PART 2 — CREATE THE ENTITLEMENT MODEL
+==================================================
+
+Build a centralized entitlement engine.
+
+The entitlement engine should answer questions like:
+- Can this user post an event?
+- Can this business post a job?
+- Is this action included in their tier?
+- Do they need an add-on?
+- Can they spend a credit instead?
+- Is this restricted to operators/admins?
+- Is this content eligible for broader distribution channels?
+
+Design this in a reusable way.
+
+Minimum recommended structures:
+
+1. plan/tier entitlement definition
+A config object or database-backed structure that defines what each tier includes.
+
+Example concept:
+- included modules
+- monthly credits
+- posting limits
+- distribution eligibility
+- analytics level
+- placement priority
+- hub count limit
+
+2. add-on entitlement definition
+Maps each add-on to capabilities it unlocks.
+
+3. credit action definition
+Maps each one-time action to:
+- what it unlocks
+- whether it is one-time only
+- whether it can substitute for an add-on temporarily
+- whether operator approval is required
+
+4. resolved entitlements object
+At runtime, create a single resolved object for a user/account/business such as:
+- visibleModules
+- allowedActions
+- blockedActions
+- requiredUpgradePaths
+- creditEligibleActions
+- adminCapabilities
+- distributionRights
+
+==================================================
+PART 3 — GATE EXISTING MODULES
+==================================================
+
+Apply the framework to EXISTING app areas only.
+
+At minimum, wire gating checks into the modules/features that already exist or are already planned in this ecosystem:
+
+- business listing / hub presence
+- creator participation
+- expert participation
+- events
+- jobs
+- marketplace
+- pulse / stories / content
+- media participation
+- promotions / boosts / featured placement
+- multi-hub presence if already partially present
+- admin/operator tools
+
+For every module, establish:
+
+1. Visibility rule
+Should the module show in the dashboard/nav for this user/profile?
+
+2. Entry rule
+Can the user open the workflow?
+
+3. Action rule
+Can they create/post/edit/publish/boost?
+
+4. Upgrade rule
+If blocked, what unlock path is shown?
+Examples:
+- included in current tier
+- requires add-on
+- use 1 credit
+- upgrade to higher plan
+- operator approval required
+
+==================================================
+PART 4 — BUILD CENTRAL CHECKS / MIDDLEWARE
+==================================================
+
+Create reusable functions/middleware/hooks so the whole app uses one source of truth.
+
+Recommended concepts:
+- getResolvedEntitlements(userContext)
+- canAccessModule(userContext, moduleKey)
+- canPerformAction(userContext, actionKey)
+- getUpgradePath(userContext, actionKey)
+- spendCreditIfAllowed(userContext, creditActionKey)
+- hasOperatorPermission(userContext, permissionKey)
+
+Do not scatter permission rules across UI files.
+All checks must route through centralized access logic.
+
+==================================================
+PART 5 — ADMIN CONFIGURATION / CONTROL LAYER
+==================================================
+
+Add an admin-friendly structure so the system can be updated later.
+
+Need a clean place where I can later adjust:
+- what each tier includes
+- how many credits are included
+- what features require add-ons
+- which actions can be done via credits
+- which content types qualify for distribution channels
+- what operator roles can approve/manage what
+
+This can begin as:
+- centralized config files, or
+- admin tables if the app already has admin configuration support
+
+But structure it so later it can become editable in admin UI without major refactor.
+
+==================================================
+PART 6 — CREDIT LOGIC
+==================================================
+
+Add basic support for credits as one-time usage or one-time unlock actions.
+
+Required behavior:
+- a feature may be unavailable by default
+- if credit use is allowed, the user can spend credits instead of subscribing to the add-on
+- credits should deduct only after successful completion of the gated action
+- credits should not deduct if the action fails
+- credit-eligible actions must be centrally defined
+- system must support monthly included credits and separately purchased credits later
+
+Create the structure even if full billing for credits is not implemented yet.
+
+==================================================
+PART 7 — DISTRIBUTION RIGHTS
+==================================================
+
+Some actions/content may qualify for broader distribution depending on tier/add-on/credits.
+
+Build the structure so content can later be tagged with eligibility for channels such as:
+- pulse_feed
+- hub_tv
+- venue_tv
+- hub_radio
+- podcast
+- newsletter
+- social distribution
+- micro hub distribution
+
+Do not fully build all channels if not already present.
+But do build the entitlement layer that determines if a post/item is eligible for those destinations.
+
+==================================================
+PART 8 — BLOCKED STATE UX
+==================================================
+
+For any gated area, add clean UX states:
+- locked / unavailable
+- available via upgrade
+- available via add-on
+- available via credit use
+- operator restricted
+
+Keep these lightweight.
+Do not overdesign.
+Need clarity, not beauty work.
+
+Examples of helpful messages:
+- Included in Charter and above
+- Requires Event Host add-on
+- Use 1 credit to post this event
+- Available to operators only
+
+==================================================
+PART 9 — DATA SAFETY / COMPATIBILITY
+==================================================
+
+- preserve current data
+- preserve current module behavior where access is allowed
+- do not break current posting flows
+- add fallback defaults for older records if new fields are missing
+- if needed, migrate carefully with sensible defaults
+
+==================================================
+PART 10 — DELIVERABLES
+==================================================
+
+Implement and return:
+
+1. centralized access/entitlement definitions
+2. resolved entitlement service/helpers
+3. module/action gating wired into the major existing app areas
+4. credit eligibility + deduction structure
+5. upgrade-path helper logic
+6. admin/operator permission structure
+7. minimal locked-state UI messaging
+8. notes on where to adjust tiers/add-ons/credits later
+
+At the end, provide:
+- a short summary of what files/components/services were added or changed
+- any migrations added
+- any places still needing manual business-rule review
+
+Build this as production-minded internal platform logic for the existing City Hub app.

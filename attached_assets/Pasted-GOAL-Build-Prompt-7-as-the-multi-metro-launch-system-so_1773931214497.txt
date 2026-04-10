@@ -1,0 +1,243 @@
+GOAL:
+Build Prompt 7 as the multi-metro launch system so Becky can:
+- spin up new cities fast
+- reuse Charlotte as the base
+- control “coming soon → live” transition
+- standardize structure across all metros
+- allow Cora to assist with setup but NOT auto-launch
+
+This is the system that lets you scale to:
+80 hubs x multiple metros without breaking yourself
+
+IMPORTANT:
+- DO NOT duplicate Charlotte logic
+- DO NOT fork the app per city
+- DO NOT hardcode Charlotte anywhere new
+- DO NOT auto-launch cities
+- DO NOT create public-facing metro management UI yet
+
+==================================================
+PART 1 — CREATE METRO TEMPLATE SYSTEM
+==================================================
+
+Create table: metro_templates
+- id
+- name
+- base_metro_id (reference to Charlotte or chosen base)
+- description
+- includes_config_json
+- status (active, archived)
+- created_at
+- updated_at
+
+Purpose:
+- define what gets copied when a new metro is created
+
+includes_config_json example:
+{
+  "copy_hub_structure": true,
+  "copy_categories": true,
+  "copy_tags": true,
+  "copy_content_settings": true,
+  "copy_pricing": true,
+  "copy_ai_personas": true,
+  "copy_outreach_templates": true
+}
+
+==================================================
+PART 2 — CREATE METRO CLONE SERVICE
+==================================================
+
+Create service:
+metroCloneService.ts
+
+Function:
+createMetroFromTemplate({
+  templateId,
+  newMetroName,
+  region,
+  state,
+  optionalOverrides
+})
+
+Behavior:
+- create new metro record
+- clone ONLY structure (not content unless explicitly allowed)
+- attach:
+  - hub structure
+  - categories
+  - tags
+  - pricing (platform-linked)
+  - AI persona config (Charlotte-style but renamed)
+- assign status = "coming_soon"
+
+DO NOT:
+- copy old content blindly
+- copy user data
+- auto-publish anything
+
+==================================================
+PART 3 — CREATE METRO STATUS SYSTEM
+==================================================
+
+Extend metro table OR create supporting field:
+
+metro_status:
+- draft
+- coming_soon
+- building
+- soft_live
+- live
+- paused
+
+Purpose:
+- control lifecycle of each metro
+
+Cora should reference this in operator dashboard.
+
+==================================================
+PART 4 — COMING SOON vs LIVE MODE
+==================================================
+
+Create a metro-level flag or config:
+
+metro_mode:
+- coming_soon
+- live
+
+Behavior:
+
+COMING SOON:
+- show landing page
+- allow:
+  - early interest capture
+  - operator recruitment
+  - Crown nominations (optional)
+- limit full hub functionality
+
+LIVE:
+- full hub access
+- content visible
+- businesses active
+- marketing engine active
+
+DO NOT:
+- mix states unintentionally
+- allow partial broken experiences
+
+==================================================
+PART 5 — CREATE METRO LAUNCH CHECKLIST SYSTEM
+==================================================
+
+Create table: metro_launch_checklist
+
+- id
+- metro_id
+- item_key
+- item_name
+- status (pending, complete, blocked)
+- notes
+- created_at
+- updated_at
+
+Default checklist items:
+- hub structure created
+- categories verified
+- pricing assigned
+- AI persona configured
+- coming soon page live
+- initial content seeded
+- outreach ready
+- operator identified (optional)
+- first businesses added (optional)
+
+Cora should:
+- read this
+- suggest missing items
+- NOT auto-complete items
+
+==================================================
+PART 6 — CORA SUPPORT FOR METRO CREATION
+==================================================
+
+Cora should support:
+
+- "Create a new metro for Indianapolis"
+- "Spin up Dallas from template"
+- "What’s missing for Tampa launch?"
+
+Behavior:
+- Hat: Operator + Builder
+- generate plan first
+- show:
+  - what will be created
+  - what will be copied
+  - what is missing
+- require approval before running clone service
+
+==================================================
+PART 7 — TEMPLATE STANDARDIZATION RULES
+==================================================
+
+Charlotte should act as:
+- default base metro template
+
+But system must support:
+- future alternate templates (e.g. smaller metros, niche metros)
+
+DO NOT:
+- hardcode Charlotte everywhere
+- allow uncontrolled template drift
+
+==================================================
+PART 8 — ADMIN UI (LIGHT)
+==================================================
+
+Extend /admin/cora OR metro admin area with:
+
+Metro Management section:
+- list metros
+- status
+- mode (coming soon / live)
+- launch readiness indicator
+
+Actions:
+- create metro (via template)
+- view checklist
+- toggle mode (coming soon → live) WITH confirmation
+- view blockers/opportunities tied to metro
+
+Keep simple.
+
+==================================================
+PART 9 — SAFETY RULES
+==================================================
+
+- No metro goes LIVE without manual approval
+- No template cloning runs without approval
+- No pricing changes auto-apply across metros
+- No AI auto-launch behavior
+
+==================================================
+PART 10 — SUCCESS CRITERIA
+==================================================
+
+This prompt is successful if Becky can:
+
+1. create a new metro from a template in minutes
+2. keep it in “coming soon” safely
+3. see what is missing before launch
+4. move it to live only when ready
+5. reuse Charlotte structure without rebuilding everything
+
+==================================================
+OUTPUT REQUIRED AFTER IMPLEMENTATION
+==================================================
+
+Provide:
+1. tables added
+2. clone logic overview
+3. metro lifecycle states
+4. checklist structure
+5. how Cora interacts with metro creation
+6. confirmation no auto-launch occurs

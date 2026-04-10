@@ -1,0 +1,338 @@
+You are working INSIDE the existing City Hub / Charlotte Hub application.
+
+IMPORTANT:
+Do NOT create a separate platform.
+Do NOT build a new SaaS product.
+Do NOT build a new standalone events system.
+
+You are extending the EXISTING hub infrastructure so events become a fully functional capability inside the hub ecosystem.
+
+The hub already contains:
+- Presences (business / venue profiles)
+- Pulse (social feed / distribution layer)
+- Categories and micros
+- Hub discovery
+- Credits for visibility boosts
+- Crown program
+- Admin tools
+- User/member accounts
+
+This implementation must integrate with those systems.
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Build the **Events Capability Add-On** for the hub.
+
+Events must support:
+
+1) Public Events
+2) Unlisted Events
+3) Private / Invitation Events
+
+All event types use the same event system.
+Only visibility settings change.
+
+Events function as **micro-sites tied to a Presence** (venue or organizer).
+
+==================================================
+PHASE 1 — EVENT DATA MODEL
+==================================================
+
+Create event models while reusing existing patterns.
+
+Event
+- id
+- title
+- description
+- host_presence_id
+- venue_presence_id (nullable)
+- visibility
+    public
+    unlisted
+    private
+- start_datetime
+- end_datetime
+- recurring_rule (nullable)
+- location_name
+- location_address
+- hub_id
+- category_id
+- created_by_user_id
+- status
+    draft
+    published
+    archived
+- created_at
+- updated_at
+
+EventVisibility enum:
+public
+unlisted
+private
+
+Events must be tied to:
+Presence
+Hub
+Category when applicable.
+
+==================================================
+PHASE 2 — EVENT MICRO-SITE
+==================================================
+
+Each event must generate a micro-site page.
+
+Route example:
+
+/events/{event-slug}
+
+Page must include:
+
+Event title
+Description
+Date/time
+Location
+Host presence
+Venue presence
+RSVP button
+Add to calendar
+Share event
+Invite button
+
+If event visibility is:
+
+PUBLIC
+- show in hub calendar
+- show in discovery
+- eligible for Pulse promotion
+
+UNLISTED
+- not searchable
+- accessible by direct link
+
+PRIVATE
+- accessible only by invitation or approved guest list
+
+==================================================
+PHASE 3 — INVITATION SYSTEM
+==================================================
+
+Events must include an invitation system.
+
+Features:
+
+Upload contacts (CSV)
+Paste email list
+Manual email entry
+Invite link sharing
+
+Invitation sends should create:
+
+EventInvitation
+- id
+- event_id
+- email
+- name
+- status
+    invited
+    accepted
+    declined
+    maybe
+- invited_at
+- responded_at
+
+Invited users can RSVP through the event page.
+
+Non-members can RSVP but must create a **free hub account**.
+
+==================================================
+PHASE 4 — RSVP SYSTEM
+==================================================
+
+Create RSVP model:
+
+EventRSVP
+- id
+- event_id
+- user_id
+- response
+    attending
+    maybe
+    declined
+- created_at
+
+Public events show RSVP capability.
+
+Private events require invitation or approval.
+
+RSVP counts should NOT be publicly displayed.
+
+==================================================
+PHASE 5 — VISIBILITY SETTINGS
+==================================================
+
+Event visibility must control discovery behavior.
+
+PUBLIC
+- appears in hub calendar
+- appears in discovery
+- eligible for Pulse promotion
+
+UNLISTED
+- accessible by link only
+
+PRIVATE
+- invitation access only
+
+Events must still remain connected to the host or venue Presence.
+
+==================================================
+PHASE 6 — EVENT SECTION ON PRESENCE
+==================================================
+
+Each Presence must gain an Events section.
+
+This section shows:
+
+Upcoming events
+Recurring events
+Past events archive
+
+Private events should display:
+
+"Private Event Scheduled"
+
+without exposing details.
+
+==================================================
+PHASE 7 — EVENT HISTORY
+==================================================
+
+Past events should not disappear.
+
+They move to:
+
+Past Events archive under the Presence.
+
+This helps:
+
+SEO
+credibility
+event series authority
+
+==================================================
+PHASE 8 — OPERATIONAL CREDIT SYSTEM
+==================================================
+
+Events must support **Operational Credits**.
+
+These are separate from existing **visibility credits**.
+
+Operational credits cover platform usage.
+
+Credit triggers:
+
+Invitation sends
+Reminder emails
+SMS reminders (future)
+Check-in tools (future)
+
+Example usage rules:
+
+25 invitations = 1 credit
+Reminder campaign = 1 credit
+
+The Events add-on should include a small free allowance per month.
+
+==================================================
+PHASE 9 — EVENT MANAGEMENT DASHBOARD
+==================================================
+
+Add an organizer dashboard:
+
+Route example:
+
+/dashboard/events
+
+Features:
+
+Create event
+Edit event
+Manage invitations
+View RSVP list
+Copy event link
+Generate QR code
+Archive event
+
+Keep UI simple and consistent with existing hub admin tools.
+
+==================================================
+PHASE 10 — PULSE INTEGRATION
+==================================================
+
+Events should integrate with Pulse.
+
+When an event is published:
+
+Optional Pulse post may be generated.
+
+Example:
+
+"New event announced"
+
+Pulse promotion may use existing **visibility credits**.
+
+==================================================
+PHASE 11 — PRIVATE EVENT SUPPORT
+==================================================
+
+Private events must support:
+
+Invite-only access
+Optional manual approval
+Guest list control
+
+Guests who RSVP must create a free hub account.
+
+This allows the hub to onboard new members.
+
+==================================================
+PHASE 12 — IMPORTANT GUARDRAILS
+==================================================
+
+DO NOT:
+- build a separate event SaaS
+- build ticketing infrastructure
+- rebuild the hub architecture
+- create a new multi-tenant system
+
+DO:
+- extend existing Presence logic
+- extend hub discovery
+- reuse existing credit systems
+- integrate with Pulse
+- follow existing admin patterns
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+An organizer can:
+
+1) create an event tied to a Presence
+2) choose public, unlisted, or private visibility
+3) send invitations
+4) collect RSVPs
+5) manage guest lists
+6) display the event on the Presence page
+7) archive past events
+8) optionally promote through Pulse
+
+The events system must function as an integrated capability inside the existing City Hub application.
+
+Return a summary of:
+- models added
+- routes added
+- UI components added
+- integrations with Presence, Pulse, and credits

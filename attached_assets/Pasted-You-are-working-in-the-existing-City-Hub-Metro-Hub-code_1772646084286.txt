@@ -1,0 +1,74 @@
+You are working in the existing City Hub / Metro Hub codebase.
+
+GOAL:
+Update the entire repo to the new branding + URL structure. This is a global rename and must replace ALL prior mentions consistently across UI copy, metadata, routes, constants, docs, and any seed content.
+
+NEW BRANDING (SOURCE OF TRUTH):
+- Parent / network brand: "City Metro Hub"
+- Parent domain: CityMetroHub.com
+- Per-city public brand uses BOTH forms as needed:
+  - Airport code brand: "[AIRPORT] Metro Hub" (example: "CLT Metro Hub")
+  - Full city brand: "[CityName] Metro Hub" (example: "Charlotte Metro Hub")
+
+PER-CITY DOMAINS (SOURCE OF TRUTH):
+Each city has TWO public entry domains:
+1) Airport code domain: [AIRPORT]MetroHub.com  (ex: CLTMetroHub.com)
+2) Full city domain: [CityName]MetroHub.com   (ex: CharlotteMetroHub.com)
+
+REQUIRED BEHAVIOR:
+- Both per-city domains must resolve to the SAME city hub experience (same content, same app).
+- Implement a canonical strategy:
+  - Choose ONE canonical per city (default to the airport code domain as canonical unless code already has a better pattern).
+  - The non-canonical domain must 301 redirect to the canonical OR set rel=canonical properly (prefer 301 redirect at the edge if your setup supports it; otherwise set canonical tags and ensure no duplicate indexing issues).
+- Ensure SEO metadata reflects "Metro Hub" naming everywhere:
+  - <title>, meta description, Open Graph, Twitter cards, JSON-LD where present
+  - Any “City Hub / Charlotte City Hub / CLT City Hub / CityCoreHub / City Core Hub” phrasing in end-user branding should be replaced with the new scheme unless it refers to an internal legacy system name (in that case, leave internal identifiers alone but change visible labels).
+- Update nav labels, hero sections, footers, badges, and “powered by” lines:
+  - Example footer line: "Powered by CityMetroHub.com" (use exactly this casing)
+- Update any “protocol” docs / onboarding docs / marketing copy within repo to the new structure.
+
+CITY CONFIG REQUIREMENT:
+Introduce (or update) a single source of truth config object per city, e.g.:
+- citySlug (ex: "clt")
+- airportCode (ex: "CLT")
+- cityName (ex: "Charlotte")
+- brandShort (ex: "CLT Metro Hub")
+- brandLong (ex: "Charlotte Metro Hub")
+- primaryDomain (ex: "cltmetrohub.com")  // canonical
+- secondaryDomain (ex: "charlottemetrohub.com") // redirects/canonicalized
+- parentDomain (always "citymetrohub.com")
+
+Then refactor UI/SEO to use this config instead of hard-coded strings.
+
+SEARCH + REPLACE SCOPE:
+Do a repo-wide audit and update:
+- Components copy
+- Static pages
+- Route titles
+- Layout metadata files
+- Sitemap/robots (if present)
+- Any listing “claim” pages and badges
+- Any “CLT City Hub” references -> “CLT Metro Hub”
+- Any “Charlotte City Hub” references -> “Charlotte Metro Hub”
+
+NON-NEGOTIABLES:
+- Do not break existing routing.
+- Do not remove any functional features.
+- Only change branding text, metadata, and domain handling.
+- Keep code clean: centralize new strings in config/constants.
+
+DELIVERABLE:
+1) A concise list of files changed
+2) The new/updated city config module
+3) Any redirect/canonical implementation you add (show exact code)
+4) Confirm no remaining old-brand strings via a final search report (show search results count for key old phrases).
+
+Key phrases to eliminate from visible branding (unless explicitly internal-only):
+- "CLT City Hub"
+- "Charlotte City Hub"
+- "CityCoreHub"
+- "City Core Hub"
+- "City Hub"
+Replace with Metro Hub naming as described above.
+
+Proceed now.

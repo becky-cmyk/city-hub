@@ -1,0 +1,386 @@
+Prompt 1 — Expand the existing CLT City Hub / City Hub platform without creating a separate system. Build everything off the current Verified Hub Presence architecture and existing microsite/profile model. Do not reinvent the wheel. Extend the current business listing / hub presence so it can support additional badges, modules, content types, and opportunity systems under the same base profile.
+
+CORE RULES
+1. Everything must remain under the same hub brand and same hub presence system.
+2. Do not build separate directories for podcasts, speakers, contributors, creators, or experts.
+3. Use the existing hub presence / microsite as the base entity.
+4. Add modular badges, profile sections, permissions, and upgrade logic on top of the existing profile.
+5. Keep the architecture scalable for micro hubs, metro content, business content, and future media/network features.
+6. Preserve the existing micro hub / ZIP code / category logic.
+7. All paid participation must require a Verified Hub Presence.
+8. The free/open community submission layer can still exist for general story/event submission, but advanced tools, visibility, and network participation must tie back to account level and paid status.
+
+BUILD / EXPAND THE PLATFORM AROUND THIS MODEL
+
+A. VERIFIED HUB PRESENCE FOUNDATION
+Use Verified Hub Presence as the base paid membership and profile system.
+
+Verified Hub Presence:
+- Base price: $299
+- Includes:
+  - one primary ZIP code / micro hub
+  - one primary category
+  - one primary microsite / profile
+  - eligibility for paid upgrades
+  - account-based content management
+  - eligibility for media network participation
+  - eligibility for business/expert/speaker/creator/podcast modules
+
+Geographic upsells:
+- additional ZIP code or micro hub: $50 each
+- full Charlotte metro coverage upgrade: $2,000
+
+Location logic:
+- ZIP code is the territory anchor
+- if business has a physical location, that location ZIP is the primary ZIP
+- if mobile/service business, billing ZIP is the primary ZIP
+- additional physical locations beyond the first: $99 each
+
+Category logic:
+- one primary category included
+- additional categories are an upsell
+- micro-categories should also be supported as a deeper discovery/search upsell
+
+B. BADGES / MODULES ON THE SAME PROFILE
+Do not create new listing systems. Add badge-based modules that can be enabled on the same hub presence profile.
+
+Support badges/modules such as:
+- Business
+- Organization
+- Nonprofit
+- Podcast
+- Creator
+- Contributor
+- Local Expert
+- Speaker
+- Venue
+
+Each badge should:
+- visually display on the profile
+- unlock profile sections
+- unlock permissions
+- unlock discovery filters
+- unlock opportunity systems where relevant
+
+Examples:
+- Podcast badge unlocks podcast section, RSS import, listening links, episode display, podcast-related discovery
+- Creator badge unlocks creator/video/social embeds and creator-related discovery
+- Contributor badge unlocks contributor/article/publication features
+- Local Expert badge unlocks expert topics, quote opportunities, expert request participation
+- Speaker badge unlocks speaking topics, availability, booking/opportunity participation
+
+C. DYNAMIC MICROSITE / PROFILE SECTIONS
+Build dynamic profile sections that appear based on the badges/modules enabled.
+
+Examples of sections:
+Business section:
+- services
+- offers
+- service areas
+- business description
+- contact info
+- location info
+
+Podcast section:
+- RSS feed import
+- show description
+- host info
+- embedded episode list
+- listening platform links
+
+Creator section:
+- social links
+- embedded short-form videos
+- content gallery
+- creator bio
+
+Contributor section:
+- articles written
+- stories submitted
+- publication appearances
+
+Expert section:
+- topics of expertise
+- quote-ready topics
+- expert credentials
+- article citations / featured quotes
+
+Speaker section:
+- speaking topics
+- audience types
+- sample talks
+- booking/contact form
+- speaking availability or interest flag
+
+Venue section:
+- physical address
+- venue-specific profile details
+- venue media eligibility
+
+D. BUSINESS CATEGORY / BUSINESS HUB
+Create or formalize a dedicated Business category / business hub section.
+
+This should function like a Charlotte business intelligence / business journal style area inside the platform.
+
+Business category should support:
+- business news feed
+- external RSS business content
+- local expert quotes
+- business-focused creator videos
+- podcast episodes related to business
+- founder spotlights
+- entrepreneurship content
+- economic development content
+- small business content
+
+Business subcategories to support:
+- Small Business
+- Startups
+- Marketing
+- Commercial Real Estate
+- Banking / Finance
+- Technology
+- Economic Development
+- Nonprofit / Social Impact
+- Leadership
+- Local Business News
+
+Add RSS feed ingestion capability for business-related feeds and place them inside the business category grid/feed structure.
+
+If RSS feed infrastructure already exists, expand the current feed/category mapping so the business category can ingest and display designated business-related feeds.
+
+E. PODCAST LAYER
+Add a podcast module on top of the same hub presence/profile system.
+
+Important concept:
+- podcasts can be seeded/imported as unclaimed profiles from RSS/public sources
+- then claimed/verified by the owner
+- fully active / upgraded podcast presence requires hub presence / paid participation
+
+Podcast support should include:
+- RSS feed import
+- podcast cover art
+- host name
+- show description
+- listening links
+- latest episodes
+- category tags
+- micro hub / local relevance tagging
+- claim / verify flow
+
+Podcast states:
+- seeded / unclaimed
+- claimed
+- verified / active as paid hub presence participant
+
+Podcast amplification upsell:
+Create a feature where AI can transform podcast episodes into hub content:
+- AI-generated episode summary article
+- AI-generated Pulse feed posts
+- key quotes / excerpts
+- SEO summary content
+- local topic tagging
+- optional future use for radio/article/publication repurposing
+
+This should be a paid upgrade / AI usage feature, not unlimited for everyone.
+
+F. CREATOR / CONTRIBUTOR LAYER
+Add support for creators and contributors on the same profile architecture.
+
+Creators can include:
+- TikTok creators
+- video creators
+- local influencers
+- community creators
+- photographers / visual storytellers
+
+Contributors can include:
+- writers
+- community contributors
+- local content submitters
+- guest contributors
+
+Support:
+- seeded / unclaimed creator profiles if desired
+- claim / verify workflow
+- content embeds
+- category tagging
+- micro hub tagging
+- contributor content history
+- local creator discovery
+
+Possible upsell:
+- AI amplification of creator content into feed/article snippets
+- feature placement in hub sections
+- contributor spotlights
+
+G. EXPERT NETWORK LAYER
+Build an expert request / source request / media request system on top of hub presence.
+
+This is not free/public in the sense of random participation.
+Participation should require hub presence, with priority features tied to upgrades.
+
+Use cases:
+- hub editorial team asks for quotes for articles
+- local topic-based source requests
+- podcast guest requests
+- event speaker requests
+- business commentary requests
+- creator collaboration requests
+
+Support:
+- expert topics on profile
+- request posting
+- matching by category, micro hub, badge, expertise topic
+- response workflow
+- quote collection workflow
+- admin/editor selection workflow
+
+Positioning ideas:
+- Expert Opportunities
+- Media Requests
+- Source Requests
+- Local Expert Network
+
+Participation model:
+- base participation included or limited for paid hub members
+- priority / premium visibility as an upsell
+- profile badges for expert status
+
+H. SPEAKER NETWORK / SPEAKER BUREAU LAYER
+Add a speaker opportunities system using the same profile/badge architecture.
+
+This should function like a local speaker bureau layer inside the platform.
+
+Support:
+- speaker badge
+- speaking topics
+- audience types
+- sample topics / talk titles
+- optional media samples or links
+- booking/contact request
+- speaking opportunity board
+- event organizer requests for local speakers, panels, workshops, podcast guests, nonprofit speakers, business speakers
+
+Important:
+- speakers are not separate from their hub presence
+- this is another module on the same microsite/profile
+
+I. AI CONTENT ASSISTANCE / ACCOUNT TIER LOGIC
+The platform already has AI-assisted story/event/help flows. Expand this into a controlled AI usage system tied to account level.
+
+Requirements:
+1. Require account creation for submissions and advanced participation.
+2. Allow limited AI help for first submission or limited basic usage.
+3. Restrict ongoing AI assistance based on account / membership level / add-ons.
+4. Track AI usage limits by account.
+5. Create upgrade logic for AI help.
+
+Examples of AI-assisted outputs:
+- story drafts
+- event descriptions
+- announcements
+- podcast summaries
+- creator/video summaries
+- publication-ready blurbs
+- feed copy
+- profile copy improvements
+
+Need:
+- usage meter / quota tracking
+- per-tier permissions
+- admin control for quotas
+- future support for add-on AI packs
+
+J. CONTENT / FEED / DISCOVERY LOGIC
+All of this should feed the existing ecosystem, not sit isolated.
+
+Content generated or connected through these modules should be able to flow into:
+- Pulse feed
+- category pages
+- micro hub pages
+- business category pages
+- article/publication sections
+- podcast pages
+- creator pages
+- expert/speaker opportunity sections
+- future media distribution areas
+
+Discovery should support filtering/search by:
+- micro hub
+- ZIP code
+- category
+- micro-category
+- badge/module type
+- podcast
+- creator
+- contributor
+- expert
+- speaker
+- venue
+- business
+
+K. CLAIM / VERIFY MODEL
+Support claim flows for these seeded entities where relevant:
+- podcast
+- creator
+- contributor
+- speaker
+- expert/business profile if seeded/unclaimed data exists
+
+General claim pattern:
+- profile exists as seeded/unclaimed
+- user creates account
+- verifies ownership/identity
+- claims profile
+- edits details
+- upgrades into paid/active hub presence if needed
+
+L. DATA / ADMIN / CMS NEEDS
+Implement or extend admin/CMS support for:
+- badges/modules per profile
+- pricing/upgrade flags
+- AI usage tracking
+- claim status
+- verification status
+- seeded vs claimed state
+- opportunity board items
+- RSS feed mapping by category
+- expert topics
+- speaker topics
+- contributor records
+- podcast records
+- creator profile records
+
+M. UI / UX GOAL
+The end result should feel like:
+- a verified local hub presence
+- a marketing-in-a-box microsite
+- a local authority profile
+- a business/expert/media/community identity layer
+- one profile with expandable capabilities
+
+It should NOT feel like:
+- separate disconnected directories
+- multiple profile systems
+- a generic directory
+- a messy social network clone
+
+N. DELIVERABLES TO BUILD
+Please produce and/or implement:
+1. Data model/schema updates needed
+2. Badge/module architecture
+3. Dynamic microsite/profile section logic
+4. Claim/verify workflow design
+5. Account tier / AI usage logic
+6. Business category / business RSS feed integration plan
+7. Podcast module plan
+8. Creator/contributor module plan
+9. Expert request system plan
+10. Speaker opportunity system plan
+11. Admin/CMS controls for all of the above
+12. Recommended UI components / profile layouts / filters
+13. Suggested upgrade / monetization hooks wired to the architecture
+
+Important final instruction:
+Build this as an extension of the current CLT City Hub / City Hub system and existing hub presence infrastructure. Reuse existing listing/profile patterns wherever possible. Avoid duplication. Keep everything centralized under the hub presence model.

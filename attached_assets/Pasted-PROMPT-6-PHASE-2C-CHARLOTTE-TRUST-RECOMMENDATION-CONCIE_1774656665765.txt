@@ -1,0 +1,316 @@
+PROMPT 6 — PHASE 2C: CHARLOTTE TRUST / RECOMMENDATION / CONCIERGE CONNECTION LAYER
+
+You are implementing ONLY Task C of Phase 2.
+
+Task A is complete:
+- orchestrator core
+- intent parser
+- entity resolution
+- command routing
+
+Task B is complete:
+- proposal engine
+- action templates
+- confirmation handling
+- batch proposal support
+
+Task #173 is complete:
+- expo / field capture processing workflow
+- capture sessions and capture session items
+- input-driven batch pipeline
+
+DO NOT rebuild those.
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Connect Charlotte to the existing trust / scoring / recommendation / search logic so she can function as:
+
+1. local recommendation layer
+2. concierge / navigation layer
+3. trust-aware discovery guide
+4. backend foundation for a future command center
+
+This is NOT a new recommendation engine.
+This is NOT a new scoring system.
+
+It is a Charlotte-facing orchestration/adaptor layer over the existing systems.
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1. DO NOT create:
+- another recommendation engine
+- another scoring engine
+- duplicate trust logic
+- duplicate search system
+- shadow discovery records
+
+2. REUSE existing:
+- trust engine
+- scoring logic
+- recommendation behavior where already present
+- search infrastructure where useful
+- quick search / location intent detection if already working
+- current inbox behavior, unless a small extension is required
+
+3. If something is missing:
+- extend the existing system carefully
+- do not fork it into a parallel engine
+
+4. Charlotte recommendations must remain tied to:
+- real platform objects
+- existing discovery surfaces
+- geo-first logic
+- trust / participation / activity signals
+- actual ecosystem behavior
+
+This is a curated ecosystem recommendation layer, not a generic assistant search layer.
+
+--------------------------------------------------
+PART 1 — CREATE CHARLOTTE RECOMMENDATION ADAPTOR
+--------------------------------------------------
+
+Create:
+
+charlotte-recommendation-adaptor.ts
+(or equivalent name)
+
+Purpose:
+- take a Charlotte request in search / concierge / recommendation mode
+- call existing trust/recommendation/search/scoring systems
+- normalize the results into a Charlotte-usable response structure
+
+This adaptor should NOT score independently.
+It should:
+- query existing systems
+- apply existing geo/trust data
+- return structured recommendation output
+
+Return format should look approximately like:
+
+{
+  mode: "search" | "concierge",
+  queryType: string,
+  geoContext?: string,
+  recommendations: [
+    {
+      entityId?: string,
+      entityType: string,
+      title: string,
+      reason?: string,
+      trustSignals?: string[],
+      nextRoute?: string
+    }
+  ],
+  notes?: string[]
+}
+
+--------------------------------------------------
+PART 2 — SUPPORT THESE CHARLOTTE REQUEST TYPES
+--------------------------------------------------
+
+Wire Charlotte to handle at minimum:
+
+1. THINGS TO DO
+Examples:
+- “what should I do this weekend”
+- “things to do in Pineville”
+
+2. SERVICES / LOCAL BUSINESS RECOMMENDATIONS
+Examples:
+- “best realtor near me”
+- “who should I talk to for a mortgage”
+- “good coffee in Ballantyne”
+
+3. JOBS
+Examples:
+- “find jobs near uptown”
+- “I’m hiring”
+- “what jobs are active around here”
+
+4. MARKETPLACE / BUY-SELL / LOCAL OPPORTUNITIES
+Examples:
+- “what’s for sale nearby”
+- “find local vendors”
+- “who is selling…”
+
+5. HOUSING / RELOCATION-STYLE ROUTING
+Examples:
+- “where should I live”
+- “show me good areas for families”
+- “what neighborhoods are active”
+
+6. CREATOR / EXPERT / COMMUNITY RECOMMENDATIONS
+Examples:
+- “who’s a good local creator”
+- “who should I collaborate with”
+- “who is active in the community”
+
+Support this through existing systems and data.
+Do not fake recommendations.
+
+--------------------------------------------------
+PART 3 — GEO-FIRST + TRUST-AWARE CONNECTION
+--------------------------------------------------
+
+Charlotte must use the existing geo-first logic as the inclusion rule.
+
+Reminder:
+Geo decides inclusion first.
+Level/trust/participation decide prioritization within the valid set.
+
+Use existing trust/scoring/recommendation signals where available.
+
+Charlotte should be able to explain recommendations in grounded language like:
+- active locally
+- strong presence in this area
+- engaged in the community
+- strong fit for what you asked
+- relevant nearby option
+
+Do NOT generate unsupported “best” claims.
+Do NOT invent ratings.
+
+If the data is thin, Charlotte should say so and return the strongest available matches.
+
+--------------------------------------------------
+PART 4 — SEARCH VS RECOMMENDATION BEHAVIOR
+--------------------------------------------------
+
+Keep these distinct internally:
+
+A. SEARCH
+- broad retrieval
+- existing search infrastructure can be used
+
+B. CHARLOTTE RECOMMENDS
+- curated
+- trust-aware
+- geo-aware
+- conversation-friendly
+- smaller set of stronger options
+
+Charlotte should not dump huge result lists.
+Aim for concise, high-signal results.
+
+--------------------------------------------------
+PART 5 — CONCIERGE RESPONSE STRUCTURE
+--------------------------------------------------
+
+Add a lightweight response formatter for Charlotte in search/concierge mode.
+
+Pattern:
+1. identify the ask
+2. identify the local context
+3. return 2–4 strong options when possible
+4. briefly explain why
+5. route into the next step
+
+Example next steps:
+- show story
+- open profile
+- route to map
+- open event
+- show jobs
+- connect to booking
+- connect to claim flow
+- schedule with Becky if needed
+
+The output should be structured enough that later UI can render cards/actions, but do not build the UI now.
+
+--------------------------------------------------
+PART 6 — INBOX ROLE CHECK (LIGHT ONLY)
+--------------------------------------------------
+
+Do NOT redesign the inbox.
+
+Only make small changes if needed so Charlotte can:
+- send low-confidence search/recommendation exceptions there
+- flag unresolved requests
+- queue “needs human judgment” items
+
+Current inbox behavior is acceptable for now.
+Do not overbuild this.
+
+--------------------------------------------------
+PART 7 — COMMAND CENTER BACKEND FOUNDATIONS
+--------------------------------------------------
+
+Do NOT build the command center UI.
+
+Only add backend foundations so Charlotte can support future command-center style questions like:
+- “What should I focus on this week?”
+- “Where are the strongest opportunities?”
+- “What’s active in South End right now?”
+- “Who are the strongest advertiser opportunities?”
+- “Who should I feature next?”
+
+This means:
+- add service functions
+- add summary-building helpers
+- add structured outputs
+- keep it backend-only
+
+No front-end redesign in this task.
+
+--------------------------------------------------
+PART 8 — ORCHESTRATOR INTEGRATION
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts so that when mode resolves to:
+- search
+- concierge
+- recommendation-like asks
+
+it delegates into the new Charlotte recommendation adaptor rather than generic tool execution.
+
+Do not break:
+- operator mode
+- proposal mode
+- batch handling
+
+This should be additive.
+
+--------------------------------------------------
+PART 9 — TESTING
+--------------------------------------------------
+
+Add focused tests for:
+
+1. recommendation adaptor using existing trust/search data
+2. geo-aware filtering behavior
+3. curated output shape
+4. orchestrator delegation for search/concierge asks
+5. unresolved / low-confidence fallback behavior
+
+Do not create giant brittle tests.
+Keep them targeted.
+
+--------------------------------------------------
+PART 10 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — WHAT EXISTING TRUST / SEARCH / RECOMMENDATION SYSTEMS WERE REUSED
+OUTPUT C — SUPPORTED CHARLOTTE REQUEST TYPES
+OUTPUT D — EXAMPLE STRUCTURED RESPONSES
+OUTPUT E — ANY SMALL INBOX EXTENSIONS MADE
+OUTPUT F — WHAT WAS NOT BUILT (confirm no duplicate engine was created)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+STOP after Task C is complete.
+
+Do NOT begin:
+- Phase 3 sales/lifecycle behavior
+- command center UI
+- large inbox redesign
+- new scoring engine
+- new recommendation engine

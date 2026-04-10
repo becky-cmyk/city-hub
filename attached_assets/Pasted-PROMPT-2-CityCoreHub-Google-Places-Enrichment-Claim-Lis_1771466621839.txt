@@ -1,0 +1,117 @@
+PROMPT 2 — CityCoreHub: Google Places Enrichment + Claim Listing Growth Loop (Phase 1)
+
+Goal: Add (1) Google Places/Maps enrichment to Business creation/edit + submissions, and (2) a “Claim this listing” workflow that sends an email and lets an owner claim/manage basics. Keep it simple, admin-controlled, no service worker, no aggressive caching.
+
+DO NOT change the overall architecture from Prompt 1. Build on what exists.
+
+A) GOOGLE PLACES ENRICHMENT (Admin + Submissions)
+1) Add fields to Business model (Prisma + migration):
+- googlePlaceId (string, nullable, indexed)
+- googleRating (float, nullable)
+- googleReviewCount (int, nullable)
+- googleMapsUrl (string, nullable)
+- googleLastSyncAt (datetime, nullable)
+
+2) Add env vars + .env.example:
+- GOOGLE_MAPS_API_KEY
+
+3) Create server routes (API) for Google Places:
+- GET /api/google/places/autocomplete?input=...&citySlug=...
+  - Use Google Places Autocomplete (or Places API equivalent)
+  - Return top results with: place_id, description, structured formatting
+- GET /api/google/places/details?placeId=...
+  - Fetch place details
+  - Return: name, formatted_address, phone, website, rating, user_ratings_total, url (maps url), lat/lng if available
+
+4) Admin UI enhancements for Business create/edit:
+- Add “Find on Google” search input
+- When admin selects a result:
+  - Save googlePlaceId
+  - Pull details + prefill business fields (name/address/phone/website)
+  - Save rating/reviewCount/mapsUrl
+  - Set googleLastSyncAt
+
+5) Submissions flow:
+- On /[citySlug]/submit/business:
+  - Add optional “Search business on Google” step for submitter:
+    - They can search and pick the place
+    - Store selected googlePlaceId inside Submission.payload
+- In admin submission review screen:
+  - Show Google place preview if provided
+  - On approve: create Business with googlePlaceId + enriched fields prefilled
+
+6) Caching rule:
+- Do NOT call Google on every public page render.
+- Only call Google during admin actions (select/refresh).
+- Add a “Refresh Google Data” button in admin business edit which updates rating/reviewCount/mapsUrl and sets googleLastSyncAt.
+
+B) CLAIM LISTING WORKFLOW (Admin-initiated email + owner claim)
+1) Add fields to Business model (Prisma + migration):
+- claimStatus enum: UNCLAIMED | CLAIM_SENT | CLAIMED (default UNCLAIMED)
+- ownerEmail (string, nullable)
+- claimTokenHash (string, nullable)
+- claimTokenExpiresAt (datetime, nullable)
+- claimedAt (datetime, nullable)
+
+2) Create server utilities:
+- Generate secure random claim token (32+ bytes)
+- Store only a hash in DB (e.g., sha256) as claimTokenHash
+- Token expires default 14 days
+
+3) Add env vars + .env.example:
+- RESEND_API_KEY
+- APP_PUBLIC_URL (e.g., https://citycorehub.com or the current Replit published URL for now)
+- FROM_EMAIL (e.g., "CLT Connects <hello@cltconnects.com>" placeholder ok)
+
+4) Create API routes:
+- POST /api/admin/businesses/:id/send-claim
+  - Admin-only
+  - Requires ownerEmail present OR allow admin to input email in modal
+  - Generates token, stores hash+expiry, sets claimStatus=CLAIM_SENT
+  - Sends email via Resend with:
+    - Subject: “Your listing is live on CLT Connects — claim it”
+    - Body: short, helpful, includes view link and claim link:
+      {APP_PUBLIC_URL}/{citySlug}/claim/{token}
+    - Include unsubscribe preference line (simple: “Reply to this email to opt out.” is fine for now)
+- GET /api/claim/verify?token=...&citySlug=...
+  - Validates token hash + expiry + claimStatus
+  - Returns business summary if valid
+
+- POST /api/claim/complete
+  - Input: token, citySlug, ownerName (optional), ownerEmail (confirm), phone (optional)
+  - Marks business claimStatus=CLAIMED, claimedAt=now
+  - Creates/links a lightweight “Owner” user record if your auth supports it OR store ownerEmail only if you want to avoid new auth now
+  - Return a success response and redirect destination
+
+5) Public routes:
+- /[citySlug]/claim/[token]
+  - Shows business preview
+  - “Yes, this is my business” button
+  - Collects: name + email confirm (no password Phase 1)
+  - Completes claim and then redirects to:
+- /[citySlug]/owner/[businessSlug] (very light owner page)
+  - Phase 1 owner controls (limited):
+    - Edit: description, websiteUrl, phone, hoursText (if you have it), category/tags request (optional)
+    - All edits go to moderation queue OR save directly but flagged “owner-updated” for admin review (choose the safer route: moderation queue)
+  - Show “Upgrade your visibility” CTA button (Stripe checkout link placeholder ok if not wired yet)
+
+6) Admin UI updates:
+- In admin business list/detail:
+  - Display claimStatus badge
+  - Action: “Send claim email”
+  - Field: ownerEmail
+  - If claimed: show claimedAt
+
+C) SAFETY / MODERATION / SPAM
+- Rate-limit claim attempts (basic: max 10 per IP per hour)
+- Tokens must be single-use (after claim, invalidate token hash)
+- All owner edits should be reviewed by admin before public changes (recommended)
+
+D) TESTING CHECKLIST (must be done)
+- Create business in admin, attach googlePlaceId, save
+- Approve submission with googlePlaceId → business created enriched
+- Send claim email (log email send success)
+- Open claim link → verify + claim completes → status becomes CLAIMED
+- Owner edit request appears in admin queue or flagged for review
+
+Deliver as code changes only; do not add service workers; do not introduce heavy caching. Ensure build passes and routes work on the published Replit app.

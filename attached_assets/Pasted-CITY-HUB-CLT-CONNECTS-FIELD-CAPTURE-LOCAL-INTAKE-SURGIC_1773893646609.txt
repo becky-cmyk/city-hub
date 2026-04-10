@@ -1,0 +1,242 @@
+CITY HUB / CLT CONNECTS
+FIELD CAPTURE + LOCAL INTAKE
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Stabilize and complete the FIELD CAPTURE / LOCAL INTAKE flow so real-world discoveries can enter the platform quickly without forcing categorization at the moment of capture.
+
+This is a SURGICAL INTAKE PASS.
+Do NOT rebuild the platform.
+Do NOT rebuild the admin system.
+Do NOT create duplicate object tables.
+Do NOT force users to fully classify content during capture.
+
+LOCKED CAPTURE RULE
+
+Capture first.
+Classify later.
+
+Required workflow:
+
+capture
+→ admin inbox
+→ review / classification
+→ object creation or update
+
+This rule is already part of the locked City Hub architecture and must be preserved.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are businesses with creator-specific fields/types.
+Pulse is an aggregation layer, not a table.
+Objects already exist in real tables such as:
+- businesses
+- events
+- articles
+- posts
+- jobs / job_listings
+- marketplace_listings
+
+There are staging/revision style systems already in the platform, including import_drafts and audit/revision patterns.
+Reuse existing staging concepts where practical.
+Do NOT create a second intake architecture unless absolutely necessary.
+
+PRIMARY OBJECTIVE
+
+Make it easy to capture local information fast from the field and route it into the correct admin workflow without breaking the single-source architecture.
+
+Examples of capture types:
+- photo
+- business card
+- voice note
+- document
+- flyer
+- quick note
+- event info
+- missing business
+- job lead
+- marketplace opportunity
+- creator lead
+- community update
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current codebase and confirm:
+
+1. What intake / submission / draft / import flows already exist
+2. Whether there is already an admin inbox, moderation queue, intake panel, or staging area
+3. Which tables/services currently store raw or draft intake
+4. How imported records differ from manual capture
+5. Whether field capture already exists partially in UI or admin
+6. Which current pieces are reusable and should remain
+7. The smallest stable path to support clean capture → inbox → classification behavior
+
+Return a concise implementation note first before major changes.
+
+REQUIRED IMPLEMENTATION
+
+1. SIMPLE CAPTURE ENTRY
+
+Create or complete a lightweight intake entry point for local capture.
+
+Capture entry should allow quick submission with minimal required fields.
+
+Minimum capture inputs should support some combination of:
+- title or short label
+- note/description
+- capture type
+- optional photo/file
+- optional location
+- optional contact info
+- optional business/event name
+- optional source link
+- optional city/zone context if already available
+
+Do NOT require full category assignment, full taxonomy, or full object type certainty at the moment of capture.
+
+2. ADMIN INBOX / REVIEW QUEUE
+
+Route captures into an admin-side inbox or review queue.
+
+Inbox items should be reviewable before they become live objects.
+
+Review states may include lightweight statuses such as:
+- new
+- reviewing
+- ready to convert
+- converted
+- discarded
+- needs follow-up
+
+Reuse existing moderation/intake/draft patterns where possible.
+
+3. CLASSIFICATION AFTER CAPTURE
+
+From the admin review flow, allow a capture to be classified into the correct target type such as:
+- business
+- event
+- job
+- article/story
+- marketplace listing
+- creator lead
+- contact/opportunity
+- update to existing object
+
+Important:
+classification happens after capture, not during capture.
+
+4. CONVERT OR MERGE INTO REAL OBJECTS
+
+Allow admin to:
+- create a new real object from intake
+- attach/merge intake into an existing object
+- hold it for later follow-up
+- discard it safely
+
+Do NOT create permanent duplicate intake-based live records.
+The capture item should either convert into or attach to the real object model.
+
+5. LOCATION / CITY SAFETY
+
+Respect current city and geography context.
+
+If capture is being done inside a city/metro context:
+- preserve city association
+- preserve zone relevance where available
+
+Do NOT hardcode Charlotte as the default if active city context already exists.
+
+Preserve both valid hierarchies:
+- regions for territory/sales/licensing
+- zones for content/discovery/local scoping
+
+Do not flatten them.
+
+6. FILE / MEDIA SAFETY
+
+If photo/document/business card uploads are already supported somewhere in the platform, reuse that pattern.
+
+Do not build a giant media system here.
+Just allow practical attachment to intake items if low-risk and already supported.
+
+7. AUDIT / TRACEABILITY
+
+Preserve traceability.
+
+An admin should be able to tell:
+- what was captured
+- who captured it if applicable
+- when it was captured
+- how it was classified
+- what live object it became or was attached to
+
+Reuse current audit logging patterns.
+
+8. LOCAL OPERATIONS USEFULNESS
+
+This intake flow should support real local operations use cases such as:
+- “I found a missing business”
+- “I saw a flyer for an event”
+- “This business is hiring”
+- “This creator should be added”
+- “This marketplace opportunity exists”
+- “This listing needs correction”
+- “This should become a story lead”
+
+9. BILINGUAL SAFETY
+
+Do not break the bilingual system.
+
+If intake/admin labels are already bilingual or shared through the translation system, preserve that pattern.
+Do not build separate English/Spanish intake systems.
+
+10. PERFORMANCE / SCOPE SAFETY
+
+Keep this implementation small and practical.
+
+Prefer:
+- lightweight intake form
+- admin inbox/review queue
+- conversion/merge actions
+- reuse of current draft/staging patterns
+
+Do NOT:
+- build a full CRM
+- build a giant workflow engine
+- redesign moderation globally
+- redesign all admin UX
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild businesses/events/jobs/articles tables
+- create a second live object system
+- force classification at capture time
+- create duplicate records as the final destination
+- redesign all admin tools
+- flatten region and zone hierarchies
+- hardcode Charlotte as the permanent platform context
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. capture can happen quickly with minimal friction
+2. captured items route into an admin inbox/review flow
+3. classification happens after capture
+4. captures can be converted into or merged with real objects
+5. traceability is preserved
+6. no duplicate live object architecture is introduced
+7. current city/geography context is respected
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current intake/draft/inbox flows first
+3. implement the smallest stable change set
+4. list exactly which files/components/services/routes were changed
+5. list what should wait for the later discovery integration / intelligence prompts

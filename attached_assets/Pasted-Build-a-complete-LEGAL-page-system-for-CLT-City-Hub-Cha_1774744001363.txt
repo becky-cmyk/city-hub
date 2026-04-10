@@ -1,0 +1,221 @@
+Build a complete LEGAL page system for CLT City Hub (Charlotte Hub) with the following requirements:
+
+----------------------------------
+GOAL
+----------------------------------
+Create a single /legal page with sections + anchor navigation AND separate routes:
+- /terms
+- /privacy
+- /content-policy
+- /acceptable-use
+- /disclaimer
+
+All pages should share the same content blocks below.
+
+Tone: clear, firm, protective of platform
+Priority: platform control, ownership, no refunds, monetization rights
+
+----------------------------------
+GLOBAL HEADER (ALL PAGES)
+----------------------------------
+CLT City Hub Legal
+Effective Date: [AUTO TODAY DATE]
+
+----------------------------------
+SECTION 1: TERMS OF SERVICE
+----------------------------------
+Include:
+
+1. Platform Definition
+CLT City Hub is a community-based media, discovery, and business presence platform combining user content, AI-generated content, and curated information.
+
+2. Eligibility
+Users must be 18+
+
+3. Account + Verification
+We reserve full rights to:
+- Verify or deny any user, business, or listing
+- Request documentation at any time
+- Remove or revoke verification at our sole discretion
+
+Verification is not endorsement.
+
+4. Platform Control (CRITICAL)
+We reserve absolute rights to:
+- Edit, rewrite, enhance, or remove any content
+- Create listings from public or collected data
+- Reorganize, categorize, or relocate content
+- Approve, deny, suspend, or terminate users or businesses
+- Remove inaccurate, outdated, or harmful information
+
+No notice required.
+
+5. Payments + NO REFUNDS (STRICT)
+All payments are final.
+
+- No refunds
+- No partial refunds
+- No prorations
+- No credits unless explicitly issued by platform
+
+Applies to:
+- Subscriptions
+- Listings
+- Ads
+- Sponsorships
+- Upgrades
+
+6. Subscriptions
+Access and benefits are active only while paid and current.
+Failure to pay may result in:
+- Loss of placement
+- Loss of visibility
+- Loss of pricing
+
+7. Limitation of Liability
+We are not responsible for:
+- Business outcomes
+- Transactions between users
+- Accuracy of listings
+- Damages or losses
+
+Use platform at your own risk.
+
+8. Changes
+We may update terms at any time.
+
+----------------------------------
+SECTION 2: PRIVACY POLICY
+----------------------------------
+Include:
+
+We collect:
+- Name, email, phone
+- Business information
+- Content submissions
+- Usage data
+
+We use data to:
+- Operate platform
+- Improve discovery
+- Generate AI content
+- Communicate with users
+
+Public Content:
+Anything submitted may be displayed publicly.
+
+We may:
+- Store, edit, and reuse data
+- Maintain backups
+- Use data for platform improvement
+
+We do NOT guarantee data deletion from backups.
+
+We do NOT sell personal data.
+
+----------------------------------
+SECTION 3: CONTENT + OWNERSHIP POLICY (IMPORTANT)
+----------------------------------
+Include:
+
+1. Platform Ownership
+All platform systems, structure, design, and functionality are owned by CLT City Hub.
+
+2. User Content License
+By submitting content, user grants:
+
+- Perpetual
+- Irrevocable
+- Worldwide
+- Royalty-free
+
+rights to:
+- Use
+- Modify
+- Rewrite
+- Publish
+- Distribute
+
+Across:
+- Website
+- Print
+- Social
+- Video / TV / Radio
+- Marketing
+
+3. AI Rights
+We may:
+- Rewrite content
+- Expand content
+- Optimize for SEO/AEO
+- Generate new content from submissions
+
+4. Listings Ownership
+All listings (claimed or unclaimed):
+- Are part of the platform ecosystem
+- Can be created, edited, or removed by platform
+
+----------------------------------
+SECTION 4: ACCEPTABLE USE POLICY
+----------------------------------
+Users may NOT:
+- Post false or misleading information
+- Upload illegal or harmful content
+- Spam or abuse platform features
+- Attempt to manipulate rankings or visibility
+
+We may remove content or ban users at any time.
+
+----------------------------------
+SECTION 5: DISCLAIMER
+----------------------------------
+CLT City Hub provides information “as is”
+
+We do NOT guarantee:
+- Accuracy
+- Completeness
+- Reliability
+
+We are not responsible for:
+- Business interactions
+- Third-party services
+- External links
+
+----------------------------------
+SECTION 6: MONETIZATION + PLATFORM RIGHTS (ADD THIS)
+----------------------------------
+CLT City Hub reserves the right to:
+
+- Place ads, sponsorships, and promotions anywhere on the platform
+- Monetize listings, pages, and content
+- Insert affiliate links or revenue-generating elements
+- Control placement, ranking, and visibility
+
+Users acknowledge that:
+The platform is a commercial system and visibility may be influenced by paid placement.
+
+----------------------------------
+SECTION 7: TERMINATION
+----------------------------------
+We may:
+- Suspend or remove users
+- Delete content
+- Remove listings
+
+At any time, for any reason, without notice.
+
+----------------------------------
+UI REQUIREMENTS
+----------------------------------
+- Sticky side navigation (anchors to sections)
+- Clean readable layout
+- Mobile responsive
+- Each section collapsible (accordion optional)
+- Footer links to all legal pages
+
+----------------------------------
+DELIVERABLE
+----------------------------------
+- /legal page (full combined)
+- Individual pages for each section
+- Reusable component for future edits

@@ -1,0 +1,74 @@
+PROMPT 2 — OWNER DASHBOARD UPGRADE → STRIPE CHECKOUT (LISTING_TIER)
+
+CONTEXT (LOCKED — DO NOT CHANGE):
+- Same CityCoreHub Replit project.
+- Stripe webhook works at POST /api/stripe/webhook and entitlements upsert is already implemented.
+- Entitlement gating is implemented and verified.
+- We are not changing file structure, naming, or doing refactors.
+- No new tables. No new env vars.
+- Multi-tenant city scope is enforced by citySlug/cityId.
+- The goal is to let a FREE business click “Upgrade” and complete checkout, which results in an active LISTING_TIER entitlement (via existing webhook upsert).
+
+OBJECTIVE:
+When a business in FREE tier sees the locked “Edit My Listing Details” button:
+- Add a working “Upgrade” action that starts Stripe Checkout for the correct Listing Tier product/price
+- After successful payment, the business becomes entitled and the dashboard unlocks editing
+
+SCOPE:
+A) Backend — Checkout Session Creation
+1) Create (or reuse if exists) an API endpoint that:
+   - Is called from the owner dashboard
+   - Accepts: citySlug, businessSlug (or businessId if already available server-side)
+   - Creates a Stripe Checkout Session in subscription mode (or the mode your current system uses for LISTING_TIER)
+   - Uses the existing configured price ID for the LISTING_TIER product (DO NOT hardcode new IDs; use the current config pattern already used elsewhere)
+   - Includes business identity in metadata so webhook can map entitlement to the correct subject:
+     REQUIRED metadata:
+       - cityId (or citySlug if your webhook maps it reliably)
+       - businessId (preferred) or businessSlug
+       - subject_type = "business" (or your system’s expected value)
+       - product_type = "LISTING_TIER" (must match existing entitlement product_type conventions)
+
+2) Success/Cancel URLs
+   - Use the current deployed base URL pattern already used in the project.
+   - Success should return the owner to the owner dashboard page for that business.
+   - Cancel should return them to the same page without changes.
+
+3) Response
+   - Return: { url: <checkout_session_url> }
+
+B) Frontend — Upgrade Button Wiring
+1) In the owner dashboard, for FREE tier:
+   - Replace/augment the locked state with a clear “Upgrade” button.
+   - On click:
+     - Call the new backend endpoint to create a checkout session.
+     - Redirect the browser to the returned Stripe Checkout URL.
+   - Ensure button shows loading state to prevent double-click.
+
+2) Post-checkout Unlock
+   - On returning to success URL:
+     - Re-fetch entitlements endpoint:
+       GET /api/cities/:citySlug/owner/:slug/entitlements
+     - If still FREE (webhook delay), show “Processing payment…” and auto-refresh entitlements up to a short limit (e.g., 30–60 seconds total, polling every 3–5 seconds).
+     - Once tier updates, unlock edit button.
+
+FORENSIC RULES:
+- Do NOT modify webhook logic.
+- Do NOT change entitlements schema.
+- Do NOT introduce new price IDs or products.
+- Do NOT create a second entitlement system.
+- Do NOT add file paths in your explanation; implement in-place using existing patterns.
+
+ACCEPTANCE TESTS (MUST PASS):
+1) FREE business:
+   - Click Upgrade → gets redirected to Stripe Checkout.
+2) Complete checkout successfully:
+   - Stripe redirects back to success URL.
+   - Within a short time window, entitlements endpoint returns a non-FREE tier/capabilities that allow editing OR an active LISTING_TIER entitlement.
+   - Owner edit action becomes enabled without manual refresh (or with the auto-refresh built in).
+3) Cancel checkout:
+   - Redirects back to dashboard and remains locked.
+4) Security:
+   - Endpoint must only allow authenticated owner/admin context to start checkout for that business (same auth guard used for owner dashboard routes).
+
+DELIVERABLE:
+Implement the upgrade → checkout wiring end-to-end for LISTING_TIER using existing Stripe config and webhook entitlement upsert, including success/cancel return and post-checkout unlock behavior.

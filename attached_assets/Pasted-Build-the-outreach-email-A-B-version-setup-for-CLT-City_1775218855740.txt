@@ -1,0 +1,151 @@
+Build the outreach email A/B version setup for CLT City Hub with the following exact requirements.
+
+GOAL
+Create two outbound email versions for cold outreach:
+- Version A = more ego/personal spotlight focused
+- Version B = more community/impact focused
+
+These emails are meant to invite someone to participate in a local story and activate their profile/presence inside City Hub.
+
+IMPORTANT CTA / LINK RULES
+1. Do NOT show raw or ugly URLs anywhere in the email body.
+2. The main activation CTA must be a BUTTON only.
+3. The button text must be:
+   Yes
+4. Also include a secondary text option underneath or near the button that says:
+   No thanks
+5. The Yes button should route to the activation page.
+6. The No thanks option should route to a simple decline / not now path.
+7. All links must use clean tracking behind the scenes.
+8. No visible long query strings in the email copy.
+9. The Yes button is the main CTA and should feel simple, low-friction, and clear.
+
+TRACKING REQUIREMENTS
+Implement hidden tracking/UTM structure behind the button and no-thanks link so we can identify:
+- campaign name
+- email version (A or B)
+- recipient/source if available
+- send batch if available
+- CTA clicked (yes or no)
+
+Suggested tracking fields:
+- campaign=story_outreach
+- variant=A or B
+- cta=yes or no
+- source=outreach
+- recipient_id or lead_id if available
+- batch_id if available
+
+Use clean redirect handling so the user only sees polished buttons/links, never ugly URLs.
+
+EMAIL POSITIONING
+These emails should position City Hub as:
+- a local search and discovery platform
+- also producing weekly newsletters, print features, and community spotlights
+- inviting the recipient into something collaborative and useful
+- not sounding salesy
+- not sounding like a directory claim email
+- not emphasizing “listing”
+- using language around profile / activation / presence
+
+CTA LANGUAGE REQUIREMENT
+The action is not “claim your listing.”
+The language should center around:
+- letting us know they are interested
+- confirming their details
+- activation
+- moving forward with their story
+- access to manage their presence
+
+SUBJECT LINE TESTING
+Use these subject lines for the A/B versions:
+
+Version A Subject:
+🗞️ Write a story with you — no cost
+
+Version B Subject:
+🗞️ Share something meaningful locally
+
+EMAIL COPY
+Use the following exact copy unless minor formatting adjustments are needed for email rendering.
+
+VERSION A — EGO / PERSONAL SPOTLIGHT
+
+Hi [First Name],
+
+We came across [Name/Organization] and would love to write a short local story with you as part of our community spotlight (no cost).
+
+This is a chance to share your story — what you’ve built, what you’re working on, and what people should know about you.
+
+As part of that, we’ve already created your profile in City Hub — this is what we use to support your story, make sure your information is accurate, and help people find you locally.
+
+Can you take 2–5 minutes to let us know you’re interested and confirm your details for activation?
+
+[YES BUTTON]
+
+[NO THANKS TEXT LINK]
+
+This step lets us move forward with your story and gives you access to manage your presence.
+
+City Hub is a local search and discovery platform, and we also produce weekly newsletters, print features, and community spotlights.
+
+We’d love to include you.
+
+— Becky
+CLT City Hub
+
+
+VERSION B — COMMUNITY / IMPACT FOCUS
+
+Hi [First Name],
+
+We came across [Name/Organization] and would love to write a short local story with you as part of our community spotlight (no cost).
+
+The story can be about something that matters to you — your organization, a cause you support, a group you’re involved with, or something happening in your community that deserves more visibility.
+
+As part of that, we’ve already created your profile in City Hub — this helps us support your story, keep your information accurate, and connect people locally.
+
+Can you take 2–5 minutes to let us know you’re interested and confirm your details for activation?
+
+[YES BUTTON]
+
+[NO THANKS TEXT LINK]
+
+This step lets us move forward and gives you access to your presence in the hub.
+
+City Hub is a local search and discovery platform, and we also produce weekly newsletters, print features, and community spotlights.
+
+We’d love to include what matters to you.
+
+— Becky
+CLT City Hub
+
+DESIGN / LAYOUT REQUIREMENTS
+1. Keep the email clean and mobile-friendly.
+2. Make the Yes button visually clear and easy to tap.
+3. Keep the No thanks link small and secondary.
+4. Preserve a human, community-based tone.
+5. Do not make it look promotional or like an ad blast.
+6. Support merge tags such as:
+   - [First Name]
+   - [Name/Organization]
+   - activation link target
+   - decline link target
+   - lead id / recipient id if available
+
+BUTTON / LINK BEHAVIOR
+- Yes button text: Yes
+- No link text: No thanks
+- Yes click = activation / interest path
+- No thanks click = polite decline / not now path
+- Store version, click type, and lead reference in tracking
+
+OUTPUT NEEDED
+1. Build-ready email template structure for Version A and Version B
+2. Subject lines stored separately for each version
+3. CTA button wiring for Yes
+4. Decline link wiring for No thanks
+5. Tracking setup for both variants
+6. Any supporting config fields needed for campaign management
+
+Keep it simple, polished, and ready to plug into the outbound email flow.

@@ -1,0 +1,125 @@
+PROMPT ADD-ON — EXPAND CHARLOTTE METRO COVERAGE (YORK + ROCK HILL + LAKE WYLIE + GASTONIA + BELMONT + DOWNTOWN HUBS)
+
+Do NOT delete prior seed logic.
+Append only.
+Return raw structured output.
+
+GOAL
+Expand the seeded “Charlotte Metro” definition to reflect current real-world metro coverage based on the coverage map and updated market footprint.
+
+------------------------------------------------------------
+1) EXPAND REGIONS (COUNTY + HUB LEVEL)
+------------------------------------------------------------
+
+1A) Ensure York County exists
+If not present in regions:
+Insert:
+- name: "York County"
+- region_type: "county"
+- parent_region_id: (Charlotte Metro id)
+- code: "YORK"
+
+1B) Ensure Rock Hill exists as hub
+Insert (if not exists):
+- name: "Rock Hill"
+- region_type: "hub"
+- parent_region_id: York County id
+- code: "ROCKHILL"
+
+1C) Ensure Lake Wylie exists as hub
+Insert:
+- name: "Lake Wylie"
+- region_type: "hub"
+- parent_region_id: York County id
+- code: "LAKEWYLIE"
+
+1D) Ensure Gastonia exists as hub
+Insert:
+- name: "Gastonia"
+- region_type: "hub"
+- parent_region_id: Gaston County id
+- code: "GASTONIA"
+
+1E) Ensure Belmont exists as hub
+Insert:
+- name: "Belmont"
+- region_type: "hub"
+- parent_region_id: Gaston County id
+- code: "BELMONT"
+
+------------------------------------------------------------
+2) SEED ADDITIONAL ZIP_GEOS (AUTO LOOKUP VIA GOOGLE PLACES)
+------------------------------------------------------------
+
+Add the following ZIPs if not already seeded:
+
+YORK COUNTY / ROCK HILL / LAKE WYLIE:
+- 29730 (Rock Hill)
+- 29732 (Rock Hill)
+- 29733 (Rock Hill)
+- 29745 (York)
+- 29710 (Lake Wylie / Clover)
+
+GASTON COUNTY WEST / BELMONT:
+- 28012 (Belmont)
+- 28052 (Gastonia)
+- 28054 (Gastonia)
+- 28056 (Belmont/Mt Holly area if not already)
+- 28032 (Cramerton / Belmont corridor)
+
+DOWNTOWN CHARLOTTE CORE (ensure present):
+- 28202
+- 28203
+- 28204
+- 28205
+- 28206
+- 28207
+- 28209
+
+For each ZIP:
+- If exists in zip_geos → skip
+- Else:
+  - Use Google Places Text Search:
+    "{ZIP} NC postal code" OR "{ZIP} SC postal code"
+  - Extract geometry.location lat/lng
+  - Insert into zip_geos
+  - radius_meters default 3500
+
+Respect:
+- PLACES_IMPORT_RPM_LIMIT
+- Daily caps
+
+If lookup fails:
+- Log to console
+- Create Admin Inbox item type="places_import_failed" with title:
+  "Metro ZIP seed failed: {ZIP}"
+
+------------------------------------------------------------
+3) OPTIONAL — CREATE HUB-CENTER GEO SNAPSHOTS
+------------------------------------------------------------
+
+For hubs created above:
+If a hub has no geographic center yet,
+- Perform Places search:
+  "{Hub Name}, NC" or "{Hub Name}, SC"
+- Capture lat/lng
+- Store as:
+  - regions.center_lat (add column if not exists)
+  - regions.center_lng (add column if not exists)
+
+Do NOT require this field. Only add if missing.
+
+------------------------------------------------------------
+4) OUTPUT (RAW)
+------------------------------------------------------------
+
+Return:
+- York County region id
+- Rock Hill / Lake Wylie / Gastonia / Belmont hub ids
+- ZIPs attempted
+- ZIPs inserted
+- ZIPs skipped
+- ZIPs failed
+- Remaining daily cap
+
+END.

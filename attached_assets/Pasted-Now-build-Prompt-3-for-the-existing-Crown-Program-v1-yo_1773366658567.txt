@@ -1,0 +1,206 @@
+Now build Prompt 3 for the existing Crown Program v1 you already created and refined.
+
+GOAL
+Polish, test, and harden the Crown Program v1 so it is launch-ready enough for internal testing and first use. Do NOT introduce major new features. Focus on cleanup, QA, edge cases, admin usability, and stable operation.
+
+PRIORITY
+This prompt is about:
+- testing
+- bug fixing
+- UI cleanup
+- validation
+- seeded data
+- edge-case handling
+- admin ease of use
+- launch readiness
+
+PART 1 — QA / FLOW TESTING
+
+Test the complete Crown v1 flow from end to end for these scenarios:
+
+SCENARIO A — Standard Business
+- candidate exists
+- invitation page loads
+- business accepts
+- activates Hub Presence
+- becomes Verified Participant
+- enters a category in correct hub
+- receives Nominee status
+- votes are cast
+- threshold is met
+- becomes Qualified Nominee
+- admin marks winner
+- appears on winners page
+
+SCENARIO B — Multi-Location Business
+- parent profile exists
+- multiple child locations exist in different hubs
+- each location only appears in its own hub
+- each location can be nominated separately
+- no cross-hub competition leakage
+
+SCENARIO C — Creator
+- creator can be onboarded properly
+- appears only in creator categories
+- can receive votes and status changes normally
+
+SCENARIO D — Networking Group with Chapters
+- parent organization exists
+- chapter-level hub presences exist
+- at least one chapter has an event
+- chapter can qualify and compete
+- chapter is tied to correct hub
+- voting works normally
+
+SCENARIO E — Community Organization
+- organization onboarded
+- event/calendar requirement respected
+- can be nominee in the proper category
+
+PART 2 — EDGE CASE HANDLING
+
+Clean up and handle these edge cases:
+
+1. A participant tries to enter a hub where they do not have a valid location/chapter/meeting presence
+2. A participant has incomplete onboarding and abandons midway
+3. A networking group or organization tries to qualify without an event
+4. Duplicate candidate records for the same business/location
+5. Parent profile exists but child chapter/location missing
+6. Category assigned to a hub but no nominees yet
+7. Votes cast before email verification is complete
+8. Suspicious voting flag appears on a nominee near threshold
+9. Admin needs to manually override status or winner
+10. A category threshold changes after nominees already exist
+
+Make the system behave gracefully and predictably.
+
+PART 3 — ADMIN UX CLEANUP
+
+Improve the admin dashboard so it is easier to operate.
+
+Need clean admin visibility for:
+- candidates waiting for review
+- invited but inactive records
+- active nominees
+- nominees close to qualifying
+- qualified nominees
+- current winners
+- flagged votes
+- networking groups/orgs missing events
+- duplicate or incomplete profiles
+
+Add basic filters where helpful:
+- by hub
+- by category
+- by participant type
+- by status
+
+Do not overbuild. Just make it easier to manage.
+
+PART 4 — VALIDATION + GUARDRAILS
+
+Add or tighten form validation and business rules.
+
+Examples:
+- required hub for child location/chapter
+- required category before nomination activation
+- prevent public nominee activation without active Hub Presence
+- prevent winner selection if nominee is not qualified, unless admin override is intentionally used
+- require event for networking group/community org qualification
+- validate one vote per user per category per hub
+- validate email verification before vote counts finalize
+
+PART 5 — UI POLISH
+
+Do a clean pass on the user-facing UI to improve readability and consistency.
+
+Focus on:
+- spacing
+- button labels
+- section headings
+- form clarity
+- empty states
+- success/error messages
+- mobile responsiveness
+- status chips / labels
+- nominee card consistency
+- winner card consistency
+
+Do not redesign from scratch. Just make the current version feel more coherent and usable.
+
+PART 6 — SEEDED DATA IMPROVEMENT
+
+Improve seeded data so the app can be meaningfully demoed.
+
+Need sample data for:
+- multiple active hubs
+- all Year-1 categories
+- at least one business in several categories
+- one multi-location business example
+- one creator example
+- one networking organization with multiple chapters
+- one community organization with event(s)
+- nominees in mixed statuses
+- a few qualified nominees
+- at least one current winner
+
+Make seeded examples believable and easy to test.
+
+PART 7 — BASIC REPORTING / COUNTS
+
+Add simple admin summary counts/cards if not already present.
+
+Helpful metrics:
+- total candidates
+- total invited
+- total active nominees
+- total qualified nominees
+- total current winners
+- total flagged votes
+- total hubs with active categories
+- total events tied to organizations/groups
+
+Keep it simple. Just enough for internal visibility.
+
+PART 8 — ERROR / EMPTY STATES
+
+Make sure public and admin pages handle no-data cases well.
+
+Examples:
+- no nominees in this category yet
+- no winners yet
+- no active events
+- no active categories in this hub
+- candidate record not found
+- invalid invite link
+- duplicate vote blocked
+- vote pending email verification
+
+Use clear, friendly system messaging.
+
+PART 9 — FUTURE-READY CLEANUP
+
+Without adding Metro Crown now, make sure the codebase is organized so future expansion is easier.
+
+Clean up:
+- models
+- services
+- route naming
+- shared UI components
+- status logic
+- category threshold config
+- event requirement logic
+
+Leave comments where future Phase 2 items would plug in, especially:
+- Metro Crown
+- deeper AI suggestion engine
+- richer event/calendar logic
+- ambassador workflows
+
+PART 10 — FINAL TEST PASS
+
+Run a final pass and fix obvious issues so the system is stable for internal testing.
+
+DELIVERABLE
+Produce a cleaned-up, tested, seedable, internally launchable Crown Program v1 with better admin usability, fewer edge-case failures, and stronger overall stability.
+Prioritize working reliability over adding anything new.

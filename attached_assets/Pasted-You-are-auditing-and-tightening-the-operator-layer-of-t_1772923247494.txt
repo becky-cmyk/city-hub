@@ -1,0 +1,337 @@
+You are auditing and tightening the operator layer of this platform. Do NOT add broad new feature sprawl. Do NOT redesign the whole product. Do NOT remove core modules already built. Focus only on tightening the operator layer so the platform can be run by one person with maximum AI support.
+
+PROJECT REALITY / NON-NEGOTIABLES
+
+- This is NOT being treated like a traditional directory or listings product.
+- Pulse is the public spine of the platform.
+- Stories, seeded listings, venue channels, press/chamber/business discovery, and field capture all feed the ecosystem.
+- Charlotte AI is both:
+  1. the public-facing guide/voice of the Charlotte Metro Hub
+  2. the internal intelligence/reporting/qualification engine
+- We are not trying to expand features right now. We are trying to reduce admin sprawl and tighten what the operator actually sees and uses daily.
+- Existing flows and modules should be reused where possible, not rebuilt from scratch.
+- Keep future multi-city architecture in mind, but this phase is for Charlotte only.
+- Assume there are already many existing admin tools. The goal is to route what matters into a smaller operator layer.
+
+PRIMARY GOALS FOR THIS PHASE
+
+1. Finalize and tighten the Field Capture pipeline
+2. Finalize Charlotte Daily Report / Charlotte Intelligence briefing
+3. Finalize Opportunity Radar
+4. Limit Inbox to exceptions and true human-action items
+
+DO NOT FOCUS ON THESE YET
+
+- exact follow-up cadences/timing
+- complex campaign builder logic
+- packaging sponsorship bundles
+- deep multi-role micro-hub ops permissions
+- redesigning all public-facing pages
+- adding lots of new dashboards
+
+PHASE 1 SCOPE
+
+==================================================
+A. FIELD CAPTURE SYSTEM
+==================================================
+
+There are multiple field capture input methods already conceptually in use and they should all route into ONE shared backend pipeline.
+
+Capture input methods to support:
+
+- Business Card / Photo
+- From My Phone
+- QR Code / vCard
+- Manual Entry
+- Voice Note
+- Handwrite
+
+IMPORTANT:
+Field Capture must support 3 distinct outreach origins. This is critical and must be structured in the data model and processing flow, not left to freeform interpretation later.
+
+Required capture_origin values:
+
+1. met_in_person
+   Meaning:
+   - I actually met this person / business owner / rep
+   - I exchanged contact details or spoke with them directly
+
+2. stopped_by_location
+   Meaning:
+   - I visited or stopped by the location
+   - I may not have met them directly
+   - I want the outreach to reflect that I noticed the business in person
+
+3. found_business_card
+   Meaning:
+   - I picked up a card, flyer, brochure, rack card, or printed info
+   - I did not necessarily meet them directly
+   - outreach should reflect passive discovery
+
+REQUIRED FIELD CAPTURE PIPELINE
+
+Every capture method should route through the same backend logic:
+
+Capture
+→ choose or infer capture_origin
+→ extract data
+→ normalize data
+→ match against existing records
+→ create or update contact
+→ create or update business / organization / venue entity
+→ assign hub
+→ assign category/type
+→ create or update listing
+→ create Opportunity Radar record
+→ prepare activation-ready outreach draft based on capture_origin
+
+Data extraction targets should include as much of the following as possible:
+
+- person name
+- business/organization name
+- phone
+- email
+- website
+- address
+- social links
+- category / business type
+- venue potential
+- organization type
+- notes / context from capture
+
+Must include duplicate/matching logic to reduce duplicate contacts/listings if already present.
+
+Field Capture should be treated as a real-world intelligence intake layer.
+This is not just a contact form. It is a way for the operator to seed people, businesses, organizations, and venues while networking and moving through the city.
+
+Required output of field capture:
+- contact record
+- entity record (business / organization / venue / person as appropriate)
+- listing created or updated where applicable
+- hub assignment
+- opportunity radar entry
+- activation-ready outreach draft
+
+Do NOT build heavy follow-up sequence logic yet.
+Just make sure the first capture-to-activation setup is structurally correct.
+
+==================================================
+B. OUTREACH DRAFTS BASED ON CAPTURE ORIGIN
+==================================================
+
+The system must support 3 different default outreach message frames tied to capture_origin.
+
+1. met_in_person
+Default framing:
+- Great meeting you
+- I added your business/info to the hub
+- Please confirm I set it up correctly
+
+2. stopped_by_location
+Default framing:
+- I stopped by your location today
+- I noticed / was impressed by your business
+- I added your business to the hub
+- Please confirm the details
+
+3. found_business_card
+Default framing:
+- I came across your business card today
+- I thought your business sounded like a great fit for the hub
+- I went ahead and listed it on the hub
+- Please confirm the information
+
+IMPORTANT:
+These should be generated as structured email draft types controlled by capture_origin.
+Do NOT make the operator manually rewrite these each time.
+Do NOT leave this as vague prompt logic.
+Build this as a deterministic mapping.
+
+Please audit where this could live in the existing messaging / draft / outreach systems if those already exist.
+
+==================================================
+C. CHARLOTTE DAILY REPORT / CHARLOTTE INTELLIGENCE
+==================================================
+
+Build or tighten a daily operator briefing layer called Charlotte Report (or equivalent if something similar already exists).
+
+Charlotte should report TO the operator instead of forcing the operator to dig through many admin screens.
+
+This daily briefing should include only the most important operational blocks:
+
+1. Hub Signals
+- hottest neighborhoods / hubs
+- rising hubs
+- dormant hubs
+- seeded-but-inactive hubs
+
+2. New Opportunity Activity
+- new businesses found
+- new organizations found
+- new venue prospects
+- new field captures
+- press/chamber/announcement opportunities
+- seeded businesses ready for activation
+
+3. Top Contactable Leads
+Surface the strongest leads only, such as:
+- venue prospects
+- activation-ready businesses
+- high-value organizations
+- visibility / ad / banner prospects where applicable
+- story-first candidates
+
+4. Exceptions / Needs Human Review
+Only show:
+- duplicate conflicts
+- failed extraction
+- ambiguous matches
+- claim/confirmation problems
+- risky content / risky classification
+- important system issues Charlotte could not resolve confidently
+
+5. Suggested Actions for Today
+Examples:
+- which hub to visit
+- which venue prospects to contact
+- which captured businesses need activation outreach
+- which listings are ready for confirmation push
+
+IMPORTANT:
+Charlotte Report should be concise, action-oriented, and useful for a single operator.
+
+==================================================
+D. OPPORTUNITY RADAR
+==================================================
+
+Build or tighten one unified actionable board called Opportunity Radar.
+
+This is NOT a generic CRM list.
+It is the operator’s action board for discovered businesses, venues, organizations, and opportunities from all sources.
+
+Opportunity Radar should collect records from:
+
+- field capture
+- Google Places / seeded business import
+- press releases
+- chamber announcements
+- AI discovery
+- story interviews / profile intelligence
+- other relevant system discovery sources already in place
+
+Each Opportunity Radar row should show at minimum:
+
+- name
+- entity type
+- hub / neighborhood
+- source
+- contact info available
+- activation status
+- why it was surfaced
+- recommended next step
+- priority
+
+Suggested entity/opportunity types may include:
+- business
+- venue
+- organization
+- claim candidate
+- activation-ready
+- story-first candidate
+- visibility/ad prospect
+- partnership candidate
+
+IMPORTANT:
+All discovered entities should not disappear into background data tables. They should land in Opportunity Radar in a way that is actually usable for the operator.
+
+If something similar already exists, audit it and tighten it rather than duplicating it.
+
+==================================================
+E. INBOX / EXCEPTIONS
+==================================================
+
+Reduce Inbox to things that truly require human review/action.
+
+Inbox should NOT be cluttered with ordinary AI drafts or low-risk automated content.
+
+Inbox / Exceptions should include things like:
+- extraction failures
+- duplicate conflicts
+- ambiguous identity matches
+- claim verification issues
+- important inbound requests
+- system alerts
+- bounced delivery / contact issues
+- risky moderation items if applicable
+
+Goal:
+The operator should not have to live in 50 back-office sections.
+The operator should mostly work from:
+1. Charlotte Report
+2. Opportunity Radar
+3. Inbox / Exceptions
+
+==================================================
+F. AUDIT FIRST, THEN IMPLEMENT TIGHTLY
+==================================================
+
+Before building or changing anything major, audit the current codebase and existing systems for:
+- field capture flows already built
+- messaging/outreach draft systems already built
+- CRM/contact/entity tables
+- seeded business flows
+- opportunity/prospect lists already built
+- inbox/queue systems already built
+- Charlotte/AI reporting systems already built
+
+Then:
+
+1. identify what already exists
+2. identify what can be reused
+3. identify what should be merged
+4. identify what is missing for this phase
+5. implement the smallest cleanest structural version without admin sprawl
+
+==================================================
+G. OUTPUT REQUIRED
+==================================================
+
+Please do the following in order:
+
+1. Audit the current system and identify existing pieces relevant to:
+   - Field Capture
+   - Outreach Drafts
+   - Charlotte Report
+   - Opportunity Radar
+   - Inbox / Exceptions
+
+2. Provide a concise implementation plan showing:
+   - what already exists
+   - what needs to be tightened
+   - what needs to be added
+   - what should be merged instead of duplicated
+
+3. Then implement Phase 1 cleanup for:
+   - Field Capture pipeline
+   - capture_origin-based outreach draft mapping
+   - Charlotte Daily Report
+   - Opportunity Radar
+   - Inbox / Exceptions noise reduction
+
+4. Preserve current system structure where possible and avoid unnecessary rewrites.
+
+5. After implementation, provide a concise verification summary showing:
+   - where Field Capture enters
+   - where capture_origin is stored
+   - where outreach draft type is selected
+   - where Charlotte Report is viewed
+   - where Opportunity Radar is viewed
+   - what now lands in Inbox / Exceptions
+
+FINAL GUIDANCE
+
+This phase is about making the system operable by one person.
+Do not add a lot of extra dashboard surfaces.
+Do not broaden scope.
+Do not turn this into a generic CRM rebuild.
+Tighten the operator layer and route intelligence into the right places.

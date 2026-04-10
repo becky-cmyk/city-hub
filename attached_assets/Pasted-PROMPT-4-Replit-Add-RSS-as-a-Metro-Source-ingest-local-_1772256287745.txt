@@ -1,0 +1,161 @@
+PROMPT 4 (Replit) — Add RSS as a Metro Source + ingest local Charlotte feeds + display “Seed Content” on front end (minimal, safe)
+
+GOAL
+Implement an RSS ingestion pipeline as part of our multi-metro “Metro Sources” framework, starting with Charlotte. Automatically pull RSS feeds (hourly), normalize items, store them, and render a simple “Seed Content” module on the front end (homepage + neighborhood pages optional) WITHOUT turning the site into a static directory. This is for lightweight, rotating community content.
+
+CONSTRAINTS
+- No manual entry.
+- Use only public RSS URLs.
+- Respect source links: always link back to original article URL; do not copy full articles.
+- Store only: title, link, published date, short summary/description if present, source name, optional image if present.
+- Must work for multiple metros via metro_sources config.
+- No paywalls circumvention; if the article is paywalled, we still show title + link only.
+
+RSS FEEDS TO ADD (Charlotte)
+Create metro_sources entries (source_type=RSS) for:
+1) Spectrum Local News Charlotte RSS: https://spectrumlocalnews.com/nc/charlotte/rss
+2) WCNC RSS hub: https://www.wcnc.com/rss
+3) WFAE RSS: https://www.wfae.org/rss-feed
+4) Charlotte Observer RSS directory page (NOTE: actual feeds may be multiple; for now create a placeholder “Observer RSS (to fill)” with enabled=false)
+   https://www.charlotteobserver.com/customer-service/rss/
+
+(Implement system so we can add more RSS feeds later easily via admin UI.)
+
+DATABASE CHANGES
+A) Extend enums
+- Add SourceType: "RSS"
+
+B) Add tables (names exact)
+
+1) rss_items
+- id (pk)
+- metro_id (fk)
+- metro_source_id (fk)
+- external_id (string)              // stable id: hash(source_url + item_link)
+- source_name (string)
+- title (string)
+- url (string)
+- published_at (datetime nullable)
+- summary (text nullable)           // short description only
+- author (string nullable)
+- image_url (string nullable)
+- categories_json (json nullable)   // rss categories/tags if present
+- raw_json (json)                   // store full parsed item for traceability
+- created_at, updated_at
+Unique: (metro_source_id, external_id)
+
+2) content_posts (optional “hub normalized content” layer)
+If we already have a content system, reuse it. If not, create minimal:
+- id (pk)
+- metro_id (fk)
+- type (enum: "rss")
+- title
+- url
+- published_at
+- excerpt
+- source_name
+- image_url
+- created_at, updated_at
+This table is optional; we can render directly from rss_items.
+
+CONNECTOR IMPLEMENTATION
+Create:
+  /server/intelligence/connectors/rssConnector.ts
+
+Use a lightweight RSS parsing library (Node):
+- prefer “rss-parser” (npm package)
+Implement:
+- Fetch feed URL
+- Parse XML
+- Return items with normalized fields:
+  title, link, pubDate, contentSnippet/summary, creator/author, categories, enclosure/image if present
+
+Rate limit:
+- 1 request per feed per pull
+- cache ETag/Last-Modified if available:
+  store in metro_sources.params_json.rssHeaders (or in a new fields table if preferred)
+- On pull, send If-None-Match / If-Modified-Since when available, handle 304
+
+JOB RUNNER UPDATE
+In /server/intelligence/jobRunner.ts:
+- When source_type=RSS:
+  - call rssConnector.pull()
+  - for each item:
+    - external_id = sha256(metro_source.base_url + item.link)
+    - upsert into rss_items
+  - update pull run counts
+
+ADMIN UI UPDATE
+In /admin/intelligence/sources:
+- allow creating/editing RSS sources:
+  - base_url is the feed URL
+  - name
+  - pull_frequency
+  - enabled
+- show last run status
+
+FRONT END DISPLAY (MINIMAL, ROTATIONAL)
+Add a new “Seed Content” module component:
+  /components/SeedContent.tsx (or equivalent)
+
+Behavior:
+- Fetch from endpoint:
+  GET /api/content/seed?metroId=<id>&limit=20
+- Server returns the newest rss_items for that metro across enabled RSS sources.
+
+Rotation:
+- On each page load, randomly pick:
+  - 6 items for homepage module
+  - (optional) 4 items for neighborhood page module
+- Ensure variety: avoid showing more than 2 from the same source in one render (simple filter).
+
+UI Requirements:
+- Show:
+  - title (linked)
+  - source_name
+  - published_at (relative time ok)
+  - optional thumbnail if image_url exists
+- NO full article body
+- Add a “More local updates” link to a /updates page.
+
+Optional /updates page:
+- /updates
+- infinite scroll or simple pagination
+- filters by source
+
+API ENDPOINTS
+1) GET /api/content/seed
+Query:
+- metroId (required)
+- limit (default 20)
+Return:
+- list of rss_items fields needed for UI
+
+2) GET /api/content/updates (optional)
+Query:
+- metroId
+- sourceId (optional)
+- page / limit
+Return paginated rss_items
+
+SEED METRO SOURCES
+Update seed script:
+  /scripts/seed-metro-sources-charlotte-indy.ts
+Add the RSS sources for Charlotte above. Set enabled=true for Spectrum/WCNC/WFAE; Observer placeholder enabled=false.
+
+ACCEPTANCE CRITERIA
+1) RSS SourceType works end-to-end with job runner.
+2) Pulling feeds stores items in rss_items with dedupe.
+3) /api/content/seed returns items for Charlotte.
+4) Homepage renders “Seed Content” module with rotating items on each load.
+5) No public UX breakage; no paywall circumvention; links always go to publisher site.
+6) Admin can add new RSS feed URLs without code changes.
+
+DELIVERABLES
+- DB migrations
+- RSS connector
+- Job runner updated
+- rss_items table
+- API endpoints
+- Seed content front-end module
+- Seed script updated for Charlotte RSS feeds

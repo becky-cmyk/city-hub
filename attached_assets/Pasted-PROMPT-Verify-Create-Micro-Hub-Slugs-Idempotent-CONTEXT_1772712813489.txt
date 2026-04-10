@@ -1,0 +1,88 @@
+PROMPT — Verify + Create Micro Hub Slugs (Idempotent)
+
+CONTEXT
+You are working inside the CLT City Hub Replit codebase. Becky has already uploaded/imported the full Micro Hub list (all micro hubs/territories exist in data), but it’s unclear whether each hub has a clean, consistent `slug`.
+
+GOAL
+1) Audit all Micro Hubs and confirm each has:
+   - a non-empty slug
+   - unique across all hubs (case-insensitive)
+   - conforms to our slug rules
+2) If any hubs are missing slugs (or have invalid/duplicate slugs), generate and assign slugs automatically.
+3) Make the operation idempotent: safe to run multiple times without changing already-correct slugs.
+4) Output a report in the console/logs and as a CSV file (or downloadable artifact) listing:
+   - hub_id, hub_name, county (if available), zip(s) (if available)
+   - old_slug, new_slug
+   - status: OK / CREATED / FIXED_DUPLICATE / FIXED_INVALID
+   - any collisions resolved and how
+
+SLUG RULES (LOCKED)
+- Lowercase
+- Letters + numbers only
+- Hyphens allowed
+- No spaces, no underscores
+- Trim leading/trailing hyphens
+- Max length 40 (truncate safely)
+- Must be unique across all hubs (case-insensitive)
+- Prefer human-readable “name-based” slugs
+
+UNIQUENESS / COLLISION RULE
+If collision:
+- First try adding a short locality token (in order of availability):
+  1) county slug
+  2) primary ZIP
+  3) city token if present
+- If still collision, append `-2`, `-3`, etc.
+
+EXAMPLES
+"Plaza Midwood" -> "plaza-midwood"
+"South End" -> "south-end"
+"28025 Concord" -> "concord-28025" (only if needed to resolve collision)
+
+IMPLEMENTATION REQUIREMENTS
+- Use the existing DB + ORM patterns (Drizzle if that’s what the app uses).
+- Identify the correct table/model (e.g., `hubs`, `microHubs`, `territories`, etc.).
+- Only operate on Micro Hubs (not Metro hubs unless they share the same table and are flagged).
+- If there is a “type” field, filter where type = 'MICRO' (or equivalent).
+- If no type field exists, use the data shape and fields you have (e.g., has zipCodes / neighborhood / corridor) to select micro hubs. Prefer a clear filter.
+
+DELIVERABLES
+A) Add a script/command (preferred):
+- `npm run hubs:slugs` or `pnpm hubs:slugs`
+that runs the audit + fix.
+
+B) Or add an Admin-only endpoint/tool:
+- `/admin/tools/hubs/ensure-slugs`
+protected behind admin auth, returns JSON report.
+
+C) Provide a one-time migration only if necessary (but prefer script to avoid schema coupling).
+
+STEP-BY-STEP TASKS
+1) Locate hub storage:
+   - table name
+   - columns: id, name, slug, type, county, zips, etc.
+2) Implement `slugify(name: string): string` per rules above.
+3) Load all micro hubs.
+4) Validate each slug:
+   - missing -> needs creation
+   - invalid format -> needs fix
+   - duplicate (case-insensitive) -> needs fix
+5) Generate a proposed slug per hub, resolve collisions.
+6) Update only hubs that need changes.
+7) Write out report:
+   - console table output
+   - CSV file at `./tmp/hub-slug-audit-YYYYMMDD-HHMM.csv` (or similar)
+8) Confirm counts:
+   - total hubs
+   - ok
+   - created
+   - fixed invalid
+   - fixed duplicates
+
+ACCEPTANCE CHECKLIST
+- After running, every micro hub has a unique, valid slug.
+- Running again produces “no changes” (idempotent).
+- Report clearly shows what changed.
+
+IMPORTANT
+Do NOT change hub names, ZIP lists, pricing, or any other fields—ONLY slugs when missing/invalid/duplicate.

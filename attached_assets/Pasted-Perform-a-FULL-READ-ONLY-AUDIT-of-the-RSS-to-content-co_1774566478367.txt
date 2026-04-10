@@ -1,0 +1,341 @@
+Perform a FULL READ-ONLY AUDIT of the RSS-to-content conversion workflow in this codebase.
+
+Goal:
+Determine exactly how an RSS item becomes a published content item in the system, with special focus on why Charlotte-level content is not being labeled deeply enough for hubs / microhubs / neighborhoods and why content may be landing in the wrong places after creation.
+
+This is an AUDIT ONLY.
+DO NOT change code.
+DO NOT migrate data.
+DO NOT apply fixes yet.
+
+I need a complete map of:
+1. the RSS ingestion workflow
+2. the AI rewrite workflow
+3. the location labeling workflow
+4. the category labeling workflow
+5. the save/persist workflow
+6. the publish/post workflow
+7. the final display-surface routing logic
+
+Important context:
+- The likely problem is NOT only Pulse.
+- The likely root issue is that AI-generated labels for location and category are too shallow or too generic.
+- Content may be getting assigned at the Charlotte/city level but not correctly to hub / microhub / neighborhood level.
+- Content may also be getting assigned weak or incorrect categories, which affects where it appears later.
+- I need to understand the full content creation workflow before rebuilding Pulse V2.
+
+==================================================
+PART 1 — FIND THE FULL RSS CONTENT PIPELINE
+==================================================
+
+Identify every file, service, function, cron job, queue worker, job runner, API endpoint, admin action, or background process involved in:
+
+- pulling RSS items
+- storing raw RSS data
+- deciding whether an item should be rewritten
+- sending content to AI for rewrite/extraction
+- receiving the AI output
+- assigning location labels
+- assigning category/type labels
+- setting status (draft/pending/published/approved)
+- saving the resulting content
+- making it eligible to appear in app surfaces
+
+For each step, show:
+- file name
+- function/service name
+- what it does
+- input
+- output
+- next step in the pipeline
+
+Return this as a sequential workflow map from raw RSS item to final published item.
+
+==================================================
+PART 2 — IDENTIFY THE SOURCE-OF-TRUTH TABLES / MODELS
+==================================================
+
+List all database tables / models involved in the RSS content workflow.
+
+At minimum check for things like:
+- rss_items
+- articles
+- posts
+- cms_content_items
+- events
+- any AI output tables
+- any content queue / staging tables
+- any geo tagging / category tagging support tables
+
+For each table/model, explain:
+- what role it plays
+- whether it stores raw RSS, AI-transformed content, or final published content
+- whether it is a temporary/staging table or a true source of truth
+- what fields are used for location/category/publish eligibility
+
+==================================================
+PART 3 — AUDIT THE AI REWRITE / CONTENT GENERATION STEP
+==================================================
+
+Find the exact logic used when an RSS item is transformed into platform content.
+
+Show:
+- where the AI prompt/template is assembled
+- what instructions are sent to the AI
+- what fields the AI is expected to return
+- whether the AI is rewriting, summarizing, extracting, classifying, or all of the above
+- whether the AI is deciding:
+  - article title
+  - summary/excerpt
+  - story body
+  - content type
+  - category
+  - city
+  - hub
+  - neighborhood
+  - zip
+  - tags
+  - publish status
+- whether there are guardrails or validation rules after the AI responds
+
+I need the FULL input/output contract for the AI step.
+
+For example:
+- raw RSS title/body/url/category/source
+→ AI prompt
+→ AI JSON or structured response
+→ mapped into DB fields
+
+If there are multiple AI prompts/services/models involved, show all of them.
+
+==================================================
+PART 4 — AUDIT LOCATION LABELING IN DETAIL
+==================================================
+
+This is one of the most important parts.
+
+Find exactly how location is determined for RSS-derived content.
+
+I need answers to:
+1. Is location assigned by the AI?
+2. Is location assigned by code after the AI returns?
+3. Is there a fallback to Charlotte/city-level when a deeper match is not found?
+4. Is there any attempt to map content to:
+   - city
+   - district / hub
+   - microhub
+   - neighborhood
+   - zip code
+5. Is location derived from:
+   - article text
+   - RSS source metadata
+   - known venue/business matches
+   - geocoder
+   - keyword matching
+   - static lookup tables
+   - AI guesswork
+6. What exact fields hold the location result?
+7. Are those fields required or optional?
+8. What happens when no microhub/neighborhood is found?
+
+I need a precise explanation of:
+- current location detection logic
+- current fallback logic
+- current depth of labeling
+- why content may stop at Charlotte instead of deeper geo assignment
+
+Also identify:
+- any lookup tables for neighborhoods/hubs/microhubs
+- any matching rules or dictionaries
+- any missing mappings that could cause shallow classification
+
+==================================================
+PART 5 — AUDIT CATEGORY / CONTENT-TYPE LABELING IN DETAIL
+==================================================
+
+Find exactly how category and type are assigned.
+
+I need answers to:
+1. Is content type chosen by AI or by code?
+2. Are categories chosen by AI or by code?
+3. What are the valid content types and categories?
+4. Where are these definitions stored?
+5. Is there a taxonomy or category table?
+6. Are there weak defaults or generic fallbacks that cause bad classification?
+
+Audit whether RSS-derived items are being labeled too broadly, for example:
+- “news”
+- “community”
+- “general”
+instead of something more useful like:
+- local event
+- local business story
+- neighborhood update
+- arts & culture
+- food & drink
+- nonprofit
+- family
+- pets
+- jobs
+- marketplace
+etc.
+
+I need:
+- the current category/type taxonomy
+- the current assignment logic
+- the fallback/default behavior
+- examples of how an RSS item gets classified
+
+==================================================
+PART 6 — AUDIT STATUS / APPROVAL / AUTO-PUBLISH LOGIC
+==================================================
+
+Show exactly how RSS-derived content gets status assigned.
+
+I need to know:
+- where status is set
+- what values exist (draft, pending, approved, published, archived, etc.)
+- how/when content is auto-approved
+- whether approval affects which surfaces it can appear on
+- whether status differs between rss_items and final article/post records
+- whether content can be published with weak location/category tagging
+
+Identify any step where content is allowed through before proper validation.
+
+==================================================
+PART 7 — AUDIT SAVE / PERSIST / ROUTING AFTER CREATION
+==================================================
+
+Once the RSS item has been rewritten and labeled, show exactly where it is saved and how it becomes available to the rest of the app.
+
+I need the exact workflow:
+- which final table/model gets the content
+- what record is created
+- what fields determine where it shows up later
+- whether it is saved as article vs post vs event vs generic content item
+- whether the routing to surfaces is based on:
+  - content type
+  - category
+  - location fields
+  - status
+  - source type
+  - separate feed mapping logic
+
+Show how one RSS-derived content item moves from creation to:
+- Pulse
+- Stories page
+- Vertical Hub
+- city feed
+- hub page
+- microhub page
+- event page/calendar (if applicable)
+
+==================================================
+PART 8 — TRACE 5 REAL EXAMPLES END TO END
+==================================================
+
+Pick 5 recent RSS-derived items and trace them fully from start to finish.
+
+For each one, show:
+- original RSS source/title/url
+- raw stored RSS record
+- AI-generated title/body/summary
+- assigned type/category
+- assigned location fields
+- final stored record
+- final status
+- where it currently appears in the app
+
+For each example, clearly say whether:
+- location labeling is correct or too shallow
+- category labeling is correct or too broad
+- final routing is correct or incorrect
+
+Use real examples from the database/code behavior, not hypothetical examples.
+
+==================================================
+PART 9 — FAILURE POINT ANALYSIS
+==================================================
+
+Based on the audit, identify the top failure points in the RSS-to-content workflow.
+
+I want specific, evidence-based answers to questions like:
+- Is the AI prompt too vague?
+- Is the AI asked to do too much at once?
+- Is location labeling dependent on weak text inference?
+- Is category labeling too generic?
+- Is there no deep geo mapping layer after AI output?
+- Are fallback rules too aggressive to Charlotte/city-level?
+- Is content being saved without enough structured validation?
+- Is routing later in the app dependent on fields that are often missing or wrong?
+
+Identify the TOP 10 reasons content may be:
+- too generic
+- in the wrong places
+- not deep enough geographically
+- not categorized well enough
+- appearing only at the city level
+
+==================================================
+PART 10 — REQUIREMENTS GAP ANALYSIS
+==================================================
+
+Compare the CURRENT workflow against the following intended requirement:
+
+INTENDED REQUIREMENT:
+RSS-derived content should be converted into clean, relevant local content with:
+- correct content type
+- correct category
+- correct city
+- correct hub
+- correct microhub/neighborhood when possible
+- sensible fallback only when deep geo cannot be confidently assigned
+- clean approval/publish logic
+- reliable routing to the right discovery surfaces
+
+Audit the gap between:
+- what the system does now
+vs
+- what it would need to do to satisfy that requirement
+
+Be very specific.
+
+==================================================
+PART 11 — READ-ONLY FINAL SUMMARY
+==================================================
+
+At the end, provide:
+
+A. Executive summary
+- What the RSS conversion workflow is doing today
+- Whether the root problem is more about:
+  - AI prompt quality
+  - geo labeling
+  - category labeling
+  - validation
+  - routing
+  - or a mix
+
+B. Structured findings
+- RSS ingestion findings
+- AI rewrite findings
+- location labeling findings
+- category labeling findings
+- status/publish findings
+- routing findings
+
+C. Most likely root causes
+- Top 5 root causes of bad RSS-derived content placement
+
+D. What should be fixed first
+IMPORTANT:
+Do NOT implement fixes yet.
+But do state which layer appears to be the first and most important correction point:
+- AI prompt/template
+- location mapping layer
+- category taxonomy layer
+- validation rules
+- publish/routing layer
+
+Output should be detailed, technical, and evidence-based.
+Use file names, function names, and real code references wherever possible.

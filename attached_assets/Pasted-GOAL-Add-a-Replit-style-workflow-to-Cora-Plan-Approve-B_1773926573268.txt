@@ -1,0 +1,247 @@
+GOAL:
+Add a Replit-style workflow to Cora:
+Plan → Approve → Build → Log → Revert
+
+MUST:
+- Integrate with existing Cora service (prompt-002)
+- NOT break current app or Charlotte Content Engine
+- NOT auto-apply changes
+- Every build must be reversible
+
+--------------------------------------------------
+PART 1 — TABLES
+--------------------------------------------------
+
+CREATE TABLE cora_plans:
+- id (uuid, pk)
+- title (string)
+- description (text)
+- hat (string)                 // admin, cmo, cfo, cto, builder, debugger, operator, editor
+- scope (enum: platform, metro)
+- metro_id (nullable)
+- tags (json)                 // ["ui","pricing","content","bugfix"]
+- plan_json (json)            // goal, steps, impact, risks, dependencies, confidence
+- status (enum: draft, approved, rejected, built) DEFAULT 'draft'
+- created_at
+- updated_at
+
+CREATE TABLE cora_build_logs:
+- id (uuid, pk)
+- plan_id (fk → cora_plans.id)
+- build_type (enum: ui, backend, content, config)
+- changes_summary (text)
+- files_modified (json)       // ["path/file.ts", ...]
+- replit_prompt (text)        // exact prompt used to build (if any)
+- result_summary (text)
+- created_at
+
+CREATE TABLE cora_snapshots:
+- id (uuid, pk)
+- build_log_id (fk → cora_build_logs.id)
+- snapshot_type (enum: db, files, config)
+- snapshot_data (json)        // lightweight: refs, diffs, or version ids
+- created_at
+
+--------------------------------------------------
+PART 2 — PLAN SERVICE
+--------------------------------------------------
+
+Create file: cora_plan_service.ts
+
+Functions:
+
+createPlan({
+  title,
+  description,
+  hat,
+  scope,
+  metroId,
+  tags,
+  planJson
+}) → inserts cora_plans (status=draft)
+
+approvePlan(planId) → sets status=approved
+
+rejectPlan(planId) → sets status=rejected
+
+getPlan(planId)
+listPlans(filters)
+
+VALIDATION:
+- plan_json must include:
+  - goal
+  - steps[]
+  - impact
+  - risks
+  - confidence
+
+--------------------------------------------------
+PART 3 — BUILD SERVICE (NO AUTO-APPLY)
+--------------------------------------------------
+
+Create file: cora_build_service.ts
+
+Functions:
+
+buildFromPlan(planId)
+
+Behavior:
+1. fetch plan (must be status=approved)
+2. DO NOT modify app state directly
+3. generate:
+   - changes_summary
+   - files_modified (if known)
+   - replit_prompt (if build requires code)
+4. create cora_build_logs record
+5. create cora_snapshots record (pre-change snapshot placeholder)
+6. update plan.status = 'built'
+7. return:
+   {
+     buildLogId,
+     changes_summary,
+     replit_prompt,
+     preview_available: true
+   }
+
+IMPORTANT:
+- “build” here = PREPARE + LOG, not APPLY
+- application happens only after user confirms
+
+--------------------------------------------------
+PART 4 — REVERT SERVICE
+--------------------------------------------------
+
+Create file: cora_revert_service.ts
+
+Functions:
+
+revertBuild(buildLogId)
+
+Behavior:
+1. find associated snapshot
+2. simulate/prepare revert instructions
+3. return:
+   {
+     revert_summary,
+     revert_prompt_or_steps
+   }
+
+DO NOT auto-apply revert
+User must confirm
+
+--------------------------------------------------
+PART 5 — INTEGRATE WITH CORA SERVICE
+--------------------------------------------------
+
+Update cora_service.ts:
+
+When intent = planning (UI change, feature, pricing change, etc.):
+
+1. resolve hat
+2. generate plan_json
+3. call createPlan
+4. respond:
+
+{
+  hat,
+  planId,
+  message: "Plan created",
+  plan_preview,
+  requiresApproval: true
+}
+
+When user says “approve”:
+→ call approvePlan
+
+When user says “build”:
+→ call buildFromPlan
+
+--------------------------------------------------
+PART 6 — RESPONSE CONTRACT (STANDARDIZE)
+--------------------------------------------------
+
+All Cora responses for plans MUST include:
+
+{
+  hat: "builder",
+  plan: { ... },
+  options: [
+    "Approve Plan",
+    "Modify Plan",
+    "Cancel"
+  ]
+}
+
+For builds:
+
+{
+  hat: "builder",
+  build_summary,
+  replit_prompt,
+  options: [
+    "Preview",
+    "Apply",
+    "Revert"
+  ]
+}
+
+--------------------------------------------------
+PART 7 — TEST ENDPOINTS
+--------------------------------------------------
+
+POST /cora/plan
+body:
+{
+  "input": "Update homepage colors",
+  "scope": "platform"
+}
+
+POST /cora/plan/approve
+body:
+{
+  "planId": "..."
+}
+
+POST /cora/build
+body:
+{
+  "planId": "..."
+}
+
+POST /cora/revert
+body:
+{
+  "buildLogId": "..."
+}
+
+--------------------------------------------------
+PART 8 — GUARDRAILS (ENFORCE)
+--------------------------------------------------
+
+- No plan → no build
+- No approval → no build
+- No auto-apply
+- Every build must create a snapshot
+- Every revert must reference snapshot
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+- Cora generates a structured plan
+- Plan is saved and requires approval
+- Approved plan can generate a build log
+- Build produces a Replit-ready prompt (when needed)
+- Snapshot is recorded
+- Revert instructions can be generated
+- Nothing auto-applies or breaks existing system
+
+--------------------------------------------------
+OUTPUT AFTER BUILD
+--------------------------------------------------
+
+Return summary:
+1. tables created
+2. services added
+3. endpoints available
+4. confirmation no existing flows were modified

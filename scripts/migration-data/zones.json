@@ -1,0 +1,1607 @@
+[
+  {
+    "id": "9ccd577b-b5a9-40bc-9011-b54207d822f0",
+    "name": "Uptown",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "80eaa12e-5714-4c67-a389-2b057f8a40bc",
+    "name": "South End",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "49796104-81ed-444f-878a-5f1419d0c25c",
+    "name": "NoDa",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "65bf3c81-8816-42fb-855a-32d82969d6d5",
+    "name": "Plaza Midwood",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b30c6836-281e-44a9-9cb2-a194d73d6d60",
+    "name": "Dilworth",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "6230d57a-8083-470a-bf7a-e6430e27d056",
+    "name": "University City",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "4bb6fe77-e8a9-4571-b10c-99507916e1b3",
+    "name": "Ballantyne",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "5a45f168-484c-420d-8daa-5f3ab2846e0a",
+    "name": "Myers Park",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5e514d6a-0fae-4308-93fd-c0fb7da5c4ba",
+    "name": "SouthPark",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "58e7b3ba-b3fe-4c3f-b329-5a983bd09588",
+    "name": "Steele Creek",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "050e3f9b-94ef-45d5-be0d-3068fa13ffb4",
+    "name": "Providence",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "d1ca4a8c-071f-4ec0-acdb-cd85d172fc34",
+    "name": "East Forest",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "25470574-7715-4e6e-9b05-4108dad44877",
+    "name": "Elizabeth",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "cd89d752-7901-42c1-8927-a82b2d807337",
+    "name": "Cotswold",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "45ffd8d4-9280-4297-9c84-cec003efce61",
+    "name": "Eastway",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "47537b24-d736-4463-8b3e-1edd50b42309",
+    "name": "Montford",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "15f4c26f-104b-44e3-a9d6-85010da7cdd8",
+    "name": "Northlake",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "738e2cf4-9f12-4a41-a30a-397d7f262ff2",
+    "name": "Ayrsley",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a71d443b-407f-46d3-b59f-a924b5455d5d",
+    "name": "Huntersville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "dfc2e7bc-007a-475e-a11c-5c99d3c0ab63",
+    "name": "Cornelius",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "579964d3-e938-49b9-9b42-4a1dfea1f45f",
+    "name": "Davidson",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7d9615cb-4b17-41f4-8065-ef628365568d",
+    "name": "Mint Hill",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "340e865b-ed48-4972-9d10-e5af8bd647df",
+    "name": "Matthews",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "983c333c-c281-4647-9739-6b9626357b81",
+    "name": "Pineville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "51d708e0-0e39-4a6b-b514-8733c2879a98",
+    "name": "Mooresville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "4fba6f8b-6dbd-48f5-82a3-74859ca570c7",
+    "name": "Troutman",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "1aa0f7af-b00e-4117-9b33-eab1e7ff06a4",
+    "name": "Concord",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "8f1d150f-60ab-4f31-9506-c5a1134f1911",
+    "name": "Kannapolis",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "0bd35f69-d081-4a74-b6ec-8c6a49f5d07c",
+    "name": "Harrisburg",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "afc39a17-a8eb-44fe-bfd0-5af2853da839",
+    "name": "Midland",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "92a6651e-097e-458e-af76-19c4a59e072c",
+    "name": "Mount Pleasant",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "d85b01f8-48a2-40ad-ab40-dc66019b2c68",
+    "name": "Statesville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "3195e689-6a88-4659-8448-d4f35201c09d",
+    "name": "Monroe",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "859293cb-7bdd-4042-a55f-ba6a1074c5ae",
+    "name": "Indian Trail",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "17b1025b-83b0-41cb-8258-636fe281f31c",
+    "name": "Weddington",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "d994b4f6-626b-4464-b066-daf140195456",
+    "name": "Waxhaw",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "cd806bfe-f84c-41b1-8549-79f618fe9022",
+    "name": "Wesley Chapel",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "b6dfdea9-7c7c-4c86-ba43-c2d99f010ee2",
+    "name": "Stallings",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7066d8b4-c796-4198-8fe2-f8da9fd7cb5c",
+    "name": "Marvin",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "5a6b4d74-35e0-417a-a2aa-6a6fce688a06",
+    "name": "Gastonia",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "b00970e8-60ca-4174-886d-b9350361ade9",
+    "name": "Belmont",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "c1b9af36-bb89-48e4-8872-db77044bc123",
+    "name": "Mount Holly",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "25b4e2ec-14f1-4ae1-8fdc-e0517ff38eb1",
+    "name": "Cramerton",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "9b40f336-440e-42e6-8b8d-aa66e606bc51",
+    "name": "Lowell",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "f51c6837-fc25-4fa7-9bb1-36cc3328037c",
+    "name": "McAdenville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "761cb1d7-51c7-4171-a264-33338db5a1e5",
+    "name": "Denver",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "541bafc1-4ed1-4386-9783-69b6a19dfe34",
+    "name": "Lincolnton",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "750472ab-29a7-44c1-b299-cd279872b091",
+    "name": "Rock Hill",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "2ea4f547-5631-4f6c-a97d-a74e2eb30384",
+    "name": "Fort Mill",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "8395f7f8-5bd4-40f0-b120-171577e59b15",
+    "name": "Tega Cay",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "320cfebc-ba2a-4087-ad56-cbfa684a3a88",
+    "name": "Lake Wylie",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "d87f10ab-7b08-438f-a4ba-c14c790e6783",
+    "name": "Clover",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7d6b069d-33d4-4ec1-abdc-ba467053a581",
+    "name": "York",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "4db8e750-e5b5-4107-8788-5bca3c838d5b",
+    "name": "Indian Land",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "2b67ce2f-6acf-46b3-83db-74c5beda92a4",
+    "name": "Lancaster",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "456a7d21-963a-4cd0-b089-d9615fa80969",
+    "name": "Union County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "8000f124-96e9-4b70-b858-65f1f9e40326",
+    "name": "Gaston County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "ffa76278-5309-4ed1-8edc-fcf14f4369fd",
+    "name": "Chester County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "4559f49f-002e-4a15-869e-b38654571a36",
+    "name": "York County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "6c7f64aa-7804-4371-bf34-4b2c080567e6",
+    "name": "Lancaster County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "dc2042ee-b925-4659-bd23-f3b1adeb95a6",
+    "name": "Iredell County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "1ce6d0a0-2d8e-4d84-a54f-19abcc7bd72a",
+    "name": "Stanly County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "28e4fa65-5d01-4daf-a8f3-660eeaf885b1",
+    "name": "Camp North End",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ea8350a9-01b8-4a16-90ff-24a6cd3c9388",
+    "name": "Wesley Heights",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5caf800e-c57a-4d44-ae45-38eadd5b4f11",
+    "name": "Seversville",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "695bd028-a4ed-4544-b37a-3ab3fd9e3fc9",
+    "name": "Mecklenburg County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "9020592d-bc2b-4b3f-a788-34b989a1a7b8",
+    "name": "Cabarrus County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "ab40c3e4-ea3e-49cd-98a9-653a662b5226",
+    "name": "Lincoln County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "5760725a-d6e9-4a52-a2ee-0fccf5e3c224",
+    "name": "28012",
+    "type": "ZIP"
+  },
+  {
+    "id": "a7589a5c-d666-484a-a994-1e3a89d47c4a",
+    "name": "28025",
+    "type": "ZIP"
+  },
+  {
+    "id": "1695050e-d4db-4004-aaa5-f1fb95bbe8ba",
+    "name": "28027",
+    "type": "ZIP"
+  },
+  {
+    "id": "c3b9096b-6e58-4484-8239-4a19f2f66aa8",
+    "name": "28031",
+    "type": "ZIP"
+  },
+  {
+    "id": "6041e0fe-b471-4809-9164-4bccd0355c20",
+    "name": "28036",
+    "type": "ZIP"
+  },
+  {
+    "id": "a364cf80-4b0f-40af-8931-ef3d429c82eb",
+    "name": "28052",
+    "type": "ZIP"
+  },
+  {
+    "id": "91947f56-2985-4962-8075-9c126831b449",
+    "name": "28054",
+    "type": "ZIP"
+  },
+  {
+    "id": "0de26bcf-4e37-4aca-9cb0-950b4e116cfb",
+    "name": "28056",
+    "type": "ZIP"
+  },
+  {
+    "id": "206688c0-fbc9-4de4-b013-19fac7a31520",
+    "name": "28075",
+    "type": "ZIP"
+  },
+  {
+    "id": "4fb05e58-e964-41a0-b7f5-e877b4f94b2b",
+    "name": "28078",
+    "type": "ZIP"
+  },
+  {
+    "id": "02fb5e6a-0f1a-439f-aea2-7f223bd66fd7",
+    "name": "28079",
+    "type": "ZIP"
+  },
+  {
+    "id": "33885ced-e678-4e50-944b-dc7da18613eb",
+    "name": "28081",
+    "type": "ZIP"
+  },
+  {
+    "id": "cf19f373-0be3-44d4-afe3-a4e5af355b83",
+    "name": "28083",
+    "type": "ZIP"
+  },
+  {
+    "id": "18d14760-3f8b-429a-b91f-ffcbf6e8cf03",
+    "name": "28104",
+    "type": "ZIP"
+  },
+  {
+    "id": "2bd867c5-fc00-4d55-b654-502355742be4",
+    "name": "28105",
+    "type": "ZIP"
+  },
+  {
+    "id": "50db5f0a-5857-4bb5-988a-1febd081218e",
+    "name": "28110",
+    "type": "ZIP"
+  },
+  {
+    "id": "63706f02-6c0c-48ab-96bb-00c50ecf0f8a",
+    "name": "28115",
+    "type": "ZIP"
+  },
+  {
+    "id": "33949628-02b8-43bb-a00f-8bf353a96796",
+    "name": "28117",
+    "type": "ZIP"
+  },
+  {
+    "id": "c6aa9bd8-e82f-4e12-b5a5-f47f789d0ce9",
+    "name": "28120",
+    "type": "ZIP"
+  },
+  {
+    "id": "d04a1680-f285-4352-84f6-e2adbbe15971",
+    "name": "28134",
+    "type": "ZIP"
+  },
+  {
+    "id": "da5b513b-81ad-4972-891d-f40454a7e931",
+    "name": "28173",
+    "type": "ZIP"
+  },
+  {
+    "id": "7a3a4a0f-4dfd-46b1-86cf-061610b24b93",
+    "name": "28202",
+    "type": "ZIP"
+  },
+  {
+    "id": "25eb9089-e9f7-48c0-882b-998c774291ae",
+    "name": "28203",
+    "type": "ZIP"
+  },
+  {
+    "id": "a1ab8c93-6342-473e-8282-29d7d8660fbf",
+    "name": "28204",
+    "type": "ZIP"
+  },
+  {
+    "id": "2aca5784-7fe1-4a20-8697-cc8a432c7ede",
+    "name": "28205",
+    "type": "ZIP"
+  },
+  {
+    "id": "c8d38a71-acf2-4704-b66b-28cfe1d41e6c",
+    "name": "28206",
+    "type": "ZIP"
+  },
+  {
+    "id": "fe64654f-2e7b-42c4-a583-25af42bd9cd3",
+    "name": "28207",
+    "type": "ZIP"
+  },
+  {
+    "id": "01a0dfbe-c12d-4d2e-8866-5959d83bb5c0",
+    "name": "Optimist Park",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "1c56d918-ce07-46f9-8506-f94974cef219",
+    "name": "Rowan County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "802da83b-7a34-45e1-9d87-0d89549a66df",
+    "name": "28208",
+    "type": "ZIP"
+  },
+  {
+    "id": "ea02cfe4-730c-4593-bea2-c734e5f4c6a0",
+    "name": "28209",
+    "type": "ZIP"
+  },
+  {
+    "id": "cccbea25-d947-4a62-8609-cfd4f785a929",
+    "name": "28210",
+    "type": "ZIP"
+  },
+  {
+    "id": "62473a07-1766-4ab8-9a4b-8abf8e62ba1c",
+    "name": "28211",
+    "type": "ZIP"
+  },
+  {
+    "id": "d893ca19-c9b2-40cd-96e6-f0738f56725e",
+    "name": "28212",
+    "type": "ZIP"
+  },
+  {
+    "id": "27e45adb-095c-492e-809f-4eb7b5e55f94",
+    "name": "28213",
+    "type": "ZIP"
+  },
+  {
+    "id": "78c7d2e4-a412-44fa-948f-b1830a5159fb",
+    "name": "28214",
+    "type": "ZIP"
+  },
+  {
+    "id": "56db625b-6f77-40d4-a416-50b604cfa90f",
+    "name": "28215",
+    "type": "ZIP"
+  },
+  {
+    "id": "d8894123-f6bf-490d-b628-1ac8cdcf69af",
+    "name": "28216",
+    "type": "ZIP"
+  },
+  {
+    "id": "d2b4e0ce-b789-4eab-b8bd-8949e3671341",
+    "name": "28217",
+    "type": "ZIP"
+  },
+  {
+    "id": "f88374e1-722e-412f-b845-16ba7f2a9705",
+    "name": "28218",
+    "type": "ZIP"
+  },
+  {
+    "id": "9e86de39-20a9-45ab-9d30-c580da6b5aa1",
+    "name": "28219",
+    "type": "ZIP"
+  },
+  {
+    "id": "3e702c74-4a3a-453b-8bd9-1dafca2e5480",
+    "name": "28220",
+    "type": "ZIP"
+  },
+  {
+    "id": "2586571b-5bf4-490e-a73e-dcc45cb1ade2",
+    "name": "28226",
+    "type": "ZIP"
+  },
+  {
+    "id": "8cc73ab3-89c9-4f23-92d0-7a8cae562222",
+    "name": "28227",
+    "type": "ZIP"
+  },
+  {
+    "id": "38762f38-5809-4c04-8d6d-b7e73dfe08ed",
+    "name": "28244",
+    "type": "ZIP"
+  },
+  {
+    "id": "482b8053-f4ba-4a25-ad05-fe502584407b",
+    "name": "28262",
+    "type": "ZIP"
+  },
+  {
+    "id": "68839cdd-2ec4-4682-bd72-dc5f36def008",
+    "name": "28269",
+    "type": "ZIP"
+  },
+  {
+    "id": "25900f39-a848-4fbb-90e5-1b1229653777",
+    "name": "28270",
+    "type": "ZIP"
+  },
+  {
+    "id": "fd7899f0-a13e-42cd-b01d-595c8e9e8121",
+    "name": "28273",
+    "type": "ZIP"
+  },
+  {
+    "id": "11bcb827-d966-4e65-a6de-0620057ed363",
+    "name": "28277",
+    "type": "ZIP"
+  },
+  {
+    "id": "917de6c2-44db-46ed-a98c-0dadcb90a064",
+    "name": "28278",
+    "type": "ZIP"
+  },
+  {
+    "id": "03643e10-237c-4a8c-938b-6f4b7014a30f",
+    "name": "28625",
+    "type": "ZIP"
+  },
+  {
+    "id": "ebc90219-90ef-405f-a298-29cab9865c1b",
+    "name": "29707",
+    "type": "ZIP"
+  },
+  {
+    "id": "b6a620a7-887f-4291-b544-fe19ebb8eb7c",
+    "name": "29708",
+    "type": "ZIP"
+  },
+  {
+    "id": "70fc73f8-f600-4cf3-89f9-e25648a475d8",
+    "name": "29715",
+    "type": "ZIP"
+  },
+  {
+    "id": "ffeececf-08ce-460a-8722-e116144ba94d",
+    "name": "29720",
+    "type": "ZIP"
+  },
+  {
+    "id": "0294c75b-70b9-4d2e-ae75-7930836e6713",
+    "name": "29745",
+    "type": "ZIP"
+  },
+  {
+    "id": "5aeffc41-49e7-4224-bc56-0f19b71ca402",
+    "name": "Ranlo",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7143b96b-022d-468a-82f6-90ba0e01153b",
+    "name": "Salisbury",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "62b7f14f-86d9-4bff-8498-532ea0d6fcd2",
+    "name": "China Grove",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "9b3a17a9-f1ec-4084-acfb-90c1ee168793",
+    "name": "Albemarle",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7925fb2b-85c6-451e-9843-0b27ef25eab5",
+    "name": "Locust",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "1f0aa8b6-0eb3-4f72-8adf-786893894c70",
+    "name": "Chester",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "29b14137-8f43-4ecc-9c2a-57ae23e024c7",
+    "name": "Great Falls",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "90fcf887-d552-478b-aff0-6cdda18fcc57",
+    "name": "Birkdale",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "95bc677e-ca55-4488-8b1c-a942df825d1c",
+    "name": "Rosedale",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "826152bd-18fa-4a5a-84d9-e84a32bc31e9",
+    "name": "Northcross",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a17bf4d9-21ba-4841-8ab8-60aa2ee2b5bb",
+    "name": "Antiquity",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "4cdae123-7eae-4d02-a45e-d32a9b3ca3a3",
+    "name": "Bailey's Glen",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "528cbff7-b804-4789-97e2-bbfd89ffbf47",
+    "name": "Downtown Davidson",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "59f1f39b-b4eb-42fd-87b8-2501e109cb80",
+    "name": "River Run",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9ce4982e-e519-44b4-8512-ad09a7182a69",
+    "name": "McKee Glen",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "303b3031-26b9-454e-8bc6-75fea8929cda",
+    "name": "Clear Creek",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ec96b3ca-62fc-4dd2-aee9-b7aef26f556e",
+    "name": "Morrison Plantation",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5c1f1b69-fc32-4af6-a452-459d46b24ab6",
+    "name": "Downtown Mooresville",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "0381f30b-3497-4e5a-9138-2fe370fe2b8b",
+    "name": "Downtown Statesville",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "91fa8d93-297a-4c94-aac3-7166287272a8",
+    "name": "Downtown Concord",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "8445afe9-2d2a-42ec-aca7-691c54a19e92",
+    "name": "Afton Village",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "6891552a-a85a-485a-b012-387eef4298c2",
+    "name": "Weddington Trace",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "02af34f3-e661-4f54-8f87-07753672310e",
+    "name": "Downtown Kannapolis",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5d95357b-ce03-4d3c-8341-76130639a00c",
+    "name": "Rocky River Crossing",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "4086393b-3b47-40cc-b395-558ae1b9591f",
+    "name": "Sun Valley",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9506e9c1-ecb0-44d2-a78e-b5728d9abb1a",
+    "name": "Hemby Bridge",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9ceaf508-640b-485c-942a-78c7fbe13e3f",
+    "name": "Downtown Monroe",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "79e871b3-7d6a-44f2-92c1-a8a2ef4a8309",
+    "name": "Downtown Gastonia",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a538e900-2cc7-4a35-857f-411c25b6c5ca",
+    "name": "Downtown Belmont",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "0dcde05c-7c4b-424b-a838-2d862a8ed902",
+    "name": "Downtown Mount Holly",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "af7a8233-e378-458a-808c-2f28486904b1",
+    "name": "Sun City",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "50dda808-e49c-4a58-ba2e-6d976dfd52b0",
+    "name": "Massey",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "713ec071-4e7c-4d1b-94b9-cee763640dab",
+    "name": "Downtown Lancaster",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "93d96ed1-bbd8-4c3a-813d-c9b06444ce6d",
+    "name": "Downtown Rock Hill",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "c3662229-d5ed-4c12-ab00-78bf454bf8e9",
+    "name": "Riverwalk",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "186d4bc1-a209-46d2-b9ca-01126a988195",
+    "name": "Manchester Village",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a1c91575-78ec-416c-91e0-e8f65ab1ff1c",
+    "name": "Piper Glen",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "661b068d-32f6-493f-a0db-74a92a5fc286",
+    "name": "Ballantyne Village",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "326d631f-dcdc-449e-a477-318b47f7216e",
+    "name": "Downtown Salisbury",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "8c645905-8cdb-4202-a975-eb5b8c1eb85e",
+    "name": "Downtown Albemarle",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "6e65cff1-e92c-4942-a087-8a11dbc05d51",
+    "name": "Downtown Chester",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "8ba18536-f2d3-4894-b1ff-b8285a16ec00",
+    "name": "UNCC Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "e91ff9fe-1ea4-4ff2-ac99-fc29665460b7",
+    "name": "Weddington Chase",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "cd447271-2ab6-4444-a34f-7f7b37203edc",
+    "name": "Bromley",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "dfd227e7-f2fa-4a7f-a215-abcc8a7193f7",
+    "name": "Baxter",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "d3c59bff-0276-4368-a4f9-ab6a17937b48",
+    "name": "Kingsley",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "c2d5835b-d565-45e6-9a82-3aa601faf7df",
+    "name": "Downtown Clover",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "7f2c7ea1-ce86-48e9-ab80-5d05675e50ff",
+    "name": "University Research Park",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a75aae0d-e51f-4214-9fa4-6f6daec06af1",
+    "name": "Northlake Mall Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "f9ed4e94-a11a-45a3-9d69-9c7e851341f4",
+    "name": "Park Crossing",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "48d96919-440f-4218-bac6-ea70a22030ce",
+    "name": "28023",
+    "type": "ZIP"
+  },
+  {
+    "id": "71f29d1d-8e4a-42c9-843e-485606db98e3",
+    "name": "28097",
+    "type": "ZIP"
+  },
+  {
+    "id": "c127003e-13c6-4b4b-90c9-64b3a184c6ea",
+    "name": "28687",
+    "type": "ZIP"
+  },
+  {
+    "id": "991b6262-b5cd-4f38-9235-d67ed6378a06",
+    "name": "29055",
+    "type": "ZIP"
+  },
+  {
+    "id": "ca6fd34a-acf1-4a44-8f30-33c61ca6247a",
+    "name": "Downtown Waxhaw",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "1470ee92-c909-49c1-9347-f922caec53b4",
+    "name": "Cureton",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "d029436a-a3b2-4f6b-8751-afd456c63f05",
+    "name": "Wadesboro",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "53a403c0-cf3a-4d02-b96d-0ce0a50b9566",
+    "name": "Polkton",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "dd7aed7a-f79d-42a1-ac80-e2855b3cf12f",
+    "name": "Peachland",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "32afae5c-5759-4d36-b30d-396c287434c6",
+    "name": "Morven",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "034f6b14-4593-49c6-9bdc-3f9c8447ae88",
+    "name": "Lilesville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "544d7207-15fe-47b8-b7e4-077971827132",
+    "name": "Shelby",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "96a8999b-aa4e-469f-bc4f-11758811bb62",
+    "name": "Kings Mountain",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "0adfce81-a027-4e5e-82af-740daebd09af",
+    "name": "Boiling Springs",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "4c2d44a5-c5d1-4912-9084-c6ececc7af3c",
+    "name": "Lawndale",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "00c8e09b-360d-4409-b9e0-8cd55b98be21",
+    "name": "Hickory",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "6e404e59-f885-48f5-8e65-7a42d0cc4585",
+    "name": "Newton",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "490b4ada-e662-4d3c-b26b-7a4ea4aca09a",
+    "name": "Conover",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "85624c24-30a2-4fdf-bf2c-ae05521b5a4e",
+    "name": "Maiden",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "73cbd8f5-92f5-44eb-8afb-d2568a0917e0",
+    "name": "Taylorsville",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "d2c33f05-ad2f-447c-a27d-08be30234b7e",
+    "name": "Hiddenite",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "22926162-4dcd-471d-a4e9-29027eaa770e",
+    "name": "Morganton",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "4b8a3ac2-a95e-4087-9473-7c201a2b5a0a",
+    "name": "Valdese",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "07161c6f-3bb9-454d-92d1-ef6d580d41cb",
+    "name": "Glen Alpine",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "857c2bc8-89bb-43e9-8a98-943417b4b83e",
+    "name": "Lenoir",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "8bd37f20-ee0e-4eb3-9a17-2db769f82ec6",
+    "name": "Granite Falls",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "5c8977de-f1ef-4f9d-8c75-584389c4bfe7",
+    "name": "Hudson",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7f5e5d46-58bb-4bf6-908e-5aa6657ed883",
+    "name": "Marion",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "49c6b875-00b2-4302-9bf2-e8e188feacb5",
+    "name": "Old Fort",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "7fadd966-87fe-4260-9e2c-61924b03bbdd",
+    "name": "Cheraw",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "32e3711f-a686-479a-888e-c88a2a67a4a0",
+    "name": "Chesterfield",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "8426bf71-599a-4891-a03e-862afd9b2e30",
+    "name": "Pageland",
+    "type": "DISTRICT"
+  },
+  {
+    "id": "256c0b8f-3acf-499d-8d4c-a4ee9436404e",
+    "name": "Wadesboro Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "aac983fa-6f9d-4d44-b8fd-0cac2223e778",
+    "name": "Ansonville Road Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "2cdbfcd2-e4b6-4978-8cbd-1353f30ae07a",
+    "name": "Downtown Polkton",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "e9eeb261-bdc1-4b7f-82f5-ca93f58a477e",
+    "name": "Polkton Historic Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ed68cf36-281a-4e7f-96af-5f1709104794",
+    "name": "Brown Creek Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "f0e64ae2-39d2-4445-8976-b88382846152",
+    "name": "Downtown Peachland",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "07c103e4-1530-451c-9864-4c101ead4843",
+    "name": "Downtown Morven",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "86d1c2e2-2eb4-4d89-91bc-8d1e7012e0da",
+    "name": "Morven Historic Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "d29ef71d-366c-4224-958d-8881d3673e65",
+    "name": "Downtown Lilesville",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "e915e46f-358e-43fd-8ed7-51b2f6bceebe",
+    "name": "Pee Dee River Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "81cf7936-70d2-4b63-9d6c-fd18fe8e4bbb",
+    "name": "Uptown Shelby",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "1e905c94-95c4-43af-9e4d-6f2d66e79f9f",
+    "name": "Shelby Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "25d32802-2573-47c1-aaf0-17ccf04eef98",
+    "name": "Cleveland Country Club",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "929c7058-41fb-427a-a7a1-4653f353354e",
+    "name": "West Shelby",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "e4658ab5-a65f-4a9d-b6b4-0fae49a6b730",
+    "name": "Downtown Kings Mountain",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "0d8107af-dd0b-49d6-a623-8165ef4e1628",
+    "name": "Mountain View",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "7bb1448c-f1c0-42b4-9f72-34ae65038238",
+    "name": "Moss Lake Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "cb375f93-fe54-465f-9f8b-b048ccf7aed0",
+    "name": "Dixon School Road Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "111d3662-d005-4cbc-b19d-4e7d8bf3f041",
+    "name": "Gardner-Webb University Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9699411b-bc78-4548-8d6c-113fcb41ad2e",
+    "name": "South Main Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "2c9e8a03-04fc-4e73-9d01-9a611e7b2a71",
+    "name": "Downtown Lawndale",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "fb2e7526-2090-421e-898a-e9a6fc6b2362",
+    "name": "Lawndale Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "37648c07-a870-49e2-adb1-2babc17377bf",
+    "name": "Downtown Hickory",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "6d413fc4-207e-4674-8666-92c7d9a0b89b",
+    "name": "Viewmont",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5d1c71ee-d538-43c5-9d6e-b9c19d316dc6",
+    "name": "Oakwood Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "fe8bc2d9-63e1-4734-95ed-34d886e1f1ba",
+    "name": "Highland",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "beba3383-8814-4d6e-bec9-c90739cf7745",
+    "name": "Mountain View",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "1ef2a5cc-67b1-4405-b86c-f4b351c6ab92",
+    "name": "Kenworth",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "edbd00a9-bce0-4e97-b30a-20e817d8332d",
+    "name": "Newton Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ac8d0812-4f84-48bd-ba16-0c43e21481d5",
+    "name": "Startown Road Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "8f97f783-d6eb-490e-ab02-54981767ae5f",
+    "name": "Downtown Conover",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "36877ea6-d72d-4560-a77b-0118274eccee",
+    "name": "Rock Barn Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "dcb44f4e-a304-4e60-b631-4159737a6186",
+    "name": "Northwest Conover",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "fc1a7842-55cd-46d6-bab8-2f57633776b7",
+    "name": "Buffalo Shoals Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b06e7fe5-8c4b-4230-9d48-d5c571d88e1a",
+    "name": "Downtown Taylorsville",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ff9b5fa0-fcf3-456a-bbb3-b27b277a378c",
+    "name": "Taylorsville Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "cdbd1c66-e7ed-46dd-946c-1a38acd7f8ec",
+    "name": "Bethlehem Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "7a7f30b5-ddc4-4970-9f0f-40940499fcae",
+    "name": "Downtown Hiddenite",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "778baee4-6218-4122-a8ee-2f71b7afafcc",
+    "name": "Hiddenite Gem District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b5730658-d829-4132-be55-72c2efed1212",
+    "name": "Downtown Morganton",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "847b6fb8-8469-48da-9b38-af88c696d779",
+    "name": "Catawba Meadows",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "2985865e-33b8-48c0-95a1-c897c2814511",
+    "name": "Drexel Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a388dcba-9c8b-4e60-9666-5b4372df7aa2",
+    "name": "Downtown Valdese",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b6145aff-39dc-4ea7-a45c-2d4d298433d8",
+    "name": "Waldensian Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "43615395-3b76-4471-8f57-5e3ef9b2775f",
+    "name": "Valdese Lakeside Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "7809096d-c1cf-4080-a27f-2de9261ae333",
+    "name": "Downtown Glen Alpine",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "c0f49a7c-a005-49c7-8c0b-24b1117abb8d",
+    "name": "Lake James Gateway Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "72e24bfe-f63c-4e21-8d9e-b94513db23a7",
+    "name": "Downtown Lenoir",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a12eb032-d2ab-49e9-866c-c997ba7c5016",
+    "name": "Lower Creek",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "4d723371-da82-4c29-8f6b-dbab6d14f33f",
+    "name": "Gamewell",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a2b9396f-fab1-45ea-92fb-31c1a3ae1d03",
+    "name": "Downtown Granite Falls",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "38f31677-fa49-49b2-948a-ff1d58e6f3ae",
+    "name": "River Bend Park Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "c292d3c9-86bf-4acc-9c5f-8c49a165a7a7",
+    "name": "Downtown Hudson",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "35fee8e0-0689-4876-9905-e867aa7723a5",
+    "name": "Gunpowder Creek Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "71ac825a-e836-4632-a3d5-25b05e850f6c",
+    "name": "Downtown Marion",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "f153aec5-86ec-4e7b-a505-bc8cdb68d826",
+    "name": "Pleasant Gardens",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "dce064d9-8e27-44ae-952d-ac9c5329afd5",
+    "name": "Lake James Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "e0c58287-d3ab-4c69-bb09-66d03669cf52",
+    "name": "Downtown Old Fort",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "f2948b1d-5cc3-438c-bee3-b36bcaa532f5",
+    "name": "Old Fort Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b896fa87-a6fc-4028-aacf-3cd2b316531d",
+    "name": "Gateway Trails Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "4a4ca473-d54d-434b-bf79-887cef62472e",
+    "name": "Downtown Cheraw",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "790e7aa8-924c-4708-9117-2e56edde4eef",
+    "name": "Cheraw Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "d8ee4174-a815-4250-b5de-a301bd1c0ba0",
+    "name": "Riverside Park Area",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9b4fae50-83fc-40ad-9a2c-c47cb3fbd4cf",
+    "name": "Anson County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "26536648-dd14-4bc0-bfac-c1400393b3bf",
+    "name": "Cleveland County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "abf1d765-dbf9-4ec5-b791-7d96e2aa9600",
+    "name": "Catawba County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "5684e3f1-8b49-4f77-af80-9f5aa07233d5",
+    "name": "Alexander County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "3e75f536-26ea-439a-b220-e6c2717b62b9",
+    "name": "Burke County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "78cc66dd-7b72-44b5-a499-0cf1459bb913",
+    "name": "Caldwell County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "f45d0e8c-9431-4467-9130-bba4280042d1",
+    "name": "McDowell County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "8d61f0a6-9a46-4fd6-aae9-b8ef6137b228",
+    "name": "Chesterfield County",
+    "type": "COUNTY"
+  },
+  {
+    "id": "91db4ea7-3499-458e-87f0-49012324be9c",
+    "name": "28170",
+    "type": "ZIP"
+  },
+  {
+    "id": "85c4ce43-7381-4b09-98ab-e219f56ce142",
+    "name": "28135",
+    "type": "ZIP"
+  },
+  {
+    "id": "baa0da26-3f2d-4ee8-9885-eb56d2d7a8ed",
+    "name": "28133",
+    "type": "ZIP"
+  },
+  {
+    "id": "f28e7f5b-ac79-4d9e-9623-1cc1622ce77d",
+    "name": "28119",
+    "type": "ZIP"
+  },
+  {
+    "id": "4e699e39-8d1d-4fc2-98fd-b17d6f75677f",
+    "name": "28091",
+    "type": "ZIP"
+  },
+  {
+    "id": "24ff6c2f-8ea4-43ee-b793-6ca94d69bbff",
+    "name": "28150",
+    "type": "ZIP"
+  },
+  {
+    "id": "801e10fb-b774-45f2-ac9c-2b2ba5d5eea2",
+    "name": "28152",
+    "type": "ZIP"
+  },
+  {
+    "id": "10882225-4b2e-4acb-a3e9-7c7e4cb3ea83",
+    "name": "28086",
+    "type": "ZIP"
+  },
+  {
+    "id": "99f8b409-e990-4bfe-9a8f-1421411aeb88",
+    "name": "28017",
+    "type": "ZIP"
+  },
+  {
+    "id": "943f08c7-476f-42f4-a9e9-e31ea4246f3d",
+    "name": "28090",
+    "type": "ZIP"
+  },
+  {
+    "id": "cda58e6c-5d74-4328-b9db-4eabc41da455",
+    "name": "28601",
+    "type": "ZIP"
+  },
+  {
+    "id": "63bcb4f4-89de-4e5f-8076-edcdaa087fd9",
+    "name": "28602",
+    "type": "ZIP"
+  },
+  {
+    "id": "ba796d80-26d3-455d-b68d-ba6e0367d241",
+    "name": "28658",
+    "type": "ZIP"
+  },
+  {
+    "id": "4429bb4a-2a8a-4609-80aa-57681acc2851",
+    "name": "28613",
+    "type": "ZIP"
+  },
+  {
+    "id": "f8a21fc1-4597-4526-93ff-d7895c5e3518",
+    "name": "28650",
+    "type": "ZIP"
+  },
+  {
+    "id": "a2e102aa-f2f1-4ebe-b25d-ac8631a05787",
+    "name": "28681",
+    "type": "ZIP"
+  },
+  {
+    "id": "a3cc7121-f4e2-4e6f-afab-c3be925a71dc",
+    "name": "28636",
+    "type": "ZIP"
+  },
+  {
+    "id": "7e818b3a-acdd-40a2-8a40-29b4419bf717",
+    "name": "28655",
+    "type": "ZIP"
+  },
+  {
+    "id": "db23fe18-49c9-438c-8df7-fff80d29b009",
+    "name": "28690",
+    "type": "ZIP"
+  },
+  {
+    "id": "e7da1460-1199-445f-b30b-c79f44fd7778",
+    "name": "28628",
+    "type": "ZIP"
+  },
+  {
+    "id": "34ac258d-4912-4f58-9665-0954a1282b1f",
+    "name": "28645",
+    "type": "ZIP"
+  },
+  {
+    "id": "6a50b958-4e92-4ae6-ba18-960785c1166c",
+    "name": "28630",
+    "type": "ZIP"
+  },
+  {
+    "id": "2e440c5b-b524-4819-a2c9-da6d8de5db75",
+    "name": "28638",
+    "type": "ZIP"
+  },
+  {
+    "id": "98d5c49b-1fee-4380-82b5-9cd9bac9e8d2",
+    "name": "28752",
+    "type": "ZIP"
+  },
+  {
+    "id": "198ee1d4-71e8-44d6-8a51-dd80c40baa4a",
+    "name": "28762",
+    "type": "ZIP"
+  },
+  {
+    "id": "e4c57609-21ee-4e8f-8778-4bdfcce7580d",
+    "name": "29520",
+    "type": "ZIP"
+  },
+  {
+    "id": "d569fa57-e43d-47d4-8711-741cf9061dcf",
+    "name": "Downtown Pageland",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "f820d936-091e-466b-a701-933d1a88c85d",
+    "name": "Pageland Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ef8cd406-9fa6-419d-8582-3a30d0b73b72",
+    "name": "29709",
+    "type": "ZIP"
+  },
+  {
+    "id": "9e12f134-1665-47ec-8d1c-7823c7ae0503",
+    "name": "29728",
+    "type": "ZIP"
+  },
+  {
+    "id": "519cdae3-56c8-4890-a382-ab1bd51cacde",
+    "name": "Downtown Wadesboro",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ef30bfe6-6459-4f47-9031-2797a9d44062",
+    "name": "Morven Road Corridor",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "9b692b77-af0e-45de-944a-a9508734e2ad",
+    "name": "Peachland Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "bd1d920a-d81b-48df-b87c-d74ca39e5a45",
+    "name": "East Shelby",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "25ec890b-4e57-4494-aa72-1cc87be59d44",
+    "name": "Boiling Springs Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "0d5f9d4c-7eb2-40b4-bcb7-1724fccc3c4c",
+    "name": "Downtown Newton",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "c2322e8f-050f-41ff-ba71-d68065bf1054",
+    "name": "Downtown Maiden",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "a2f091b3-fbb1-4f37-bb92-ff5d5187e25e",
+    "name": "Maiden Historic District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "5a3aa550-89c7-4a39-b4ab-277919bf11be",
+    "name": "Historic Morganton District",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "36ddf15f-090f-4c1a-8a28-368572fefb86",
+    "name": "Whitnel",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "3aa96100-f18a-4cf1-8a60-7cdf1bc3d96d",
+    "name": "Historic Main Street",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "b6d9df94-6b94-4810-8db9-5c9f6e221a81",
+    "name": "Downtown Chesterfield",
+    "type": "NEIGHBORHOOD"
+  },
+  {
+    "id": "ac32c8bc-4a8f-4401-ae3a-0f977183d2d6",
+    "name": "Chesterfield Historic District",
+    "type": "NEIGHBORHOOD"
+  }
+]

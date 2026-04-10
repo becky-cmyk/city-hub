@@ -1,0 +1,261 @@
+CITY HUB / CLT CONNECTS — SEARCH FOUNDATION
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Stabilize and align the SEARCH FOUNDATION so it functions as the real local discovery engine for the platform using the current live object model and current live data structure.
+
+This is a SURGICAL SEARCH PASS.
+Do NOT rebuild the platform.
+Do NOT introduce a separate search-only data architecture unless absolutely necessary.
+Do NOT create duplicate object records.
+Do NOT flatten the geography model.
+Do NOT replace working search behavior blindly.
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+Current search uses PostgreSQL ILIKE queries.
+There is no dedicated search engine yet.
+Search already reaches across multiple object types.
+
+Current searchable object areas include:
+- businesses
+- events
+- articles
+- jobs
+- attractions
+- other live content areas already wired into the codebase
+
+Hub Presence currently runs primarily through the businesses table.
+Creators are not a separate table; they are businesses with creator-specific fields/types.
+Pulse is not its own table and must remain an aggregation layer over real objects.
+
+The platform has TWO valid geographic hierarchies and both must remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, operators
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and local discovery
+
+Do NOT collapse these into one model.
+Do NOT let search accidentally discard either hierarchy.
+
+LOCKED SEARCH RULE
+
+Search is a DISCOVERY ENGINE.
+
+It must function like a local ecosystem search layer across the real platform, not just a basic keyword box.
+
+Search must:
+- query real object types
+- group results cleanly by object type where appropriate
+- support local / geographic intent
+- support category and micro-category discovery
+- preserve fairness and relevance
+- remain aligned to the existing object model
+
+Search is NOT:
+- a separate directory database
+- a separate geography system
+- a duplicate content store
+- a global internet search engine
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current search implementation and confirm:
+
+1. Which components/pages currently power search
+2. Which endpoints/services/queries currently run search
+3. Which object types are currently included
+4. Which object types are missing but should already be reachable
+5. How ranking currently works
+6. How grouping currently works
+7. How location context currently works, if at all
+8. Whether Charlotte / CLT assumptions are hardcoded in search logic
+9. Which current search pieces are already correct and should remain
+
+Return a concise implementation note first before major changes.
+
+PRIMARY OBJECTIVE
+
+Refine the current search into a stronger local discovery foundation using the existing PostgreSQL-based approach.
+
+This means:
+- preserve what already works
+- improve grouping
+- improve relevance
+- improve location awareness
+- improve consistency across object types
+- avoid introducing a heavy search platform too early unless clearly necessary
+
+REQUIRED IMPLEMENTATION
+
+1. CLEAN OBJECT-TYPE SEARCH COVERAGE
+
+Audit and stabilize search coverage across real objects.
+
+Target search coverage should include the real current discovery ecosystem where supported in code, such as:
+- businesses
+- creators (through business/creator fields)
+- events
+- articles
+- jobs / job_listings
+- marketplace listings
+- attractions
+- hubs / neighborhoods / districts where relevant
+- other current live content objects already supported
+
+Do not invent separate creator tables or shadow search models.
+
+2. RESULT GROUPING
+
+Search results should group cleanly by object type where practical.
+
+Examples:
+- Businesses
+- Events
+- Jobs
+- Articles / Stories
+- Marketplace
+- Places / Attractions
+- Neighborhoods / Hubs if applicable
+
+Do not return one messy mixed list if grouped presentation is already possible.
+
+Use the lightest stable grouping approach that fits the current UI.
+
+3. RELEVANCE / FAIRNESS
+
+Preserve useful existing relevance factors, but refine them.
+
+Search may use:
+- text match strength
+- category/subcategory/micro-category match
+- geographic relevance
+- tier/featured weighting where valid
+- fairness rotation where appropriate
+
+Do NOT turn search into:
+- a pure paid placement engine
+- a random shuffle
+- a social engagement algorithm
+
+Paid/featured boosts may exist, but should not destroy usefulness.
+
+4. LOCATION-AWARE SEARCH FOUNDATION
+
+Search must begin correctly interpreting local discovery intent.
+
+Examples:
+- "roof washing"
+- "roof washing southside"
+- "roof washing ballantyne"
+
+Search should use available geography and context such as:
+- city
+- zone
+- district
+- neighborhood
+- micro_hub
+- county
+- zip
+
+Important:
+Do not flatten REGIONS and ZONES.
+Use them correctly for their purposes.
+
+Content/discovery should continue respecting the content-local zone structure where relevant.
+
+This prompt is the FOUNDATION.
+Do not overbuild advanced NLP.
+Just establish a strong, structured local-intent base.
+
+5. CATEGORY / TAXONOMY ALIGNMENT
+
+The current taxonomy already exists in layered form.
+Search must align to existing category structure rather than inventing a second taxonomy system.
+
+Use current category levels and creator/business/service classification fields where available.
+
+Support:
+- category match
+- subcategory match
+- micro-category match where current data supports it
+
+Do not rebuild taxonomy in this prompt.
+Just make sure search respects it.
+
+6. CREATOR / BUSINESS HANDLING
+
+Because creators are businesses with creator-specific fields/types:
+- search should return creators correctly without requiring a separate creator object table
+- creator-relevant searches should surface the correct business/hub presence records
+- creator display/routing should respect the current real object structure
+
+7. CITY / METRO CONTEXT SAFETY
+
+Do not leave hidden Charlotte-only assumptions in search logic where city context should be dynamic.
+
+Respect the platform/city separation being established.
+Do not hardcode Charlotte as the top-level search scope unless intentionally in Charlotte context.
+
+8. BILINGUAL SAFETY
+
+Preserve and respect the bilingual system.
+
+Where supported by current fields/system:
+- search should respect English and Spanish content fields
+- search labels and grouping should not break translations
+- do not create a second translation architecture
+
+If full bilingual search matching needs deeper work later, note it clearly.
+This prompt should establish safe compatibility, not overpromise.
+
+9. PERFORMANCE / STABILITY
+
+Keep this search pass lightweight and stable.
+
+Prefer:
+- improved PostgreSQL queries
+- better filters/grouping
+- better scoping
+- sensible indexes if needed
+- clean object coverage
+
+Do not prematurely introduce Elasticsearch/Meilisearch/Algolia/etc. unless absolutely justified by the current codebase and data needs.
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild all discovery pages
+- rebuild taxonomy from scratch
+- create duplicate search tables
+- flatten region and zone hierarchies
+- build a heavy enterprise search stack
+- redesign the whole public search UX unless needed for grouping clarity
+- break existing object routes/pages
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. search coverage across the real object model is cleaner and more complete
+2. results are grouped more clearly by object type where practical
+3. location-aware discovery foundation is improved
+4. taxonomy/category matching is better aligned to the existing structure
+5. creator/business search behavior is handled correctly
+6. Charlotte-only assumptions are reduced where relevant
+7. no duplicate search-only data system is introduced
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current search implementation first
+3. implement the smallest stable change set for the search foundation
+4. list exactly which files/components/services/routes were changed
+5. list what should wait for the next search/location prompt

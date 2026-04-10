@@ -1,0 +1,5564 @@
+[
+  {
+    "id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "name": "Restaurant & Dining",
+    "slug": "restaurant-dining",
+    "icon": "UtensilsCrossed",
+    "parent_category_id": null,
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "name": "Professional Services",
+    "slug": "professional-services-cat",
+    "icon": "Briefcase",
+    "parent_category_id": null,
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "name": "Health & Wellness",
+    "slug": "health-wellness-cat",
+    "icon": "HeartPulse",
+    "parent_category_id": null,
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "name": "Home Services",
+    "slug": "home-services-cat",
+    "icon": "Wrench",
+    "parent_category_id": null,
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "name": "Retail & Shopping",
+    "slug": "retail-shopping-cat",
+    "icon": "ShoppingBag",
+    "parent_category_id": null,
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "name": "Beauty & Personal Care",
+    "slug": "beauty-personal-care",
+    "icon": "Sparkles",
+    "parent_category_id": null,
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "name": "Entertainment & Recreation",
+    "slug": "entertainment-recreation",
+    "icon": "Music",
+    "parent_category_id": null,
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "name": "Nonprofit & Faith",
+    "slug": "nonprofit-faith",
+    "icon": "HandHeart",
+    "parent_category_id": null,
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "b40f4a01-fb85-4bb9-a100-6b9233b78e53",
+    "name": "Financial Services",
+    "slug": "financial-services",
+    "icon": "DollarSign",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "name": "Chiropractic & PT",
+    "slug": "chiropractic-pt",
+    "icon": "Activity",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "088be9b2-3e90-49e7-aa44-5dffa10ede3b",
+    "name": "Veterinary & Pet Health",
+    "slug": "veterinary-pet-health",
+    "icon": "PawPrint",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "d5992f42-153c-41ca-8008-f393cb2971fe",
+    "name": "Fine Dining",
+    "slug": "fine-dining",
+    "icon": "Wine",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 1,
+    "sic_code": "5812"
+  },
+  {
+    "id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "name": "Casual Dining",
+    "slug": "casual-dining",
+    "icon": "Utensils",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 2,
+    "sic_code": "5812"
+  },
+  {
+    "id": "44ff0bd2-eb32-4a8d-b193-7391c9c4bf5e",
+    "name": "Fast Casual",
+    "slug": "fast-casual",
+    "icon": "Sandwich",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 3,
+    "sic_code": "5812"
+  },
+  {
+    "id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "name": "Coffee & Tea",
+    "slug": "coffee-tea",
+    "icon": "Coffee",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 4,
+    "sic_code": "5812"
+  },
+  {
+    "id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "name": "Bars & Breweries",
+    "slug": "bars-breweries",
+    "icon": "Beer",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 5,
+    "sic_code": "5813"
+  },
+  {
+    "id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "name": "Bakeries & Desserts",
+    "slug": "bakeries-desserts",
+    "icon": "CakeSlice",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 6,
+    "sic_code": "5461"
+  },
+  {
+    "id": "73760ca4-90fc-4316-b4c6-9b39d7a8ce77",
+    "name": "Food Trucks",
+    "slug": "food-trucks",
+    "icon": "Truck",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 7,
+    "sic_code": "5812"
+  },
+  {
+    "id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "name": "Catering",
+    "slug": "catering",
+    "icon": "ChefHat",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 8,
+    "sic_code": "5812"
+  },
+  {
+    "id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "name": "Legal",
+    "slug": "legal",
+    "icon": "Scale",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 1,
+    "sic_code": "8111"
+  },
+  {
+    "id": "61093943-e1d9-490c-97fc-db880995746f",
+    "name": "Accounting & Tax",
+    "slug": "accounting-tax",
+    "icon": "Calculator",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 2,
+    "sic_code": "8721"
+  },
+  {
+    "id": "5336ea5d-963f-4ab5-9f66-1328ebe08c8f",
+    "name": "Real Estate",
+    "slug": "real-estate",
+    "icon": "Home",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 3,
+    "sic_code": "6512"
+  },
+  {
+    "id": "d7a74645-595b-4558-941c-8daa57551089",
+    "name": "Insurance",
+    "slug": "insurance",
+    "icon": "Shield",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 4,
+    "sic_code": "6411"
+  },
+  {
+    "id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "name": "Marketing & Advertising",
+    "slug": "marketing-advertising",
+    "icon": "Megaphone",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 6,
+    "sic_code": "7311"
+  },
+  {
+    "id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "name": "IT & Technology",
+    "slug": "it-technology",
+    "icon": "Monitor",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 7,
+    "sic_code": "7372"
+  },
+  {
+    "id": "161fcc14-23e3-4911-b0d0-2604fd1400ff",
+    "name": "Consulting",
+    "slug": "consulting",
+    "icon": "Users",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 8,
+    "sic_code": "7389"
+  },
+  {
+    "id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "name": "Medical & Dental",
+    "slug": "medical-dental",
+    "icon": "Stethoscope",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 1,
+    "sic_code": "8011"
+  },
+  {
+    "id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "name": "Mental Health",
+    "slug": "mental-health",
+    "icon": "Brain",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 2,
+    "sic_code": "8049"
+  },
+  {
+    "id": "b11af887-0e5a-42e6-b06a-98f7b59b9ded",
+    "name": "Pharmacy",
+    "slug": "pharmacy",
+    "icon": "Pill",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 7,
+    "sic_code": "5912"
+  },
+  {
+    "id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "name": "Fitness & Gym",
+    "slug": "fitness-gym",
+    "icon": "Dumbbell",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 3,
+    "sic_code": "7991"
+  },
+  {
+    "id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "name": "Yoga & Pilates",
+    "slug": "yoga-pilates",
+    "icon": "Flower2",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 4,
+    "sic_code": "7999"
+  },
+  {
+    "id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "name": "Cleaning",
+    "slug": "cleaning",
+    "icon": "SprayCan",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "name": "Roofing & Siding",
+    "slug": "roofing-siding",
+    "icon": "HardHat",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "name": "Moving & Storage",
+    "slug": "moving-storage",
+    "icon": "Package",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "322a93be-a631-4e89-9695-9af101142485",
+    "name": "Grocery & Market",
+    "slug": "grocery-market",
+    "icon": "Apple",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "8d05db8a-b9b7-41d6-83fb-9b77f9c550fd",
+    "name": "Furniture & Home Decor",
+    "slug": "furniture-home-decor",
+    "icon": "Sofa",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "85942223-2932-4dd9-a84e-0f82cde7e1a2",
+    "name": "Gifts & Specialty",
+    "slug": "gifts-specialty",
+    "icon": "Gift",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "a1b5feb5-2366-4da5-a74a-b79e2c5b2646",
+    "name": "Automotive",
+    "slug": "automotive",
+    "icon": "Car",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "name": "Hair Salon",
+    "slug": "hair-salon",
+    "icon": "Scissors",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "7fb4af89-414a-48e6-bd46-19d6439b299a",
+    "name": "Barbershop",
+    "slug": "barbershop",
+    "icon": "Scissors",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "7f59497f-fa8a-4869-a160-923390b4cd27",
+    "name": "Nail Salon",
+    "slug": "nail-salon",
+    "icon": "Sparkles",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "651cbd01-6fc9-427f-824c-f49459acc8c4",
+    "name": "Arts & Culture",
+    "slug": "arts-culture",
+    "icon": "Palette",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "047ebf84-6d81-4d93-a63e-509df5efaa21",
+    "name": "Sports & Athletics",
+    "slug": "sports-athletics",
+    "icon": "Trophy",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "name": "Music & Nightlife",
+    "slug": "music-nightlife",
+    "icon": "Music",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "04276763-aafe-439c-a454-081904107980",
+    "name": "Family Fun",
+    "slug": "family-fun",
+    "icon": "Puzzle",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "262260b2-7f56-4d1a-9ad1-7db2b7818564",
+    "name": "Parks & Outdoors",
+    "slug": "parks-outdoors",
+    "icon": "Trees",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "d052c9bc-1022-4b15-944b-afc19a680814",
+    "name": "Education & Learning",
+    "slug": "education-learning",
+    "icon": "GraduationCap",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "name": "Churches & Places of Worship",
+    "slug": "churches-places-of-worship",
+    "icon": "Church",
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000001",
+    "name": "Baptist",
+    "slug": "baptist",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000002",
+    "name": "Catholic",
+    "slug": "catholic",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000003",
+    "name": "Methodist",
+    "slug": "methodist",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000004",
+    "name": "Presbyterian",
+    "slug": "presbyterian",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000005",
+    "name": "Non-Denominational",
+    "slug": "non-denominational",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000006",
+    "name": "Pentecostal",
+    "slug": "pentecostal",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000007",
+    "name": "Lutheran",
+    "slug": "lutheran",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000008",
+    "name": "Episcopal / Anglican",
+    "slug": "episcopal-anglican",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000009",
+    "name": "AME / African Methodist",
+    "slug": "ame-african-methodist",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 9,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000010",
+    "name": "Church of God",
+    "slug": "church-of-god",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 10,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000011",
+    "name": "Seventh-day Adventist",
+    "slug": "seventh-day-adventist",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 11,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000012",
+    "name": "Islamic / Mosque",
+    "slug": "islamic-mosque",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 12,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000013",
+    "name": "Hindu Temple",
+    "slug": "hindu-temple",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 13,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000014",
+    "name": "Jewish / Synagogue",
+    "slug": "jewish-synagogue",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 14,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000015",
+    "name": "Buddhist Temple",
+    "slug": "buddhist-temple",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 15,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000016",
+    "name": "Sikh Gurdwara",
+    "slug": "sikh-gurdwara",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 16,
+    "sic_code": null
+  },
+  {
+    "id": "c0a00001-0001-4000-8000-000000000017",
+    "name": "Other Denomination",
+    "slug": "other-denomination",
+    "icon": "Church",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 17,
+    "sic_code": null
+  },
+  {
+    "id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "name": "Community Organizations",
+    "slug": "community-orgs",
+    "icon": "Users",
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "a4179937-1816-4b65-b34b-dca0d7bca038",
+    "name": "Youth Programs",
+    "slug": "youth-programs",
+    "icon": "Sparkles",
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "543ba568-010b-476f-9134-53fc23492c92",
+    "name": "Senior Services",
+    "slug": "senior-services",
+    "icon": "Heart",
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "fe271c34-94ed-4107-8960-087d92effb46",
+    "name": "Civic & Advocacy",
+    "slug": "civic-advocacy",
+    "icon": "Scale",
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "4c3ab5f3-be7c-46ae-8183-7ee73a842278",
+    "name": "Barter",
+    "slug": "barter",
+    "icon": "ArrowLeftRight",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 9,
+    "sic_code": null
+  },
+  {
+    "id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "name": "Events & Weddings",
+    "slug": "events-weddings",
+    "icon": "PartyPopper",
+    "parent_category_id": null,
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "name": "Real Estate & Local Living",
+    "slug": "real-estate-local-living",
+    "icon": "Building",
+    "parent_category_id": null,
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8fac6eff-b970-4a39-8608-17b48bec36e1",
+    "name": "Business Coaching",
+    "slug": "business-coaching",
+    "icon": "Target",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e3a2900b-98fc-489f-9640-479218b86728",
+    "name": "Coworking Spaces",
+    "slug": "coworking-spaces",
+    "icon": "Building2",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8bf2a3d5-2336-4234-925b-e51867628f62",
+    "name": "Event & Meeting Planners",
+    "slug": "event-meeting-planners",
+    "icon": "CalendarCheck",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c7e24ef0-837b-42c8-b2d0-ca21fe5d5e4f",
+    "name": "Event Venues",
+    "slug": "event-venues",
+    "icon": "Landmark",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2cada668-5402-40a2-b682-3add17e5fac1",
+    "name": "Events Production",
+    "slug": "events-production",
+    "icon": "Clapperboard",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "name": "Pets",
+    "slug": "pets",
+    "icon": "PawPrint",
+    "parent_category_id": null,
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "name": "Veterinary & Pet Health",
+    "slug": "pets-veterinary-pet-health",
+    "icon": "Stethoscope",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "name": "Grooming",
+    "slug": "pets-grooming",
+    "icon": "Scissors",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "name": "Boarding & Daycare",
+    "slug": "pets-boarding-daycare",
+    "icon": "Home",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "name": "Training & Behavior",
+    "slug": "pets-training-behavior",
+    "icon": "GraduationCap",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "name": "Pet Supplies & Retail",
+    "slug": "pets-supplies-retail",
+    "icon": "ShoppingBag",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "name": "Pet Services",
+    "slug": "pets-services",
+    "icon": "Footprints",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "name": "Adoption & Rescue",
+    "slug": "pets-adoption-rescue",
+    "icon": "Heart",
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "38a3aeea-ac06-4315-93c1-76cb821066a8",
+    "name": "Spa & Massage",
+    "slug": "spa-massage",
+    "icon": "Droplets",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 3,
+    "sic_code": "7299"
+  },
+  {
+    "id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "name": "Plumbing",
+    "slug": "plumbing",
+    "icon": "Droplets",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 1,
+    "sic_code": "1711"
+  },
+  {
+    "id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "name": "Electrical",
+    "slug": "electrical",
+    "icon": "Zap",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 2,
+    "sic_code": "1731"
+  },
+  {
+    "id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "name": "HVAC",
+    "slug": "hvac",
+    "icon": "Fan",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 3,
+    "sic_code": "1711"
+  },
+  {
+    "id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "name": "Landscaping",
+    "slug": "landscaping",
+    "icon": "Trees",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 4,
+    "sic_code": "0782"
+  },
+  {
+    "id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "name": "Pest Control",
+    "slug": "pest-control",
+    "icon": "Bug",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 8,
+    "sic_code": "7342"
+  },
+  {
+    "id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "name": "Skincare & Aesthetics",
+    "slug": "skincare-aesthetics",
+    "icon": "Flower2",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 5,
+    "sic_code": "7299"
+  },
+  {
+    "id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "name": "Clothing & Apparel",
+    "slug": "clothing-apparel",
+    "icon": "Shirt",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 1,
+    "sic_code": "5699"
+  },
+  {
+    "id": "beb64d0f-c008-466d-8885-e69c2c4188b2",
+    "name": "Electronics",
+    "slug": "electronics",
+    "icon": "Smartphone",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 3,
+    "sic_code": "5731"
+  },
+  {
+    "id": "2c1fe711-0ee9-4a7a-935e-ffa0d0565bd3",
+    "name": "Pet Supplies",
+    "slug": "pet-supplies",
+    "icon": "PawPrint",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 6,
+    "sic_code": "5999"
+  },
+  {
+    "id": "9177ecbd-9b35-4d4c-af7b-fdb5810a5233",
+    "name": "Graphic Design & Branding",
+    "slug": "graphic-design-branding",
+    "icon": "Palette",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "21d22dd9-71fc-4eca-a23f-013842e9ec28",
+    "name": "HR & Staffing",
+    "slug": "hr-staffing",
+    "icon": "Users",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7f1df4e0-2b71-4646-86b2-ce7982e3270e",
+    "name": "Office Supplies",
+    "slug": "office-supplies",
+    "icon": "Paperclip",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c1f87cb2-9732-49f9-a8c6-7fbf1d035dc6",
+    "name": "Print & Copy Services",
+    "slug": "print-copy-services",
+    "icon": "Printer",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9c84c872-1f91-41e6-aa1f-0acf1181116b",
+    "name": "Shipping & Logistics",
+    "slug": "shipping-logistics",
+    "icon": "Truck",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "name": "Specialty Food & Markets",
+    "slug": "specialty-food-markets",
+    "icon": "ShoppingBasket",
+    "parent_category_id": "f9e943cb-d074-4b81-bf43-592f79933cd0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "name": "Remodeling & Construction",
+    "slug": "remodeling-construction",
+    "icon": "Hammer",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "name": "Pressure Washing & Surface Care",
+    "slug": "pressure-washing",
+    "icon": "Droplets",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "name": "Pools & Outdoor Living",
+    "slug": "pools-outdoor-living",
+    "icon": "Waves",
+    "parent_category_id": "bd355fb2-4378-496f-a769-4af0d1a8f83f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c336d691-dbfd-4c7e-a441-57ba8a483ca3",
+    "name": "Nutrition & Coaching",
+    "slug": "nutrition-coaching",
+    "icon": "Apple",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "07a59178-303f-4dc1-8770-9cc700daa353",
+    "name": "Alternative & Holistic",
+    "slug": "alternative-holistic",
+    "icon": "Leaf",
+    "parent_category_id": "3b6fd8f6-8fb7-40a1-a9ac-7ea32a29ad0a",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5388a291-bb21-4d19-8a51-fc9df0cdcec6",
+    "name": "Personal Styling",
+    "slug": "personal-styling",
+    "icon": "Shirt",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7e5debe0-c319-461f-bf49-0cd276c11877",
+    "name": "Hobby & Collectibles",
+    "slug": "hobby-collectibles",
+    "icon": "Gamepad2",
+    "parent_category_id": "3e6e00ce-9a20-4852-a747-5e616dad4ae0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "55288237-7891-4b8e-9375-9ab8b9b848da",
+    "name": "Classes & Workshops",
+    "slug": "classes-workshops",
+    "icon": "GraduationCap",
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0cc79ca5-06b8-4c5d-8203-5e6c3de74749",
+    "name": "Catering & Bar Service",
+    "slug": "catering-bar-service",
+    "icon": "Wine",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a419f082-287d-4333-a07c-bbaaafe10c6d",
+    "name": "Photography & Video",
+    "slug": "photography-video",
+    "icon": "Camera",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7fe216db-d277-4f8e-84c9-bd1270458eef",
+    "name": "Music & Entertainment (Events)",
+    "slug": "music-entertainment-events",
+    "icon": "Mic2",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "name": "Decor, Florals & Rentals",
+    "slug": "decor-florals-rentals",
+    "icon": "Flower2",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "42044a7e-5127-4f4e-8306-32f45453ee56",
+    "name": "Beauty (Events)",
+    "slug": "beauty-events",
+    "icon": "Sparkles",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "662de729-b899-4288-aa6b-25e0558aaa85",
+    "name": "Printing & Signage",
+    "slug": "printing-signage",
+    "icon": "Printer",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000001",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "name": "Networking Groups & Business Communities",
+    "slug": "networking-groups",
+    "icon": "Users",
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5dafd434-4659-409d-9c64-e1d7e16ae680",
+    "name": "Residential Real Estate",
+    "slug": "residential-real-estate",
+    "icon": "Home",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "02524feb-71e7-4941-ba85-5e66511a7c32",
+    "name": "Commercial Real Estate",
+    "slug": "commercial-real-estate",
+    "icon": "Building2",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "26ac4909-80f2-4b0d-8691-e0a5449bad21",
+    "name": "Property Management",
+    "slug": "property-management",
+    "icon": "Key",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "aae2cdeb-8bfc-4067-96c5-b397b8f91882",
+    "name": "Mortgage & Lending",
+    "slug": "mortgage-lending",
+    "icon": "DollarSign",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a8454c82-6b57-493d-a01f-a6aa70104802",
+    "name": "Home Inspection & Appraisal",
+    "slug": "home-inspection-appraisal",
+    "icon": "Search",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0b6c8b57-f579-434e-9b25-b3d439b7969a",
+    "name": "Title & Closing",
+    "slug": "title-closing",
+    "icon": "FileCheck",
+    "parent_category_id": "aaaaaaaa-0001-0001-0001-000000000002",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1a4b06cc-66d3-4a39-b500-13d20db5817a",
+    "name": "Custom Cakes",
+    "slug": "custom-cakes",
+    "icon": "Cake",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8f19c726-70e0-487e-8170-5b9140abe54e",
+    "name": "Donuts",
+    "slug": "donuts",
+    "icon": "Cookie",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2c8cee53-fb41-4839-9314-2a03aecafb30",
+    "name": "Ice Cream",
+    "slug": "ice-cream",
+    "icon": "IceCream2",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "11813824-5ffc-4ece-a438-d2ad3dd16bbc",
+    "name": "Gluten-Free Bakery",
+    "slug": "gluten-free-bakery",
+    "icon": "Wheat",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4bf133fc-f60d-49d9-9ab0-065430b3b62f",
+    "name": "Vegan Bakery",
+    "slug": "vegan-bakery",
+    "icon": "Leaf",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "611b5ccc-b889-4007-8356-79242f1d1aa7",
+    "name": "Late-Night Sweets",
+    "slug": "late-night-sweets",
+    "icon": "Moon",
+    "parent_category_id": "1cd0839f-90b8-40c9-af52-f514d9a28551",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d02790c8-1e52-46b9-a553-55b6e70e3744",
+    "name": "Espresso Bar",
+    "slug": "espresso-bar",
+    "icon": "Coffee",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6ab6913d-6be9-41e6-88fb-bb513772be37",
+    "name": "Roastery",
+    "slug": "roastery",
+    "icon": "Flame",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "50af49f6-e73a-4b87-af78-a1b375c94ad7",
+    "name": "Drive-Thru Coffee",
+    "slug": "drive-thru-coffee",
+    "icon": "Car",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9df016ef-153e-49d4-a612-35248a58c88d",
+    "name": "Study-Friendly Cafe",
+    "slug": "study-friendly-cafe",
+    "icon": "BookOpen",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "51966d11-8233-4381-96ab-90d7fe17b63c",
+    "name": "Latte Art",
+    "slug": "latte-art",
+    "icon": "Palette",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "27e6767a-227d-4e5e-ba18-1612adaf914a",
+    "name": "Pastries",
+    "slug": "pastries",
+    "icon": "Croissant",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7554c3eb-5808-4f8e-b0a5-910d67bf95e1",
+    "name": "Tea House",
+    "slug": "tea-house",
+    "icon": "Leaf",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7b2c0204-8572-4ccd-ac53-834093ca3cf9",
+    "name": "Boba",
+    "slug": "boba",
+    "icon": "GlassWater",
+    "parent_category_id": "ff4e9f5b-a304-41b0-9c52-aaf13817431e",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "42641665-9d42-4ddc-8851-8dbf5f6a9bfa",
+    "name": "Craft Beer",
+    "slug": "craft-beer",
+    "icon": "Beer",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d7d9770c-fd42-4dc9-a880-08ae1bc74080",
+    "name": "Sports Bar",
+    "slug": "sports-bar",
+    "icon": "Trophy",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0ad1fdc2-4b12-4a51-95f2-fd7723dc1e87",
+    "name": "Cocktail Lounge",
+    "slug": "cocktail-lounge",
+    "icon": "Martini",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1762ad1c-5d2c-4526-899e-a9caaaff3d53",
+    "name": "Wine Bar",
+    "slug": "wine-bar",
+    "icon": "Wine",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5fe40021-e1a6-4c41-bcf6-c0cd4c392611",
+    "name": "Live Music Nights",
+    "slug": "live-music-nights",
+    "icon": "Music",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1dc709cb-17ac-4ead-8b0f-03a928f39902",
+    "name": "Trivia Nights",
+    "slug": "trivia-nights",
+    "icon": "Brain",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ba41f9cc-12be-4bd1-9571-2dabd36e4c45",
+    "name": "Dog-Friendly Bar",
+    "slug": "dog-friendly-bar",
+    "icon": "Dog",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f7b57e3f-b0cb-47db-a051-e4bd361f49df",
+    "name": "Happy Hour",
+    "slug": "happy-hour",
+    "icon": "Clock",
+    "parent_category_id": "39e1cfc8-4f39-42a0-8a03-b48479184ca8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "eb7044de-8958-467e-a108-e2925de7ac35",
+    "name": "Corporate Catering",
+    "slug": "corporate-catering",
+    "icon": "Building",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4a1b7189-3808-4f4b-a07c-1a2d8c1eedd4",
+    "name": "Wedding Catering",
+    "slug": "wedding-catering",
+    "icon": "Heart",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3490ec1f-d5cd-4015-9a6a-ba5dee801d6a",
+    "name": "Drop-Off Catering",
+    "slug": "drop-off-catering",
+    "icon": "Truck",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8dc30747-21a5-4e05-9c5d-c6555a411466",
+    "name": "Full Service Catering",
+    "slug": "full-service-catering",
+    "icon": "ChefHat",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e772b2cc-1f4d-47d6-9376-857aa0afd2c4",
+    "name": "BBQ Catering",
+    "slug": "bbq-catering",
+    "icon": "Flame",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "40d616a8-269d-4975-90e3-90274e011ed9",
+    "name": "Charcuterie",
+    "slug": "charcuterie",
+    "icon": "UtensilsCrossed",
+    "parent_category_id": "cedd029b-5040-48a8-b1a5-8b2ed3a3c0cc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8ec59d17-20ac-4d8a-8b8c-27b0eb39398a",
+    "name": "Weekly Schedule",
+    "slug": "food-truck-weekly",
+    "icon": "Calendar",
+    "parent_category_id": "73760ca4-90fc-4316-b4c6-9b39d7a8ce77",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "66790fbf-64a8-4704-8a8d-741f53043943",
+    "name": "Private Events",
+    "slug": "food-truck-private-events",
+    "icon": "Lock",
+    "parent_category_id": "73760ca4-90fc-4316-b4c6-9b39d7a8ce77",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "09a22e81-8851-4bf2-a24b-26037c894911",
+    "name": "Street Festivals",
+    "slug": "street-festivals",
+    "icon": "Flag",
+    "parent_category_id": "73760ca4-90fc-4316-b4c6-9b39d7a8ce77",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "677cc4d5-5006-4e42-bcfb-84d661adec69",
+    "name": "Late-Night Food Truck",
+    "slug": "late-night-food-truck",
+    "icon": "Moon",
+    "parent_category_id": "73760ca4-90fc-4316-b4c6-9b39d7a8ce77",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "547b24c1-f5b5-4b0e-a365-dd589096a374",
+    "name": "International Market",
+    "slug": "international-market",
+    "icon": "Globe",
+    "parent_category_id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9bfd88ad-4a4f-4e13-a928-03220f81227c",
+    "name": "Butcher",
+    "slug": "butcher",
+    "icon": "Beef",
+    "parent_category_id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "57710d49-928c-4ee8-8677-f25742408090",
+    "name": "Seafood Market",
+    "slug": "seafood-market",
+    "icon": "Fish",
+    "parent_category_id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a13f6e5f-a5cc-4b2f-a0a4-a3c646539501",
+    "name": "Gourmet",
+    "slug": "gourmet",
+    "icon": "ChefHat",
+    "parent_category_id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "677c3def-1f29-4606-9f1e-13742188ad36",
+    "name": "Meal Prep",
+    "slug": "meal-prep",
+    "icon": "Package",
+    "parent_category_id": "6faa696b-d3e6-4c22-9323-d19932736ef4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "668a832d-2b89-426a-9c6b-80e5aae66aca",
+    "name": "New Openings",
+    "slug": "new-openings",
+    "icon": "Sparkles",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "95c4c940-e19a-486d-8f9b-bf9c284b650c",
+    "name": "Date Night",
+    "slug": "date-night",
+    "icon": "Heart",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "955610a0-de2a-479c-9e52-761604753b6f",
+    "name": "Brunch",
+    "slug": "brunch",
+    "icon": "Sun",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3ceba5a7-99e0-4c16-a145-e7101978c6b3",
+    "name": "Lunch Specials",
+    "slug": "lunch-specials",
+    "icon": "Clock",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "90dea60a-83ce-4bdf-995e-a0d03584d268",
+    "name": "Late Night Dining",
+    "slug": "late-night-dining",
+    "icon": "Moon",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f97341b6-99ab-40ac-bf2d-178d1947fd47",
+    "name": "Outdoor Patio",
+    "slug": "outdoor-patio",
+    "icon": "TreePine",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c052d354-9081-445a-91b0-e56bba6a82a2",
+    "name": "Rooftop Dining",
+    "slug": "rooftop-dining",
+    "icon": "Building",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "81f89d4f-c406-475d-8369-80feea0d79ab",
+    "name": "Private Dining",
+    "slug": "private-dining",
+    "icon": "Lock",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9cfe90d4-abd4-47e7-9eca-91321321b5b5",
+    "name": "Family-Friendly",
+    "slug": "family-friendly-dining",
+    "icon": "Users",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3cedac5c-687f-48db-a088-30170b050227",
+    "name": "Vegan & Vegetarian",
+    "slug": "vegan-vegetarian",
+    "icon": "Leaf",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "958c9bd6-78ba-4640-994c-e73f0295444a",
+    "name": "Gluten-Free",
+    "slug": "gluten-free-dining",
+    "icon": "Wheat",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b9252d19-6934-489b-ba7e-50d8c2fb35af",
+    "name": "Local Favorites",
+    "slug": "local-favorites",
+    "icon": "Star",
+    "parent_category_id": "b52b1d21-ee90-4973-a906-cf4989388888",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9d507a09-ed1e-423b-85c7-547889c12bdc",
+    "name": "Deep Clean",
+    "slug": "deep-clean",
+    "icon": "Sparkles",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1ad54b27-85a8-46f8-9872-c3fe6ec3dfd5",
+    "name": "Move-In/Out Cleaning",
+    "slug": "move-in-out-cleaning",
+    "icon": "Truck",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7cdcf733-d3d2-43d8-895b-c538402bc96f",
+    "name": "Vacation Rental Cleaning",
+    "slug": "vacation-rental-cleaning",
+    "icon": "Plane",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0fbaf95e-3764-466d-b1fb-b4769d4316e8",
+    "name": "Post-Construction Cleaning",
+    "slug": "post-construction-cleaning",
+    "icon": "HardHat",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f6cf80c8-798a-4035-b602-5e464e0698be",
+    "name": "Carpet Cleaning",
+    "slug": "carpet-cleaning",
+    "icon": "LayoutGrid",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2598c26e-f843-4bd7-b323-e8a6d401b135",
+    "name": "Window Cleaning",
+    "slug": "window-cleaning",
+    "icon": "Square",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a476c8e6-0050-456f-b7b9-77c7f96759bc",
+    "name": "Organizing",
+    "slug": "organizing",
+    "icon": "FolderOpen",
+    "parent_category_id": "57abbef1-c256-4e7c-8c66-8f46c4d27d54",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f75b6064-1467-4ec1-aa9a-fb4bac274c4f",
+    "name": "Hardscaping",
+    "slug": "hardscaping",
+    "icon": "Blocks",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6527a022-6449-47c1-8af2-f1f018442c9d",
+    "name": "Irrigation",
+    "slug": "irrigation",
+    "icon": "Droplets",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b449aff0-e1c4-4ad5-95f6-52cc4ef02ba7",
+    "name": "Tree Service",
+    "slug": "tree-service",
+    "icon": "TreePine",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ce790be1-21c5-4d24-a7f5-91000f07d66c",
+    "name": "Mulch & Pine Straw",
+    "slug": "mulch-pine-straw",
+    "icon": "Leaf",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2e6f3d97-06bf-4626-9ec4-06f086ae101a",
+    "name": "Drainage",
+    "slug": "drainage",
+    "icon": "Waves",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d29c5c52-6201-48a6-b7b6-18f5729534f9",
+    "name": "Turf",
+    "slug": "turf",
+    "icon": "Grass",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f18fd384-92c3-4d0a-8c5e-ad069ddc7c48",
+    "name": "Seasonal Cleanup",
+    "slug": "seasonal-cleanup",
+    "icon": "Calendar",
+    "parent_category_id": "b556e079-6a98-4951-a981-a2c1f7710fb2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "18abfa72-5f4b-44fc-98aa-ec615b14da73",
+    "name": "HVAC Repair",
+    "slug": "hvac-repair",
+    "icon": "Wrench",
+    "parent_category_id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7d1c164f-d063-4707-b664-2898539000a4",
+    "name": "HVAC Replacement",
+    "slug": "hvac-replacement",
+    "icon": "RefreshCw",
+    "parent_category_id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ad6ed2a4-2c8d-424d-a0c6-bde182237159",
+    "name": "Maintenance Plans",
+    "slug": "hvac-maintenance-plans",
+    "icon": "ClipboardCheck",
+    "parent_category_id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e7c3f3ef-ce6e-44f8-ae16-8108b6f772b7",
+    "name": "Indoor Air Quality",
+    "slug": "indoor-air-quality",
+    "icon": "Wind",
+    "parent_category_id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4a8e9add-3a7c-4d47-9f63-90cadb3ecec8",
+    "name": "Duct Cleaning",
+    "slug": "duct-cleaning",
+    "icon": "Pipette",
+    "parent_category_id": "b6ab6caa-5903-47a3-9504-9ea7473499c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "34e8bfc4-9284-429a-9b6f-fdfc2a9bad3f",
+    "name": "Water Heater",
+    "slug": "water-heater",
+    "icon": "Flame",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8ef537bb-3576-483c-a6cc-4b4f3a805f21",
+    "name": "Drain Cleaning",
+    "slug": "drain-cleaning",
+    "icon": "Droplets",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bee6053d-fe0b-4200-a100-300bfe3906c7",
+    "name": "Leak Detection",
+    "slug": "leak-detection",
+    "icon": "Search",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b43f1893-2ac5-4c9f-b352-58a8b53c5dbf",
+    "name": "Sewer Line",
+    "slug": "sewer-line",
+    "icon": "Route",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fe11383e-ac12-4ec3-bfbd-b555da9cfa43",
+    "name": "Fixtures",
+    "slug": "plumbing-fixtures",
+    "icon": "Droplet",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "22f44f3d-d366-469e-9e14-cae699f64f14",
+    "name": "Emergency Plumbing",
+    "slug": "emergency-plumbing",
+    "icon": "Siren",
+    "parent_category_id": "acd4aea5-d3cd-43e7-931f-50cc53af60ce",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "97e01470-1bec-4f56-af7f-d6d6ea554c6a",
+    "name": "Panel Upgrade",
+    "slug": "panel-upgrade",
+    "icon": "Zap",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c000af0f-7b47-4366-a19e-a6070f1dcffa",
+    "name": "EV Charger Install",
+    "slug": "ev-charger",
+    "icon": "BatteryCharging",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "df6e6881-117f-4b96-929a-4007798cd288",
+    "name": "Lighting",
+    "slug": "lighting-install",
+    "icon": "Lightbulb",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "57777328-468c-4ca3-b534-e57536fa5715",
+    "name": "Ceiling Fans",
+    "slug": "ceiling-fans",
+    "icon": "Fan",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1ace0aaa-67ce-4461-9393-6e24e6449472",
+    "name": "Smart Home",
+    "slug": "smart-home",
+    "icon": "Smartphone",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "499a5557-2436-4844-a3eb-03af41bca139",
+    "name": "Generator",
+    "slug": "generator-install",
+    "icon": "Power",
+    "parent_category_id": "ddca7f71-7335-4c5f-9267-6a93e445fc8f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "01ef912c-9895-4e8d-8535-ff44d27b7bf9",
+    "name": "Roof Repair",
+    "slug": "roof-repair",
+    "icon": "Wrench",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ddb28f61-7023-44c5-ae32-47c5f806c02e",
+    "name": "Roof Replacement",
+    "slug": "roof-replacement",
+    "icon": "RefreshCw",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fbfde550-0346-48f4-8513-1ae6831ff56f",
+    "name": "Gutters",
+    "slug": "gutters",
+    "icon": "Droplets",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0f3c6961-06e8-4bbf-a895-7293bcc8a7ba",
+    "name": "Siding",
+    "slug": "siding",
+    "icon": "LayoutGrid",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0e30c74c-bb7d-4ea5-8f2f-20f1fd8dd0dc",
+    "name": "Storm Damage",
+    "slug": "storm-damage",
+    "icon": "CloudRain",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0070661e-eb80-4aa5-b953-66b7b32881b0",
+    "name": "Insurance Claim Help",
+    "slug": "insurance-claim-help",
+    "icon": "FileCheck",
+    "parent_category_id": "13127c19-79c4-4903-9fff-1473f4b8ab99",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "92dd8ba4-0d48-43ba-93bf-320a5c9d15cd",
+    "name": "Kitchen Remodel",
+    "slug": "kitchen-remodel",
+    "icon": "ChefHat",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "700e5266-ac47-4115-bce8-caf1564a0198",
+    "name": "Bath Remodel",
+    "slug": "bath-remodel",
+    "icon": "Bath",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "aae3163d-e32f-4065-9198-37ea9ea4483f",
+    "name": "Additions",
+    "slug": "home-additions",
+    "icon": "Plus",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c313f09e-a290-4367-b036-af511f1407da",
+    "name": "Decks & Porches",
+    "slug": "decks-porches",
+    "icon": "Home",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2f810f4e-53d6-4d71-959b-674842fe2a8a",
+    "name": "Drywall",
+    "slug": "drywall",
+    "icon": "Square",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6b2d161d-7786-46a9-957a-615254870399",
+    "name": "Handyman",
+    "slug": "handyman",
+    "icon": "Wrench",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "35bb6404-9e88-43d2-9c8e-0a99fe50e035",
+    "name": "Termites",
+    "slug": "termites",
+    "icon": "Bug",
+    "parent_category_id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a55bb17e-728d-4f13-97a2-a5a1e3c46bd4",
+    "name": "Mosquito Control",
+    "slug": "mosquito-control",
+    "icon": "Bug",
+    "parent_category_id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5da34a6f-3d6c-4f18-9018-2b0eeb3a83b8",
+    "name": "Rodent Control",
+    "slug": "rodent-control",
+    "icon": "MousePointer",
+    "parent_category_id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a11429f5-6a96-4f97-90ef-8ad3c5af5d9b",
+    "name": "Wildlife Removal",
+    "slug": "wildlife-removal",
+    "icon": "Bird",
+    "parent_category_id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1a1d0e2a-00f9-4f6e-bd75-feae4e83c0f5",
+    "name": "Quarterly Plans",
+    "slug": "pest-quarterly-plans",
+    "icon": "Calendar",
+    "parent_category_id": "f037efc1-d997-422c-a357-40ea1416f9fc",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d828f6f8-2653-4f93-a9c2-ba982c3ec118",
+    "name": "Local Moves",
+    "slug": "local-moves",
+    "icon": "Truck",
+    "parent_category_id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bc34f239-67e9-4a78-88ca-7a0a1fd2c2ce",
+    "name": "Long Distance",
+    "slug": "long-distance-moves",
+    "icon": "Map",
+    "parent_category_id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b07c5c8a-78e0-4669-9d3e-9b84637ada31",
+    "name": "Packing Services",
+    "slug": "packing-services",
+    "icon": "Package",
+    "parent_category_id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e869b827-8fa8-4a8e-9e9b-ef25def001dc",
+    "name": "Storage Units",
+    "slug": "storage-units",
+    "icon": "Archive",
+    "parent_category_id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2eb8f797-64ae-4111-abae-803a03ef3c7b",
+    "name": "Junk Removal",
+    "slug": "junk-removal",
+    "icon": "Trash2",
+    "parent_category_id": "3f53f38a-0748-442a-99dd-08cc18596a6b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2d611679-1d0f-4681-b97e-267f9f179324",
+    "name": "Roof Cleaning",
+    "slug": "pressure-roof-cleaning",
+    "icon": "Home",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d702fbe3-15b0-4213-a7db-a729350ad856",
+    "name": "Sidewalk Cleaning",
+    "slug": "sidewalk-cleaning",
+    "icon": "Footprints",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5b8f7fa8-1103-4554-afa0-966defe462da",
+    "name": "Driveway Cleaning",
+    "slug": "driveway-cleaning",
+    "icon": "Car",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "463bcf7a-83fa-4cde-b911-401993fd5b95",
+    "name": "Deck Cleaning",
+    "slug": "deck-cleaning",
+    "icon": "LayoutGrid",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "86250245-a243-46a8-bdc6-7d435de50e24",
+    "name": "Soft Wash",
+    "slug": "soft-wash",
+    "icon": "Droplet",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a82c31af-ed08-4a98-8b40-7733ab1ce89b",
+    "name": "Concrete Sealing",
+    "slug": "concrete-sealing",
+    "icon": "Shield",
+    "parent_category_id": "c571df80-4a7f-4310-bb3e-56d28a9eada5",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9785c22b-5813-44c8-b056-1b2d45f8d029",
+    "name": "Pool Service",
+    "slug": "pool-service",
+    "icon": "Waves",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "69c3f829-e52f-4e18-8793-5941e89f6b30",
+    "name": "Pool Install",
+    "slug": "pool-install",
+    "icon": "Shovel",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "27904656-62a8-4723-972c-064e3bfe1a0f",
+    "name": "Pool Repairs",
+    "slug": "pool-repairs",
+    "icon": "Wrench",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "975a62c4-d5ca-4325-a89b-ff2cf07144f1",
+    "name": "Outdoor Kitchens",
+    "slug": "outdoor-kitchens",
+    "icon": "ChefHat",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0fa2041d-a7f4-4325-b323-3eae21b147c6",
+    "name": "Firepits",
+    "slug": "firepits",
+    "icon": "Flame",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "94b8eaa4-e66c-47aa-a075-2854d6e2f568",
+    "name": "Pergolas",
+    "slug": "pergolas",
+    "icon": "Columns",
+    "parent_category_id": "8455d8fd-afb5-4e23-afad-e0c5d5105176",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "cbc50dad-2436-4427-b753-22929b59357f",
+    "name": "Personal Training",
+    "slug": "personal-training",
+    "icon": "Dumbbell",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8335f474-d399-45b6-9a75-c245d9d36eb7",
+    "name": "Group Classes",
+    "slug": "group-classes",
+    "icon": "Users",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "df4edc5e-7ba4-498d-9ccf-da66be0278ba",
+    "name": "Strength Training",
+    "slug": "strength-training",
+    "icon": "Dumbbell",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c048422a-e573-4e8f-bb0a-6e7fc7b8f128",
+    "name": "HIIT",
+    "slug": "hiit",
+    "icon": "Zap",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d09a709a-52f3-4c04-876e-8a0a1f48b239",
+    "name": "CrossFit-Style",
+    "slug": "crossfit-style",
+    "icon": "Flame",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b4263995-caf3-44a1-b405-02aad98a8497",
+    "name": "Women's Fitness",
+    "slug": "womens-fitness",
+    "icon": "Heart",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "558b8fbc-daa5-4b62-ace5-d93363eeaf06",
+    "name": "Senior Fitness",
+    "slug": "senior-fitness",
+    "icon": "HeartPulse",
+    "parent_category_id": "94bff3d1-c8dc-4f1b-aec1-4ac3ca5b13f9",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b2247deb-5614-4dc7-991f-5fa55876511e",
+    "name": "Hot Yoga",
+    "slug": "hot-yoga",
+    "icon": "Flame",
+    "parent_category_id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "515a6a84-4eef-460e-9721-08fe5be60178",
+    "name": "Reformer Pilates",
+    "slug": "reformer-pilates",
+    "icon": "Layers",
+    "parent_category_id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ab2a151e-a242-4c75-9e46-d3fb2cf9edef",
+    "name": "Prenatal",
+    "slug": "prenatal-yoga",
+    "icon": "Baby",
+    "parent_category_id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d6ff04a6-6c72-4bc7-9d74-816d67338e3e",
+    "name": "Recovery",
+    "slug": "recovery-yoga",
+    "icon": "RefreshCw",
+    "parent_category_id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bfdbeccd-cb15-4ec5-b5f0-a790c1c5cb75",
+    "name": "Breathwork",
+    "slug": "breathwork",
+    "icon": "Wind",
+    "parent_category_id": "2808319d-1aac-477c-ae5a-b18d440a3b52",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c230d243-6d9d-4843-ab14-104637406366",
+    "name": "Sports Rehab",
+    "slug": "sports-rehab",
+    "icon": "Activity",
+    "parent_category_id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c2368582-645b-452c-baa6-086b3d91f0db",
+    "name": "Injury Recovery",
+    "slug": "injury-recovery",
+    "icon": "HeartPulse",
+    "parent_category_id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "26eb615f-8a88-4882-990e-36a24d9430b2",
+    "name": "Post-Op Therapy",
+    "slug": "post-op-therapy",
+    "icon": "Scissors",
+    "parent_category_id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0155ce04-bf81-483b-8d3d-bf3ef3f7d62f",
+    "name": "Manual Therapy",
+    "slug": "manual-therapy",
+    "icon": "Hand",
+    "parent_category_id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "96abafcb-f814-40a1-a29f-58d66cb56b35",
+    "name": "Dry Needling",
+    "slug": "dry-needling",
+    "icon": "Target",
+    "parent_category_id": "a336b277-8f82-4f0b-a5ec-0fd8ef7be80b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2ba761ce-b168-4b73-b2d4-16daf21b688b",
+    "name": "Primary Care",
+    "slug": "primary-care",
+    "icon": "Stethoscope",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fe186a75-8d86-4953-8e4d-45004ebf7930",
+    "name": "Pediatrics",
+    "slug": "pediatrics",
+    "icon": "Baby",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f8c6c7b1-661e-425e-a143-37cda8d67789",
+    "name": "Urgent Care",
+    "slug": "urgent-care",
+    "icon": "Siren",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fe5b2991-5b4a-4e08-96c4-daf705786828",
+    "name": "Dental",
+    "slug": "dental",
+    "icon": "Smile",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "11e17711-f753-4f2b-a5a3-36e712ff1514",
+    "name": "Flooring",
+    "slug": "flooring",
+    "icon": "LayoutGrid",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": "1752"
+  },
+  {
+    "id": "4c5b0137-5030-4b2b-a04f-759902c92ba4",
+    "name": "Orthodontics",
+    "slug": "orthodontics",
+    "icon": "AlignLeft",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4dcd8e07-0f4a-46d5-a015-7258421444ff",
+    "name": "Cosmetic Dentistry",
+    "slug": "cosmetic-dentistry",
+    "icon": "Sparkles",
+    "parent_category_id": "e3bbc4e5-9ddd-4adc-925f-b29710a1aa60",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "341def7a-126d-45d2-9e08-1605a0a5adf8",
+    "name": "Therapy",
+    "slug": "therapy",
+    "icon": "MessageCircle",
+    "parent_category_id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8c28f29b-5cb1-491a-9f6c-cfe0fd600d56",
+    "name": "Couples Counseling",
+    "slug": "couples-counseling",
+    "icon": "Heart",
+    "parent_category_id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "edf8160f-4019-4a60-999a-f15c602a3f34",
+    "name": "Psychiatry",
+    "slug": "psychiatry",
+    "icon": "Brain",
+    "parent_category_id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d6b7a6d9-79d2-4fee-8f0f-fff5df74c677",
+    "name": "Teen Counseling",
+    "slug": "teen-counseling",
+    "icon": "Users",
+    "parent_category_id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f41a33aa-5718-4abd-a21b-a16a18c0ad7a",
+    "name": "Addiction Support",
+    "slug": "addiction-support",
+    "icon": "Shield",
+    "parent_category_id": "637e9651-6693-4d3c-8198-ae0077d17337",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "321e1f11-24f0-43f7-a84e-98a4278341a0",
+    "name": "Weight Loss",
+    "slug": "weight-loss",
+    "icon": "TrendingDown",
+    "parent_category_id": "c336d691-dbfd-4c7e-a441-57ba8a483ca3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "53e68d97-d418-426b-9fae-47667a8ab614",
+    "name": "Sports Nutrition",
+    "slug": "sports-nutrition",
+    "icon": "Dumbbell",
+    "parent_category_id": "c336d691-dbfd-4c7e-a441-57ba8a483ca3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "21e65f28-1cc5-4666-935f-308449c80ab2",
+    "name": "Meal Planning",
+    "slug": "meal-planning",
+    "icon": "ClipboardList",
+    "parent_category_id": "c336d691-dbfd-4c7e-a441-57ba8a483ca3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7fcfabbe-c5f1-4d5d-8076-0da3bdf04e76",
+    "name": "Diabetes Support",
+    "slug": "diabetes-support",
+    "icon": "HeartPulse",
+    "parent_category_id": "c336d691-dbfd-4c7e-a441-57ba8a483ca3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "85fb72cd-5fd9-4652-a20a-9f4c15bee302",
+    "name": "Compounding",
+    "slug": "compounding-pharmacy",
+    "icon": "Flask",
+    "parent_category_id": "b11af887-0e5a-42e6-b06a-98f7b59b9ded",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4329f8aa-7a2c-4ffa-a4a2-6cf266617624",
+    "name": "Supplements",
+    "slug": "supplements",
+    "icon": "Pill",
+    "parent_category_id": "b11af887-0e5a-42e6-b06a-98f7b59b9ded",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0a4883fb-f029-47c2-9d47-042ae3ea5333",
+    "name": "Immunizations",
+    "slug": "immunizations",
+    "icon": "Syringe",
+    "parent_category_id": "b11af887-0e5a-42e6-b06a-98f7b59b9ded",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b5b313cf-f4af-4537-9e7a-601ec7ab590e",
+    "name": "Pet Grooming (Health)",
+    "slug": "pet-grooming-health",
+    "icon": "Scissors",
+    "parent_category_id": "088be9b2-3e90-49e7-aa44-5dffa10ede3b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5573c0c3-2114-4623-aa1d-77aa5f7226c1",
+    "name": "Emergency Vet",
+    "slug": "emergency-vet",
+    "icon": "Siren",
+    "parent_category_id": "088be9b2-3e90-49e7-aa44-5dffa10ede3b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "db9e63ca-4fac-4d1d-9872-17b0db358607",
+    "name": "Holistic Vet",
+    "slug": "holistic-vet",
+    "icon": "Leaf",
+    "parent_category_id": "088be9b2-3e90-49e7-aa44-5dffa10ede3b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7e764933-4bb7-486e-8783-767610ebac22",
+    "name": "Boarding-Daycare Health",
+    "slug": "boarding-daycare-health",
+    "icon": "Home",
+    "parent_category_id": "088be9b2-3e90-49e7-aa44-5dffa10ede3b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6a11d625-091f-4e6c-96b8-ac934bec8e8b",
+    "name": "Acupuncture",
+    "slug": "acupuncture",
+    "icon": "Target",
+    "parent_category_id": "07a59178-303f-4dc1-8770-9cc700daa353",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e60464e0-6657-4baa-91be-e70da2ed136f",
+    "name": "Massage Therapy",
+    "slug": "massage-therapy",
+    "icon": "Hand",
+    "parent_category_id": "07a59178-303f-4dc1-8770-9cc700daa353",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "098ae880-b215-4375-b12d-a60a7509f624",
+    "name": "IV Therapy",
+    "slug": "iv-therapy",
+    "icon": "Droplet",
+    "parent_category_id": "07a59178-303f-4dc1-8770-9cc700daa353",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "87283954-537e-49d7-b5ee-b26b8d1eede3",
+    "name": "Sauna & Cryotherapy",
+    "slug": "sauna-cryotherapy",
+    "icon": "Thermometer",
+    "parent_category_id": "07a59178-303f-4dc1-8770-9cc700daa353",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "659f8192-6627-4a24-92fd-dd43b762397a",
+    "name": "Color Specialist",
+    "slug": "color-specialist",
+    "icon": "Palette",
+    "parent_category_id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5273a8f1-eb89-46ba-96ce-7bbb27e52678",
+    "name": "Extensions",
+    "slug": "hair-extensions",
+    "icon": "Sparkles",
+    "parent_category_id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "da68b3d5-62e6-488b-b824-08b88770e928",
+    "name": "Curly Hair",
+    "slug": "curly-hair",
+    "icon": "Waves",
+    "parent_category_id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d5912113-ba02-4f86-b9f1-e6448fbeebc5",
+    "name": "Blowouts",
+    "slug": "blowouts",
+    "icon": "Wind",
+    "parent_category_id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b63620b2-54b7-4543-ba21-7406b04a4645",
+    "name": "Bridal Hair",
+    "slug": "bridal-hair",
+    "icon": "Heart",
+    "parent_category_id": "45bf1514-4ba3-4605-9e02-efaa4d795f63",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4304735a-bc54-4fb2-acfb-16f2dbc2f202",
+    "name": "Barber Fades",
+    "slug": "barber-fades",
+    "icon": "Scissors",
+    "parent_category_id": "7fb4af89-414a-48e6-bd46-19d6439b299a",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "73ee2deb-6104-41bd-b3a4-e8e41fdc18e4",
+    "name": "Gel Nails",
+    "slug": "gel-nails",
+    "icon": "Sparkles",
+    "parent_category_id": "7f59497f-fa8a-4869-a160-923390b4cd27",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1fde0c49-9ffe-40ed-b926-33b6fb01e2e3",
+    "name": "Acrylic Nails",
+    "slug": "acrylic-nails",
+    "icon": "Sparkles",
+    "parent_category_id": "7f59497f-fa8a-4869-a160-923390b4cd27",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0b561edb-b326-4b1d-a801-ed019559aa1e",
+    "name": "Nail Art",
+    "slug": "nail-art",
+    "icon": "Palette",
+    "parent_category_id": "7f59497f-fa8a-4869-a160-923390b4cd27",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8697fce2-9fb9-43c8-9858-203f0d8e12ac",
+    "name": "Pedicures",
+    "slug": "pedicures",
+    "icon": "Footprints",
+    "parent_category_id": "7f59497f-fa8a-4869-a160-923390b4cd27",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0c1c96a5-5b08-44d9-8c7a-160c60ae8b0d",
+    "name": "Facials",
+    "slug": "facials",
+    "icon": "Sparkles",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "70c85f24-0ffc-4e4a-8bf2-61019f57c061",
+    "name": "Waxing",
+    "slug": "waxing",
+    "icon": "Droplet",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8ceb8b52-f80b-4912-8a74-8a31a7f9cab4",
+    "name": "Lashes",
+    "slug": "lashes",
+    "icon": "Eye",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a5d805d6-cc69-4c1f-9ba9-445e1bc77b60",
+    "name": "Brows",
+    "slug": "brows",
+    "icon": "Eye",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9ef721e6-5d55-4455-8e6b-3f1a9d9f8be3",
+    "name": "Microneedling",
+    "slug": "microneedling",
+    "icon": "Target",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1c630542-74fa-471c-b44b-21ccc8811d5f",
+    "name": "Injectables",
+    "slug": "injectables",
+    "icon": "Syringe",
+    "parent_category_id": "e0f5d1a4-2b23-486b-8a0e-5e98707143c7",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9aecf48a-75ac-4f76-a016-693d70b8875b",
+    "name": "Deep Tissue",
+    "slug": "deep-tissue",
+    "icon": "Hand",
+    "parent_category_id": "38a3aeea-ac06-4315-93c1-76cb821066a8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "51321636-215f-43fb-ae88-7932e5461f9b",
+    "name": "Sports Massage",
+    "slug": "sports-massage",
+    "icon": "Activity",
+    "parent_category_id": "38a3aeea-ac06-4315-93c1-76cb821066a8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5a83eb5f-ed0f-4ca3-801d-72e4148a87eb",
+    "name": "Prenatal Massage",
+    "slug": "prenatal-massage",
+    "icon": "Baby",
+    "parent_category_id": "38a3aeea-ac06-4315-93c1-76cb821066a8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a345322e-e9a0-4073-943b-7d3f453eb4b7",
+    "name": "Couples Massage",
+    "slug": "couples-massage",
+    "icon": "Heart",
+    "parent_category_id": "38a3aeea-ac06-4315-93c1-76cb821066a8",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fa3c9d3d-a17a-4c0e-a9a5-8d268c94909c",
+    "name": "Fine Line Tattoo",
+    "slug": "fine-line-tattoo",
+    "icon": "PenLine",
+    "parent_category_id": "d39500e6-42f8-4726-8528-55f4e9e00caa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e907727d-1f6c-4c08-85d7-b16ec06089aa",
+    "name": "Traditional Tattoo",
+    "slug": "traditional-tattoo",
+    "icon": "Anchor",
+    "parent_category_id": "d39500e6-42f8-4726-8528-55f4e9e00caa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b9f15918-4324-4a29-9b20-7b1509517e47",
+    "name": "Cover-Ups",
+    "slug": "cover-ups",
+    "icon": "RefreshCw",
+    "parent_category_id": "d39500e6-42f8-4726-8528-55f4e9e00caa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1f1955af-37ac-4980-a0f2-03b1c98d2e6d",
+    "name": "Body Jewelry",
+    "slug": "body-jewelry",
+    "icon": "Gem",
+    "parent_category_id": "d39500e6-42f8-4726-8528-55f4e9e00caa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "32893ab1-b593-4379-89e8-4b5942a15ab1",
+    "name": "Wardrobe Styling",
+    "slug": "wardrobe-styling",
+    "icon": "Shirt",
+    "parent_category_id": "5388a291-bb21-4d19-8a51-fc9df0cdcec6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "169ed055-c9c6-44d8-92d5-9cd3abece9f4",
+    "name": "Makeup Artist",
+    "slug": "makeup-artist",
+    "icon": "Palette",
+    "parent_category_id": "5388a291-bb21-4d19-8a51-fc9df0cdcec6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f3c78878-0c9f-4a45-b783-2cf48615f880",
+    "name": "Bridal Glam",
+    "slug": "bridal-glam",
+    "icon": "Sparkles",
+    "parent_category_id": "5388a291-bb21-4d19-8a51-fc9df0cdcec6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c93dd14a-394c-4efa-bec3-8f5fe37c9c17",
+    "name": "Boutique",
+    "slug": "boutique",
+    "icon": "Store",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7afa7bd5-dad8-4128-a5c9-19864b5d5712",
+    "name": "Men's Fashion",
+    "slug": "mens-fashion",
+    "icon": "Shirt",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "10aee81d-99f7-40bd-9c63-c80f0dea65ac",
+    "name": "Women's Fashion",
+    "slug": "womens-fashion",
+    "icon": "Heart",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ce3f7727-d7f6-4af1-89f7-36e143844afe",
+    "name": "Kids Fashion",
+    "slug": "kids-fashion",
+    "icon": "Baby",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c146dcda-3a4f-4b89-a881-9a4c44800107",
+    "name": "Streetwear",
+    "slug": "streetwear",
+    "icon": "Zap",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ba300113-cf00-4f79-b9fd-a07d3cce9101",
+    "name": "Formal Wear",
+    "slug": "formal-wear",
+    "icon": "Award",
+    "parent_category_id": "e2a3a3e0-71b7-48bc-aa93-2215eece4fd4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "28f3d57d-5d34-4515-97e7-5282459f144a",
+    "name": "Vintage",
+    "slug": "vintage-decor",
+    "icon": "Clock",
+    "parent_category_id": "8d05db8a-b9b7-41d6-83fb-9b77f9c550fd",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a26fbc5e-2397-496f-a625-9e5c58956621",
+    "name": "Custom Furniture",
+    "slug": "custom-furniture",
+    "icon": "Hammer",
+    "parent_category_id": "8d05db8a-b9b7-41d6-83fb-9b77f9c550fd",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2a383aac-2900-4812-9b9e-5747f0b38999",
+    "name": "Lighting",
+    "slug": "lighting-decor",
+    "icon": "Lightbulb",
+    "parent_category_id": "8d05db8a-b9b7-41d6-83fb-9b77f9c550fd",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4e689b30-d5e4-4115-85fe-0f5b7bb246ea",
+    "name": "Art Prints",
+    "slug": "art-prints",
+    "icon": "Frame",
+    "parent_category_id": "8d05db8a-b9b7-41d6-83fb-9b77f9c550fd",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "91a16d54-0826-4350-8450-fdbd1fa433f5",
+    "name": "Local Makers",
+    "slug": "local-makers",
+    "icon": "Hand",
+    "parent_category_id": "85942223-2932-4dd9-a84e-0f82cde7e1a2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5d9cf738-2e72-46c2-8be2-7db6cf90c80a",
+    "name": "Personalization",
+    "slug": "personalization",
+    "icon": "PenLine",
+    "parent_category_id": "85942223-2932-4dd9-a84e-0f82cde7e1a2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2f9b8f6a-600f-4829-9539-6a2d8bf9f148",
+    "name": "Subscription Boxes",
+    "slug": "subscription-boxes",
+    "icon": "Package",
+    "parent_category_id": "85942223-2932-4dd9-a84e-0f82cde7e1a2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "80f66880-da8f-4a1e-97c6-9c82e3bf4499",
+    "name": "Repairs",
+    "slug": "electronics-repairs",
+    "icon": "Wrench",
+    "parent_category_id": "beb64d0f-c008-466d-8885-e69c2c4188b2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "227bce16-67df-4eda-8e6e-397dfe500501",
+    "name": "Phone Accessories",
+    "slug": "phone-accessories",
+    "icon": "Smartphone",
+    "parent_category_id": "beb64d0f-c008-466d-8885-e69c2c4188b2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fdc0d4f5-dee0-4471-b345-b14188ec54eb",
+    "name": "Gaming",
+    "slug": "gaming",
+    "icon": "Gamepad2",
+    "parent_category_id": "beb64d0f-c008-466d-8885-e69c2c4188b2",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c2882887-22da-4beb-a419-8556bb8df20d",
+    "name": "Organic",
+    "slug": "organic-grocery",
+    "icon": "Leaf",
+    "parent_category_id": "322a93be-a631-4e89-9695-9af101142485",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d77b2d2b-1af9-4b02-9f6a-cb41f9480c6b",
+    "name": "International Grocery",
+    "slug": "international-grocery",
+    "icon": "Globe",
+    "parent_category_id": "322a93be-a631-4e89-9695-9af101142485",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "05a9a633-2b85-4227-87fd-b37e57767fb9",
+    "name": "Farmers Market Vendors",
+    "slug": "farmers-market-vendors",
+    "icon": "Sun",
+    "parent_category_id": "322a93be-a631-4e89-9695-9af101142485",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "85df1247-f8f2-4c66-bd9c-1df389efa385",
+    "name": "Raw Pet Food",
+    "slug": "raw-pet-food",
+    "icon": "Beef",
+    "parent_category_id": "2c1fe711-0ee9-4a7a-935e-ffa0d0565bd3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "162bb882-f5d2-4913-a080-6a3b1386e686",
+    "name": "Grooming Supplies",
+    "slug": "grooming-supplies",
+    "icon": "Scissors",
+    "parent_category_id": "2c1fe711-0ee9-4a7a-935e-ffa0d0565bd3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "42b40849-d7b2-4dab-9f59-cd4e07267e30",
+    "name": "Specialty Pet Treats",
+    "slug": "specialty-pet-treats",
+    "icon": "Cookie",
+    "parent_category_id": "2c1fe711-0ee9-4a7a-935e-ffa0d0565bd3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fc5f2e98-3377-40c0-83ac-befd19fbf55c",
+    "name": "Tires",
+    "slug": "tires",
+    "icon": "Circle",
+    "parent_category_id": "a1b5feb5-2366-4da5-a74a-b79e2c5b2646",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6f9d9036-d52d-453d-91cc-685290227d64",
+    "name": "Auto Accessories",
+    "slug": "auto-accessories",
+    "icon": "Car",
+    "parent_category_id": "a1b5feb5-2366-4da5-a74a-b79e2c5b2646",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8aead6c6-6555-401d-9e0a-a132df997104",
+    "name": "Detailing Products",
+    "slug": "detailing-products",
+    "icon": "Sparkles",
+    "parent_category_id": "a1b5feb5-2366-4da5-a74a-b79e2c5b2646",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4a47228f-4789-42ea-b3a9-566cecfe290a",
+    "name": "Comics",
+    "slug": "comics",
+    "icon": "BookOpen",
+    "parent_category_id": "7e5debe0-c319-461f-bf49-0cd276c11877",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "28217a48-e838-4da0-b06e-1936fd425d18",
+    "name": "Trading Cards",
+    "slug": "trading-cards",
+    "icon": "Layers",
+    "parent_category_id": "7e5debe0-c319-461f-bf49-0cd276c11877",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "259a1815-cfcb-49db-99fe-bc2d576b3f19",
+    "name": "Board Games",
+    "slug": "board-games",
+    "icon": "Dice5",
+    "parent_category_id": "7e5debe0-c319-461f-bf49-0cd276c11877",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "24ed0c2b-b2c3-4c37-8025-d6d756f5f71f",
+    "name": "Music Gear",
+    "slug": "music-gear",
+    "icon": "Guitar",
+    "parent_category_id": "7e5debe0-c319-461f-bf49-0cd276c11877",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "83660f8b-cead-4cc7-b92e-690b1d57639c",
+    "name": "Live Music Venue",
+    "slug": "live-music-venue",
+    "icon": "Music",
+    "parent_category_id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "eca8eec1-4f48-4c65-81b4-6f9458859066",
+    "name": "DJs",
+    "slug": "djs",
+    "icon": "Disc",
+    "parent_category_id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c0d9d15d-7801-4df4-8d99-62e1cf80e890",
+    "name": "Late-Night Entertainment",
+    "slug": "late-night-entertainment",
+    "icon": "Moon",
+    "parent_category_id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b6566c2e-0d32-47dd-8cb3-f3dd23d220b6",
+    "name": "Dance Nights",
+    "slug": "dance-nights",
+    "icon": "Music2",
+    "parent_category_id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ec74f634-7463-4e6e-a93f-547511379e9f",
+    "name": "Open Mic",
+    "slug": "open-mic",
+    "icon": "Mic",
+    "parent_category_id": "b5642635-980e-4eaa-9982-5d0e8c881ffa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9b17a7e4-385a-471d-b9b8-4ef7aabc13da",
+    "name": "Galleries",
+    "slug": "galleries",
+    "icon": "Frame",
+    "parent_category_id": "651cbd01-6fc9-427f-824c-f49459acc8c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a9c1924c-d135-4424-9634-5ce3d39486e4",
+    "name": "Museums",
+    "slug": "museums",
+    "icon": "Landmark",
+    "parent_category_id": "651cbd01-6fc9-427f-824c-f49459acc8c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c41cc1a8-67bb-4aea-afad-baebbfd03bd3",
+    "name": "Theater",
+    "slug": "theater",
+    "icon": "Theater",
+    "parent_category_id": "651cbd01-6fc9-427f-824c-f49459acc8c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "216e8fc6-c2e0-41b7-bbaa-7e2de5af5afa",
+    "name": "Comedy",
+    "slug": "comedy",
+    "icon": "Smile",
+    "parent_category_id": "651cbd01-6fc9-427f-824c-f49459acc8c4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "cc462e3d-a84e-4784-98e9-a779f70cfc14",
+    "name": "Indoor Play",
+    "slug": "indoor-play",
+    "icon": "Home",
+    "parent_category_id": "04276763-aafe-439c-a454-081904107980",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5f34b0ae-d7ef-4f1c-a2d1-6a560ab82501",
+    "name": "Trampoline Parks",
+    "slug": "trampoline-parks",
+    "icon": "ArrowUp",
+    "parent_category_id": "04276763-aafe-439c-a454-081904107980",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a3b969e3-4cd2-4bab-868b-76237a111b1a",
+    "name": "Mini Golf",
+    "slug": "mini-golf",
+    "icon": "Flag",
+    "parent_category_id": "04276763-aafe-439c-a454-081904107980",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "abdc93d2-c872-4383-b180-6f0d2c84650a",
+    "name": "Arcades",
+    "slug": "arcades",
+    "icon": "Gamepad2",
+    "parent_category_id": "04276763-aafe-439c-a454-081904107980",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "629e943c-83a7-4384-bd74-586138079bb8",
+    "name": "Birthday Parties",
+    "slug": "birthday-parties",
+    "icon": "Cake",
+    "parent_category_id": "04276763-aafe-439c-a454-081904107980",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8468a0e9-cac4-4ec6-a5d5-b8b63323b09b",
+    "name": "Outdoor Rentals",
+    "slug": "outdoor-rentals",
+    "icon": "Backpack",
+    "parent_category_id": "262260b2-7f56-4d1a-9ad1-7db2b7818564",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "53641199-ceca-48dd-9a2b-efe573c713ba",
+    "name": "Guided Tours",
+    "slug": "guided-tours",
+    "icon": "Map",
+    "parent_category_id": "262260b2-7f56-4d1a-9ad1-7db2b7818564",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "058691f2-7e44-4ed0-943c-147764f1735b",
+    "name": "Hiking Groups",
+    "slug": "hiking-groups",
+    "icon": "Mountain",
+    "parent_category_id": "262260b2-7f56-4d1a-9ad1-7db2b7818564",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f4f510b2-3461-4bfd-8519-b48395a2cf6e",
+    "name": "Paddle Sports",
+    "slug": "paddle-sports",
+    "icon": "Waves",
+    "parent_category_id": "262260b2-7f56-4d1a-9ad1-7db2b7818564",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fb606284-6446-42e0-8f7b-00a54c8b0d3d",
+    "name": "Leagues",
+    "slug": "sports-leagues",
+    "icon": "Trophy",
+    "parent_category_id": "047ebf84-6d81-4d93-a63e-509df5efaa21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f684290b-191b-4591-b606-3cf92a3eebab",
+    "name": "Training Facilities",
+    "slug": "training-facilities",
+    "icon": "Dumbbell",
+    "parent_category_id": "047ebf84-6d81-4d93-a63e-509df5efaa21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "cd8de053-d073-4ba4-b9ca-e21dbb183e24",
+    "name": "Youth Sports",
+    "slug": "youth-sports",
+    "icon": "Baby",
+    "parent_category_id": "047ebf84-6d81-4d93-a63e-509df5efaa21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fd723232-8208-4fa1-8645-8b322a103bea",
+    "name": "Adult Rec",
+    "slug": "adult-rec",
+    "icon": "Users",
+    "parent_category_id": "047ebf84-6d81-4d93-a63e-509df5efaa21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "606e0c78-65d5-497b-92bd-e66916788376",
+    "name": "Cooking Classes",
+    "slug": "cooking-classes",
+    "icon": "ChefHat",
+    "parent_category_id": "55288237-7891-4b8e-9375-9ab8b9b848da",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "56ab8d3d-85a3-4c3c-b469-a482ccc7ebc6",
+    "name": "Art Classes",
+    "slug": "art-classes",
+    "icon": "Palette",
+    "parent_category_id": "55288237-7891-4b8e-9375-9ab8b9b848da",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "eec2c9f7-e586-4482-aa97-f16e1b977302",
+    "name": "Dance Classes",
+    "slug": "dance-classes",
+    "icon": "Music2",
+    "parent_category_id": "55288237-7891-4b8e-9375-9ab8b9b848da",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b762b25a-c416-49a8-a475-9aae91a34747",
+    "name": "DIY Workshops",
+    "slug": "diy-workshops",
+    "icon": "Hammer",
+    "parent_category_id": "55288237-7891-4b8e-9375-9ab8b9b848da",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9507fc20-843d-402a-bf84-b335913adf03",
+    "name": "Wedding Venues",
+    "slug": "wedding-venues",
+    "icon": "Heart",
+    "parent_category_id": "c7e24ef0-837b-42c8-b2d0-ca21fe5d5e4f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7ae1d44f-87cc-41be-b2c5-50b36dfa6289",
+    "name": "Corporate Venues",
+    "slug": "corporate-venues",
+    "icon": "Building",
+    "parent_category_id": "c7e24ef0-837b-42c8-b2d0-ca21fe5d5e4f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5c452d96-ac69-4198-8f04-11730f1c4a72",
+    "name": "Outdoor Venues",
+    "slug": "outdoor-venues",
+    "icon": "TreePine",
+    "parent_category_id": "c7e24ef0-837b-42c8-b2d0-ca21fe5d5e4f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "68312185-4f8d-431b-988d-30015234eca3",
+    "name": "Private Rooms",
+    "slug": "private-rooms",
+    "icon": "Lock",
+    "parent_category_id": "c7e24ef0-837b-42c8-b2d0-ca21fe5d5e4f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2991a440-ac8f-4be5-af36-812d65ec4b57",
+    "name": "Wedding Planner",
+    "slug": "wedding-planner",
+    "icon": "Heart",
+    "parent_category_id": "8bf2a3d5-2336-4234-925b-e51867628f62",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8b85326e-eab1-441a-b9b7-8b4227b2519a",
+    "name": "Corporate Planner",
+    "slug": "corporate-planner",
+    "icon": "Building",
+    "parent_category_id": "8bf2a3d5-2336-4234-925b-e51867628f62",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bd0a1c61-ee53-450e-b0cf-35523c03a3ff",
+    "name": "Day-of Coordination",
+    "slug": "day-of-coordination",
+    "icon": "Clock",
+    "parent_category_id": "8bf2a3d5-2336-4234-925b-e51867628f62",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "addb9dbd-b4d3-4098-8d30-37539fcad976",
+    "name": "Bartenders",
+    "slug": "bartenders",
+    "icon": "GlassWater",
+    "parent_category_id": "0cc79ca5-06b8-4c5d-8203-5e6c3de74749",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ee943e94-a295-42ff-8058-d82a8a079788",
+    "name": "Mobile Bar",
+    "slug": "mobile-bar",
+    "icon": "Truck",
+    "parent_category_id": "0cc79ca5-06b8-4c5d-8203-5e6c3de74749",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "fb29b7e1-d92c-4880-a21b-0c976f8a53c0",
+    "name": "Beverage Packages",
+    "slug": "beverage-packages",
+    "icon": "Package",
+    "parent_category_id": "0cc79ca5-06b8-4c5d-8203-5e6c3de74749",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "329b447e-8d6f-4ff2-a783-7a9ab26420f5",
+    "name": "Wedding Photography",
+    "slug": "wedding-photography",
+    "icon": "Camera",
+    "parent_category_id": "a419f082-287d-4333-a07c-bbaaafe10c6d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "25b962ad-f936-4c34-9609-7be97cc230c2",
+    "name": "Corporate Photography",
+    "slug": "corporate-photography",
+    "icon": "Building",
+    "parent_category_id": "a419f082-287d-4333-a07c-bbaaafe10c6d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "92893224-2d84-4a51-88f2-a20c5eaab525",
+    "name": "Drone Photography",
+    "slug": "drone-photography",
+    "icon": "Plane",
+    "parent_category_id": "a419f082-287d-4333-a07c-bbaaafe10c6d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4cc2d797-7c92-40a1-aefa-c806c2ecf26f",
+    "name": "Reels & Short-Form",
+    "slug": "reels-short-form",
+    "icon": "Film",
+    "parent_category_id": "a419f082-287d-4333-a07c-bbaaafe10c6d",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a6ea22aa-a347-41cc-a878-c8e521bb8fc5",
+    "name": "Event DJs",
+    "slug": "event-djs",
+    "icon": "Disc",
+    "parent_category_id": "7fe216db-d277-4f8e-84c9-bd1270458eef",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "922e1015-1106-4872-915c-df6c79ea808d",
+    "name": "Live Bands",
+    "slug": "live-bands",
+    "icon": "Music",
+    "parent_category_id": "7fe216db-d277-4f8e-84c9-bd1270458eef",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "72585487-d662-401b-a7f7-2f0ba300af59",
+    "name": "MCs & Hosts",
+    "slug": "mcs-hosts",
+    "icon": "Mic",
+    "parent_category_id": "7fe216db-d277-4f8e-84c9-bd1270458eef",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "02ce6560-6477-4a8e-a510-1eb1929d168e",
+    "name": "Photo Booths",
+    "slug": "photo-booths",
+    "icon": "Camera",
+    "parent_category_id": "7fe216db-d277-4f8e-84c9-bd1270458eef",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "95d6101e-8d64-47c0-b68a-9a8386905cf2",
+    "name": "Florist",
+    "slug": "florist",
+    "icon": "Flower2",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "975fbecd-861d-41c3-8cac-3f1e7aa7c09d",
+    "name": "Balloons",
+    "slug": "balloons",
+    "icon": "Circle",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3e5f3273-3a67-42ac-a9ce-f16544d393b0",
+    "name": "Event Lighting",
+    "slug": "event-lighting",
+    "icon": "Lightbulb",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8dc937fb-7b6a-4b6a-9a75-f81190fe8d74",
+    "name": "Linens",
+    "slug": "linens",
+    "icon": "LayoutGrid",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1aea0fc0-4745-450c-bcd9-053f7d9bc8cc",
+    "name": "Tents",
+    "slug": "tents",
+    "icon": "Triangle",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f0f83023-f66b-4de0-9f01-bcb0f58ed98a",
+    "name": "Furniture Rentals",
+    "slug": "furniture-rentals",
+    "icon": "Sofa",
+    "parent_category_id": "772b3558-ca08-4638-b103-c4aea168f970",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ed6cd8c7-718c-48cb-afa1-e4a786a6657f",
+    "name": "Bridal Hair (Events)",
+    "slug": "bridal-hair-events",
+    "icon": "Scissors",
+    "parent_category_id": "42044a7e-5127-4f4e-8306-32f45453ee56",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c86bf401-bf89-4274-ba25-9c323d3f53d7",
+    "name": "Bridal Makeup",
+    "slug": "bridal-makeup",
+    "icon": "Palette",
+    "parent_category_id": "42044a7e-5127-4f4e-8306-32f45453ee56",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "15d1098b-b79b-455c-a226-0eccefa4ede6",
+    "name": "Invitations",
+    "slug": "invitations",
+    "icon": "Mail",
+    "parent_category_id": "662de729-b899-4288-aa6b-25e0558aaa85",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0aaef8f0-9b47-4639-bb54-5836b0f939a8",
+    "name": "Menus",
+    "slug": "print-menus",
+    "icon": "FileText",
+    "parent_category_id": "662de729-b899-4288-aa6b-25e0558aaa85",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ce609ad3-5fd3-438b-a456-34e9deebff9c",
+    "name": "Banners",
+    "slug": "banners",
+    "icon": "Flag",
+    "parent_category_id": "662de729-b899-4288-aa6b-25e0558aaa85",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d3f14643-1222-4774-8540-d9a71f6a8a16",
+    "name": "Bookkeeping",
+    "slug": "bookkeeping",
+    "icon": "Calculator",
+    "parent_category_id": "61093943-e1d9-490c-97fc-db880995746f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "908eab87-672d-4174-94dd-c80bceab4541",
+    "name": "Payroll",
+    "slug": "payroll",
+    "icon": "DollarSign",
+    "parent_category_id": "61093943-e1d9-490c-97fc-db880995746f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f6c19e16-7a02-4cba-845d-e1718ac0faf9",
+    "name": "Small Business Tax",
+    "slug": "small-business-tax",
+    "icon": "Building",
+    "parent_category_id": "61093943-e1d9-490c-97fc-db880995746f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f7367537-1ca2-4de9-a0b8-3541ce778635",
+    "name": "Personal Tax",
+    "slug": "personal-tax",
+    "icon": "User",
+    "parent_category_id": "61093943-e1d9-490c-97fc-db880995746f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a132c894-07fc-434f-9ddb-0ebf6e0a1a54",
+    "name": "Audit Help",
+    "slug": "audit-help",
+    "icon": "Search",
+    "parent_category_id": "61093943-e1d9-490c-97fc-db880995746f",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d290fdcc-e009-44db-ad45-de68c1c95b92",
+    "name": "Business Law",
+    "slug": "business-law",
+    "icon": "Briefcase",
+    "parent_category_id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a0c57f47-7bf4-4924-8c6c-f215d1ce1370",
+    "name": "Family Law",
+    "slug": "family-law",
+    "icon": "Users",
+    "parent_category_id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3a967f0b-c8fa-4449-bf0e-12a4b4e822f6",
+    "name": "Real Estate Law",
+    "slug": "real-estate-law",
+    "icon": "Home",
+    "parent_category_id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0377ae1d-68b9-4d5a-8c97-3c06f5c1b58e",
+    "name": "Estate Planning",
+    "slug": "estate-planning",
+    "icon": "FileText",
+    "parent_category_id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3e51e3b7-5135-4735-93eb-a1e4d6f45752",
+    "name": "Immigration Law",
+    "slug": "immigration-law",
+    "icon": "Globe",
+    "parent_category_id": "d64d790d-7a95-4f3a-9883-d8cbfe37336c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "43a47bcb-d63f-4855-afad-21f09a3e4d25",
+    "name": "Auto & Home Insurance",
+    "slug": "auto-home-insurance",
+    "icon": "Car",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c30090e6-5d12-443b-8ff8-fa815d5bc50d",
+    "name": "Business Insurance",
+    "slug": "business-insurance",
+    "icon": "Building",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f657952f-76f7-43a4-af90-4503517312cb",
+    "name": "Life Insurance",
+    "slug": "life-insurance",
+    "icon": "Heart",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2f625b9b-4e38-49b5-84d9-d56cc2bb21ba",
+    "name": "Health Insurance",
+    "slug": "health-insurance",
+    "icon": "HeartPulse",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "f822535c-aeda-4449-aa53-e830a1e28196",
+    "name": "Medicare",
+    "slug": "medicare",
+    "icon": "Shield",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3aecb1da-6e2b-4bed-8f1c-0b81576976dc",
+    "name": "Disability Insurance",
+    "slug": "disability-insurance",
+    "icon": "Accessibility",
+    "parent_category_id": "d7a74645-595b-4558-941c-8daa57551089",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d02039c8-ce58-4357-974d-6b9f3398876d",
+    "name": "Investments",
+    "slug": "investments",
+    "icon": "BarChart",
+    "parent_category_id": "b40f4a01-fb85-4bb9-a100-6b9233b78e53",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4ef1a5fe-dfd1-4f07-8dc3-3b174b15acfd",
+    "name": "Credit Repair",
+    "slug": "credit-repair",
+    "icon": "RefreshCw",
+    "parent_category_id": "b40f4a01-fb85-4bb9-a100-6b9233b78e53",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "dc8d7da8-fd02-4941-9024-da58c4154e92",
+    "name": "Lending & Mortgage",
+    "slug": "lending-mortgage",
+    "icon": "DollarSign",
+    "parent_category_id": "b40f4a01-fb85-4bb9-a100-6b9233b78e53",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "be206fd3-06b9-49d8-a7da-bf2ec33a6794",
+    "name": "SEO",
+    "slug": "seo",
+    "icon": "Search",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4b965c68-574d-4de4-ad0c-3b5b6b28e38a",
+    "name": "Paid Ads",
+    "slug": "paid-ads",
+    "icon": "DollarSign",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "35456138-89b3-46e0-ba57-106e269ba329",
+    "name": "Branding",
+    "slug": "branding",
+    "icon": "Palette",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "cd63930b-4429-4ceb-9cd1-e23bb4bfb439",
+    "name": "Social Media Marketing",
+    "slug": "social-media-marketing",
+    "icon": "Share2",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5dadcbf0-c455-4e14-925c-95d8d2290337",
+    "name": "Video Marketing",
+    "slug": "video-marketing",
+    "icon": "Film",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "21d4e6c5-d251-45c9-a966-7897ec9e2bb7",
+    "name": "PR",
+    "slug": "pr",
+    "icon": "Megaphone",
+    "parent_category_id": "41db99bf-4b57-4cbf-94b4-655d6326c927",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ec47d300-8b3e-4389-90dd-94672447d2b4",
+    "name": "Logo Design",
+    "slug": "logo-design",
+    "icon": "Palette",
+    "parent_category_id": "9177ecbd-9b35-4d4c-af7b-fdb5810a5233",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ecfc8f90-49c3-4922-9e83-147a017bf664",
+    "name": "Website Design",
+    "slug": "website-design",
+    "icon": "Monitor",
+    "parent_category_id": "9177ecbd-9b35-4d4c-af7b-fdb5810a5233",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b6b67c51-fa9c-4b60-a7c6-fc0ee54483eb",
+    "name": "UX Design",
+    "slug": "ux-design",
+    "icon": "Layout",
+    "parent_category_id": "9177ecbd-9b35-4d4c-af7b-fdb5810a5233",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d7a9d7c0-5ccb-4420-ad09-8201cfe14b0b",
+    "name": "Copywriting",
+    "slug": "copywriting",
+    "icon": "PenLine",
+    "parent_category_id": "9177ecbd-9b35-4d4c-af7b-fdb5810a5233",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "67e43377-d8e2-4801-90cf-5aa2e6c737a2",
+    "name": "Managed IT",
+    "slug": "managed-it",
+    "icon": "Server",
+    "parent_category_id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a4f723fb-767f-470c-b839-55bd546c36e9",
+    "name": "Cybersecurity",
+    "slug": "cybersecurity",
+    "icon": "Shield",
+    "parent_category_id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "27675882-7f69-42b7-9e46-87f41e9355e4",
+    "name": "Cloud Services",
+    "slug": "cloud-services",
+    "icon": "Cloud",
+    "parent_category_id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5931791a-69ec-4d48-afa7-a448d54d68ea",
+    "name": "Phone Systems",
+    "slug": "phone-systems",
+    "icon": "Phone",
+    "parent_category_id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "832908fd-08cc-47b1-8052-ad0657a1245e",
+    "name": "POS Systems",
+    "slug": "pos-systems",
+    "icon": "CreditCard",
+    "parent_category_id": "13fbdab0-71ab-43a2-8f1a-af40ec670639",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c4795898-3082-4429-8d07-8bc5897a2944",
+    "name": "Temp Staffing",
+    "slug": "temp-staffing",
+    "icon": "Clock",
+    "parent_category_id": "21d22dd9-71fc-4eca-a23f-013842e9ec28",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "75476dec-29f1-41a7-b1b1-34b0d6c363f8",
+    "name": "Hiring",
+    "slug": "hiring",
+    "icon": "UserPlus",
+    "parent_category_id": "21d22dd9-71fc-4eca-a23f-013842e9ec28",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "76dee092-af67-42f9-bf8d-39a67eec161a",
+    "name": "Resume Services",
+    "slug": "resume-services",
+    "icon": "FileText",
+    "parent_category_id": "21d22dd9-71fc-4eca-a23f-013842e9ec28",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "91e7a262-3c8c-4102-9619-133c9b6660bd",
+    "name": "Background Checks",
+    "slug": "background-checks",
+    "icon": "Search",
+    "parent_category_id": "21d22dd9-71fc-4eca-a23f-013842e9ec28",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "80242d7f-e1ff-405a-8ace-f0b4bdaa037b",
+    "name": "Leadership Coaching",
+    "slug": "leadership-coaching",
+    "icon": "Users",
+    "parent_category_id": "8fac6eff-b970-4a39-8608-17b48bec36e1",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "66e7a06c-c937-4ac5-a017-8566d61a8a97",
+    "name": "Sales Coaching",
+    "slug": "sales-coaching",
+    "icon": "TrendingUp",
+    "parent_category_id": "8fac6eff-b970-4a39-8608-17b48bec36e1",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0b16a9cc-1461-4b02-afa3-65696100bcb0",
+    "name": "Operations Consulting",
+    "slug": "operations-consulting",
+    "icon": "Settings",
+    "parent_category_id": "8fac6eff-b970-4a39-8608-17b48bec36e1",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "84a0fac7-e71d-4ce5-be38-ac23241aa014",
+    "name": "Fractional Executive",
+    "slug": "fractional-exec",
+    "icon": "Award",
+    "parent_category_id": "8fac6eff-b970-4a39-8608-17b48bec36e1",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9bc32bba-e4a3-44f7-a677-b46d23a81c45",
+    "name": "Hot Desk",
+    "slug": "hot-desk",
+    "icon": "Monitor",
+    "parent_category_id": "e3a2900b-98fc-489f-9640-479218b86728",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6aaa5f8e-da3e-412b-9deb-bb2a885a550b",
+    "name": "Dedicated Office",
+    "slug": "dedicated-office",
+    "icon": "Building",
+    "parent_category_id": "e3a2900b-98fc-489f-9640-479218b86728",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "786e0cc7-d2d5-4373-b017-5c8a51ccdad1",
+    "name": "Meeting Rooms",
+    "slug": "meeting-rooms",
+    "icon": "Users",
+    "parent_category_id": "e3a2900b-98fc-489f-9640-479218b86728",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8ddea3c2-fd04-4397-8e21-49094651bc9b",
+    "name": "Virtual Office",
+    "slug": "virtual-office",
+    "icon": "Globe",
+    "parent_category_id": "e3a2900b-98fc-489f-9640-479218b86728",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "49158d0c-fe03-4ae0-8a9e-480b25e0fc6d",
+    "name": "Flyers",
+    "slug": "flyers",
+    "icon": "FileText",
+    "parent_category_id": "c1f87cb2-9732-49f9-a8c6-7fbf1d035dc6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "1a2c9eb8-dcf8-49d3-85cd-f881769fb6bb",
+    "name": "Business Cards",
+    "slug": "business-cards",
+    "icon": "CreditCard",
+    "parent_category_id": "c1f87cb2-9732-49f9-a8c6-7fbf1d035dc6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "9110d6c5-044f-41a6-836b-32dd432b9c90",
+    "name": "Signs",
+    "slug": "signs",
+    "icon": "Flag",
+    "parent_category_id": "c1f87cb2-9732-49f9-a8c6-7fbf1d035dc6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "56c618a9-1a74-4fbc-900e-2134c3ae394e",
+    "name": "Direct Mail",
+    "slug": "direct-mail",
+    "icon": "Mail",
+    "parent_category_id": "c1f87cb2-9732-49f9-a8c6-7fbf1d035dc6",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "313ede89-5d77-4ebf-8a1f-9c51cca12530",
+    "name": "Local Courier",
+    "slug": "local-courier",
+    "icon": "Truck",
+    "parent_category_id": "9c84c872-1f91-41e6-aa1f-0acf1181116b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "392f7650-fd83-43cd-93fe-753462b34081",
+    "name": "Freight",
+    "slug": "freight",
+    "icon": "Container",
+    "parent_category_id": "9c84c872-1f91-41e6-aa1f-0acf1181116b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "3d829bff-4a30-432d-b20f-711188a759ea",
+    "name": "Packing",
+    "slug": "shipping-packing",
+    "icon": "Package",
+    "parent_category_id": "9c84c872-1f91-41e6-aa1f-0acf1181116b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "10f52556-7e15-4097-9b6b-aeb912a9f415",
+    "name": "Storage",
+    "slug": "shipping-storage",
+    "icon": "Archive",
+    "parent_category_id": "9c84c872-1f91-41e6-aa1f-0acf1181116b",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a4b2fd25-324c-4abd-a0b7-51d9c5db1c1e",
+    "name": "Referral Groups",
+    "slug": "referral-groups",
+    "icon": "Share2",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "56dec616-6636-4adb-ae74-02bf9f2e9354",
+    "name": "Chambers of Commerce",
+    "slug": "chambers-commerce",
+    "icon": "Building",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "2614c05b-d670-4ce6-ab08-35bf1618fa63",
+    "name": "Industry Meetups",
+    "slug": "industry-meetups",
+    "icon": "Users",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b93e329d-6e9b-4129-b78f-0eaa114ebae1",
+    "name": "Women's Networks",
+    "slug": "womens-networks",
+    "icon": "Heart",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "46d2b6f4-81b0-4162-9d97-471ab05f0069",
+    "name": "Young Professionals",
+    "slug": "young-professionals",
+    "icon": "Award",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "52f0838a-43fe-42c8-820d-60080a8d2fcc",
+    "name": "Nonprofit Boards",
+    "slug": "nonprofit-boards",
+    "icon": "Gavel",
+    "parent_category_id": "cbdde746-a301-410d-b890-e07014837bf4",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4510fda2-c00c-41a6-b740-81c9b4e218f7",
+    "name": "Buyer Agent",
+    "slug": "buyer-agent",
+    "icon": "UserCheck",
+    "parent_category_id": "5dafd434-4659-409d-9c64-e1d7e16ae680",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "04ea339a-3ce1-45cb-bbf7-cdfd716cf098",
+    "name": "Seller Agent",
+    "slug": "seller-agent",
+    "icon": "DollarSign",
+    "parent_category_id": "5dafd434-4659-409d-9c64-e1d7e16ae680",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0e4ebc0a-6e54-4f19-a664-7d887766ec91",
+    "name": "Luxury Real Estate",
+    "slug": "luxury-real-estate",
+    "icon": "Gem",
+    "parent_category_id": "5dafd434-4659-409d-9c64-e1d7e16ae680",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7a360a80-4b00-49ff-8932-585899590638",
+    "name": "First-Time Buyers",
+    "slug": "first-time-buyers",
+    "icon": "Key",
+    "parent_category_id": "5dafd434-4659-409d-9c64-e1d7e16ae680",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "ed689ba7-ce55-4892-a141-ae18b0c39ed4",
+    "name": "Commercial Leasing",
+    "slug": "commercial-leasing",
+    "icon": "FileText",
+    "parent_category_id": "02524feb-71e7-4941-ba85-5e66511a7c32",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5b63aa6a-0b4e-48ff-b147-ea2ffc3246f3",
+    "name": "Investment Property",
+    "slug": "investment-property",
+    "icon": "TrendingUp",
+    "parent_category_id": "02524feb-71e7-4941-ba85-5e66511a7c32",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "632239e4-f358-4c45-b658-8e7ea1f93dff",
+    "name": "Tenant Rep",
+    "slug": "tenant-rep",
+    "icon": "Users",
+    "parent_category_id": "02524feb-71e7-4941-ba85-5e66511a7c32",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "8a124f22-86bf-4367-aa97-63f2c7bcfe4e",
+    "name": "Rental Management",
+    "slug": "rental-management",
+    "icon": "Home",
+    "parent_category_id": "26ac4909-80f2-4b0d-8691-e0a5449bad21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "55916377-a47d-4e47-889f-44d32393c566",
+    "name": "HOA & Community Mgmt",
+    "slug": "hoa-community-mgmt",
+    "icon": "Users",
+    "parent_category_id": "26ac4909-80f2-4b0d-8691-e0a5449bad21",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c77c6909-cbf7-44db-b9e4-fbf1292df499",
+    "name": "Pre-Approval",
+    "slug": "pre-approval",
+    "icon": "Check",
+    "parent_category_id": "aae2cdeb-8bfc-4067-96c5-b397b8f91882",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "07fe8ff4-fa7d-4b31-800b-68bd89d69c62",
+    "name": "Refinance",
+    "slug": "refinance",
+    "icon": "RefreshCw",
+    "parent_category_id": "aae2cdeb-8bfc-4067-96c5-b397b8f91882",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "750d5da9-9a2d-47e2-825e-77ccc374585d",
+    "name": "VA/FHA Loans",
+    "slug": "va-fha-loans",
+    "icon": "Shield",
+    "parent_category_id": "aae2cdeb-8bfc-4067-96c5-b397b8f91882",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "62367dd0-91fa-4d1e-bd83-863f1501759c",
+    "name": "Pre-Listing Inspection",
+    "slug": "pre-listing-inspection",
+    "icon": "ClipboardCheck",
+    "parent_category_id": "a8454c82-6b57-493d-a01f-a6aa70104802",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "042799d5-fa07-43cf-8699-99da97c38352",
+    "name": "New Construction Inspection",
+    "slug": "new-construction-inspection",
+    "icon": "HardHat",
+    "parent_category_id": "a8454c82-6b57-493d-a01f-a6aa70104802",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c2863cdd-9277-44e6-933a-66aa88d072d8",
+    "name": "Settlement Services",
+    "slug": "settlement-services",
+    "icon": "FileCheck",
+    "parent_category_id": "0b6c8b57-f579-434e-9b25-b3d439b7969a",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bd20f6d3-e4a2-42f9-ac71-d834ea803699",
+    "name": "Notary",
+    "slug": "notary",
+    "icon": "Stamp",
+    "parent_category_id": "0b6c8b57-f579-434e-9b25-b3d439b7969a",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "d93aeddc-45d8-4e2a-a2b8-ef6dfdcc73cf",
+    "name": "Food Pantry",
+    "slug": "food-pantry",
+    "icon": "Apple",
+    "parent_category_id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b8654113-0a82-4cb8-80fb-cf3f63482ace",
+    "name": "Youth Mentoring",
+    "slug": "youth-mentoring",
+    "icon": "Users",
+    "parent_category_id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "a1deafdf-631e-4706-8689-c27e0f03cfcf",
+    "name": "Community Outreach",
+    "slug": "community-outreach",
+    "icon": "Megaphone",
+    "parent_category_id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6a79df75-3734-45a6-90b6-d4b3cc40cd41",
+    "name": "Community Events",
+    "slug": "community-events",
+    "icon": "Calendar",
+    "parent_category_id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4b7d0ca3-ebac-47e4-a54b-c99aff5825cc",
+    "name": "Mutual Aid",
+    "slug": "mutual-aid",
+    "icon": "HandHeart",
+    "parent_category_id": "29033f37-3b29-40d1-86a3-b02d308845fa",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0d52db3c-8c84-43e8-90bc-6187ca9a4800",
+    "name": "Senior Transportation",
+    "slug": "senior-transportation",
+    "icon": "Car",
+    "parent_category_id": "543ba568-010b-476f-9134-53fc23492c92",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "173f4561-062a-4ed5-9155-3a7fc7b22d0c",
+    "name": "Meal Support",
+    "slug": "meal-support",
+    "icon": "UtensilsCrossed",
+    "parent_category_id": "543ba568-010b-476f-9134-53fc23492c92",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "e2477afc-0dc0-4e15-87be-07b46e028ab8",
+    "name": "Caregiver Support",
+    "slug": "caregiver-support",
+    "icon": "Heart",
+    "parent_category_id": "543ba568-010b-476f-9134-53fc23492c92",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "b3302863-7ee5-4d84-9d4e-edb7d1e15702",
+    "name": "Senior Activities",
+    "slug": "senior-activities",
+    "icon": "Star",
+    "parent_category_id": "543ba568-010b-476f-9134-53fc23492c92",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "89b327bc-c64a-484f-95fb-4b704daa1ee7",
+    "name": "Youth Sports Programs",
+    "slug": "youth-sports-programs",
+    "icon": "Trophy",
+    "parent_category_id": "a4179937-1816-4b65-b34b-dca0d7bca038",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "5d7521e5-ab69-4980-a67b-d2f9d2c879d8",
+    "name": "Tutoring",
+    "slug": "tutoring",
+    "icon": "BookOpen",
+    "parent_category_id": "a4179937-1816-4b65-b34b-dca0d7bca038",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "46997dc9-e37e-4dc7-946f-f5700a96909a",
+    "name": "Youth Arts Programs",
+    "slug": "youth-arts-programs",
+    "icon": "Palette",
+    "parent_category_id": "a4179937-1816-4b65-b34b-dca0d7bca038",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "edf1de11-5354-4cb9-aca2-a2252f78aa8b",
+    "name": "Neighborhood Associations",
+    "slug": "neighborhood-associations",
+    "icon": "Home",
+    "parent_category_id": "fe271c34-94ed-4107-8960-087d92effb46",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "48f80a95-df99-4220-b006-3a171429371c",
+    "name": "Public Campaigns",
+    "slug": "public-campaigns",
+    "icon": "Megaphone",
+    "parent_category_id": "fe271c34-94ed-4107-8960-087d92effb46",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "4458215a-42d4-4e22-ac46-c6c52472c067",
+    "name": "Volunteer Drives",
+    "slug": "volunteer-drives",
+    "icon": "Heart",
+    "parent_category_id": "fe271c34-94ed-4107-8960-087d92effb46",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "df11eb6e-f95a-4870-b9c5-6fc327f4dbb7",
+    "name": "Food Distribution",
+    "slug": "food-distribution",
+    "icon": "Package",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "36b2c6f1-e2ad-48d3-8c5e-351e813f84f0",
+    "name": "Shelter Support",
+    "slug": "shelter-support",
+    "icon": "Home",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "6d760b69-93a6-4bee-9d36-b52cef603e9c",
+    "name": "Community Clinics",
+    "slug": "community-clinics",
+    "icon": "HeartPulse",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "c68e8889-5a9c-43be-969e-2962deecd6fc",
+    "name": "Clothing Drives",
+    "slug": "clothing-drives",
+    "icon": "Shirt",
+    "parent_category_id": "1bb2a2a1-0e21-4aa5-b609-f5d128ee0ef0",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "bbbb0001-pets-0008-0000-000000000000",
+    "name": "Pet-Friendly Places",
+    "slug": "pets-friendly-places",
+    "icon": null,
+    "parent_category_id": "9257b831-445b-49da-ad9b-fa1e2bccfb7e",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "ee811fe8-f302-435e-9e49-575e5be7b43a",
+    "name": "Primary Care",
+    "slug": "pets-vet-primary-care",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "72e555d3-775e-49a2-bc55-317c48effcfd",
+    "name": "Emergency Vet",
+    "slug": "pets-vet-emergency",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "d4e173fb-f887-485b-856f-00590cbacf21",
+    "name": "Specialty Care",
+    "slug": "pets-vet-specialty-care",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "b58c1a9e-0138-4468-811d-9b03f58ed77e",
+    "name": "Surgery",
+    "slug": "pets-vet-surgery",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "b4240b33-f8fe-40a6-ba93-35a36e96349e",
+    "name": "Dental",
+    "slug": "pets-vet-dental",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "c505f78e-a94d-4d00-9f96-efafead1fef0",
+    "name": "Mobile Vet",
+    "slug": "pets-vet-mobile",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "a6bf96d6-4870-4fa8-8539-834e5a2832ae",
+    "name": "Vaccines",
+    "slug": "pets-vet-vaccines",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "1338eacf-4a1b-4823-b50e-ad34a8763314",
+    "name": "Senior Pet Care",
+    "slug": "pets-vet-senior-care",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "1eea9b0f-cac7-468a-84ca-89c4e1ca644f",
+    "name": "Holistic/Alternative",
+    "slug": "pets-vet-holistic",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 9,
+    "sic_code": null
+  },
+  {
+    "id": "2396f405-27b0-4208-8e14-00b9769d1b4c",
+    "name": "Pet Pharmacy",
+    "slug": "pets-vet-pharmacy",
+    "icon": null,
+    "parent_category_id": "e4751b48-770f-4dcc-abf6-35803ee938a6",
+    "sort_order": 10,
+    "sic_code": null
+  },
+  {
+    "id": "fda983d0-f03c-4ec9-9d47-a2bcf9d60af1",
+    "name": "Dog Grooming",
+    "slug": "pets-groom-dog",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "cd7caa51-9d4a-4d4d-9907-4c3075e26e97",
+    "name": "Cat Grooming",
+    "slug": "pets-groom-cat",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "528c7dec-c895-45e8-b83c-7265d6524ee8",
+    "name": "Mobile Grooming",
+    "slug": "pets-groom-mobile",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "63084952-6d53-4b34-a3d9-2debad984faf",
+    "name": "Nail Trim",
+    "slug": "pets-groom-nail-trim",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "00a3791c-1846-46da-8b7b-e832033e18e2",
+    "name": "De-shedding",
+    "slug": "pets-groom-deshedding",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "992efee1-1e37-4d18-b09c-2427609f2e41",
+    "name": "Breed Cuts",
+    "slug": "pets-groom-breed-cuts",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "a8956609-e2a3-4313-89cf-2f4c4b9414eb",
+    "name": "Puppy Grooming",
+    "slug": "pets-groom-puppy",
+    "icon": null,
+    "parent_category_id": "b9a8c1f3-60f1-421c-a061-5952fc10142b",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "2d87f8c1-a104-4d7c-a206-aed37069b07c",
+    "name": "Dog Daycare",
+    "slug": "pets-board-dog-daycare",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "1cb999a9-a1e9-48c2-bb50-18fb0da89435",
+    "name": "Overnight Boarding",
+    "slug": "pets-board-overnight",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "a5117253-b0a3-4044-a54b-0f7b4180af4c",
+    "name": "Cat Boarding",
+    "slug": "pets-board-cat",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "d2e78fc4-b818-4f7f-979c-b597ea6b2d30",
+    "name": "Cage-Free",
+    "slug": "pets-board-cage-free",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "c37bc772-29c6-4578-8de0-2963df9f29c7",
+    "name": "Luxury Boarding",
+    "slug": "pets-board-luxury",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "188b9cdc-6d61-4ae3-96f1-bb41439b7a68",
+    "name": "Play Groups",
+    "slug": "pets-board-play-groups",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "add9b582-1722-4c8b-9ae9-931e61e0a58e",
+    "name": "Temperament Testing",
+    "slug": "pets-board-temperament",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "95d572c9-1254-42a8-9f84-44ed29e06428",
+    "name": "Holiday Boarding",
+    "slug": "pets-board-holiday",
+    "icon": null,
+    "parent_category_id": "6511c6b8-7a55-4d17-8621-e412ec86765b",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "94325d63-18ca-4566-9e67-8fb7987d060b",
+    "name": "Puppy Training",
+    "slug": "pets-train-puppy",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "65c3c719-8a06-4888-8591-a07b6fca2c86",
+    "name": "Obedience",
+    "slug": "pets-train-obedience",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "e588eb40-592a-4f9b-b07f-6c63605c25e0",
+    "name": "Reactivity",
+    "slug": "pets-train-reactivity",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "35bdcca3-4b09-4f42-8e3b-1449403354fb",
+    "name": "Aggression Support",
+    "slug": "pets-train-aggression",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "5f99bc51-cf85-43ca-bd4d-1fa97694eeaf",
+    "name": "Board-and-Train",
+    "slug": "pets-train-board-and-train",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "ac38d7d1-1a8e-4ad4-ba21-6d0075d32141",
+    "name": "Service Dog Training",
+    "slug": "pets-train-service-dog",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "00d0bf5f-0bf3-4d1b-8ae9-e6d334ac1154",
+    "name": "Group Classes",
+    "slug": "pets-train-group-classes",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "553d302c-ebb2-4326-986b-05ddc926c294",
+    "name": "Private Sessions",
+    "slug": "pets-train-private",
+    "icon": null,
+    "parent_category_id": "fec4fb41-3c46-41ea-a839-fecf2ed1b4bd",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "38411117-7258-42ed-a40e-e7cc3ea6da47",
+    "name": "Raw Food",
+    "slug": "pets-supply-raw-food",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "2619145c-35dc-47ff-85fa-149f8c30d589",
+    "name": "Specialty Diets",
+    "slug": "pets-supply-specialty-diets",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "586a8340-5a41-4dce-be66-c427781f7156",
+    "name": "Treats",
+    "slug": "pets-supply-treats",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "d03a45f3-25ad-44b3-800d-8348b358ba7f",
+    "name": "Toys",
+    "slug": "pets-supply-toys",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "1d350a22-9140-4808-95e6-4715de736480",
+    "name": "Grooming Supplies",
+    "slug": "pets-supply-grooming",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "3be4d909-1a97-44f8-86f9-4a6eb2edb44b",
+    "name": "Aquatics",
+    "slug": "pets-supply-aquatics",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "40b8a937-8829-4f81-96f8-19334c399841",
+    "name": "Reptiles",
+    "slug": "pets-supply-reptiles",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "403780a5-7bf5-4b46-981b-279588e15e83",
+    "name": "Boutique Accessories",
+    "slug": "pets-supply-boutique",
+    "icon": null,
+    "parent_category_id": "7f1b095c-b1ae-4a60-8bee-19c2d6c76dcb",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "decb91d0-d613-41cf-b504-a4f8c43a4f82",
+    "name": "Dog Walking",
+    "slug": "pets-svc-dog-walking",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "a87640ec-7256-40f8-bd9e-7209d227257e",
+    "name": "Pet Sitting",
+    "slug": "pets-svc-pet-sitting",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "e1d2b308-afc6-41d6-8d4e-13d1b2c3dd75",
+    "name": "In-Home Care",
+    "slug": "pets-svc-in-home-care",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "45553b4f-7942-45b3-a9c4-46df72ae7bad",
+    "name": "Medication Visits",
+    "slug": "pets-svc-medication-visits",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "ce538f03-ab6c-43b8-b5e9-f304475e49df",
+    "name": "Pet Taxi/Transport",
+    "slug": "pets-svc-pet-taxi",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "71e1e8de-200f-467f-af55-59beb0cb82fe",
+    "name": "Poop Scooping",
+    "slug": "pets-svc-poop-scooping",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "7a6724fc-6aed-466f-8685-a48078f0f022",
+    "name": "Pet Photography",
+    "slug": "pets-svc-pet-photography",
+    "icon": null,
+    "parent_category_id": "63f58803-eb1d-4ab0-927f-776133453f13",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "e8291448-7f4c-4555-8228-e55ad266b548",
+    "name": "Animal Rescue",
+    "slug": "pets-adopt-animal-rescue",
+    "icon": null,
+    "parent_category_id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "7eb7911f-c618-47e8-bb18-cfd5bbc7a669",
+    "name": "Adoption Events",
+    "slug": "pets-adopt-events",
+    "icon": null,
+    "parent_category_id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "e76e856c-5921-4273-9425-c78c6e3ef680",
+    "name": "Foster Programs",
+    "slug": "pets-adopt-foster",
+    "icon": null,
+    "parent_category_id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "a47c0f5d-6256-438f-a7c8-c60883ca2c1a",
+    "name": "TNR/Community Cats",
+    "slug": "pets-adopt-tnr",
+    "icon": null,
+    "parent_category_id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "842086fd-ba50-4256-b901-1af2fa8df41f",
+    "name": "Low-Cost Spay/Neuter Resources",
+    "slug": "pets-adopt-spay-neuter",
+    "icon": null,
+    "parent_category_id": "9b05a482-d767-46bb-b5bb-421a8848e325",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "1afb1aa9-dd15-45b3-a4fd-6ee9c2b9e939",
+    "name": "Dog-Friendly Patios",
+    "slug": "pets-places-dog-patios",
+    "icon": null,
+    "parent_category_id": "bbbb0001-pets-0008-0000-000000000000",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "413b39cf-0828-4891-be45-8389b692843b",
+    "name": "Dog Parks",
+    "slug": "pets-places-dog-parks",
+    "icon": null,
+    "parent_category_id": "bbbb0001-pets-0008-0000-000000000000",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "cd0886a6-7091-4385-bdd1-4356a23858db",
+    "name": "Trails",
+    "slug": "pets-places-trails",
+    "icon": null,
+    "parent_category_id": "bbbb0001-pets-0008-0000-000000000000",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "34b00cca-6ca5-4749-83d8-90a33476f46d",
+    "name": "Pet-Friendly Hotels",
+    "slug": "pets-places-hotels",
+    "icon": null,
+    "parent_category_id": "bbbb0001-pets-0008-0000-000000000000",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "f270685a-2626-4ebb-a808-f339f80661a7",
+    "name": "Pet-Friendly Events",
+    "slug": "pets-places-events",
+    "icon": null,
+    "parent_category_id": "bbbb0001-pets-0008-0000-000000000000",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "name": "Apartment Communities",
+    "slug": "apartment-communities",
+    "icon": "Building2",
+    "parent_category_id": "5336ea5d-963f-4ab5-9f66-1328ebe08c8f",
+    "sort_order": 10,
+    "sic_code": null
+  },
+  {
+    "id": "b4d6fb3d-8616-4fba-8a2b-34e4fa4cc864",
+    "name": "Luxury Apartments",
+    "slug": "luxury-apartments",
+    "icon": "Crown",
+    "parent_category_id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "87926c5e-0b29-43af-92b2-d90406efb092",
+    "name": "Student Housing",
+    "slug": "student-housing",
+    "icon": "GraduationCap",
+    "parent_category_id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "a5cff093-204a-4507-9aec-121405694f2c",
+    "name": "Affordable Housing",
+    "slug": "affordable-housing",
+    "icon": "Home",
+    "parent_category_id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "01e07730-8d28-43e6-a95a-ceb94a99f861",
+    "name": "Senior Living",
+    "slug": "senior-living",
+    "icon": "Heart",
+    "parent_category_id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "f748c66b-ec9f-48b0-923a-9af4fe6f0171",
+    "name": "Loft & Urban Living",
+    "slug": "loft-urban-living",
+    "icon": "Building",
+    "parent_category_id": "d6d85a3f-e688-42a3-b58d-3c91f21731d8",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "230158d9-2fdb-4999-a558-a8116da14052",
+    "name": "Financial Planning",
+    "slug": "financial-planning",
+    "icon": "TrendingUp",
+    "parent_category_id": "b40f4a01-fb85-4bb9-a100-6b9233b78e53",
+    "sort_order": 0,
+    "sic_code": "6282"
+  },
+  {
+    "id": "efa4ff53-2179-4ac7-a53a-a53ea216ac4f",
+    "name": "Painting",
+    "slug": "painting",
+    "icon": "Paintbrush",
+    "parent_category_id": "881778a7-424a-4098-be0c-9fee53a0a52d",
+    "sort_order": 0,
+    "sic_code": "1721"
+  },
+  {
+    "id": "d39500e6-42f8-4726-8528-55f4e9e00caa",
+    "name": "Tattoo & Piercing",
+    "slug": "tattoo-piercing",
+    "icon": "Pen",
+    "parent_category_id": "19d7580f-856c-4904-91ae-57aba766295c",
+    "sort_order": 0,
+    "sic_code": "7299"
+  },
+  {
+    "id": "ff58874c-2b60-4a8d-811d-46c9fe26b050",
+    "name": "Auto Parts",
+    "slug": "auto-parts",
+    "icon": "Cog",
+    "parent_category_id": "a1b5feb5-2366-4da5-a74a-b79e2c5b2646",
+    "sort_order": 0,
+    "sic_code": "5531"
+  },
+  {
+    "id": "7bdf462a-19ca-4572-9577-f25440394caf",
+    "name": "After-School Programs",
+    "slug": "after-school-programs",
+    "icon": "Clock",
+    "parent_category_id": "a4179937-1816-4b65-b34b-dca0d7bca038",
+    "sort_order": 0,
+    "sic_code": "8351"
+  },
+  {
+    "id": "af5bd048-32ea-4579-a5bb-1970565716e6",
+    "name": "Funeral & Memorial Services",
+    "slug": "funeral-memorial",
+    "icon": null,
+    "parent_category_id": "12683309-f840-40a3-b12b-beb32427c73c",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "0200196d-aecf-4280-991c-74659c9a2547",
+    "name": "Travel & Lodging",
+    "slug": "travel-lodging",
+    "icon": null,
+    "parent_category_id": "ef2c0083-dc4c-4361-aa0a-4e49ae1e3c53",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "54a95898-9e12-4aa5-927e-117e0906522c",
+    "name": "Transit & Transportation",
+    "slug": "transit-transportation",
+    "icon": null,
+    "parent_category_id": "5ce4782a-957a-4f81-886f-f3005e5424e3",
+    "sort_order": 0,
+    "sic_code": null
+  },
+  {
+    "id": "7c81ab1c-0aaf-4347-b30c-7c1ec8ebe415",
+    "name": "Mobile & Home-Based",
+    "slug": "mobile-home-based",
+    "icon": "Truck",
+    "parent_category_id": null,
+    "sort_order": 12,
+    "sic_code": null
+  },
+  {
+    "id": "d8dafb14-1764-4b41-8e95-7fea2f4b5619",
+    "name": "Food Trucks",
+    "slug": "mobile-food-trucks",
+    "icon": "Truck",
+    "parent_category_id": "7c81ab1c-0aaf-4347-b30c-7c1ec8ebe415",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "763e59d7-b7f0-4a67-97f5-14920f292578",
+    "name": "Mobile Services",
+    "slug": "mobile-services",
+    "icon": "MapPin",
+    "parent_category_id": "7c81ab1c-0aaf-4347-b30c-7c1ec8ebe415",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "93968a11-d791-42e2-a169-46d295994624",
+    "name": "Home-Based Business",
+    "slug": "home-based-business",
+    "icon": "Home",
+    "parent_category_id": "7c81ab1c-0aaf-4347-b30c-7c1ec8ebe415",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "f75f101a-bce5-446c-8893-f0a43b55b3ea",
+    "name": "Side Hustle / Freelance",
+    "slug": "side-hustle-freelance",
+    "icon": "Briefcase",
+    "parent_category_id": "7c81ab1c-0aaf-4347-b30c-7c1ec8ebe415",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "name": "Local Farms & Food Sources",
+    "slug": "local-farms-food-sources",
+    "icon": "Leaf",
+    "parent_category_id": null,
+    "sort_order": 10,
+    "sic_code": null
+  },
+  {
+    "id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "name": "Farms",
+    "slug": "farms",
+    "icon": "Tractor",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "name": "Meat Producers",
+    "slug": "meat-producers",
+    "icon": "Beef",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "7f8b8394-5481-4eaf-b86b-6dd074789feb",
+    "name": "Egg Producers",
+    "slug": "egg-producers",
+    "icon": "Egg",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "name": "CSA / Farm Boxes",
+    "slug": "csa-farm-boxes",
+    "icon": "Package",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "dccf5732-f778-4735-a9f7-59ad62ea6857",
+    "name": "Farm Co-ops / Buying Clubs",
+    "slug": "farm-coops-buying-clubs",
+    "icon": "Users",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "d9d5c492-eab1-462a-9975-b72618e585c5",
+    "name": "Pickup Locations",
+    "slug": "farm-pickup-locations",
+    "icon": "MapPin",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "c5041de6-5150-41b3-9de0-f7d7c806b50c",
+    "name": "Farmers Markets",
+    "slug": "farmers-markets",
+    "icon": "Store",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 7,
+    "sic_code": null
+  },
+  {
+    "id": "cfa3e562-cfd4-49fd-ab86-4ae28a898125",
+    "name": "Farm Stores / Farm Stands",
+    "slug": "farm-stores-stands",
+    "icon": "ShoppingBasket",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 8,
+    "sic_code": null
+  },
+  {
+    "id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "name": "Local Food Specialty Sources",
+    "slug": "local-food-specialty",
+    "icon": "Cherry",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 9,
+    "sic_code": null
+  },
+  {
+    "id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "name": "Homestead / Backyard Food Support",
+    "slug": "homestead-backyard-support",
+    "icon": "Sprout",
+    "parent_category_id": "41dd8aeb-d388-4a90-af61-a8f3468fa342",
+    "sort_order": 10,
+    "sic_code": null
+  },
+  {
+    "id": "ac8e1dcd-be3b-4a1f-84ef-f20f3ebfb8e2",
+    "name": "Crop Farm",
+    "slug": "crop-farm",
+    "icon": "Wheat",
+    "parent_category_id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "f7cb21cb-71c5-4a92-a433-4e8e4132c92d",
+    "name": "Livestock Farm",
+    "slug": "livestock-farm",
+    "icon": "Fence",
+    "parent_category_id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "0dd9d847-3d4b-4f6b-91e6-c1dda93b26b3",
+    "name": "Mixed Farm",
+    "slug": "mixed-farm",
+    "icon": "Tractor",
+    "parent_category_id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "9eafd44d-b84f-4a03-b0ca-ba4c32d89167",
+    "name": "U-Pick Farm",
+    "slug": "u-pick-farm",
+    "icon": "Apple",
+    "parent_category_id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "c8eef0fe-43a1-46dc-bab4-80873723f465",
+    "name": "Organic Farm",
+    "slug": "organic-farm",
+    "icon": "Leaf",
+    "parent_category_id": "a0263e81-5363-48d9-be32-08da1466dc8e",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "66539f2c-7488-49cc-827c-f87b61146409",
+    "name": "Grass-Fed Beef",
+    "slug": "grass-fed-beef",
+    "icon": "Beef",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "e9d80148-c408-4609-b789-d566418af6fc",
+    "name": "Pastured Pork",
+    "slug": "pastured-pork",
+    "icon": "Drumstick",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "09677dfb-eefa-4ca0-839b-4c5e7a2e8284",
+    "name": "Pasture-Raised Poultry",
+    "slug": "pasture-raised-poultry",
+    "icon": "Bird",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "711eb394-6898-40c1-894e-b2eae61933a0",
+    "name": "Lamb & Goat",
+    "slug": "lamb-goat",
+    "icon": "Fence",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "850131f0-3f03-4737-91d8-8fe5cb479c64",
+    "name": "Bulk Beef Sales",
+    "slug": "bulk-beef-sales",
+    "icon": "Package",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "f5b55fd9-88c0-48fc-a735-fb20de396ee7",
+    "name": "Custom Butchering",
+    "slug": "custom-butchering",
+    "icon": "Scissors",
+    "parent_category_id": "1c1e2b45-eee5-4cee-a0a3-ff0185f304f7",
+    "sort_order": 6,
+    "sic_code": null
+  },
+  {
+    "id": "f67cddf6-63dc-45b3-b919-2b8c7d953983",
+    "name": "Pasture-Raised Eggs",
+    "slug": "pasture-raised-eggs",
+    "icon": "Egg",
+    "parent_category_id": "7f8b8394-5481-4eaf-b86b-6dd074789feb",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "c28f4e19-a2ff-42e7-8caf-014cf6d88f7d",
+    "name": "Free-Range Eggs",
+    "slug": "free-range-eggs",
+    "icon": "Egg",
+    "parent_category_id": "7f8b8394-5481-4eaf-b86b-6dd074789feb",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "e411124f-07e5-4b53-a8ce-96c3bc4257f2",
+    "name": "Duck Eggs",
+    "slug": "duck-eggs",
+    "icon": "Egg",
+    "parent_category_id": "7f8b8394-5481-4eaf-b86b-6dd074789feb",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "149db04d-deb6-47f6-a2f9-044fa27208d6",
+    "name": "Quail Eggs",
+    "slug": "quail-eggs",
+    "icon": "Egg",
+    "parent_category_id": "7f8b8394-5481-4eaf-b86b-6dd074789feb",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "373339c5-8702-47fd-8b58-7946b012bd4e",
+    "name": "Produce CSA",
+    "slug": "produce-csa",
+    "icon": "Carrot",
+    "parent_category_id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "bedb33c6-ca3f-479f-99f4-92274772746b",
+    "name": "Meat CSA",
+    "slug": "meat-csa",
+    "icon": "Beef",
+    "parent_category_id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "d2f43bbd-0355-4ee2-bd3d-cf598583bb29",
+    "name": "Mixed Farm Box",
+    "slug": "mixed-farm-box",
+    "icon": "Package",
+    "parent_category_id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "514884ee-33e8-4a21-85c5-5dca6261094f",
+    "name": "Egg Subscription",
+    "slug": "egg-subscription",
+    "icon": "Egg",
+    "parent_category_id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "c8308827-a28e-4382-97ea-ec1e9ae638d4",
+    "name": "Dairy Share",
+    "slug": "dairy-share",
+    "icon": "Milk",
+    "parent_category_id": "9db1e4c4-a10d-43b1-9dd8-862525702500",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "c0e0d980-c11a-4def-a0df-dc4363ec2c97",
+    "name": "Buying Club",
+    "slug": "buying-club",
+    "icon": "Users",
+    "parent_category_id": "dccf5732-f778-4735-a9f7-59ad62ea6857",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "a215b375-02e5-4aad-ad4e-c4f5261adb85",
+    "name": "Food Co-op",
+    "slug": "food-co-op",
+    "icon": "Store",
+    "parent_category_id": "dccf5732-f778-4735-a9f7-59ad62ea6857",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "dae3e157-9162-4874-b690-2e3e7be21d30",
+    "name": "Bulk Buying Group",
+    "slug": "bulk-buying-group",
+    "icon": "Package",
+    "parent_category_id": "dccf5732-f778-4735-a9f7-59ad62ea6857",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "b950e89b-e8bc-4aea-92a1-546f7321ef84",
+    "name": "Farm Pickup",
+    "slug": "farm-pickup",
+    "icon": "MapPin",
+    "parent_category_id": "d9d5c492-eab1-462a-9975-b72618e585c5",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "2fc716c3-4896-4cc4-b931-59809703ff2b",
+    "name": "Community Pickup",
+    "slug": "community-pickup",
+    "icon": "MapPin",
+    "parent_category_id": "d9d5c492-eab1-462a-9975-b72618e585c5",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "dcfc2b79-c717-4258-8d68-4ebdb28b8277",
+    "name": "Drop-off Point",
+    "slug": "drop-off-point",
+    "icon": "MapPin",
+    "parent_category_id": "d9d5c492-eab1-462a-9975-b72618e585c5",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "ebd3b748-b3ca-46e4-8fbe-eeac939350df",
+    "name": "Weekly Market",
+    "slug": "weekly-market",
+    "icon": "Calendar",
+    "parent_category_id": "c5041de6-5150-41b3-9de0-f7d7c806b50c",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "3ff1aef7-e049-4cc8-b5ab-7c8bdfb7f0fc",
+    "name": "Seasonal Market",
+    "slug": "seasonal-market",
+    "icon": "Sun",
+    "parent_category_id": "c5041de6-5150-41b3-9de0-f7d7c806b50c",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "afef1e20-ab48-4fb7-a96c-5945447b56dd",
+    "name": "Indoor Market",
+    "slug": "indoor-market",
+    "icon": "Store",
+    "parent_category_id": "c5041de6-5150-41b3-9de0-f7d7c806b50c",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "23c532fe-f643-4819-be0c-55d5ae933a94",
+    "name": "Specialty Market",
+    "slug": "specialty-market",
+    "icon": "Cherry",
+    "parent_category_id": "c5041de6-5150-41b3-9de0-f7d7c806b50c",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "46cea863-8149-4916-8155-b35ec4f49b0e",
+    "name": "Farm Store",
+    "slug": "farm-store",
+    "icon": "Store",
+    "parent_category_id": "cfa3e562-cfd4-49fd-ab86-4ae28a898125",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "875687ce-8010-4cd7-867c-d1aa479607b9",
+    "name": "Roadside Stand",
+    "slug": "roadside-stand",
+    "icon": "Flag",
+    "parent_category_id": "cfa3e562-cfd4-49fd-ab86-4ae28a898125",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "bb807a34-779a-4e2f-b279-6ae75514ce4e",
+    "name": "Honor System Stand",
+    "slug": "honor-system-stand",
+    "icon": "DollarSign",
+    "parent_category_id": "cfa3e562-cfd4-49fd-ab86-4ae28a898125",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "7bfad1ef-2001-4ce7-bd86-d6c5872c484d",
+    "name": "Local Honey",
+    "slug": "local-honey",
+    "icon": "Droplet",
+    "parent_category_id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "f2551204-44ad-4699-ac06-14fd61dd64d4",
+    "name": "Artisan Cheese",
+    "slug": "artisan-cheese",
+    "icon": "Cheese",
+    "parent_category_id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "5b0878a1-e081-4891-9f20-cdbf03aa1ad7",
+    "name": "Specialty Meats",
+    "slug": "specialty-meats",
+    "icon": "Beef",
+    "parent_category_id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "c13c19cb-8757-4b8c-b166-3356173b651f",
+    "name": "Fermented Foods",
+    "slug": "fermented-foods",
+    "icon": "Flask",
+    "parent_category_id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "2f3632af-78c0-4f42-8a12-bdee09e2bc81",
+    "name": "Local Preserves",
+    "slug": "local-preserves",
+    "icon": "Jar",
+    "parent_category_id": "acdcf362-e836-414a-8445-9108c47de8e1",
+    "sort_order": 5,
+    "sic_code": null
+  },
+  {
+    "id": "3fd7cb47-b549-4b3e-a23c-36eaa630808d",
+    "name": "Chicken Coop Supplies",
+    "slug": "chicken-coop-supplies",
+    "icon": "Bird",
+    "parent_category_id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "sort_order": 1,
+    "sic_code": null
+  },
+  {
+    "id": "2f589613-5d14-4e5e-acef-78a6043098a3",
+    "name": "Garden Supplies",
+    "slug": "garden-supplies",
+    "icon": "Shovel",
+    "parent_category_id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "sort_order": 2,
+    "sic_code": null
+  },
+  {
+    "id": "7cee2e86-1e0f-437d-b343-1f009e9bf494",
+    "name": "Seed & Feed",
+    "slug": "seed-feed",
+    "icon": "Sprout",
+    "parent_category_id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "sort_order": 3,
+    "sic_code": null
+  },
+  {
+    "id": "6c9dd31c-8044-46eb-9141-a9e012521bff",
+    "name": "Composting",
+    "slug": "composting",
+    "icon": "Recycle",
+    "parent_category_id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "sort_order": 4,
+    "sic_code": null
+  },
+  {
+    "id": "3e8dfcd2-e298-412c-8581-11291835d904",
+    "name": "Beekeeping Supplies",
+    "slug": "beekeeping-supplies",
+    "icon": "Bug",
+    "parent_category_id": "c298a7f2-585a-4bd4-b8aa-ca522de33d0b",
+    "sort_order": 5,
+    "sic_code": null
+  }
+]

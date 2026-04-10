@@ -1,0 +1,129 @@
+PROMPT 1 — REPLIT (BUILD)
+
+Project: CLT Connects / City Hub
+Goal: Add a “Live Feeds” page/section that embeds external live streams (YouTube + allowed iframe pages) so we do NOT host video. Provide a clean grid UI, categories, rotation, and graceful fallbacks.
+
+STACK/CONTEXT
+- Existing app: React (Vite) + Node/Express API (if present). Use current routing system (React Router if present).
+- Do not break existing navigation.
+- No service worker / no PWA caching.
+- We are embedding only (iframes), not re-streaming.
+
+DELIVERABLES
+1) New route: /live
+2) New UI page component: LiveFeedsPage
+3) Data-driven config for feeds: src/data/liveFeeds.ts (or .json) with metadata
+4) FeedCard component with:
+   - Title, source label, category badge
+   - Embedded player (iframe)
+   - “Open source” link (opens in new tab)
+   - Fallback if iframe is blocked (X-Frame-Options): show a “View Live” button only
+5) Optional: simple rotation mode for homepage widget (if we already have a homepage) that rotates featured feed every 30 seconds (client-side only).
+
+CATEGORIES (INITIAL)
+- Charlotte Skyline
+- Wildlife / Raptor
+- NC Scenic / Beach
+- “More Live” (misc)
+
+INITIAL FEED LIST (PUT THESE EXACTLY INTO THE CONFIG)
+(Use embed URLs; for “page embeds” use the page URL as iframe src and handle X-Frame fallback.)
+
+A) Charlotte Skyline (YouTube embeds)
+- Title: “Charlotte Skyline (WBTV Tower Cam)”
+  type: "youtube"
+  embedUrl: "https://www.youtube.com/embed/4Vv6mf2TLPo"
+  sourceUrl: "https://www.youtube.com/watch?v=4Vv6mf2TLPo"
+  category: "Charlotte Skyline"
+
+- Title: “Charlotte Skyline Live”
+  type: "youtube"
+  embedUrl: "https://www.youtube.com/embed/JXeIZvgayDE"
+  sourceUrl: "https://www.youtube.com/watch?v=JXeIZvgayDE"
+  category: "Charlotte Skyline"
+
+B) Wildlife / Raptor (YouTube embeds)
+- Title: “Jordan Lake Eagle Cam (NC)”
+  type: "youtube"
+  embedUrl: "https://www.youtube.com/embed/K-JIB3vHWYs"
+  sourceUrl: "https://www.youtube.com/watch?v=K-JIB3vHWYs"
+  category: "Wildlife / Raptor"
+
+- Title: “Jordan Lake Eagle Cam (Alt)”
+  type: "youtube"
+  embedUrl: "https://www.youtube.com/embed/_0T1CHgnn-A"
+  sourceUrl: "https://www.youtube.com/watch?v=_0T1CHgnn-A"
+  category: "Wildlife / Raptor"
+
+C) NC Scenic / Beach (page iframe embeds; must have fallback)
+- Title: “Outer Banks Webcams (Directory)”
+  type: "page"
+  embedUrl: "https://www.outerbanks.org/webcams/"
+  sourceUrl: "https://www.outerbanks.org/webcams/"
+  category: "NC Scenic / Beach"
+
+- Title: “Surfchex — Carolina Beach Cam”
+  type: "page"
+  embedUrl: "https://www.surfchex.com/cams/carolina-beach-web-cam/"
+  sourceUrl: "https://www.surfchex.com/cams/carolina-beach-web-cam/"
+  category: "NC Scenic / Beach"
+
+D) More Live (page iframe embeds; must have fallback)
+- Title: “Emerald Isle Live Cameras”
+  type: "page"
+  embedUrl: "https://www.emeraldisle-nc.org/375/EI-Live-Cameras"
+  sourceUrl: "https://www.emeraldisle-nc.org/375/EI-Live-Cameras"
+  category: "More Live"
+
+- Title: “Bryson City Webcams”
+  type: "page"
+  embedUrl: "https://www.explorebrysoncity.com/plan-your-visit/bryson-city-smoky-mountain-webcams/"
+  sourceUrl: "https://www.explorebrysoncity.com/plan-your-visit/bryson-city-smoky-mountain-webcams/"
+  category: "More Live"
+
+UI/UX REQUIREMENTS
+- Layout: responsive grid (1 col mobile, 2 col tablet, 3 col desktop).
+- Each card: 16:9 player area.
+- Autoplay rules:
+  - YouTube: default to muted autoplay OFF (do not force autoplay). Provide a “Play” click (YouTube handles).
+- Show a “Featured Live Now” section at top (first feed by default) + “Browse by Category” tabs/filters.
+- Add a disclaimer line at top: “Streams are hosted by their original sources. Availability may change.”
+- Add a “Suggest a feed” link (mailto or internal form stub; no backend required).
+
+TECHNICAL REQUIREMENTS
+- No backend changes required.
+- For type "page" embeds: implement robust fallback since many sites set X-Frame-Options.
+  - Approach: render iframe; also render a “Open Live Feed” button always.
+  - Detect likely block: onLoad timer + try/catch cannot read cross-origin; so just show a message “If video does not load, use Open Live Feed.”
+- Security: iframe sandbox attributes where reasonable:
+  - For YouTube: allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  - For page embeds: sandbox="allow-scripts allow-same-origin allow-popups allow-forms" (if it breaks, relax to allow-popups only)
+- Add a small config validation in dev (warn if missing fields).
+
+IMPLEMENTATION STEPS
+1) Create src/data/liveFeeds.ts exporting an array of feeds with the above fields.
+2) Add FeedCard component that:
+   - Takes a feed
+   - Renders title, category, source link
+   - Renders iframe with proper attributes based on type
+3) Create LiveFeedsPage:
+   - Loads feeds from config
+   - Renders Featured
+   - Renders category filter
+   - Renders grid
+4) Add route /live to router and add nav link “Live”
+5) Ensure it builds and runs.
+
+OUTPUT
+- Make the code changes directly.
+- Provide a short checklist for me to test:
+  - /live route loads
+  - YouTube embeds render
+  - Page embeds show fallback button and do not break layout
+  - Mobile layout OK
+
+DO NOT
+- Do not tell me how to find feeds.
+- Do not add paid services.
+- Do not re-stream or scrape video.
+- Do not add service workers or caching.

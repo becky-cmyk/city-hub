@@ -1,0 +1,296 @@
+CHARLOTTE CITY HUB
+TERMS OF SERVICE, LICENSING DISCLOSURE, PRIVACY POLICY & REFUND POLICY
+Effective Date: [Insert Date]
+
+Charlotte City Hub (“Platform,” “Site,” “we,” “our,” or “us”) is a digital commerce, publication, listing, and advertising platform managed and operated by City Core Hub (“Owner”).
+
+By accessing, submitting content, purchasing services, subscribing, advertising, claiming listings, or participating in any capacity, you agree to these Terms.
+
+If you do not agree, do not use the Platform.
+
+--------------------------------------------------
+1. PLATFORM STRUCTURE
+--------------------------------------------------
+
+Charlotte City Hub operates under a centralized licensing model.
+
+City Core Hub retains exclusive ownership of:
+
+• All intellectual property
+• All trademarks and branding
+• All domains
+• All technology and platform code
+• All data
+• All subscriber records
+• All payment processing accounts
+• All advertising systems
+• All pricing authority
+
+Metro and Micro operators, where applicable, operate solely under limited, revocable licensing agreements.
+
+No ownership rights are transferred to any operator.
+
+--------------------------------------------------
+2. NON-FRANCHISE DECLARATION
+--------------------------------------------------
+
+Nothing contained herein or in any related agreement shall be construed to create a franchise, partnership, joint venture, employment relationship, or agency relationship.
+
+All Metro and Micro operators are independent licensed operators.
+
+No franchise relationship is created or intended.
+
+--------------------------------------------------
+3. TERRITORY & LICENSING
+--------------------------------------------------
+
+Territory rights, where granted, are:
+
+• Conditional
+• Performance-based
+• Revocable
+• Non-transferable
+• Non-assignable without written approval
+
+Territory rights do not constitute ownership.
+
+City Core Hub may modify, reassign, divide, or revoke territory rights at its sole discretion in accordance with applicable agreements.
+
+--------------------------------------------------
+4. LISTINGS & PUBLIC INFORMATION DISCLAIMER
+--------------------------------------------------
+
+The Platform may display:
+
+• Publicly available business information
+• User-submitted information
+• AI-enhanced descriptions
+• Event details
+• Editorial content (“Pulses”)
+
+We do not guarantee accuracy, completeness, timeliness, or correctness.
+
+Charlotte City Hub is not liable for:
+
+• Incorrect business information
+• Outdated contact details
+• Misrepresentations by third parties
+• AI-generated inaccuracies
+• Event cancellations or changes
+
+Businesses are responsible for reviewing and updating their information.
+
+--------------------------------------------------
+5. ADVERTISING DISCLAIMER
+--------------------------------------------------
+
+Advertising is a promotional service only.
+
+We do not guarantee:
+
+• Traffic
+• Click-through rates
+• Leads
+• Sales
+• Revenue
+• Ranking placement
+• Performance outcomes
+
+Rotational and dynamic placement means advertisement position may vary.
+
+Advertising dissatisfaction does not qualify for refund.
+
+--------------------------------------------------
+6. EVENTS DISCLAIMER
+--------------------------------------------------
+
+The Platform may publish or promote events submitted by third parties.
+
+We are not responsible for:
+
+• Event cancellations
+• Safety conditions
+• Ticketing disputes
+• Refund disputes
+• Venue changes
+• Organizer conduct
+
+All disputes must be handled directly with the event organizer.
+
+--------------------------------------------------
+7. AI & AUTOMATION DISCLAIMER
+--------------------------------------------------
+
+The Platform may use automated systems or artificial intelligence to enhance content.
+
+We make no guarantees regarding the accuracy of automated outputs.
+
+Users are responsible for reviewing and correcting information.
+
+--------------------------------------------------
+8. DATA OWNERSHIP
+--------------------------------------------------
+
+All data, including:
+
+• Listings
+• Subscriber data
+• CRM records
+• Advertising data
+• Analytics
+• Operator data
+
+Remain the exclusive property of City Core Hub.
+
+Operators receive limited access only and have no ownership rights.
+
+Upon termination of any license or account, access is revoked immediately.
+
+--------------------------------------------------
+9. ALL SALES FINAL – STRICT NO REFUND POLICY
+--------------------------------------------------
+
+ALL SALES ARE FINAL.
+
+NO REFUNDS WILL BE ISSUED UNDER ANY CIRCUMSTANCES.
+
+This includes:
+
+• Membership subscriptions
+• Listing upgrades
+• Advertising purchases
+• Sponsored content
+• Event promotions
+• Activation fees
+• Licensing fees
+• Platform fees
+• Digital services
+
+Cancellation prevents future billing only.
+
+No prorated refunds.
+
+No refunds for dissatisfaction, underperformance, or unused services.
+
+--------------------------------------------------
+10. CHARGEBACK & PAYMENT DISPUTES
+--------------------------------------------------
+
+By completing any purchase, you agree:
+
+• You understand all sales are final.
+• You will not initiate a chargeback without first contacting support.
+• You authorize City Core Hub to provide transaction records, service logs, IP records, agreement acceptance records, and proof of service to the payment processor (including Stripe).
+
+If a chargeback is initiated:
+
+• Access may be suspended immediately.
+• Listings may be removed.
+• Territory rights may be revoked.
+• We reserve the right to contest the dispute.
+• We reserve the right to pursue recovery of disputed funds, processor fees, administrative costs, and legal expenses where permitted.
+
+Fraudulent disputes may result in permanent removal from the Platform.
+
+--------------------------------------------------
+11. PLATFORM DISCRETION
+--------------------------------------------------
+
+City Core Hub reserves the right to:
+
+• Refuse service
+• Remove content
+• Suspend accounts
+• Modify pricing
+• Adjust revenue splits
+• Update platform features
+• Modify policies
+• Revoke licenses
+
+At any time, without refund.
+
+--------------------------------------------------
+12. LIMITATION OF LIABILITY
+--------------------------------------------------
+
+To the maximum extent permitted by law:
+
+Charlotte City Hub and City Core Hub shall not be liable for:
+
+• Lost revenue
+• Lost profits
+• Business interruption
+• Reputational harm
+• Indirect or consequential damages
+• Listing inaccuracies
+• Advertising outcomes
+• Operator disputes
+• User disputes
+
+Total liability shall not exceed the amount paid by the user within the previous twelve (12) months.
+
+--------------------------------------------------
+13. INDEMNIFICATION
+--------------------------------------------------
+
+You agree to indemnify and hold harmless Charlotte City Hub and City Core Hub from any claims arising from:
+
+• Your business practices
+• Your advertising
+• Your submitted content
+• Your event promotion
+• Your misuse of the Platform
+• Your breach of these Terms
+
+--------------------------------------------------
+14. PRIVACY POLICY
+--------------------------------------------------
+
+We may collect:
+
+• Name
+• Email
+• Phone number
+• Business information
+• Payment information (processed by third-party processors such as Stripe)
+• IP address
+• Device data
+• Usage analytics
+• Cookies
+
+We do not sell personal information.
+
+Information may be shared with:
+
+• Payment processors
+• Hosting providers
+• Analytics providers
+• Legal authorities if required
+
+We implement reasonable safeguards but cannot guarantee absolute security.
+
+Users may request data correction or deletion where legally permitted.
+
+The Platform is not intended for children under 13.
+
+--------------------------------------------------
+15. GOVERNING LAW
+--------------------------------------------------
+
+These Terms are governed by the laws of the State of North Carolina.
+
+Any disputes shall be resolved exclusively in North Carolina courts.
+
+--------------------------------------------------
+16. MODIFICATIONS
+--------------------------------------------------
+
+We may update these Terms at any time.
+
+Continued use of the Platform constitutes acceptance of revised Terms.
+
+--------------------------------------------------
+17. CONTACT
+--------------------------------------------------
+
+All inquiries must be submitted through official contact methods listed on the Platform.

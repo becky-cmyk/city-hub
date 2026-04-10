@@ -1,0 +1,258 @@
+PROMPT 5 — PHASE 2B: PROPOSAL ENGINE + ACTION TEMPLATES + BATCH (CONTROLLED BUILD)
+
+You are implementing ONLY Task B of Phase 2.
+
+Prerequisite:
+- Task A (charlotte-orchestrator.ts) is complete and in use by chat routes.
+
+DO NOT implement:
+- recommendation/search systems (Task C)
+- UI/command center
+- lifecycle/sales Phase 3
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Enable Charlotte to:
+1) generate structured proposals from parsed intent + entities
+2) map proposals to reusable action templates
+3) process grouped inputs (expo/field capture) in batches
+4) execute via existing systems (no rebuilds)
+
+This is orchestration + templates over existing engines.
+
+--------------------------------------------------
+CRITICAL RULES (COST + ARCHITECTURE)
+--------------------------------------------------
+
+1) DO NOT rebuild:
+- trust engine / scoring
+- CRM / pipelines
+- inbox
+- opportunity scoring
+- story generation
+- claim flow
+- TV/venue, radio, Crown
+- jobs, events, marketplace
+
+2) DO NOT create:
+- new scoring engine
+- new recommendation engine
+- duplicate tables for existing entities
+
+3) EXTEND ONLY:
+- reuse executeCharlotteTool and existing flows
+- proposal engine returns plans; execution calls existing tools
+
+4) KEEP LIGHT:
+- minimal new files
+- no large refactors
+- additive modules only
+
+--------------------------------------------------
+PART 1 — PROPOSAL ENGINE
+--------------------------------------------------
+
+Create:
+
+charlotte-proposal-engine.ts
+
+Function:
+
+generateCharlotteProposal({
+  parsedIntent,
+  resolvedEntity,
+  context // optional: batch context, source, notes
+})
+
+Return a STRUCTURED proposal:
+
+{
+  proposalType: "activation" | "content" | "growth" | "followup",
+  objectives: string[],
+  recommendedActions: [
+    {
+      actionType: string,        // maps to template key
+      priority: "high" | "med" | "low",
+      reason: string,
+      requiresConfirmation?: boolean
+    }
+  ],
+  risks?: string[],
+  missingData?: string[]
+}
+
+Rules:
+- Use existing signals (entity data, prospect status, scoring if available)
+- No new scoring logic; read-only use of existing signals
+- Keep deterministic rules (no heavy AI)
+
+--------------------------------------------------
+PART 2 — ACTION TEMPLATES (MAPPERS ONLY)
+--------------------------------------------------
+
+Create:
+
+charlotte-action-templates.ts
+
+Define a registry of templates that MAP to existing flows.
+
+Example keys (expand as needed, but keep tight):
+- CLAIM_LISTING
+- GENERATE_STORY
+- SEND_OUTREACH_EMAIL
+- SCHEDULE_INTERVIEW
+- ACTIVATE_TV_VENUE
+- ACTIVATE_CROWN
+- CREATE_EVENT
+- CREATE_JOB
+- CREATE_MARKETPLACE_ITEM
+
+Each template contains:
+{
+  key: string,
+  description: string,
+  requiresConfirmation: boolean,
+  execute: (input) => Promise<any> // calls existing systems
+}
+
+Execution must:
+- call existing services/routes (e.g., claim flow, story flow, CRM/outreach)
+- NOT reimplement logic
+- pass through required params only
+
+--------------------------------------------------
+PART 3 — PROPOSAL → EXECUTION ADAPTER
+--------------------------------------------------
+
+Create:
+
+executeCharlotteProposal(proposal, options?)
+
+Behavior:
+- iterate recommendedActions by priority
+- for each action:
+  - if requiresConfirmation and not confirmed → skip and flag
+  - else call corresponding action template
+- collect results
+
+Return:
+
+{
+  executed: [
+    { actionType, status: "success" | "skipped" | "failed", result? }
+  ],
+  pendingConfirmation: string[],
+  errors?: any[]
+}
+
+--------------------------------------------------
+PART 4 — BATCH / EXPO PROCESSING
+--------------------------------------------------
+
+Create:
+
+charlotte-batch-processor.ts
+
+Function:
+
+processCharlotteBatch(inputs, context)
+
+Where inputs can be:
+- photos/cards/notes already parsed into text (assume upstream parsing)
+- list of contacts/business hints
+
+Flow per item:
+1) call orchestrator parse (reuse from Task A)
+2) resolve entity
+3) generate proposal
+4) optionally execute (based on mode)
+
+Batch return:
+
+{
+  items: [
+    {
+      inputId,
+      entity,
+      proposal,
+      execution?: { ... }
+    }
+  ],
+  summary: {
+    total,
+    highConfidence,
+    needsReview
+  }
+}
+
+Rules:
+- Do not create entities automatically on low confidence
+- flag low-confidence items for inbox (reuse existing inbox mechanisms)
+
+--------------------------------------------------
+PART 5 — ORCHESTRATOR INTEGRATION (EXTEND)
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts:
+
+Add handling:
+
+- mode === "proposal"
+  → call generateCharlotteProposal
+  → return proposal (do not auto-execute unless explicitly instructed)
+
+- mode === "operator" with actionable intent
+  → generate proposal
+  → pass to executeCharlotteProposal (respect confirmation flags)
+
+- batch context detected
+  → route to batch processor
+
+Do NOT break existing direct tool execution paths.
+
+--------------------------------------------------
+PART 6 — CONFIRMATION HANDLING (LIGHT)
+--------------------------------------------------
+
+Add simple confirmation flag support:
+
+- proposals can mark actions as requiresConfirmation
+- orchestrator returns pendingConfirmation list
+- do NOT build full UI/flow yet
+
+--------------------------------------------------
+PART 7 — LOGGING (LIGHT)
+--------------------------------------------------
+
+Log:
+- proposal generated (type + actions)
+- actions executed / skipped
+- batch summary counts
+
+No heavy logging system.
+
+--------------------------------------------------
+PART 8 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — SAMPLE PROPOSAL (realistic example)
+OUTPUT C — ACTION TEMPLATE LIST
+OUTPUT D — EXECUTION FLOW SUMMARY
+OUTPUT E — WHAT EXISTING SYSTEMS WERE CALLED
+OUTPUT F — WHAT WAS NOT BUILT (confirm scope control)
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+STOP after Task B is complete.
+
+Do NOT begin:
+- recommendation/search (Task C)
+- UI / command center
+- Phase 3 lifecycle/sales logic

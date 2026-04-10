@@ -1,0 +1,323 @@
+You are working INSIDE the existing Charlotte / City Hub app codebase.
+
+IMPORTANT CONTEXT:
+Do NOT build a separate new platform.
+Do NOT build a generic agency system.
+Do NOT build a multi-tenant marketing SaaS right now.
+
+This prompt is ONLY to extend the existing Charlotte Hub app so Charlotte can function as the content marketing engine for the hub.
+
+The goal is to finish the content production loop already partially built inside the hub.
+
+WHAT ALREADY EXISTS OR IS ASSUMED TO EXIST:
+- Charlotte already exists as the AI guide / concierge / admin inside the hub
+- RSS feeds and story/article intake already exist or are partially implemented
+- story repurposing already exists or is partially implemented
+- SEO structure, tags, zip tags, and Google Places enrichment are already part of the system logic
+- directory onboarding and interview flow support already exist or are partially implemented
+- City Hub is already the working context
+- We are extending Charlotte into a stronger CONTENT PERSONA and SOCIAL CONTENT ENGINE
+
+DO NOT rip out existing Charlotte logic.
+DO NOT replace working flows.
+DO NOT generalize this into a full external marketing platform yet.
+DO NOT create unnecessary agency/client/platform billing systems in this prompt.
+ONLY build what is needed to make Charlotte create usable marketing content for the Charlotte Hub.
+
+PRIMARY GOAL:
+Create the minimum working marketing engine INSIDE Charlotte Hub so the workflow becomes:
+
+RSS / Idea / Existing Story
+→ Charlotte content interpretation
+→ social-ready deliverables
+→ optional Charlotte video script
+→ publish/export queue
+→ reusable content archive
+
+CORE OUTCOME REQUIRED:
+Charlotte must be able to take incoming hub content and turn it into:
+1. social media post copy
+2. caption variations
+3. short promotional summaries
+4. short video scripts for Charlotte as a host
+5. publish-ready content records for later posting/export
+
+==================================================
+PHASE 1 — AUDIT CURRENT SYSTEM FIRST
+==================================================
+
+Before building anything new:
+1. inspect the existing Charlotte-related models, routes, components, and AI flows
+2. identify what already exists for:
+   - RSS/article intake
+   - story generation
+   - tagging
+   - SEO fields
+   - Google Places enrichment
+   - onboarding/interview flows
+   - admin/content tools
+3. preserve existing structures wherever possible
+4. extend rather than duplicate
+
+Create a short internal implementation note in comments or project notes describing:
+- what already existed
+- what was added
+- what was reused
+- what remains intentionally out of scope
+
+==================================================
+PHASE 2 — ADD CHARLOTTE CONTENT ENGINE LAYER
+==================================================
+
+Build a new content production layer inside the hub called something like:
+
+Charlotte Content Engine
+or
+Charlotte Studio
+or
+Charlotte Content
+
+Use the naming convention already most consistent with the current app.
+
+This layer should let Charlotte transform existing hub content into marketing deliverables.
+
+INPUT SOURCES TO SUPPORT:
+- RSS-derived stories
+- manually created stories
+- enriched business/location stories
+- event stories
+- curated news or community updates
+- existing article records already in the hub
+
+For each content item, Charlotte should be able to generate these deliverables:
+
+A. SOCIAL POST
+- short post for Facebook / Instagram / LinkedIn style usage
+- community tone
+- local / engaging voice
+- CTA back to the hub
+
+B. CAPTION VARIANTS
+- at least 2–3 text variants
+- shorter and longer options
+- optional hashtag suggestions
+
+C. SHORT HUB UPDATE
+- 1–3 sentence summary
+- designed for quick publishing or Pulse-style promotion
+
+D. CHARLOTTE VIDEO SCRIPT
+- 30–60 second host script
+- written as if Charlotte is presenting the update
+- conversational local guide tone
+- mention the hub / where to learn more when relevant
+
+E. PUBLISH / EXPORT RECORD
+- save generated outputs so they can be reviewed, approved, copied, exported, or later posted
+
+==================================================
+PHASE 3 — DATA MODEL / RECORD STRUCTURE
+==================================================
+
+Reuse existing tables if possible. Only add what is needed.
+
+Create a content deliverables structure tied to existing story/content records.
+
+Suggested fields for each generated deliverable:
+- id
+- source_story_id or source_content_id
+- deliverable_type
+  - social_post
+  - caption_variant
+  - short_update
+  - video_script
+- title or label
+- generated_text
+- platform_target (nullable)
+- status
+  - draft
+  - reviewed
+  - approved
+  - archived
+- created_by_ai (boolean)
+- persona_name
+- created_at
+- updated_at
+
+If useful, create a grouped parent record such as content_package or marketing_package tied to the source story.
+
+Suggested package relationship:
+Source Story / Source Content
+→ many generated deliverables
+
+Do NOT overengineer this.
+Keep it simple and usable.
+
+==================================================
+PHASE 4 — CHARLOTTE PERSONA OUTPUT RULES
+==================================================
+
+Charlotte is not a generic marketing bot.
+She is the host / voice / guide of the Charlotte Hub.
+
+All generated content should follow these style rules:
+- local
+- warm
+- informative
+- community-aware
+- not overly corporate
+- not spammy
+- should make people curious enough to click through
+- should sound like a city guide / local connector / host
+
+Add a reusable prompt template or server-side helper for Charlotte content generation that:
+- takes the source story/content
+- identifies the main local relevance
+- creates the deliverables listed above
+- keeps Charlotte’s voice consistent
+
+If the app already has AI prompt utilities, reuse them.
+
+==================================================
+PHASE 5 — SIMPLE CONTENT STUDIO UI
+==================================================
+
+Build a simple internal UI for admins/content managers inside Charlotte Hub.
+
+This can be a page such as:
+- /admin/content-studio
+- /admin/charlotte-content
+- or the most consistent route with the app
+
+The UI should allow a user to:
+1. view eligible source stories/content
+2. click “Generate Charlotte Content”
+3. see generated outputs in grouped format
+4. regenerate if needed
+5. edit manually if needed
+6. mark approved
+7. copy/export content for posting
+
+For each source item, show:
+- source title
+- source type
+- source link if available
+- category / tags / zip if available
+- generated social post
+- caption variants
+- short update
+- video script
+
+Keep the UI practical and fast, not fancy.
+
+==================================================
+PHASE 6 — CHARLOTTE VISUAL HOST PREP
+==================================================
+
+Do NOT build a full avatar/video rendering engine yet.
+
+Instead, prepare the system for Charlotte visual-host content by:
+1. creating a Charlotte persona profile/config object if one does not already exist
+2. storing:
+   - persona name
+   - persona role
+   - default tone
+   - default intro/outro style
+   - optional avatar image reference
+3. making the video script output explicitly structured for future avatar/video generation
+
+Video script format should include something like:
+- hook / opening
+- main talking points
+- call to action
+- estimated duration
+
+This ensures the system is ready for a future visual Charlotte layer.
+
+==================================================
+PHASE 7 — PUBLISH / EXPORT QUEUE
+==================================================
+
+Build a basic publish/export queue.
+This does NOT need direct live posting API integrations yet.
+
+Minimum requirement:
+- approved deliverables can be saved into a queue
+- queue can be filtered by type/status/date
+- each item can be copied/exported easily
+- each item remains linked to the original source story/content
+
+Statuses may include:
+- draft
+- approved
+- queued
+- published
+- archived
+
+This queue is the bridge between Charlotte content generation and manual or future automated publishing.
+
+==================================================
+PHASE 8 — ARCHIVE / REUSE
+==================================================
+
+Nothing should be deleted.
+
+Generated content should remain searchable and reusable.
+
+Support search/filter at least by:
+- source title
+- category
+- zip code
+- content type
+- date
+- status
+
+This archive becomes the basis for future repurposing.
+
+==================================================
+PHASE 9 — IMPORTANT GUARDRAILS
+==================================================
+
+Do NOT:
+- build a separate agency system
+- build billing systems
+- build creator workspaces
+- build multi-city management
+- rebuild Charlotte from scratch
+- remove existing working content logic
+- create unnecessary abstraction for future platform ideas
+
+DO:
+- work inside the current Charlotte Hub app
+- reuse current story/article/admin structures
+- add the missing marketing output layer
+- make it operational end-to-end
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+This prompt is successful if, inside the current Charlotte Hub app, an admin can:
+
+1. open an existing story/article/content item
+2. run Charlotte content generation
+3. receive:
+   - a social post
+   - caption variations
+   - a short hub update
+   - a Charlotte video script
+4. review/edit/approve those outputs
+5. place them into a publish/export queue
+6. preserve them in an archive for reuse
+
+FINAL IMPLEMENTATION REQUEST:
+- implement this cleanly in the existing codebase
+- keep changes modular and readable
+- reuse existing patterns
+- add brief comments where needed
+- after implementation, provide a concise summary of:
+  1. what was added
+  2. what existing code was reused
+  3. where the new UI lives
+  4. which models/tables were added or changed
+  5. what is ready now vs later

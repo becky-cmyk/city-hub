@@ -1,0 +1,228 @@
+PACK 0 — CITYCOREHUB / CLT CONNECTS — MASTER VISION (AMENDED v2026-02-19)
+
+SOURCE OF TRUTH SCOPE:
+- This Pack 0 is the current master vision + operating constraints for CityCoreHub / CLT Connects.
+- Includes confirmed build realities and newly completed SEO + authority work.
+- Revenue-first sequencing remains locked.
+
+================================================================================
+01 — CORE IDENTITY (LOCKED)
+CityCoreHub is Local Business Operating Infrastructure — not “just a directory.”
+It combines:
+- Visibility Engine
+- Authority Engine
+- Membership/Chamber layer
+- Lead layer (proof-of-value)
+- Micro-site layer (website replacement)
+- Community engagement surfaces
+- Event monetization
+- Modular relationship integration “hat” (Living Contacts) + referral activation layer (later)
+
+Strategic replacement intent:
+- Reduce reliance on Google Business Profiles, Yelp-style listings, basic websites, fragmented survey tools,
+  disconnected local marketing, and traditional chamber models.
+
+================================================================================
+02 — NON-NEGOTIABLES (LOCKED)
+Execution surface:
+- All implementation work is executed via Replit AI prompts.
+- One prompt at a time.
+
+System guardrails:
+- Multi-tenant architecture with strict cityId scoping is mandatory.
+- No service workers. No heavy caching. No PWA caching.
+- Modular integrations only (no schema merge) for external systems (Living Contacts).
+- No schema drift / no rebuild mid-phase.
+- Feature creep prohibited mid-phase.
+
+Outbound link hygiene:
+- No ugly URLs shown to end-users.
+- Use clean paths and buttons.
+- If query params are required for logic, they must be removed/cleaned immediately after use.
+
+Multilingual quality policy:
+- Do not market “multilingual” if experience is low-quality.
+- Hub UI bilingual must be native/human-quality strings (not auto-translate).
+- Spanish business content must be owner-provided or translated/approved.
+- Multilingual infrastructure may exist, but Spanish content fields/toggles can be commercially gated.
+
+Positioning:
+- CityCoreHub is NOT a directory; it is business operating infrastructure.
+- Early phase sequencing is revenue-first.
+
+================================================================================
+03 — TWO-SIDED ECOSYSTEM (LOCKED)
+Side A — Businesses / Nonprofits / Volunteers:
+- Listings (claimed/unclaimed)
+- Reputation presence + authority badges (later verification options)
+- Surveys + nominations/voting (later)
+- Lead intake + proof-of-value
+- Micro-sites (premium)
+- Membership tiers
+- Events
+- Managed marketing extension (done-for-you)
+
+Side B — Community:
+- Discovery by zone + category
+- Curated content surfaces (articles/events)
+- Authority recognition (campaigns later)
+- Nonprofit/volunteer spotlighting
+
+================================================================================
+04 — LIVING CONTACTS INTEGRATION MODEL (LOCKED)
+- Living Contacts remains standalone.
+- CityCoreHub integrates via API bridge / deep link / optional future SSO.
+- No database merging. No schema duplication.
+- CityCoreHub generates: visibility/leads/events/authority.
+- Living Contacts manages: follow-up/relationships/referrals/contexts/hats/conversion lifecycle.
+
+================================================================================
+05 — COMMERCIAL MODEL (CURRENT DIRECTION / LOCKED)
+1) “Free tier directory” is rejected as a marketed product.
+   - Listings can exist as placeholders/unclaimed.
+   - Product motion is claim-first (paid claim or gated claim).
+
+2) Micro-site layer is the differentiator:
+   - Premium listing evolves into a micro-site (website replacement) for businesses without a site.
+   - Domain pathways (sequenced):
+     - A) Redirect custom domain to business page
+     - B) Subdomain per business
+     - C) Full custom domain mapping
+
+3) Two-track monetization model (locked direction):
+   - Track 1: Self-Service (guided, multilingual onboarding; low cost; high volume)
+   - Track 2: Done-For-You (managed setup; higher price; more attention/service)
+
+4) Multicultural-first positioning (Charlotte):
+   - Hub UI bilingual EN/ES is required (implemented).
+   - Language badges + filters are core differentiation (planned/next).
+
+5) Storefront retention gap:
+   - Storefronts want loyalty/repeat business more than relationship CRM.
+   - Loyalty layer via Boomerangme considered as optional add-on/resell.
+   - Living Contacts is better fit for professional services; do not force on storefronts.
+
+6) Lead attribution is required for sales:
+   - Must prove “CLT Connects / CityCoreHub sent you leads” via clicks/forms.
+   - Call tracking numbers (Twilio) is a later upgrade path.
+
+================================================================================
+06 — CONFIRMED BUILD REALITY (AS OF 2026-02-19)
+Stack (verified):
+- Node.js (Replit)
+- Express 5
+- React 18 / Vite SPA
+- Drizzle ORM
+- PostgreSQL (Neon)
+- Resend (email)
+- Stripe (live approved)
+- Google Places integrated
+- No service worker
+
+Multi-tenant (verified):
+- cityId enforced on core entities with composite unique indexes (city_id, slug)
+- Application-level isolation (no RLS)
+
+Stripe/Entitlements (verified):
+- Checkout + subscriptions working
+- Webhook signature validation active
+- Entitlement upsert implemented
+- Capability gating present (FREE/BASIC/PREMIUM/CHAMBER)
+
+Claim workflow (verified):
+- Claim email + token hashing
+- 14-day expiration
+- Rate limiting
+- Owner edit moderation queue
+
+Customer Ops module (verified):
+- city-scoped CRM-lite for internal operations (ops_accounts / ops_people / ops_tasks)
+- Admin-only UI + routes
+
+Sponsored/Featured surfaces (verified):
+- Homepage + category + zone featured strips using isFeatured + priorityRank
+
+Multilingual hub UI (verified):
+- Native EN/ES toggle implemented on hub UI strings (human-quality)
+- Persisted across reload
+
+================================================================================
+07 — SEO + AUTHORITY ENGINE (NEWLY CONFIRMED / SOURCE OF TRUTH)
+A) SEO Diagnostic (verified working)
+- Token-protected public endpoint works and is secure:
+  - Wrong/missing token -> 403
+  - Correct token -> full diagnostic JSON
+- Dev “fetch failed” fixed by base URL resolver:
+  - APP_PUBLIC_URL (prod) else REPLIT_DEV_DOMAIN else http://127.0.0.1:<PORT>
+
+B) Critical finding (resolved)
+- App was fully client-rendered; raw HTML was identical SPA shell with empty tags.
+- This was blocking real crawl/index visibility.
+
+C) Solution implemented (verified)
+SEO “Snapshot Injection” for public routes:
+- Server builds meaningful HTML per route using DB data
+- Injects into <head>:
+  - Title
+  - Meta description
+  - Canonical
+  - JSON-LD
+- Injects into <div id="root">:
+  - H1 + minimal visible content + real internal links
+- SPA scripts still load normally for users (additive for crawlers)
+
+D) Snapshot safety (verified)
+- Snapshot wrapped in #seo-snapshot
+- Inline JS adds html.js class; CSS hides snapshot for JS-enabled browsers
+- Prevents double-render flash; keeps snapshot visible for non-JS crawlers
+- Head injection is idempotent (no duplicate meta/canonical/jsonld)
+
+E) Authority clusters added (verified)
+- Internal link modules on snapshot pages:
+  - Explore Categories
+  - Explore Zones
+  - Featured Businesses
+  - “More in Category / More in Zone” (business detail; depends on seed data)
+- JSON-LD improvements:
+  - BreadcrumbList on all snapshot pages
+  - ItemList on list pages (directory/category/zone)
+
+F) Current SEO state (verified pass)
+- Public pages now have:
+  - Non-empty <title>
+  - Meta description present
+  - Canonical present
+  - JSON-LD present (LocalBusiness/Breadcrumb/ItemList as appropriate)
+  - H1 present
+  - Content checks true (business/category/zone names present in raw HTML)
+  - Strong internal linking (20+ links on list pages)
+
+================================================================================
+08 — NEXT PHASE PRIORITIES (REVENUE-FIRST, DISCIPLINED)
+Priority 1 — Lead attribution V1 (proof-of-value)
+- Track clicks (website/directions/call/booking)
+- Add simple contact form
+- Owner dashboard shows lead proof
+- Later: call tracking numbers
+
+Priority 2 — Language badges + filters (multicultural differentiator)
+- Business-declared primary_language + spoken_languages[]
+- Display badges + directory filter
+- No auto-assign; no machine-garbage
+
+Priority 3 — Hub content blocks (anti-thin pages, local authority)
+- 150–300 word intros per category/zone (EN)
+- Spanish gated/editorial-approved
+
+Priority 4 — Guided onboarding wizard (self-serve)
+- Template selection + step completion + progress
+- Autosave; low support burden
+
+Priority 5 — Loyalty layer (optional add-on)
+- Boomerangme reseller/agency component as retention layer (link/embed first)
+
+Priority 6 — Authority campaigns (later)
+- Nominations/voting/top lists after real base data + traffic exists
+
+================================================================================
+END PACK 0 (AMENDED v2026-02-19)

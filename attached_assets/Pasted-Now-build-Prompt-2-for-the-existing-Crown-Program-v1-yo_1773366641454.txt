@@ -1,0 +1,190 @@
+Now build Prompt 2 for the existing Crown Program v1 you just created.
+
+GOAL
+Refine the public-facing copy, contest rules, onboarding language, and admin-editable content so the Crown Program is understandable, legally cleaner, and easier to launch. Do NOT rebuild the core system. Work inside the existing structure.
+
+PRIORITY
+This prompt is about:
+- copy
+- wording
+- rules content
+- page clarity
+- admin editability
+- trust and conversion
+
+Do not over-engineer. Improve what already exists.
+
+PART 1 — PUBLIC COPY REFINEMENT
+
+Update the public-facing language across the Crown system so it follows these messaging rules:
+
+1. The program is community-oriented and local-first.
+2. Businesses are NOT paying for votes or awards.
+3. Businesses are paying for Hub Presence, profile visibility, and participation infrastructure.
+4. The tone should feel credible, community-based, and premium, but not stiff.
+5. Avoid overhype and avoid sounding like a gimmicky “best of” contest.
+6. Keep the word “Crown” consistent throughout the experience.
+7. Use “micro hub” only where needed; otherwise prefer “hub” or the actual hub name.
+
+PART 2 — REWRITE / IMPROVE THESE PAGES
+
+A) Crown Program Overview Page
+Rewrite and structure this page so it clearly explains:
+- what the Crown Program is
+- who it is for
+- how businesses, creators, networking groups, and community organizations participate
+- local-first eligibility
+- how hub-based competitions work
+- that Year 1 is micro-hub only
+- that Metro Crown is not part of v1
+- why Hub Presence is required
+- what winners receive
+- how voting works at a simple level
+
+Add clear sections and headings.
+
+B) Candidate Invitation / Landing Page
+Refine this page so it converts better without sounding misleading.
+
+Required headline direction:
+“You’ve been identified as a potential Crown candidate”
+
+Need clear sections for:
+- why they may qualify
+- what the Crown Program is
+- how participation works
+- what Hub Presence includes
+- what happens after they accept
+- CTA to accept nomination / activate Hub Presence
+
+Important:
+Do not imply they have already won or already been officially nominated if they have not.
+The copy must be ethical and accurate.
+
+C) Nomination Acceptance Flow Copy
+Add better microcopy for the onboarding flow:
+- participant type selection
+- parent vs location/chapter explanation
+- hub selection explanation
+- category selection explanation
+- Hub Presence value explanation
+- final confirmation language
+
+D) Voting Page Copy
+Improve clarity around:
+- one vote per person per category per hub
+- email verification
+- support your local favorites
+- this is community voting
+- current nominee / qualified nominee / winner states if shown
+
+E) Winners Page Copy
+Add better copy that explains:
+- what a Crown Winner is
+- that winners are by hub and category
+- what the title means
+- that current winners are displayed here
+
+PART 3 — CONTEST RULES PAGE
+
+Create or rewrite the public-facing Contest Rules page using clear, readable language with sections for:
+
+1. Program Overview
+2. Participant Types
+3. Eligibility Rules
+4. Local Ownership / Local Operation
+5. Location / Hub Rules
+6. Hub Presence Requirement
+7. Candidate / Nominee / Winner Status Definitions
+8. Voting Rules
+9. Qualification Thresholds
+10. Event Requirement for Networking Groups / Community Organizations
+11. Fraud / Manipulation / Disqualification
+12. Admin Review and Final Decisions
+13. Rights to Publish Names, Logos, Photos, and Winner Information
+14. Program Changes / Suspension / Correction Rights
+15. Contact / Questions
+
+Important rule framing:
+- Participation requires active Hub Presence
+- Payment is for Hub Presence and participation infrastructure, not for votes or guaranteed recognition
+- Organizers retain the right to review suspicious activity and disqualify abuse
+- Keep it public-facing and understandable, not full legalese
+- But structure it in a way that can later be reviewed by legal if needed
+
+PART 4 — ADMIN-EDITABLE CONTENT BLOCKS
+
+Where possible, convert key public copy areas into editable content blocks or CMS-style fields in admin so text can be adjusted later without code changes.
+
+At minimum make these editable:
+- overview page hero text
+- overview page section text
+- invitation page headline/body
+- rules page section text
+- CTA labels
+- winner page intro
+- voting page intro
+
+If a full CMS is too much, use simple database-backed settings/content records.
+
+PART 5 — CATEGORY DESCRIPTIONS
+
+Add admin-editable short descriptions for the Year-1 categories so each category has a clear meaning.
+
+Create simple descriptions for:
+- Best Coffee
+- Best Restaurant
+- Best Brewery
+- Best Food Truck
+- Best Realtor
+- Best Insurance Advisor
+- Best Mortgage Broker
+- Best Date Night Spot
+- Best Local Creator
+- Best Podcast
+- Best Networking Group
+- Best Community Connector
+
+Descriptions should be short, clean, and public-facing.
+
+PART 6 — STATUS LABEL CLEANUP
+
+Audit the interface and make sure status labels are consistent and human-readable.
+
+Use these exact public-facing terms:
+- Candidate
+- Invited
+- Verified Participant
+- Nominee
+- Qualified Nominee
+- Crown Winner
+
+If internal labels differ, keep them internal, but public UI should use the above consistently.
+
+PART 7 — TRUST / CONVERSION IMPROVEMENTS
+
+Add small trust-building FAQ sections where helpful.
+
+Create a short FAQ for the overview or invitation page covering:
+- Are businesses paying to win?
+- Why is Hub Presence required?
+- Can a business be in more than one hub?
+- What makes someone eligible?
+- How does voting work?
+- What do winners receive?
+
+Keep answers concise and user-friendly.
+
+PART 8 — SIMPLE EMAIL + QR CARD COPY AS CONTENT
+
+Add draft copy blocks in the system or code comments/config for these two outreach assets so they are ready for later use:
+
+1. Email invite copy
+2. QR business-card invite copy
+
+They do not need full sending functionality yet.
+They just need ready-to-edit default copy stored in a useful place.
+
+DELIVERABLE
+Refine the existing Crown Program v1 so it is clearer, more trustworthy, easier to explain publicly, and easier to adjust without code changes.
+Prioritize practical implementation over perfection.

@@ -1,0 +1,255 @@
+GOAL:
+Build Prompt 8 as the revenue control and pricing enforcement layer across the platform and all metros.
+
+This prompt ensures:
+- pricing is controlled centrally (platform-first)
+- metros inherit pricing correctly
+- Cora can suggest changes but NOT apply them
+- Stripe products/prices stay aligned
+- entitlements and access are consistent
+- no revenue chaos as you scale metros
+
+IMPORTANT:
+- DO NOT break existing Charlotte pricing
+- DO NOT duplicate Stripe products unnecessarily
+- DO NOT allow per-metro pricing drift (for now)
+- DO NOT auto-change pricing
+- DO NOT auto-create Stripe products without approval
+
+==================================================
+PART 1 — DEFINE PLATFORM PRICING AS SOURCE OF TRUTH
+==================================================
+
+Create (or confirm) a platform-level pricing table:
+
+platform_products
+- id
+- name
+- description
+- product_type (subscription, one_time, add_on)
+- tier (free, verified, charter, enhanced, etc.)
+- scope (platform, metro, hub, creator, business)
+- stripe_product_id
+- is_active
+- created_at
+- updated_at
+
+platform_prices
+- id
+- product_id
+- billing_interval (monthly, annual, one_time)
+- price_amount
+- currency
+- stripe_price_id
+- is_active
+- created_at
+- updated_at
+
+RULE:
+Platform pricing is the ONLY place where base pricing is defined.
+
+==================================================
+PART 2 — METRO PRICING INHERITANCE
+==================================================
+
+Create table:
+
+metro_pricing_overrides
+- id
+- metro_id
+- product_id
+- override_type (none, discount, override_price, custom)
+- override_value (nullable)
+- is_active
+- created_at
+- updated_at
+
+DEFAULT RULE:
+- metros inherit platform pricing
+- overrides are OFF by default
+
+For now:
+- Becky is using SAME pricing across metros
+→ enforce inheritance by default
+
+==================================================
+PART 3 — ENTITLEMENTS LAYER (ACCESS CONTROL)
+==================================================
+
+Create/extend entitlements table:
+
+user_entitlements
+- id
+- user_id
+- product_id
+- metro_id (nullable)
+- scope (platform, metro, hub)
+- status (active, inactive, canceled, past_due)
+- start_date
+- end_date (nullable)
+- source (stripe, manual, promo)
+- created_at
+- updated_at
+
+Purpose:
+- control access to:
+  - business features
+  - creator features
+  - hub placement
+  - content tools
+  - future add-ons
+
+DO NOT rely on Stripe alone for access logic.
+
+==================================================
+PART 4 — STRIPE SYNC LAYER
+==================================================
+
+Create service:
+
+stripeSyncService.ts
+
+Responsibilities:
+- validate platform_products ↔ Stripe products
+- validate platform_prices ↔ Stripe price IDs
+- detect mismatches
+- allow “create new Stripe product/price” ONLY via approval flow
+
+Cora should be able to:
+- audit pricing
+- flag missing Stripe IDs
+- suggest fixes
+- generate Stripe creation prompts
+
+DO NOT:
+- auto-create Stripe objects without approval
+
+==================================================
+PART 5 — CORA PRICING SUPPORT
+==================================================
+
+Cora should support requests like:
+
+- "What are my current prices?"
+- "Show me platform vs metro pricing"
+- "What would happen if I change this price?"
+- "Create a new pricing tier"
+- "Should I adjust pricing?"
+
+Behavior:
+- Hat: CFO / CMO
+- respond with:
+  - current pricing structure
+  - impact analysis
+  - recommendations
+- generate:
+  - pricing change plan
+  - Stripe update plan
+  - NOT apply automatically
+
+==================================================
+PART 6 — PRICING CHANGE WORKFLOW (PLAN ONLY)
+==================================================
+
+Integrate with Prompt 3 system:
+
+When pricing changes are requested:
+
+1. create PLAN
+2. include:
+   - affected products
+   - affected metros
+   - Stripe impact
+   - entitlement impact
+3. require approval
+4. generate build output:
+   - DB update steps
+   - Stripe steps
+   - migration notes
+
+DO NOT auto-apply changes.
+
+==================================================
+PART 7 — PRICING DISPLAY HELPERS
+==================================================
+
+Create helper:
+
+getEffectivePrice({
+  productId,
+  metroId
+})
+
+Logic:
+- check metro override
+- fallback to platform price
+
+Use this everywhere pricing is shown or enforced.
+
+==================================================
+PART 8 — ADMIN UI (LIGHT)
+==================================================
+
+Extend admin area with:
+
+Pricing section:
+- list platform products
+- list prices
+- show Stripe IDs
+- show active/inactive
+
+Metro Pricing view:
+- show inheritance
+- show overrides (if any)
+
+Cora Integration:
+- allow:
+  - “ask Cora about pricing”
+  - “generate pricing change plan”
+
+DO NOT build a full billing dashboard yet.
+
+==================================================
+PART 9 — SAFETY RULES
+==================================================
+
+- No automatic Stripe changes
+- No automatic pricing updates
+- No automatic entitlement changes
+- No silent overrides at metro level
+- All pricing changes require approval + build step
+
+==================================================
+PART 10 — REVENUE CONSISTENCY RULES
+==================================================
+
+- Platform pricing = source of truth
+- Metros inherit by default
+- Overrides must be explicit
+- Stripe must match DB
+- Entitlements must reflect actual access
+
+==================================================
+PART 11 — SUCCESS CRITERIA
+==================================================
+
+This prompt is successful if Becky can:
+
+1. define pricing once at platform level
+2. have all metros inherit automatically
+3. optionally override later (but not required now)
+4. see Stripe alignment clearly
+5. ask Cora for pricing insights
+6. safely plan pricing changes without breaking anything
+
+==================================================
+OUTPUT REQUIRED AFTER IMPLEMENTATION
+==================================================
+
+Provide:
+1. tables added/extended
+2. Stripe sync approach
+3. entitlement logic
+4. pricing inheritance logic
+5. how Cora interacts with pricing
+6. confirmation no auto-pricing changes occur

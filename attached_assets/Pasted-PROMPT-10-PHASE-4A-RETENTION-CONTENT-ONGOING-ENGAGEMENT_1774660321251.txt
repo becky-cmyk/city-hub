@@ -1,0 +1,261 @@
+PROMPT 10 — PHASE 4A: RETENTION + CONTENT + ONGOING ENGAGEMENT ENGINE (LIGHTWEIGHT, NO NEW SYSTEMS)
+
+You are implementing ONLY Phase 4A.
+
+Prerequisite:
+- Phase 3B (lifecycle + onboarding hooks) is complete
+- Charlotte can onboard, propose, execute, and follow up
+
+DO NOT implement:
+- new CRM
+- new automation/scheduler systems
+- new scoring/recommendation engines
+- command center UI
+- heavy analytics dashboards
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Enable Charlotte to:
+1) keep businesses active after onboarding
+2) prompt ongoing content creation
+3) trigger participation across hub surfaces (Pulse, events, TV, radio, print)
+4) surface simple upsell opportunities based on real activity
+5) reduce drop-off and keep momentum
+
+This is a LIGHT engagement layer over existing systems.
+
+--------------------------------------------------
+CRITICAL RULES
+--------------------------------------------------
+
+1) REUSE existing:
+- automation/scheduler
+- inbox
+- CRM/pipelines
+- content generation (story/social)
+- recommendation/trust signals
+
+2) DO NOT create:
+- new retention engine platform
+- new scoring models
+- duplicate schedulers
+
+3) KEEP LIGHT:
+- triggers + rules + hooks
+- minimal new files
+- additive only
+
+--------------------------------------------------
+PART 1 — ENGAGEMENT TRIGGERS (RULES)
+--------------------------------------------------
+
+Create:
+
+charlotte-engagement-triggers.ts
+
+Define simple, deterministic triggers:
+
+A) Inactivity
+- no content/activity in X days (configurable)
+
+B) New capability unlocked
+- just verified
+- story approved
+- new hub/category added
+
+C) Opportunity detected (reuse existing signals)
+- event potential
+- Crown candidate
+- TV/venue fit
+- job/marketplace fit
+
+D) Seasonal/local moments (light)
+- weekends
+- holidays
+- local events (if already available)
+
+Each trigger outputs:
+
+{
+  triggerType,
+  entityId,
+  recommendedNextAction,
+  priority: "high" | "med" | "low"
+}
+
+--------------------------------------------------
+PART 2 — CONTENT PROMPT ENGINE (REUSE GENERATORS)
+--------------------------------------------------
+
+Create:
+
+charlotte-content-prompter.ts
+
+Function:
+
+generateContentPrompt({
+  entity,
+  trigger,
+  context?
+})
+
+Return simple, actionable prompts:
+
+Examples:
+- “Let’s post a quick weekend update about what’s happening here”
+- “We can turn your story into 3 social posts this week”
+- “You have a strong candidate for an event — want to create one?”
+
+Rules:
+- use existing content generators where applicable
+- do NOT build new content engines
+- keep prompts short and actionable
+
+--------------------------------------------------
+PART 3 — PARTICIPATION SURFACE SUGGESTIONS
+--------------------------------------------------
+
+Charlotte should suggest where to participate:
+
+Surfaces:
+- Pulse
+- Events
+- Jobs
+- Marketplace
+- TV/venue
+- Radio (if applicable)
+- Print (Hub Pulse)
+
+Create helper:
+
+getParticipationSuggestions(entity)
+
+Return:
+
+[
+  {
+    surface,
+    reason,
+    actionTemplateKey?
+  }
+]
+
+Must be based on:
+- entity type
+- activity
+- existing signals (trust, scoring, etc.)
+
+--------------------------------------------------
+PART 4 — LIGHT UPSHELL DETECTION
+--------------------------------------------------
+
+Create:
+
+charlotte-upsell-detector.ts
+
+Detect opportunities WITHOUT hard selling:
+
+Examples:
+- high activity but low visibility tier
+- strong story but no ongoing content
+- event potential but no events created
+- multiple locations → multi-hub suggestion
+
+Return:
+
+{
+  upsellType,
+  reason,
+  recommendedAction
+}
+
+Rules:
+- informational, not pushy
+- tied to actual behavior
+
+--------------------------------------------------
+PART 5 — FOLLOW-UP AUTOMATION HOOKS
+--------------------------------------------------
+
+Hook into existing automation system:
+
+When triggers fire:
+- create task OR
+- queue Charlotte follow-up OR
+- send outreach (if appropriate)
+
+Do NOT build new scheduler
+
+--------------------------------------------------
+PART 6 — ORCHESTRATOR EXTENSION
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts:
+
+Allow Charlotte to:
+- detect engagement opportunities during conversation
+- surface prompts naturally
+- optionally trigger actions (with confirmation if needed)
+
+Do NOT interrupt primary flows aggressively
+
+--------------------------------------------------
+PART 7 — RESPONSE STYLE (IMPORTANT)
+--------------------------------------------------
+
+Charlotte should:
+
+- suggest, not nag
+- tie suggestions to goals
+- keep it simple and useful
+- connect content → visibility → participation
+
+Example tone:
+“Since you’re already getting visibility here, the next move would be…”
+
+--------------------------------------------------
+PART 8 — TEST SCENARIOS
+--------------------------------------------------
+
+Test:
+
+1) Inactive business:
+no activity → Charlotte suggests content
+
+2) Newly verified:
+suggest story + first post
+
+3) Active business:
+suggest event or expanded participation
+
+4) High potential:
+suggest upgrade or additional surface
+
+5) Expo follow-up:
+suggest next actions after onboarding
+
+--------------------------------------------------
+PART 9 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — TRIGGERS IMPLEMENTED
+OUTPUT C — SAMPLE CONTENT PROMPTS
+OUTPUT D — PARTICIPATION SUGGESTIONS
+OUTPUT E — UPSELL DETECTION EXAMPLES
+OUTPUT F — HOW EXISTING SYSTEMS WERE REUSED
+OUTPUT G — WHAT WAS NOT BUILT
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+Stop after Phase 4A is complete.
+
+Do NOT begin:
+- advanced retention analytics
+- UI/command center

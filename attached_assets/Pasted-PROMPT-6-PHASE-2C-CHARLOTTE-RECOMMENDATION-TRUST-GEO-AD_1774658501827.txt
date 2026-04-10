@@ -1,0 +1,211 @@
+PROMPT 6 — PHASE 2C: CHARLOTTE RECOMMENDATION + TRUST/GEO ADAPTER (NO NEW ENGINE)
+
+You are implementing ONLY Task C (focused portion).
+
+Prerequisites:
+- Task A (orchestrator) is complete
+- Task B (proposal engine + templates + batch) is complete
+
+DO NOT implement:
+- UI / command center
+- Phase 3 lifecycle/sales logic
+- new recommendation or scoring systems
+
+--------------------------------------------------
+GOAL
+--------------------------------------------------
+
+Enable Charlotte to:
+1) return curated recommendations in conversation
+2) use EXISTING trust/scoring/recommendation signals
+3) apply geo + context + intent layering
+4) return structured + conversational results
+5) stay fully tied to real platform objects
+
+This is an ADAPTER layer — not a new engine.
+
+--------------------------------------------------
+CRITICAL RULES (NON-NEGOTIABLE)
+--------------------------------------------------
+
+1) DO NOT create:
+- new recommendation engine
+- new scoring system
+- duplicate ranking logic
+
+2) MUST reuse:
+- existing trust engine (T0–T5)
+- existing scoring (hubTv, listingUpgrade, adBuyer, etc.)
+- existing entity data (business, events, jobs, marketplace)
+- existing geo structures
+
+3) If something is missing:
+- extend existing logic minimally
+- DO NOT fork or duplicate
+
+4) Results must map to REAL objects in the system
+- no generic or synthetic answers
+
+--------------------------------------------------
+PART 1 — RECOMMENDATION ADAPTER
+--------------------------------------------------
+
+Create:
+
+charlotte-recommendation-adapter.ts
+
+Function:
+
+getCharlotteRecommendations({
+  intent,
+  entityType?,   // business | event | job | marketplace | service
+  geo?,          // zip, hub, district
+  context?       // optional signals (user intent, category, etc.)
+})
+
+Process:
+
+1) Query existing data sources (reuse services/repos already used by search)
+2) Pull:
+   - trust level (T0–T5)
+   - existing scores (engagement, completeness, opportunity if relevant)
+   - geo relevance
+   - activity/recency if available
+
+3) Apply LIGHT ranking (no new scoring system):
+   - geo proximity (primary)
+   - trust level
+   - participation/activity
+   - completeness
+
+Return:
+
+{
+  results: [
+    {
+      id,
+      name,
+      type,
+      geo,
+      trustLevel,
+      reason: string,   // WHY this is recommended
+      signalsUsed: string[]
+    }
+  ],
+  meta: {
+    totalConsidered,
+    filtersApplied
+  }
+}
+
+--------------------------------------------------
+PART 2 — REASON GENERATION (IMPORTANT)
+--------------------------------------------------
+
+Each result MUST include a short reason:
+
+Examples:
+- "Highly trusted local business with strong community participation"
+- "Active in this district with recent events and verified presence"
+- "Matches your request and is highly engaged in this area"
+
+Rules:
+- reasons must be based on REAL signals (trust, activity, geo)
+- do NOT fabricate
+
+--------------------------------------------------
+PART 3 — ORCHESTRATOR INTEGRATION
+--------------------------------------------------
+
+Update charlotte-orchestrator.ts:
+
+When:
+
+mode === "search" OR mode === "concierge"
+
+Flow:
+
+1) parse intent
+2) call getCharlotteRecommendations
+3) return structured + conversational output
+
+Return format:
+
+{
+  mode,
+  intent,
+  recommendations: [...],
+  summary: string
+}
+
+Do NOT auto-execute actions here.
+
+--------------------------------------------------
+PART 4 — DISTINGUISH SEARCH VS RECOMMENDATION
+--------------------------------------------------
+
+IMPORTANT:
+
+- Existing search = broad / autocomplete / direct lookup
+- Charlotte recommendations = curated / filtered / ranked
+
+Rules:
+- if user is clearly searching exact name → use existing search
+- if user asks "best", "who should I", "where should I" → use recommendation adapter
+
+--------------------------------------------------
+PART 5 — TRUST / GEO HOOKS
+--------------------------------------------------
+
+Ensure adapter uses:
+
+- geo hierarchy (district → neighborhood → hub)
+- trust levels (T0–T5)
+- existing scoring fields (read-only)
+
+Do NOT recompute trust.
+
+--------------------------------------------------
+PART 6 — FALLBACKS
+--------------------------------------------------
+
+If low or no results:
+
+Return:
+
+- broader geo suggestions OR
+- lower trust but relevant matches
+
+Never return empty without explanation.
+
+--------------------------------------------------
+PART 7 — LOGGING (LIGHT)
+--------------------------------------------------
+
+Log:
+- recommendation requests
+- filters applied
+- number of results returned
+
+--------------------------------------------------
+PART 8 — OUTPUT REQUIRED
+--------------------------------------------------
+
+Return:
+
+OUTPUT A — FILES CREATED / MODIFIED
+OUTPUT B — SAMPLE RECOMMENDATION RESPONSE
+OUTPUT C — SIGNALS USED (explicit list)
+OUTPUT D — HOW EXISTING SYSTEMS WERE REUSED
+OUTPUT E — CONFIRMATION NO NEW ENGINE WAS CREATED
+
+--------------------------------------------------
+STOP CONDITION
+--------------------------------------------------
+
+STOP after Task C adapter is complete.
+
+Do NOT:
+- build UI
+- build lifecycle/sales logic
+- modify core trust/scoring systems

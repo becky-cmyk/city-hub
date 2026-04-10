@@ -1,0 +1,187 @@
+GOAL:
+Create the foundation for:
+1) Platform-level Stripe pricing (source of truth)
+2) Metro launch system (Coming Soon + Live Metro Project)
+3) Cora-ready architecture (tools + workflows ready to plug in)
+
+DO NOT refactor entire app.
+DO NOT break existing checkout.
+Build this as a clean additive layer.
+
+--------------------------------------------------
+PART 1 — CREATE PLATFORM PRICING TABLE
+--------------------------------------------------
+
+Create new table: platform_products
+
+Fields:
+- id (uuid, pk)
+- name (string)
+- category (enum: listing, hub, addon, capability, crown, contributor, promo)
+- billing_type (enum: one_time, monthly, annual)
+- stripe_product_id (string, nullable)
+- stripe_price_id (string, nullable)
+- price_version (string, default "v1")
+- active (boolean, default true)
+- created_at
+- updated_at
+
+--------------------------------------------------
+PART 2 — CREATE PRICING RESOLVER (CRITICAL)
+--------------------------------------------------
+
+Create utility:
+getPlatformPrice({ productKey })
+
+Behavior:
+- lookup platform_products by name or key
+- return stripe_price_id
+- if missing → throw clear error: "Platform price not configured"
+
+DO NOT remove existing env var usage yet
+BUT:
+- add fallback:
+    if no DB match → fallback to env var (temporary)
+
+--------------------------------------------------
+PART 3 — METRO TABLE (IF NOT EXISTS, CREATE LIGHT VERSION)
+--------------------------------------------------
+
+metro_projects
+
+Fields:
+- id (uuid)
+- name (string) // "Charlotte", "Indy"
+- slug (string) // "clt", "indy"
+- status (enum: idea, planned, coming_soon, building, soft_open, active)
+- coming_soon_url (string)
+- created_at
+- updated_at
+
+--------------------------------------------------
+PART 4 — LIVE METRO PROJECT TABLE
+--------------------------------------------------
+
+metro_launch_projects
+
+Fields:
+- id (uuid)
+- metro_id (fk)
+- status (same enum)
+- checklist_json (json)
+- notes (text)
+- created_at
+- updated_at
+
+--------------------------------------------------
+PART 5 — CREATE COMING SOON PAGE GENERATOR
+--------------------------------------------------
+
+Create service:
+createComingSoonPage({ metroName, slug })
+
+Behavior:
+- generates basic page config (NOT full frontend)
+- returns:
+  {
+    title: "Coming Soon: {Metro}",
+    description: "...",
+    cta_blocks: [
+      "business interest",
+      "creator interest",
+      "sponsor interest"
+    ]
+  }
+
+Store result in metro_projects.coming_soon_url or config field
+
+DO NOT build full UI — just backend config for now
+
+--------------------------------------------------
+PART 6 — CREATE METRO LAUNCH WORKFLOW (CORE)
+--------------------------------------------------
+
+Create service:
+openMetro({ name, slug })
+
+Steps:
+1. create metro record
+2. create metro_launch_project
+3. call createComingSoonPage
+4. set metro status = "coming_soon"
+5. generate checklist:
+
+checklist_json example:
+{
+  "setup": ["define regions", "seed hubs"],
+  "content": ["create starter articles"],
+  "outreach": ["build business list"],
+  "monetization": ["identify sponsors"]
+}
+
+Return:
+{
+  metro,
+  launch_project,
+  coming_soon
+}
+
+--------------------------------------------------
+PART 7 — PREP FOR CORA (TOOLS LAYER)
+--------------------------------------------------
+
+Create placeholder tool registry:
+
+cora_tools.ts
+
+Export functions:
+- openMetro
+- createComingSoonPage
+- getPlatformPrice
+
+DO NOT wire OpenAI yet
+Just expose functions
+
+--------------------------------------------------
+PART 8 — DO NOT BREAK EXISTING SYSTEM
+--------------------------------------------------
+
+- leave current Stripe env vars intact
+- do NOT delete old logic
+- only add new resolver
+- do NOT migrate data yet
+
+--------------------------------------------------
+PART 9 — TEST ENDPOINTS
+--------------------------------------------------
+
+Create simple test routes:
+
+POST /test/open-metro
+body:
+{
+  "name": "Indy",
+  "slug": "indy"
+}
+
+GET /test/platform-price?product=verified
+
+--------------------------------------------------
+SUCCESS CRITERIA
+--------------------------------------------------
+
+- can create a metro via API
+- metro shows "coming_soon"
+- coming soon config exists
+- platform_products table exists
+- pricing resolver works (DB + fallback)
+- nothing else breaks
+
+--------------------------------------------------
+DO NOT:
+- build frontend
+- migrate Stripe yet
+- over-engineer permissions
+- introduce queues yet
+
+KEEP IT LIGHT + WORKING

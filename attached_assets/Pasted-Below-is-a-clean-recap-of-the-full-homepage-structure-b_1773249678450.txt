@@ -1,0 +1,165 @@
+Below is a clean recap of the full homepage structure based on everything you’ve clarified.
+Tone = conversational, community-first, not salesy.
+Purpose = front door explanation + entry points into the app.
+
+⸻
+
+Charlotte City Hub – Homepage Structure
+
+1. Hero / Introduction
+
+Charlotte City Hub
+
+Charlotte City Hub is a place where people across the region can see what’s happening in their communities in one shared space.
+
+Instead of jumping between dozens of websites, event calendars, and social feeds, the Hub brings together local stories, events, organizations, creators, venues, and businesses so people can easily explore what’s happening around them.
+
+It’s designed to help the community discover what’s going on nearby while still connecting to activity across the larger Charlotte region.
+
+⸻
+
+2. Built Around Where You Are
+
+The Hub is designed to surface activity based on where you are, not just broad citywide listings.
+
+Charlotte City Hub is made up of 74 local hubs across the region. Each hub represents an area where local activity can surface — things like events, neighborhood updates, organizations, creators, and businesses active nearby.
+
+For example:
+
+If you’re in Ballantyne, you’ll start seeing things happening in Ballantyne.
+
+If you’re in Concord, you’ll see activity happening in Concord and nearby communities.
+
+The goal is simple: when you open the Hub, you should quickly be able to see what’s happening around you, while still being able to explore the wider Charlotte region.
+
+⸻
+
+3. Community Participation
+
+The Hub grows through participation from the community.
+
+Anyone can submit things like:
+
+• local events
+• community announcements
+• nonprofit updates
+• neighborhood news
+• creator content
+• podcasts or media mentions
+• community shout-outs
+
+Submissions are free, because the goal is to make it easy for the community to share what’s happening locally.
+
+As more people contribute, the Hub becomes a stronger resource for discovering what’s happening across the region.
+
+⸻
+
+4. The Pulse
+
+Everything flows through the Pulse, which is the main feed of the Hub.
+
+The Pulse gathers stories, updates, events, podcasts, and discoveries from across the Charlotte region into one place so people can easily see what’s happening right now.
+
+As organizations, creators, businesses, and residents share updates, the Pulse becomes a living stream of local activity across the community.
+
+Button:
+Explore the Pulse →
+
+⸻
+
+5. Events Across the Region
+
+The Hub brings together events happening across neighborhoods, venues, organizations, and communities.
+
+From festivals and concerts to nonprofit fundraisers and workshops, the Events section helps residents discover things to do throughout the region.
+
+Button:
+Explore Events →
+
+⸻
+
+6. Community Marketplace
+
+The Marketplace is a community board where residents, creators, and businesses can offer services, products, opportunities, and collaborations.
+
+This includes:
+
+• local artists and creators
+• services and consulting
+• workshops and classes
+• local products
+• freelance services
+• community opportunities
+
+Button:
+Explore Marketplace →
+
+⸻
+
+7. Local Experts & Requests
+
+People in the community can also ask for help, recommendations, or services.
+
+Local professionals and experts can respond to these requests with ideas, guidance, or quotes.
+
+This helps connect people with trusted local expertise across the region.
+
+Button:
+Ask the Community →
+
+⸻
+
+8. Check Your Hub Presence
+
+As the Hub grows across the Charlotte region, many businesses, organizations, creators, and community groups may already appear within the platform.
+
+If you’re part of the local community, you can check your Hub Presence and confirm your details so everything shown in the Hub is accurate.
+
+Only verified information is published publicly. This helps ensure the Hub reflects real people, real organizations, and real activity happening across the region.
+
+Activation includes a $1 verification, which helps confirm the information and contributes to a small community fund supporting local initiatives.
+
+Button:
+Check Your Hub Presence →
+
+⸻
+
+9. The Region We’re Building
+
+Charlotte City Hub is growing across the greater Charlotte region and surrounding communities.
+
+The platform currently covers:
+
+• 19 counties connected to the Charlotte region
+• 100+ ZIP codes across the metro area
+• 74 community hubs being developed
+• 120+ neighborhood districts planned
+
+Each hub helps surface activity from the people, organizations, and businesses that make that community unique.
+
+⸻
+
+What This Page Now Does
+
+The page now:
+
+• Explains what the Hub is
+• Explains how it works geographically
+• Explains community participation
+• Introduces the Pulse
+• Shows key sections of the platform
+• Encourages Hub Presence verification
+
+Without sounding like marketing.
+
+⸻
+
+One Thing Still Missing (Important)
+
+There is one section I would still add that will increase engagement significantly:
+
+A “What people are sharing right now” preview above the Pulse.
+
+Just a few cards showing live activity before users scroll.
+
+If you want, I can also show you the ideal homepage visual layout (section order + card style) so this reads cleanly and not like a wall of text.

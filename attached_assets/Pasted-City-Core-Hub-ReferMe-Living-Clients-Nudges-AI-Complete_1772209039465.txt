@@ -1,0 +1,732 @@
+City Core Hub — ReferMe + Living Clients + Nudges + AI: Complete Build Specification
+This document is a forensic blueprint of how these systems work in the reference implementation. Build each section exactly as described. The CCH app is standalone — no connection to Living Contacts is required.
+
+PART 1 — REFERME
+Core Concept: The Referral Triangle
+Every referral involves exactly three roles:
+
+C (Connector) = the logged-in user. The person making the introduction.
+Person A = the person being referred (they need something — a service, a connection, an opportunity).
+Person B = the person or business receiving the referral (they can provide what A needs).
+C picks A and B from their own contact list. C writes messages. C tracks outcomes. A and B are notified. The relationship between A and B is what C is creating.
+
+Database Tables
+referral_triangles
+id              integer, primary key, auto-increment
+userId          string (foreign key → users) — this is C, the Connector
+personAId       integer (foreign key → contacts) — the person being referred
+personBId       integer (foreign key → contacts) — the person receiving the referral
+referralType    enum: "b2b" | "b2c" — default "b2b"
+hatId           integer, nullable (foreign key → hats) — which business context this referral is made from
+sharedMessage   text, nullable — introduction message visible to BOTH A and B
+privateMessageToA  text, nullable — private note only A sees
+privateMessageToB  text, nullable — private note only B sees
+attachments     JSON array, default [] — file URLs/names attached to the referral
+status          enum: "submitted" | "contacted" | "connected" | "in_progress" | "completed" | "declined" — default "submitted"
+statusUpdatedAt timestamp — auto-updated when status changes
+outcomeNotes    text, nullable — written by C when marking completed or declined
+sentAt          timestamp — when the referral was created/sent
+deliveredToA    timestamp, nullable — tracked when email delivered to A
+deliveredToB    timestamp, nullable — tracked when email delivered to B
+openedByA       timestamp, nullable — tracked when A opens the notification email
+openedByB       timestamp, nullable — tracked when B opens the notification email
+nudgeDismissedAt timestamp, nullable — when C dismissed the stale nudge for this referral
+createdAt       timestamp
+engagement_events
+Used to track when A or B opens an email, clicks a link, or views a card. Powers engagement nudges.
+
+id              integer, primary key
+userId          string (foreign key → users)
+trackingToken   string, unique — embedded in email as a 1x1 tracking pixel URL
+eventType       enum: "email_open" | "link_click" | "card_view"
+source          enum: "referral_notification" | "referral_status_update" | "capture_confirmation" | "digital_card" | "general"
+contactId       integer, nullable — which contact triggered the engagement
+referralTriangleId  integer, nullable — which referral this tracks
+contactName     string, nullable
+metadata        JSON — e.g. `{ role: "person_b", newStatus: "connected" }`
+firedAt         timestamp, nullable — when the event actually fired (pixel loaded)
+dismissedAt     timestamp, nullable — when the user dismissed this nudge
+createdAt       timestamp
+Status Lifecycle
+submitted → contacted → connected → in_progress → completed
+                                               ↘ declined
+submitted — referral created, notifications sent, waiting for B to respond
+contacted — B has reached out to A (or C confirmed this)
+connected — A and B have met/spoken
+in_progress — they are actively working together
+completed — the referral led to a successful outcome
+declined — A or B declined, or the opportunity did not work out
+Status is updated manually by C (the user) via a dropdown on each referral card. When status changes, email and SMS notifications go out to both A and B.
+
+Referral Type
+B2B — Business-to-business. C is connecting two business contacts. Branding label: "ReferMe"
+B2C — Business-to-consumer. C is connecting a person to a business. Branding label varies.
+The referralType field drives email template copy but the mechanics are identical.
+
+Notifications
+When a referral is created:
+
+B receives an email: "You've been referred to [A's name] by [C's name]"
+A receives an email: "You've been introduced to [B's name] by [C's name]"
+Both receive SMS if phone numbers are on file
+Each email contains a 1x1 tracking pixel URL (unique token per person per referral) — when the pixel loads, an engagement_event row is created with firedAt set to now, which triggers an engagement nudge for C
+When status changes:
+
+Both A and B receive an email update with the new status
+Both receive SMS if phone numbers are on file
+Respect quiet hours: if the user has quiet hours configured, queue the message until the window opens
+The system uses Resend for email and Twilio for SMS.
+
+API Endpoints
+POST   /api/referral-triangles          — Create a new referral triangle
+GET    /api/referral-triangles          — Get all referrals for the logged-in user
+GET    /api/referral-triangles/:id      — Get one referral by ID
+PATCH  /api/referral-triangles/:id      — Update status and/or outcomeNotes
+GET    /api/referral-triangles/by-contact/:contactId  — All referrals involving a contact
+GET    /api/referral-triangles/contacts-as-a  — Contact IDs where the contact is Person A
+GET    /api/referral-triangles/contacts-as-b  — Contact IDs where the contact is Person B
+POST body:
+
+{
+  "personAId": 123,
+  "personBId": 456,
+  "referralType": "b2b",
+  "hatId": null,
+  "sharedMessage": "I think you two would work really well together...",
+  "privateMessageToA": "Mark is the best in town at this.",
+  "privateMessageToB": "Sarah is a great potential client.",
+  "attachments": []
+}
+PATCH body:
+
+{
+  "status": "connected",
+  "outcomeNotes": "They met for coffee and decided to work together."
+}
+Contact Categories in ReferMe
+Contacts can be tagged with a category field. The categories relevant to ReferMe:
+
+Category	Label in UI	Meaning
+trusted	People Trusted to You	Someone who trusted C with a referral or introduction
+met	Who I Met	Someone C met through a referral introduction
+partners	Trusted Partners	Businesses or professionals C actively refers
+referred_by	Who Referred You	Someone who referred C to a contact or opportunity
+These categories are set on the contact record. They filter the contact list views in the ReferMe sidebar section. Each sidebar link just filters the contacts page by category.
+
+Your Referrals Page — UI Spec
+Page: /your-referrals
+
+Header: Title "Your Referrals" + icon (Send/arrow icon)
+
+Top card: "Refer [App Name]" — a promotional card with a button to send an invite to join the platform.
+
+Filter tabs: All | Active | Completed | Declined
+
+Active = status is one of: submitted, contacted, connected, in_progress
+Completed = status === "completed"
+Declined = status === "declined"
+Referral cards (one per referral triangle):
+
+Compact view shows:
+
+Person A avatar + name + company
+Arrow icon (→)
+Person B avatar + name + company
+Badge: B2B or B2C
+Badge: current status with color coding:
+submitted = blue
+contacted = amber
+connected = green
+in_progress = purple
+completed = emerald
+declined = muted/gray
+Date created
+Preview of sharedMessage (truncated to 40 chars)
+Preview of privateMessage if present
+Attachment count if files attached
+Status dropdown (the user can change status inline)
+"More / Less" expand toggle
+Expanded view adds:
+
+Full Person A details (name, company, email, phone)
+Full Person B details
+Full sharedMessage
+Full privateMessageToA and privateMessageToB
+Outcome notes textarea + Save button (only shown when status is completed or declined)
+Empty state: "No referrals yet. When you create referral triangles, they will appear here."
+
+Loading state: 3 skeleton cards while data loads.
+
+Creating a Referral
+The creation flow is NOT on the Your Referrals page. It is triggered from a contact's detail page, or from Reese AI, or from a dedicated "New Referral" button.
+
+Required inputs:
+
+Pick Person A from contacts (contact search/selector)
+Pick Person B from contacts (contact search/selector — must be different from A)
+Choose referral type (B2B or B2C)
+Optionally: select a Hat context
+Optional: write shared introduction message
+Optional: write private note to A
+Optional: write private note to B
+Optional: attach files
+Validation: personAId ≠ personBId. Both must exist in the user's contacts.
+
+PART 2 — LIVING CLIENTS (Hats)
+Core Concept
+"Hats" are business contexts. The user is one person but wears different hats in different professional roles. Each hat is a separate CRM lens for managing clients within that role.
+
+The Doctrine:
+
+A person is one — the same contact can appear in multiple hats
+A hat is a context lens — never mix details across hats unless explicitly requested
+A person may be a client in one hat and a partner in another
+Database Tables
+hats
+id                      integer, primary key
+userId                  string (foreign key → users)
+name                    text — the hat's name (e.g. "My Insurance Practice", "Consulting")
+description             text, nullable
+templateType            enum: "none" | "insurance" | [others] — default "none"
+templateStatus          enum: "basic" | [others] — default "basic"
+outboundName            text, nullable — name shown on outbound communications for this hat
+outboundEmail           text, nullable — reply-to email for this hat's communications
+restrictionStartDate    timestamp, nullable
+restrictionEndDate      timestamp, nullable
+restrictionNote         text, nullable
+businessCardImageUrl    text, nullable
+businessCardBackImageUrl text, nullable
+pipelineStages          text array — default: ["First Contact", "Getting to Know", "Considering", "Waiting", "Decided", "Submitted", "Referrals"]
+customFieldTemplates    JSON array — [{ label: string, defaultValue?: string }]
+calendlyUrl             text, nullable — scheduling link specific to this hat
+isActive                boolean — default true
+createdAt               timestamp
+updatedAt               timestamp
+hat_contacts
+Links a contact to a hat, tracking their client journey within that hat's context.
+
+id                  integer, primary key
+hatId               integer (foreign key → hats)
+contactId           integer (foreign key → contacts)
+clientRole          enum: "want_to_meet" | "potential_client" | "current_client" — default "potential_client"
+journeyStage        integer — index into the hat's pipelineStages array, default 0
+notes               text, nullable — hat-specific notes about this client
+referredByContactId integer, nullable — who referred this client to C
+referredToContactId integer, nullable — who C referred this client to
+referralDate        timestamp, nullable
+referralNotes       text, nullable
+createdAt           timestamp
+updatedAt           timestamp
+Client Roles
+Role	Label	Meaning
+want_to_meet	People I Want to Meet	Aspirational — C wants to get introduced
+potential_client	Potential Clients	In conversation, exploring
+current_client	Current Clients	Active client relationship
+These are the three sidebar sections under Living Clients. Each is a filtered view of hat_contacts.
+
+Pipeline Stages
+Each hat has its own ordered array of stage labels. The default stages are:
+
+["First Contact", "Getting to Know", "Considering", "Waiting", "Decided", "Submitted", "Referrals"]
+The user can customize these per hat. A contact's journeyStage is the integer index into this array. Stage 0 = "First Contact", Stage 1 = "Getting to Know", etc.
+
+The pipeline view shows contacts as a kanban/list grouped by stage. The user can drag or move contacts between stages.
+
+Hat-Specific Features
+Custom field templates: Each hat can define additional fields that appear on hat-contact records (e.g. "Policy Number", "Annual Premium")
+Outbound identity: When sending communications from a hat, use the hat's outboundName and outboundEmail instead of the user's defaults
+Calendly URL: Per-hat scheduling link. Takes priority over the user's global scheduling link
+Business card images: The hat can have its own front/back business card photos for the digital card
+Industry tags: Tags that categorize the hat's industry (e.g. "Insurance", "Real Estate")
+Restrictions: Date ranges where the hat is restricted (e.g. compliance lockout periods)
+API Endpoints
+GET    /api/hats                        — All hats for logged-in user
+POST   /api/hats                        — Create a hat
+GET    /api/hats/:id                    — Single hat detail
+PATCH  /api/hats/:id                    — Update hat settings
+DELETE /api/hats/:id                    — Delete hat
+GET    /api/hats/:id/contacts           — All hat-contacts for this hat (with full contact data joined)
+POST   /api/hats/:id/contacts           — Add a contact to this hat
+PATCH  /api/hats/:hatId/contacts/:id    — Update hat-contact (stage, role, notes, etc.)
+DELETE /api/hats/:hatId/contacts/:id    — Remove contact from hat
+GET    /api/hats/:id/tasks              — Tasks associated with this hat
+GET    /api/hats/:id/events             — Calendar events for this hat
+Living Clients Sidebar Sections
+BUSINESS
+├── Living Clients
+│   ├── People I Want to Meet       → /clients/want-to-meet
+│   ├── Potential Clients           → /clients/potential
+│   └── Current Clients             → /clients/current
+└── ReferMe
+    ├── People Trusted to You       → /contacts?category=trusted
+    ├── Who I Met                   → /contacts?category=met
+    ├── Trusted Partners            → /contacts?category=partners
+    ├── Your Referrals              → /your-referrals
+    └── Who Referred You            → /contacts?category=referred_by
+PART 3 — NUDGE SYSTEM
+Overview
+The nudge system surfaces 8 priority items per day ("daily budget" = 8) for the user to act on. Nudges are computed fresh on every request — nothing is stored. They are scored and sorted by priority score, then capped at 8.
+
+There are 5 nudge types:
+
+Type 1: follow_up
+Triggers on contacts who have a nudgeWindowDays setting and whose lastContactedAt is past their window.
+
+Scoring logic:
+
+daysSinceContact = today - (lastContactedAt || createdAt)
+overdueDays = daysSinceContact - nudgeWindowDays
+overdueDays > 7  → score = 100, urgency = "high"
+overdueDays > 0  → score = 80,  urgency = "high"
+overdueDays >= -2 → score = 60, urgency = "medium"
+overdueDays >= -5 → score = 30, urgency = "low"
+otherwise        → no nudge
+Modifiers:
+  +5 if contact.category === "business"
+  +10 if contact.isFavorite
+  +0-9 rotation seed (deterministic per contact per day, prevents the same contact showing every day)
+Suggested actions:
+
+30 days: "It's been a while — reconnect with a quick hello"
+
+14 days: "Set up a one-to-one catch-up"
+
+Has company: "Touch base about [company name]"
+Default: "Check in — see how they're doing"
+Snooze system: Contacts have nudgeSnoozeUntil (date) and nudgeSkippedToday (date). If snoozed, skip. If skipped today, skip.
+
+Type 2: birthday
+Triggers when a contact's birthday is within a 7-day window (including yesterday = -1 for missed birthdays).
+
+birthdayDaysAway = days until this year's birthday (or last year's if just passed)
+today (0 or -1)  → score = 150, urgency = "high",   action = "Send a birthday message or give them a call"
+tomorrow (1)     → score = 120, urgency = "high",   action = "Plan a birthday greeting for tomorrow"
+2-7 days away    → score = 90,  urgency = "medium", action = "Get a birthday card or plan a surprise"
++10 if isFavorite
+Type 3: anniversary
+Same logic as birthday but uses anniversary field instead of birthday. Same scoring. Same window.
+
+Type 4: referral_stale
+Triggers on referral triangles stuck in a status for too long. The stale thresholds are:
+
+submitted    → stale after 3 days
+contacted    → stale after 7 days
+connected    → stale after 14 days
+in_progress  → stale after 21 days
+completed    → no nudge
+declined     → no nudge
+Scoring:
+
+daysSince = days since statusUpdatedAt (or createdAt)
+if daysSince < threshold → no nudge
+overdueDays = daysSince - threshold
+score = 70 + min(overdueDays × 5, 50)
+urgency = overdueDays > 7 → "high" | overdueDays > 0 → "medium" | else "low"
+Suggested actions by status:
+
+submitted: "Follow up with [B] to confirm they received the referral"
+contacted: "Check if [A] and [B] have connected yet"
+connected: "See how things are progressing between [A] and [B]"
+default: "Check in on the referral progress"
+The nudge name is displayed as "[PersonA name] → [PersonB name]"
+
+Nudges for a referral can be dismissed by setting nudgeDismissedAt on the triangle. Dismissed referrals are excluded from future nudge calculations.
+
+Type 5: engagement
+Triggers when someone opens an email, clicks a link, or views a card and that event was tracked within the last 24 hours. Score is always 130 (high priority) because they are actively engaged right now.
+
+score = 130
+urgency = "high"
+action = "Follow up now while they're engaged"
+reason = "[Name] just opened your email from your referral introduction"
+Engagement nudges are dismissed by setting dismissedAt on the engagement_events row.
+
+Nudge API
+GET  /api/nudges/today                          — Returns { nudges: NudgeItem[], totalContacts, budget: 8 }
+POST /api/nudges/:contactId/skip                — Skip this contact for today
+POST /api/nudges/:contactId/snooze              — Snooze for N days (body: { days: 7 })
+POST /api/nudges/referral/:triangleId/dismiss   — Dismiss a referral nudge permanently
+POST /api/nudges/engagement/:eventId/dismiss    — Dismiss an engagement nudge
+NudgeItem shape:
+
+{
+  "id": 42,
+  "name": "Sarah Chen",
+  "category": "business",
+  "photoUrl": "https://...",
+  "company": "Acme Corp",
+  "email": "sarah@acme.com",
+  "phone": "+15551234567",
+  "nudgeWindowDays": 14,
+  "lastContactedAt": "2026-01-15T00:00:00.000Z",
+  "daysSinceContact": 43,
+  "nudgeScore": 115,
+  "nudgeReason": "43 days since last contact — overdue",
+  "nudgeUrgency": "high",
+  "suggestedAction": "It's been a while — reconnect with a quick hello",
+  "nudgeType": "follow_up",
+  "hatId": null,
+  "hatName": null,
+  "referralTriangleId": null,
+  "engagementEventId": null
+}
+PART 4 — REESE AI ASSISTANT
+Persona
+Name: Reese
+Role: "Your Navigator"
+Tone: Calm, grounded, human. Not corporate. Not robotic. Not salesy. Short sentences. Clear thinking. Practical suggestions.
+
+Reese is not a chatbot. Reese is a co-pilot who knows the user's contacts, clients, and referrals and helps the user stay on top of relationships without pressure.
+
+Core Spine (All Features Inherit This)
+CATCH — Fast moment capture before it disappears
+KEEP  — Intentional decision to promote a catch into a permanent contact
+HOLD  — Maintaining full human context over time
+For Living Clients: CATCH · KEEP · MANAGE · HOLD
+For ReferMe: CATCH · KEEP · REFER · HOLD
+
+Personas / Roles
+Reese has four internal operating modes that shape its prompt:
+
+extractor — Pulling structured data from a raw capture (card scan, voice note, etc.). Be accurate and minimal. Do not guess.
+writer — Drafting or polishing a communication. Warm and natural. Preserve the user's intent.
+analyzer — Summarizing and organizing. Faithful to what's there. Suggest hats carefully.
+assistant — General navigation. Default helper mode. Catch/Keep/Hold thinking.
+What Reese Does in ReferMe
+Identifies referral opportunities from context: "I noticed Sarah might need an accountant — you have Mark who does that. Want me to connect them?"
+Walks through referral creation conversationally: "Who needs something? Who can help?"
+Always confirms before acting (ask-before-acting workflow): proposes the referral, user approves, then Reese creates it
+Checks in on open referrals: "How did the intro between Sarah and Mark go?"
+Spots signals in notes: "looking for", "needs a", "should meet", "could use"
+What Reese Does in Living Clients
+Helps identify which hat to assign a contact to
+Suggests pipeline stage updates based on recent notes
+Drafts follow-up messages that match the hat's tone
+Warns when C is crossing context between hats
+If context is unclear: asks "Which hat are we in?"
+What Reese Does with Nudges
+Surfaces today's nudge list conversationally
+Suggests what to say when reaching out
+Helps draft messages for birthday nudges, referral check-ins, and overdue contacts
+Tracks engagement events: "Sarah just opened your email from the referral you sent — good time to follow up"
+AI API Endpoints
+POST /api/reese/chat                          — Send a message, get a reply
+GET  /api/reese/conversations                 — List past conversations
+GET  /api/reese/conversations/:id/messages    — Messages in a conversation
+POST /api/reese/chat body:
+
+{
+  "message": "Who should I follow up with today?",
+  "conversationId": null
+}
+Response:
+
+{
+  "reply": "You have 3 people due for a check-in today. Sarah Chen is 43 days overdue...",
+  "conversationId": "conv_abc123",
+  "actions": []
+}
+Reese uses OpenAI GPT-4o with tool calling enabled so it can look up contacts, referrals, and hats directly from the database before answering.
+
+The ask-before-acting pattern: when Reese wants to create, update, or delete anything, it proposes the action in plain English and waits for the user to say "yes" or "go ahead" before executing.
+
+Dashboard Preference Interpreter
+Reese can also interpret plain-language descriptions of what the user wants to see on their dashboard and translate them into a structured widget list.
+
+Input: "I want to see who I haven't talked to and any referrals going stale"
+Output:
+
+{
+  "widgets": [
+    { "type": "dormant_contacts", "priority": 10, "label": "People I Haven't Reached Out To" },
+    { "type": "referral_activity", "priority": 9, "label": "Stale Referrals" }
+  ],
+  "summary": "Focus on dormant contacts and referrals that need follow-up."
+}
+Available widget types: recent_activity, contact_milestones, dormant_contacts, nudge_reminders, inbox_count, card_views, form_submissions, referral_activity, journey_stages, task_deadlines, event_attendance, member_activity, capture_volume
+
+PART 5 — CONTACTS (Required Foundation)
+ReferMe and Living Clients both operate on top of a contacts table. Minimum required fields:
+
+id              integer, primary key
+userId          string (foreign key → users)
+name            text — single name field, NOT split first/last
+email           text, nullable
+phone           text, nullable
+company         text, nullable
+jobTitle        text, nullable
+photoUrl        text, nullable
+category        text, nullable — "personal" | "business" | "trusted" | "met" | "partners" | "referred_by" | "not_sure"
+isFavorite      boolean — default false
+nudgeWindowDays integer, nullable — how many days between check-ins before a nudge fires
+lastContactedAt timestamp, nullable — manually or automatically set when user logs contact
+nudgeSnoozeUntil  timestamp, nullable
+nudgeSkippedToday timestamp, nullable
+birthday        timestamp, nullable
+anniversary     timestamp, nullable
+notes           text, nullable
+createdAt       timestamp
+updatedAt       timestamp
+Important: Use a single name field. Do NOT split into firstName/lastName. This is a core design decision.
+
+PART 6 — QUIET HOURS
+Users can configure quiet hours. When quiet hours are active, notifications (email, SMS) are queued and sent when the window opens rather than immediately.
+
+quietHoursEnabled   boolean
+quietHoursStart     text — "21:00" (HH:MM format)
+quietHoursEnd       text — "08:00"
+quietHoursTimezone  text — IANA timezone string, e.g. "America/New_York"
+Apply this to all outbound referral notifications and status updates.
+
+PART 7 — DESIGN PRINCIPLES
+Mobile-first, compact. Default to tight, clean views that expand when more detail is wanted. Most users are on phones.
+No red for errors (unless critical stop). Use amber/orange for warnings and destructive actions.
+No "Uncategorized" labels. Use "Needs Review" instead.
+Collapsible sections everywhere. Users should be able to collapse/expand all major sections.
+No pressure language. Reese and all UI copy should never imply urgency, force progression, or use sales language.
+People over data. Every record is a human being, not a lead or an entry.
+END OF SPEC. COPY EVERYTHING ABOVE THIS LINE.
+
+That covers every mechanical detail of all four systems — the triangle model, every database field, all status flows, the full scoring logic for every nudge type, the AI persona and behavior, and the design rules. The CCH AI has everything it needs to build this from scratch.
+
+Does this include the face app and how it's structured in the flow as well to all of those things
+
+It was not included — I focused on ReferMe, Living Clients, Nudges, and AI. Let me explore the Face App fully before adding it to the spec:
+
+I now have everything. The Face App was not in the previous spec. Here is the complete addendum to add to what you already have:
+
+ADD THIS SECTION TO THE SPEC — COPY EVERYTHING BELOW:
+
+PART 8 — FACE APP (The Mobile Hub)
+What It Is
+The Face App is the primary screen users see when they open the app on their phone. It is a full-screen, portrait-optimized hub for everything the user does in the field — capturing contacts, tracking trips, sharing cards, and submitting referrals. It is not a dashboard. It is a launcher.
+
+Route: /face (or make it the default / on mobile)
+
+Visual Design
+Full-screen gradient background — the entire screen behind all content. In CCH, use a dark cosmic/deep gradient. Content sits on top at z-index 1.
+
+Centered layout, vertical stack, max-width ~384px, centered horizontally.
+
+No traditional navigation header. The only navigation is the context switcher at the top and the Dashboard button toward the bottom.
+
+Color palette for CCH:
+
+Primary accent: #0891B2 (teal/cyan)
+Buttons: teal borders, teal text on dark transparent backgrounds
+Trip tracker: emerald green (#10B981)
+Main CTA button: amber (#F59E0B), black text
+Top Bar (fixed at top)
+1. Online / Offline status badge — centered at very top.
+
+Online: amber pulsing dot + wifi icon + "Online" + italic "Ready to save contacts and relationships"
+Offline: static amber dot + wifi-off icon + "Offline" + italic "Changes will sync when online"
+Use the browser's navigator.onLine and listen to window online/offline events
+2. Context switcher — centered below status badge.
+
+A dropdown button showing the user's display name (firstName, or email prefix if no name)
+The app logo icon sits to the left of the name
+Clicking opens a dropdown with:
+Personal context (user's own contacts) — first item, always present
+Each organization the user belongs to (if any) — shown with a building icon, owner/leader badge if applicable
+A checkmark on the currently active context
+Default: personal context
+When an organization context is active, captures go to that org, "Guest Sign-In" button appears
+Greeting Banner (auto-fades)
+A text banner that appears on load and fades out after 3 seconds, disappears after 3.5 seconds.
+
+Content: time-based greeting — "Good morning, [firstName]" / "Good afternoon" / "Good evening"
+
+Small text below: "Catch. Keep. Hold." (the mission spine)
+
+Background: dark semi-transparent frosted glass card.
+
+Branding Logo Area
+Shown below the context switcher, above the main button.
+
+For CCH: A teal rounded square (gradient: #0891B2 → #06B6D4 → #0e7490) with white bold initials "CCH" (or "MH" if the user has a wlRouteName). Below that, the city/hub name in cyan text. Below that: "Catch · Connect · Grow" in small uppercase cyan.
+
+Below the logo, the mission spine text adapts to tier:
+
+All: "Catch." + "Keep."
+Connect or above: add "Grow."
+ReferMe or above: add "Refer."
+All: "Hold." (color rotates by tier)
+Primary CTA — Catch / Scan Button
+Large amber button, full width, with icon row (scan line + camera + QR + mic icons).
+
+Label: "Catch / Scan"
+
+Links to /capture (or /capture?org=[orgId] if org context is active).
+
+Small italic text below: "Contacts, notes, documents & more" (personal) or "Capture contacts for this organization" (org context).
+
+This is always the first and most prominent button on the page.
+
+Trip Tracker (GPS Mileage)
+Shown directly below the Catch button.
+
+States:
+
+idle — show a dark emerald-tinted button: Car icon + "Track a Trip" + "Auto-log mileage with GPS" + Navigation icon on right. Clicking starts a trip.
+requesting — show a pulsing banner: Car icon + "Requesting location..." + "Allow location access when prompted"
+tracking — replace the button with a full TripTrackerBanner showing live miles + elapsed time + End/Discard options
+saving — brief state while saving the trip record
+How GPS tracking works (build this exactly):
+
+// Constants
+MIN_SPEED_MPS = 0.9      // ignore points below 0.9 m/s (stationary drift)
+MIN_ACCURACY_M = 100     // ignore points with accuracy worse than 100m
+// Storage: localStorage key "active_trip"
+// Persists across page reloads so a trip survives navigation
+{
+  startTime: number,       // timestamp (Date.now())
+  totalMiles: number,      // running total
+  startLocation: string | null,
+  waypoints: [{ lat, lng, ts }]
+}
+On start:
+
+Call navigator.geolocation.getCurrentPosition() — triggers permission prompt
+If denied → show error "Location access denied — check browser settings to allow location"
+If granted → initialize store with first waypoint, save to localStorage, set state = "tracking"
+Reverse-geocode the start location using https://nominatim.openstreetmap.org/reverse?lat=X&lon=Y&format=json — extract address.road + city/town — save as startLocation (async, non-blocking)
+Start navigator.geolocation.watchPosition() loop
+On each GPS update:
+
+Skip if accuracy > 100m
+Skip if speed < 0.9 m/s (if speed is available)
+Calculate haversine distance from last waypoint
+Skip if distance < 5m (0.005 km) — filters micro-jitter
+Add distance to totalMiles, push new waypoint, save to localStorage
+Haversine formula:
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+On end trip:
+
+Stop the watchPosition watcher and the elapsed-time timer
+Clear localStorage
+Return { miles, startLocation, durationMinutes, tripDate } for saving to the mileage log
+Minimum miles = 0.1 (prevent 0-mile saves)
+Background/foreground handling:
+
+Listen to document.visibilitychange
+When page goes hidden → stop watchPosition (saves battery)
+When page comes back visible → reload store from localStorage, restart watchPosition and timer
+Trip Tracker Banner (shown while tracking):
+
+Shows: miles accumulated (e.g. "2.4 mi") + elapsed time (HH:MM:SS or MM:SS)
+Shows start location if available
+Two buttons: "End & Save" and "Discard"
+On End & Save: stop tracking, show save dialog (add purpose/notes, select category)
+On Discard: stop tracking, throw away data
+After saving a trip:
+
+POST to /api/mileage/trips with { miles, startLocation, durationMinutes, tripDate, category, notes }
+Invalidate the mileage query cache
+Show success toast
+Submit Referral Button
+Only shown for users with ReferMe access or CCH users.
+
+Opens a 5-step modal dialog:
+
+Step 1 — "Who are you referring?" (Person A)
+
+Choose referral type: B2B (business intro) or B2C (consumer referral) — toggle buttons
+Pick Person A:
+"Search Contacts" mode: type-ahead search of existing contacts, shows up to 10 results, tap to select (shows checkmark + name, can Clear)
+"Enter New Person" mode: form fields — Name (required), Email, Phone, Company
+Both modes available via toggle buttons
+Can't proceed without Person A
+Step 2 — "Who is receiving this referral?" (Person B)
+
+Same search/new pattern as Step 1
+Same fields
+Step 3 — "Private note to [Person B's name]"
+
+Textarea: private note only B sees (e.g. "Sarah is a great potential client — she's looking for exactly what you offer")
+Optional — can skip
+Step 4 — "Introduction for [Person A's name]"
+
+Textarea: the shared intro message both A and B will see in their notification emails
+Optional — can skip
+Step 5 — Review & Submit
+
+Shows summary: Person A → Person B, referral type, intro preview
+Hat selector (dropdown of user's hats) — optional context
+File attachments — upload button, shows list of attached files
+Submit button
+On Submit:
+
+If Person A is a new person (not from contacts): first create an intake item via POST /api/inbox-intake with source: 'referral', category: 'business', referredByContactId: personBId, referralNotes: privateNoteToB
+If both A and B are existing contacts: also create a POST /api/referral-triangles with full triangle data
+After success: show toast "Referral submitted — added to your inbox for review", reset all form state
+Also run duplicate detection: GET /api/contacts/check-duplicates?name=X&email=Y&phone=Z — if duplicates found, show amber warning toast
+Share A Member Button
+Only shown for CCH users or users who belong to organizations.
+
+Opens a dialog for sharing a member's contact info with someone else.
+
+Modes:
+
+From organizations: browse members of the selected organization, tap a member to see their contact info, then share via the Web Share API (navigator.share()) or copy to clipboard
+From directory: if the org has an AI-extracted member directory in aiExtractedData, parse and show those members too
+Dashboard / Home Base Button
+Full-width button linking to /dashboard.
+
+Always visible below the other buttons.
+
+Quick Send Form Button
+Only shown if the user has at least one active digital form.
+
+A dropdown button labeled "Quick Send Form" with a list of all active forms. Clicking a form name opens a send dialog:
+
+Toggle: Email or SMS
+Search contacts (type-ahead, shows 8 results): auto-fills the email/phone field when a contact is selected
+Or manually enter email/phone
+Optional: recipient name
+Send button → POST /api/digital-forms/[formId]/share with { channel, recipientEmail or recipientPhone, recipientName, contactId }
+Shows success toast on send
+"Manage Forms" option at bottom of dropdown → /digital-forms
+Share My Card Button
+Only shown if the user has at least one digital card.
+
+A dropdown button labeled "Share My Card" showing each card with three inline actions:
+
+Share — uses navigator.share() (native share sheet on mobile) with the card URL. Falls back to clipboard copy if share API not available.
+QR — shows a full-screen modal with a QR code for the card URL (use the qrcode.react library's QRCodeSVG component)
+Copy — copies the card URL to clipboard, shows "Copied" toast
+Card URL format: [appBaseUrl]/card/[card.slug]
+
+If no cards yet: show a "My Digital Cards" button linking to /digital-cards.
+
+"Manage Cards" option at bottom of dropdown → /digital-cards
+
+QR Code Modal
+When user clicks QR on any card:
+
+Full dialog with QR code centered
+Card name shown above
+QR code is an SVG (not PNG) — use <QRCodeSVG value={url} size={220} />
+Close button
+Face App Navigation Location
+In the sidebar for CCH:
+
+[Face App icon]  Face App    → /face
+This is the top nav item. It is the user's home base on mobile. It should be the first item they see.
+
+In the sidebar generally:
+The Face App link is always at the top of the navigation, before Dashboard.
+
+Error States on Face App
+Location denied: amber warning text below the trip tracker button: "Location access denied — check browser settings to allow location"
+Offline: the online badge changes, but all buttons remain active (offline capture is supported)
+No digital cards: show "My Digital Cards" link instead of Share dropdown
+No digital forms: hide the Quick Send Form button entirely
+END OF FACE APP SPEC ADDENDUM

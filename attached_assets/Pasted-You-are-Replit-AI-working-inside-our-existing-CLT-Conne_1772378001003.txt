@@ -1,0 +1,88 @@
+You are Replit AI working inside our existing CLT Connects / Charlotte City Hub codebase.
+
+GOAL
+We previously built this as a directory + publication. We now want the USER EXPERIENCE to feel like TikTok/Instagram/Facebook/Nextdoor in MOBILE, but it is NOT social posting. It is a highly-visual, curated INFORMATION FEED that is easy to scroll. The feed is GEO-FIRST and TAG-FIRST.
+
+KEY CONCEPT
+All our “categories, topics, locations, neighborhoods, ZIPs, businesses, organizations” are treated as structured “hashtags” (tags). Users scroll a mixed feed of real local content. Each card shows a primary tag (topic) + location tag and is tappable: tapping a tag re-filters the feed to that tag combination.
+
+CONSTRAINTS
+- Do NOT rebuild or discard existing data. Reuse current directory/publication data (businesses, organizations, events, articles/pulses, etc.).
+- This is a PRESENTATION + QUERY shift, not a replatform.
+- Mobile-first UI. Desktop should feel like a widened mobile feed.
+- Ads/sponsored placements must appear as feed cards (clearly labeled “Sponsored”), targeted by tag + geo, not banner ads.
+- Keep SEO strong: tag-based URLs should be indexable and internally linked.
+
+WHAT TO BUILD (PHASE 1: FUNCTIONAL MVP)
+1) TAG MODEL (database + normalization)
+   - Create a normalized tags system IF we don’t already have one:
+     - tags table: id, slug, label, type (location|topic|entity|status), parentTagId nullable (for location hierarchy), synonyms optional
+     - content_tags table: contentType, contentId, tagId
+   - Do NOT migrate everything at once. Provide a safe approach:
+     - Backfill tags from existing fields (zip, neighborhood, category, etc.) into tags + content_tags
+     - Keep existing columns for now; tags become the new query layer.
+
+2) CONTENT UNIFICATION (“feed items”)
+   - Create a server-side “feed item” projection that unifies multiple content types:
+     - Event
+     - Business/Presence
+     - Organization
+     - Pulse/Article (if exists)
+     - SponsoredPlacement (ad card)
+   - Each feed item should include:
+     id, type, title, subtitle, imageUrl, primaryTag (topic), locationTags (zip/neighborhood/city), entityTag (business/org if applicable),
+     startDate/endDate (for events), createdAt, sponsored boolean, sponsorshipMeta if applicable,
+     url (deep link), and a small “why shown” explanation (for admin/debug).
+
+3) FEED API
+   - Implement endpoints:
+     - GET /api/feed?geoTag=<slug>&topicTag=<slug>&context=<trending|nearby|new>&page=&limit=
+     - GET /api/tags/suggest?geoTag=<slug> (returns topic chips relevant to this geo)
+     - GET /api/tag/<slug> (tag metadata + counts)
+   - Feed filtering rules:
+     - Default geoTag: auto-detected zip if we have it, otherwise city.
+     - topicTag optional; when selected, filter to items that have BOTH geoTag (or descendant) AND topicTag.
+     - Always mix types in the feed (not separate sections).
+
+4) FEED RANKING (simple-smart hybrid)
+   - Implement a “simple but smart hybrid” rank:
+     - Primary: relevance to geoTag (exact zip > neighborhood > city)
+     - Then: recency (events upcoming soon, new openings recent)
+     - Then: quality signals (verified/charter/enhanced)
+     - Then: sponsored insertion rules (e.g., 1 sponsored card per N organic cards, still tag/geo matched)
+     - Provide constants in config for easy tuning.
+
+5) MOBILE UI (scroll-first social feel)
+   - Replace the current home “publication/directory” layout with:
+     - Sticky top bar: current geo tag (e.g., #28277) with dropdown to change
+     - Horizontal scrolling “tag chips” (topics) under it
+     - Full-bleed visual cards in a vertical scroll feed
+     - Floating button to toggle Map mode later (Phase 2) but placeholder OK for now
+   - Card behavior:
+     - Tap card opens a deep detail view (NOT an article page template). Use a clean “detail modal/page” per type.
+     - Tap a tag chip or in-card tag: re-filter feed instantly (no reload).
+   - Keep it “Energetic + Vibrant” and “Lifestyle + Aspirational” visually: large imagery, minimal text, clean overlays.
+
+6) SEO (tag pages)
+   - Create tag routes that are indexable:
+     - /t/<tagSlug>
+     - /t/<geoSlug>/<topicSlug>  (or /t/<geoSlug>?topic=<topicSlug>)
+   - Ensure canonical URLs, dynamic title/description, and internal links between tag pages.
+   - Add schema where applicable (Event, LocalBusiness, Organization) using existing data.
+
+DELIVERABLES
+- Code changes in backend + frontend implementing Phase 1.
+- A short “Implementation Notes” section in the repo:
+  - what tables were added
+  - how backfill works
+  - how to add new tags/content types
+  - how feed ranking is tuned
+
+SAFETY / QUALITY
+- Must not break existing pages; if needed, keep legacy routes and redirect them to tag-based routes gradually.
+- Add a minimal admin/debug panel that prints the active tag filters and returns “why shown” for a few feed items.
+
+START NOW
+First: inspect current schema + routes to identify existing category/zip/neighborhood fields and any existing tags.
+Then implement the normalized tags + feed projection + feed endpoint.
+Then implement the new mobile-first feed UI on the home route.

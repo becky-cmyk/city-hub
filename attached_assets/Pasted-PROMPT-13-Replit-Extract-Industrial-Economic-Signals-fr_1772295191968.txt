@@ -1,0 +1,186 @@
+PROMPT 13 (Replit) — Extract “Industrial / Economic Signals” from EXISTING ingested sources (OSM + Open Data + GIS + Crawl) and bucket/tag entities for future monetization (admin-only)
+
+GOAL
+Without adding new data sources, build a classifier that:
+1) Scans entities + existing raw ingests we already pull (OSM/Overpass entities, Socrata open data rows, ArcGIS GIS rows, website crawl results).
+2) Identifies “Industrial / Economic” opportunities (manufacturing, construction activity, contractors, wholesalers, distribution, industrial corridors).
+3) Stores these as tags + signals in an admin-only view so Becky can search, learn, and later monetize if desired.
+
+CONSTRAINTS
+- Do NOT add new external integrations.
+- Use only existing data already ingested into our DB:
+  - entities (from OSM seed)
+  - entity_contact_verification (crawl)
+  - source_raw_rows (Socrata/ArcGIS pulls)
+  - entity_location_profile (land-use classification if implemented)
+- Admin-only visibility. Licensees do NOT see these tags unless explicitly enabled later.
+
+--------------------------------------------------
+PART A — DATABASE
+--------------------------------------------------
+
+1) entity_asset_tags (many-to-many)
+- id (pk)
+- metro_id
+- entity_id
+- tag (enum)
+- confidence (int 0-100)
+- evidence_json (json)          // why it was tagged (fields matched, sources)
+- created_at, updated_at
+Unique: (entity_id, tag)
+
+Tag enum (start set, expandable):
+- MANUFACTURING
+- FABRICATION
+- INDUSTRIAL_SUPPLY
+- WHOLESALE_DISTRIBUTION
+- WAREHOUSE_LOGISTICS
+- CONSTRUCTION_CONTRACTOR
+- ROOFING_CONTRACTOR
+- HVAC_CONTRACTOR
+- PLUMBING_CONTRACTOR
+- ELECTRICAL_CONTRACTOR
+- GENERAL_CONTRACTOR
+- COMMERCIAL_BUILDOUT_SIGNAL
+- INDUSTRIAL_CORRIDOR_LOCATION
+- HIGH_PERMIT_ACTIVITY_SIGNAL
+
+2) economic_signal_events (optional “signals timeline”, admin-only)
+- id (pk)
+- metro_id
+- signal_type (enum)
+- entity_id (nullable)
+- zip_code (nullable)
+- strength (int 0-100)
+- summary (string)
+- evidence_json (json)
+- created_at
+
+--------------------------------------------------
+PART B — CLASSIFIER: ENTITY-LEVEL TAGGING (NO NEW SOURCES)
+--------------------------------------------------
+
+Create:
+ /server/intelligence/classify/economicSignalTagger.ts
+
+Inputs:
+- entities.categories_json (OSM tags like shop/amenity/office/craft/industrial)
+- entity_location_profile.land_use_class (COMMERCIAL/INDUSTRIAL/etc.) if present
+- entity_contact_verification (website content cues + schema.org category)
+- source_raw_rows from Socrata/ArcGIS (permits/inspections/etc.) if present
+
+RULE SETS (examples; implement as deterministic rules + confidence scoring)
+
+1) OSM TAG-BASED INDUSTRIAL
+If entity originated from OSM:
+- If tags contain:
+  - "industrial=*" or "landuse=industrial" -> tag INDUSTRIAL_CORRIDOR_LOCATION (confidence 85)
+  - "man_made=works" or "craft=*" with industrial cues -> FABRICATION (65-80)
+  - "office=logistics" / "industrial" / "wholesale" -> WAREHOUSE_LOGISTICS / WHOLESALE_DISTRIBUTION (70)
+  - "shop=trade" / "shop=hardware" / "shop=electrical" etc -> INDUSTRIAL_SUPPLY (60-75)
+
+2) NAME / CATEGORY KEYWORD HEURISTICS (SAFE)
+Use entity.name + categories_json:
+- If name includes: "Manufacturing", "Fabrication", "Machine", "Tool & Die", "Plastics", "Injection", "CNC", "Metal Works", "Foundry"
+  -> MANUFACTURING or FABRICATION (confidence 60-80)
+- If name includes: "Roofing", "HVAC", "Mechanical", "Plumbing", "Electric", "Construction", "Contracting", "Builders"
+  -> contractor tags (confidence 70)
+
+3) WEBSITE CRAWL CUES (CONFIRMATION)
+From entity_contact_verification:
+- If schema.org indicates LocalBusiness @type includes:
+  - "GeneralContractor", "RoofingContractor", "Plumber", "Electrician", "HVACBusiness"
+  -> corresponding contractor tags (+20 confidence)
+- If page text contains strong signals:
+  - “commercial projects”, “industrial”, “warehouse”, “distribution”, “manufacturing”
+  -> raise confidence
+
+4) GIS LAND USE CONFIRMATION (IF AVAILABLE)
+From entity_location_profile:
+- land_use_class == INDUSTRIAL -> INDUSTRIAL_CORRIDOR_LOCATION (+20 confidence)
+- land_use_class == COMMERCIAL and contractor tags exist -> COMMERCIAL_BUILDOUT_SIGNAL (+10)
+
+5) OPEN DATA / PERMIT SIGNALS (IF ALREADY PULLED)
+If source_raw_rows includes permit datasets we already ingest for a metro:
+- For the last N days (e.g., 180):
+  - Group permits by contractor/business name (string match to entities.name)
+  - If contractor appears >= threshold (e.g., 5 permits in 180 days):
+    -> HIGH_PERMIT_ACTIVITY_SIGNAL (strength scaled by count)
+  - If permit types include commercial buildout/renovation:
+    -> COMMERCIAL_BUILDOUT_SIGNAL
+
+Match strategy:
+- Normalize names (lowercase, remove punctuation, common suffixes LLC/Inc)
+- Optional: address proximity match when permit address matches entity address
+
+Write results:
+- Upsert entity_asset_tags with evidence_json describing exact triggers.
+
+--------------------------------------------------
+PART C — SIGNAL AGGREGATION (ZIP + METRO)
+--------------------------------------------------
+
+Create:
+ /server/intelligence/aggregate/economicSignals.ts
+
+Compute admin-only rollups:
+- Top contractor categories by zip
+- Industrial corridor clusters by zip
+- Permit activity spikes (if permit data exists)
+
+Insert into economic_signal_events (optional).
+
+--------------------------------------------------
+PART D — ADMIN UI (SUPER_ADMIN ONLY)
+--------------------------------------------------
+
+Add:
+/admin/intelligence/economic-signals
+
+Features:
+- Filters:
+  - metro
+  - tag
+  - confidence >= X
+  - zip (optional)
+  - location_type (storefront/office/industrial if available)
+- Table results:
+  - entity name
+  - tag(s)
+  - confidence
+  - evidence summary
+  - contact flags (phone/website/address)
+  - recommended outreach method (if computed)
+- Export button (CSV) — SUPER_ADMIN only (optional; can be disabled now)
+
+Also add per-entity admin view section:
+- “Economic Tags”
+- Evidence sources + last computed date
+
+--------------------------------------------------
+PART E — SCHEDULING
+--------------------------------------------------
+
+Run nightly:
+- economicSignalTagger for entities updated in last 24h
+- economicSignals rollups
+
+Add env flags:
+- ENABLE_ECONOMIC_TAGGING=true
+- ECON_TAG_MIN_CONFIDENCE=60
+
+--------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------
+
+1) No new integrations added.
+2) Entities get economic tags derived from existing ingests + crawl + GIS (when present).
+3) Admin can filter/search these tagged entities and see evidence.
+4) Permit-based “HIGH_PERMIT_ACTIVITY_SIGNAL” only runs if permit datasets already exist in source_raw_rows; otherwise it no-ops cleanly.
+5) Licensees cannot see this page or tags.
+
+DELIVERABLES
+- migrations: entity_asset_tags (+ optional economic_signal_events)
+- tagger + aggregator services
+- admin UI page
+- nightly job hooks

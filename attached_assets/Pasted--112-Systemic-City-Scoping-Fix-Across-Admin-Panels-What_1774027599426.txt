@@ -1,0 +1,36 @@
+#112 - Systemic City-Scoping Fix Across Admin Panels
+What & Why
+The admin dashboard has ~80+ panels, but only ~30 pass selectedCityId to the component. The remaining ~50 panels query data with no city filter, pulling from ALL cities. Backend endpoints mirror this — many don't accept or filter by cityId. This means multi-city operation is fundamentally broken: panels show mixed data, and operators can't scope their view to one metro.
+
+The Opportunity Radar is one symptom, but the same problem exists in: Businesses, Events, Categories, Articles, Curated Lists, Submissions, Content Sources, Authors, Ads, Job Moderation, CSV Import, Listing Tiers, Enterprise Reviews, Content Journal, AI Assistant, SEO Diagnostic, CMS Dashboard, CMS Content Library, Content Pages, CMS Media Library, CMS Tags, Feed Debug, Pulse Posts, Editorial Calendar, and more.
+
+Done looks like
+Every admin panel component receives selectedCityId from dashboard.tsx
+Every admin API endpoint that returns city-scoped data accepts and filters by cityId query parameter
+Switching cities in the admin context switcher causes every panel to show only that city's data
+No panel shows cross-city mixed data
+Opportunity Radar specifically shows all 425 CLT businesses (not 229) with all zones in filter
+Out of scope
+Populating empty neighborhood text fields on businesses
+Adding new features or panels
+Platform-level cross-city aggregate views (those intentionally show all cities)
+Tasks
+Audit and list every panel in dashboard.tsx renderSection that does NOT receive selectedCityId — Create a definitive list of panels missing city context.
+
+For each panel missing cityId: add the prop and pass it from dashboard.tsx — Mechanical change: add cityId prop to component interface, thread it through to API fetch calls.
+
+For each backend API endpoint used by those panels: add cityId query param filtering — Add WHERE city_id = $cityId (or equivalent drizzle filter) to every query that returns city-scoped data. Raise the LIMIT caps on queries already scoped to a single city.
+
+Fix Opportunity Radar specifically — All three radar queries (captures, seeded, activated) need city_id filter. Remove LIMIT 200/80/50 caps. Include businesses with no contact info as walk_in_needed opportunities.
+
+Verify the connection — After changes, confirm the radar shows all 425 businesses, all zone names appear in location filter, and NoDa shows its 32 businesses.
+
+Relevant files
+client/src/pages/admin/dashboard.tsx:4506-4800
+server/opportunity-radar-routes.ts:67-270
+server/charlotte-intelligence-routes.ts
+server/intelligence-dashboard-routes.ts
+server/capture-routes.ts
+server/event-discovery-routes.ts
+server/routes.ts
+server/storage.ts

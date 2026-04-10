@@ -1,0 +1,394 @@
+PROMPT 1 — EXPAND MARKETPLACE INTO FULL CLASSIFIEDS / PROPERTY LAYERS
+VERSION: V1
+
+You are updating the existing City Hub codebase.
+
+IMPORTANT ARCHITECTURE RULES
+- Do NOT build a separate classifieds app.
+- Do NOT create duplicate systems.
+- Follow the existing platform rule:
+  Hub Presence → Objects → Discovery Surfaces.
+- Marketplace is a discovery surface / object family inside the existing ecosystem, not a disconnected product.
+- All new listing types must work with existing geo logic, search, Pulse, hub pages, and map where applicable.
+- Keep the existing patterns for visibility, expiration, moderation, and discovery weighting.
+- Build this as an extension of the existing Marketplace / listing system, not a rewrite.
+
+GOAL
+Add new Marketplace categories and listing behaviors so the platform supports:
+1. Residential housing supply
+2. Residential housing demand
+3. Commercial property
+4. Service listings
+5. Local for-sale classifieds
+6. Community / opportunity classifieds
+
+THESE NEW CATEGORIES MUST BE ADDED TO MARKETPLACE
+
+A) HOUSING_SUPPLY
+Subtypes:
+- APARTMENT_COMMUNITY
+- APARTMENT_UNIT
+- HOUSE_FOR_RENT
+- HOUSE_FOR_SALE_FSBO
+- ROOM_FOR_RENT
+- SHORT_TERM_RENTAL (prepare structure even if hidden at first)
+
+B) HOUSING_DEMAND
+Subtypes:
+- LOOKING_FOR_RENTAL
+- LOOKING_FOR_ROOMMATE
+- HOUSING_WANTED
+
+C) COMMERCIAL_PROPERTY
+Subtypes:
+- COMMERCIAL_FOR_LEASE
+- COMMERCIAL_FOR_SALE
+- OFFICE_SUBLEASE
+- RETAIL_SPACE
+- INDUSTRIAL_WAREHOUSE
+- SHARED_COMMERCIAL_SPACE
+
+D) SERVICES
+Subtypes:
+- LOCAL_SERVICE
+- FREELANCER_SERVICE
+- HOME_SERVICE
+- PROFESSIONAL_SERVICE
+
+E) FOR_SALE
+Subtypes:
+- FURNITURE
+- EQUIPMENT
+- OFFICE_EQUIPMENT
+- BUSINESS_LIQUIDATION
+- LOCAL_RESALE
+
+F) COMMUNITY
+Subtypes:
+- LOST_AND_FOUND
+- COMMUNITY_NOTICE
+- VOLUNTEER_OPPORTUNITY
+- CASTING_CALL
+- AUDITION
+- GENERAL_OPPORTUNITY
+
+BUSINESS RULES TO IMPLEMENT
+
+1. SINGLE SOURCE / OWNERSHIP
+- Every listing must have one owner record.
+- Owner can be:
+  a) hub_presence_id
+  or
+  b) reader_user_id
+- Add clear owner type handling.
+- Do not allow ambiguous ownership.
+
+2. READER LISTING RULES
+- Reader-owned classifieds are allowed.
+- Reader-owned listings require verified account status before publishing.
+- Reader-owned listings are capped at 3 active listings total across all marketplace categories unless later overridden by admin.
+- This cap must be enforced at create + publish time.
+- Reader-owned FSBO listings are allowed only if verified.
+- Reader-owned housing demand listings (looking for rental / roommate) are allowed only if verified.
+
+3. HUB PRESENCE RULES
+- Hub Presence owners can create listings as business/organization/property operators.
+- Preserve the existing add-on / capability model so listing-heavy usage can later be gated by add-on, quotas, credits, and visibility boosts.
+- Do not hardcode unlimited unless the current entitlement model already supports it cleanly.
+- Structure the code so limits can be configured by tier later.
+
+4. FSBO RULE
+- Add explicit subtype/tag for FOR SALE BY OWNER.
+- FSBO lives in Marketplace, not MLS.
+- FSBO can belong to verified readers.
+- FSBO should be searchable/filterable distinctly.
+
+5. MLS RULE
+- Do NOT ingest MLS into the marketplace database.
+- Marketplace housing supply is for internal/listed objects only.
+- Keep MLS separate for future sponsor embed blocks on relocation or hub pages.
+- Do not mix external MLS records into this schema.
+
+6. HOUSING DEMAND RULE
+- Add support for “Looking for Rental,” “Looking for Roommate,” and “Housing Wanted.”
+- These are demand-side marketplace objects.
+- They must support budget, target area, move-in timing, and preferences.
+- They should appear in search and marketplace pages, and be optionally eligible for Pulse story-style surfacing later.
+
+7. COMMERCIAL PROPERTY RULE
+- Commercial listings live in Marketplace and must be their own major category.
+- Must support lease vs sale distinction.
+- Must support property type and square footage fields.
+- Must be usable later in business relocation and “open a business here” flows.
+
+8. SERVICES RULE
+- Services are marketplace listings, not a separate architecture.
+- Services can later route users into Hub Presence upgrades.
+- Must support category + service area + pricing style.
+
+9. FOR SALE RULE
+- General local items can be posted, but keep structure clean.
+- Add expiration and moderation support to avoid clutter / stale inventory.
+
+10. COMMUNITY RULE
+- Community / opportunity listings should support simple civic or local-activity use cases.
+- These should remain structured, moderateable, and geo-aware.
+
+DATA MODEL CHANGES
+
+Extend the existing marketplace listing model or create a clearly related extension model if needed, but avoid fragmentation.
+
+Each listing should support the following core fields where applicable:
+
+CORE FIELDS
+- id
+- owner_type (HUB_PRESENCE | READER)
+- hub_presence_id (nullable)
+- reader_user_id (nullable)
+- category
+- subtype
+- title
+- slug
+- description
+- short_description
+- status (DRAFT | PENDING_REVIEW | PUBLISHED | EXPIRED | ARCHIVED | REJECTED)
+- visibility_level
+- verification_required_flag
+- featured_flag
+- sponsored_flag
+- created_at
+- updated_at
+- published_at
+- expires_at
+- active_until
+- moderation_state
+- moderation_notes
+- geo fields already used in system:
+  - metro
+  - hub
+  - district
+  - neighborhood
+  - zip
+  - latitude
+  - longitude
+  - address fields where applicable
+
+COMMON FILTER FIELDS
+- price
+- price_type
+- contact_method
+- contact_email
+- contact_phone
+- external_url
+- image gallery support
+- tags / features
+
+HOUSING-SPECIFIC FIELDS
+- property_type
+- beds
+- baths
+- square_feet
+- lot_size (optional)
+- furnished_flag
+- pet_friendly_flag
+- smoking_policy
+- available_date
+- lease_term
+- roommate_ok_flag
+- utilities_included_flag
+- parking_details
+
+HOUSING DEMAND FIELDS
+- desired_budget_min
+- desired_budget_max
+- desired_area_text
+- desired_hubs
+- move_in_timeframe
+- household_size
+- pets_flag
+- roommate_preference_text
+- accessibility_needs_text
+- notes
+
+COMMERCIAL FIELDS
+- commercial_type
+- lease_or_sale
+- square_feet
+- zoning_text
+- use_case_text
+- buildout_status
+- parking_count
+- signage_flag
+- nna_or_gross_text if needed
+
+SERVICES FIELDS
+- service_category
+- service_area_type (AT_LOCATION | MOBILE | REMOTE)
+- service_area_text
+- pricing_model (HOURLY | FIXED | QUOTE_BASED | STARTING_AT)
+- starting_price
+- license_or_certification_text
+
+FOR SALE FIELDS
+- item_condition
+- quantity
+- pickup_only_flag
+- shipping_available_flag
+
+COMMUNITY FIELDS
+- event_date if relevant
+- urgency_level
+- organization_name if relevant
+
+DB / MIGRATION WORK
+- Add enums and fields cleanly.
+- Preserve backward compatibility with current marketplace listings.
+- Migrate safely without breaking current records.
+- Use nullable fields appropriately.
+- Avoid over-normalizing for MVP.
+- Add indexes for category, subtype, owner, status, hub, neighborhood, expires_at, created_at.
+
+ADMIN / MODERATION
+Update admin tools so moderators/admins can:
+- filter by new category + subtype
+- view owner type
+- see whether listing is reader-owned or hub-presence-owned
+- see verification status
+- manually expire / reject / feature / suppress listings
+- review reader-owned listings easily
+- view listing counts per reader to enforce cap
+
+LISTING CAP ENFORCEMENT
+Implement hard cap logic for reader-owned listings:
+- max 3 active published listings per verified reader
+- “active” means status in PUBLISHED and not expired/archived
+- return clear error message if cap exceeded
+- structure this so admin can override later
+
+PUBLISH FLOW
+- Reader-owned listings should default to PENDING_REVIEW or the platform’s safest equivalent if current moderation flow exists.
+- Hub Presence listings should follow the current platform moderation / publish rules.
+- Reuse existing moderation / editorial patterns where possible.
+
+MARKETPLACE UI
+Update Marketplace navigation and filters to include the new major groups:
+- Housing
+- Commercial
+- Services
+- For Sale
+- Community
+
+Inside Housing, support tabs or filters for:
+- Apartments
+- Rentals
+- FSBO
+- Roommates
+- Looking For Housing
+
+Inside Commercial, support:
+- Lease
+- Sale
+- Office
+- Retail
+- Industrial
+
+Inside Services, support:
+- Home Services
+- Professional Services
+- Freelancers
+- Local Services
+
+Update listing cards and detail pages to render category-specific attributes cleanly.
+Do not make all cards identical if data types differ heavily.
+
+SEARCH
+Ensure global search indexes the new listings and groups them correctly by content type and marketplace type.
+Location-aware behavior should continue to work.
+Examples:
+- apartments in Ballantyne
+- office space in Pineville
+- looking for roommate South End
+- FSBO near Matthews
+- furniture for sale NoDa
+
+MAP
+If current map integration is already wired for marketplace objects, extend it cleanly so applicable listing types can appear on the map.
+Map-eligible by default:
+- apartment communities
+- apartment units
+- houses for rent
+- FSBO
+- commercial property
+Optional / later:
+- services
+- demand listings
+Do not force all categories onto the map if they do not make sense visually.
+
+PULSE / STORYING PREP
+Do not turn Marketplace into Pulse.
+But structure these listings so they can later generate story-style surfacing in Pulse, such as:
+- New apartment availability in [hub]
+- Looking for roommate in [area]
+- New commercial space open in [district]
+- Local service spotlight
+For this pass, just preserve the metadata needed for later editorial / AI-assisted story generation.
+
+RELATIONSHIP TO RELOCATION PAGES
+Make sure housing and commercial listing queries can later be embedded cleanly into relocation pages / landing pages by area.
+Do not build the full relocation pages now unless already simple.
+Just make the query/filter layer reusable.
+
+API / BACKEND
+Update or add endpoints/services for:
+- create listing
+- update listing
+- publish listing
+- expire listing
+- search/filter listings
+- fetch by category/subtype/geo
+- count reader active listings
+- admin moderation actions
+
+FRONT-END
+Update:
+- marketplace browse page
+- listing create/edit forms
+- listing cards
+- listing detail pages
+- user dashboard / my listings area
+- admin moderation table
+Keep forms dynamic by category/subtype so users only see relevant fields.
+
+VALIDATION
+- Require verification for reader-owned publishable listings
+- Enforce category-specific required fields
+- Validate date logic
+- Validate owner_type consistency
+- Validate subtype belongs to selected category
+- Prevent bad publish states
+
+ANALYTICS / TRACKING PREP
+Add clean event hooks or tracking points for:
+- listing_created
+- listing_published
+- listing_expired
+- listing_featured
+- reader_cap_hit
+- housing_demand_created
+- fsbo_created
+- commercial_listing_created
+
+DELIVERABLE FORMAT
+At the end, provide:
+1. Summary of schema changes
+2. Files changed
+3. New enums / models added
+4. Admin changes added
+5. Any migration notes
+6. Any TODOs intentionally left for next phase
+
+IMPORTANT
+- Keep this surgical and architecture-safe.
+- Reuse existing models, routes, UI patterns, moderation patterns, and geo logic wherever possible.
+- Do not create a separate housing app, separate classifieds app, or separate commercial app.
+- Everything must remain inside the existing City Hub ecosystem and marketplace structure.

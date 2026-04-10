@@ -1,0 +1,255 @@
+CITY HUB / CLT CONNECTS — INTERACTIVE MAP REBUILD
+3D-CAPABLE MAP LAYER
+SURGICAL IMPLEMENTATION PROMPT
+
+You are working inside the existing City Hub / CLT Connects codebase.
+
+Goal:
+Rebuild the MAP LAYER cleanly so it functions as a platform-wide discovery surface and is structured for 3D-capable evolution, while continuing to use the REAL existing object model and REAL existing location data.
+
+This is a MAP-LAYER REBUILD.
+It is NOT a platform rebuild.
+It is NOT a new data architecture.
+It is NOT a separate relocation-only map.
+
+Do NOT create:
+- map-only records
+- a separate map database
+- duplicate business/event/creator/job objects
+- a shadow geography system
+
+LIVE IMPLEMENTATION FACTS TO RESPECT
+
+The current map stack is:
+- Leaflet
+- react-leaflet
+
+The current map reads from real platform data, not a separate map dataset.
+That is correct and must be preserved.
+
+Businesses are the primary Hub Presence object table.
+Creators are not a separate table; they are businesses with creator-specific fields/types.
+Events currently use host business lat/lng when needed.
+
+The platform has TWO valid geographic hierarchies and both must remain:
+
+1. REGIONS hierarchy
+- metro → hub → county → zip
+- used for territories, sales, licensing, operators
+
+2. ZONES hierarchy
+- district → neighborhood → micro_hub
+- used for content scoping and discovery
+
+Do NOT flatten these into one hierarchy.
+The map may visualize or use both, but must preserve their different purposes.
+
+LOCKED MAP RULE
+
+The map is a DISCOVERY SURFACE.
+
+It must:
+- visualize real existing objects
+- connect users into real object pages
+- support geographic discovery across the whole ecosystem
+- stop being effectively trapped inside relocation-only logic
+
+The map is NOT:
+- a separate listing system
+- a separate relocation app
+- a duplicate search engine
+- a place to store map-only content
+
+MAP OBJECTS TO SUPPORT
+
+The rebuilt map layer should support real object rendering from existing data such as:
+- businesses
+- creators (through businesses/creator type logic)
+- events
+- jobs / job listings where location exists
+- marketplace listings where location exists
+- neighborhoods
+- districts
+- hubs
+- other valid real geographic/content objects already present in the codebase
+
+FIRST TASK — AUDIT BEFORE CHANGING
+
+Inspect the current map implementation and confirm:
+
+1. Which map components/pages currently exist
+2. Which routes/pages are using the map now
+3. What data queries/services currently feed the map
+4. Why the current map is not reliably working platform-wide
+5. Where relocation-specific assumptions are narrowing the map
+6. What existing data sources are already correct and should remain
+7. How neighborhoods/districts/hubs are currently represented
+8. Whether current object click-through behavior is correct or broken
+9. The safest path to rebuild the map layer without changing the object model
+
+Return a concise implementation note first before major changes.
+
+PRIMARY OBJECTIVE
+
+Rebuild the map layer so it becomes a reliable ecosystem-wide discovery surface now, while being structurally ready for richer 3D-style evolution next.
+
+This means:
+- rebuild map UI/component/query/filter behavior as needed
+- keep real object sourcing
+- preserve and clarify geography layers
+- prepare rendering/interaction patterns that can later evolve toward stronger 3D experiences
+
+Do NOT build a throwaway 2D patch.
+Do NOT jump into an overcomplicated custom 3D engine if the current stack should first be stabilized cleanly.
+
+REQUIRED IMPLEMENTATION
+
+1. REBUILD THE MAP LAYER CLEANLY
+
+Rebuild the map-specific implementation where needed:
+- map page/component structure
+- map data loading/query layer
+- layer/filter logic
+- marker/pin rendering
+- overlays/boundaries if already supported
+- click-through behavior
+- legend/filter UI if needed for clarity
+
+Preserve real object sourcing.
+Do not rebuild the underlying object tables.
+
+2. EXPAND FROM RELOCATION-SPECIFIC TO PLATFORM-WIDE DISCOVERY
+
+The map must no longer behave as if it only belongs to relocation / moving-through-Charlotte.
+
+It should become usable across the wider City Hub ecosystem for:
+- local business discovery
+- neighborhood exploration
+- creator discovery
+- event discovery
+- job/opportunity discovery where supported
+- marketplace/local opportunity discovery where supported
+
+Preserve any good relocation functionality, but do not let relocation define the entire map architecture.
+
+3. 3D-CAPABLE DIRECTION STARTS NOW
+
+This prompt should move the map toward a 3D-capable architecture, even if the first stable delivery remains within or adjacent to the current map stack.
+
+Required approach:
+- organize layers and interaction so richer visual depth can be added later without rewriting the data flow
+- preserve clean object/layer abstractions
+- support future enhancement such as:
+  - district/neighborhood visual depth
+  - category density visualization
+  - cluster towers or stacked intensity
+  - guided geographic exploration
+  - sponsored/featured visual hierarchy
+  - relocation and discovery overlays
+
+If a practical lightweight path exists now for richer depth/tilt/elevation-like behavior, use it only if stable and cost-effective.
+Do NOT overengineer.
+
+4. PRESERVE REAL CLICK-THROUGH DESTINATIONS
+
+Pins/layers must open real routes/pages.
+
+Examples:
+- business marker → real business/listing page
+- creator marker → creator/business page
+- event marker → real event page
+- job marker → real job page if supported
+- marketplace marker → real listing page
+
+Do not create alternate “map profile” pages.
+
+5. MAP FILTERING / DISCOVERY CONTROLS
+
+Support usable discovery controls tied to the real data model.
+
+Examples of desired controls:
+- category / type filtering
+- neighborhood/district filtering
+- city/hub context
+- creator/business/event/job/marketplace visibility
+- featured / verified / sponsored visibility if already supported
+
+Use the lightest stable implementation that fits the current codebase.
+
+6. GEOGRAPHIC LAYER SAFETY
+
+Preserve distinction between:
+- regions for territory/sales structure
+- zones for content/discovery structure
+
+The map should primarily support DISCOVERY behavior correctly using content-local geography where appropriate, but may also visualize broader region layers where useful.
+
+Do not accidentally replace zone discovery with only region logic.
+
+7. CLUSTERING / DENSITY / FAIR DISCOVERY
+
+If clustering already exists, audit and improve it.
+If not, add stable clustering where helpful.
+
+Goals:
+- reduce visual clutter
+- make density understandable
+- support broader city exploration
+- prepare for richer future 3D-like spatial discovery
+
+8. CITY / METRO CONTEXT SAFETY
+
+Do not leave hidden Charlotte-only assumptions in the map logic where city context should be dynamic.
+
+Respect the platform/city separation now being established.
+Do not build this map as Charlotte-only platform logic.
+
+9. BILINGUAL SAFETY
+
+Preserve the existing English/Spanish system.
+Do not break bilingual labels, controls, or map-adjacent UI text.
+If map-specific labels need translation cleanup, do it safely.
+
+10. PERFORMANCE / STABILITY
+
+Keep performance in mind.
+Do not build a heavy unstable map just to say it is 3D.
+Prefer:
+- stable real-object queries
+- efficient filtering
+- sensible clustering
+- modular layer structure
+- low-risk rendering improvements
+
+DO NOT DO IN THIS PROMPT
+
+Do NOT:
+- rebuild the businesses/events/jobs tables
+- create a map-only object system
+- flatten region and zone hierarchies
+- turn the map into a separate relocation product
+- build a brand-new custom geographic backend
+- break object page routes
+- redesign the whole public site
+- implement a giant custom WebGL city unless clearly justified and stable inside this codebase
+
+SUCCESS CRITERIA
+
+This prompt is complete when:
+
+1. the map layer is rebuilt or stabilized cleanly using real existing objects
+2. the map works as a platform-wide discovery surface, not only relocation logic
+3. object click-through goes to real destination pages
+4. filtering/layer behavior is clearer and more reliable
+5. region and zone hierarchies are both preserved correctly
+6. the map is structured for future richer 3D evolution without needing a data-model rewrite
+7. no map-only records or shadow systems are introduced
+
+DELIVERABLE
+
+Please:
+1. briefly restate the implementation plan based on the audit
+2. audit the current map implementation first
+3. implement the smallest stable map-layer rebuild needed
+4. list exactly which files/components/services/routes were changed
+5. list what should wait for the next map/search/discovery prompt

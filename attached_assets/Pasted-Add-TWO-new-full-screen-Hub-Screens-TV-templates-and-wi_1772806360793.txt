@@ -1,0 +1,198 @@
+Add TWO new full-screen Hub Screens TV templates and wire them into the existing TV system.
+
+GOAL
+Create:
+1. "Tonight Around You"
+2. "This Weekend"
+
+These must work inside the existing Hub Screens / Web TV offering and be usable across:
+- Metro
+- Micro Hub
+- Location/Venue screens
+
+These are GLANCEABLE TV slides, not article pages.
+They should be optimized for viewing from across a room.
+One idea per slide. Large text. Fast scan. QR optional.
+
+==================================================
+A) NEW TEMPLATE 1: TONIGHT_AROUND_YOU
+==================================================
+
+Purpose:
+Show immediate, nearby, same-day activity around the current hub/location.
+This should feel like: "What’s happening near me tonight?"
+
+Template key:
+- tonight_around_you
+
+Primary use cases:
+- bars
+- breweries
+- restaurants
+- salons
+- waiting areas
+- neighborhood micro hubs
+
+Data source priority:
+1. events in the current location’s micro hub happening TODAY and later than "now"
+2. if not enough, use metro events for tonight
+3. if still not enough, use fallback CTA slide
+
+Content rules:
+- Show up to 3 events max
+- Each item should include:
+  - event title
+  - start time
+  - short location/area label
+- Optional small tag:
+  - Live Music
+  - Trivia
+  - Family
+  - Food
+  - Networking
+  - Free
+- Include a strong headline:
+  - "Tonight Around You"
+- Include subline:
+  - "What’s happening nearby"
+- Include QR if available:
+  - QR should go to filtered hub events page for tonight
+- If only 1 event exists, feature it larger
+- If 2–3 events exist, show a simple stacked layout
+- If no events exist:
+  - fallback headline: "What’s Going On Tonight?"
+  - CTA: "Scan to explore local events"
+  - QR goes to hub events page
+
+Visual requirements:
+- dark, TV-friendly background
+- large headline
+- event cards with strong contrast
+- easy to read from across room
+- subtle "Powered by Charlotte Metro Hub" footer
+- no paragraphs
+- no long descriptions
+
+Backend/data requirements:
+- Add a builder function that fetches tonight’s events based on:
+  - metroSlug
+  - hubSlug
+  - locationSlug
+  - current local date/time
+- "Tonight" means current date only
+- Prefer events in same hub first
+- Sort by soonest upcoming
+- Exclude ended events
+- Return normalized data for template rendering
+
+==================================================
+B) NEW TEMPLATE 2: THIS_WEEKEND
+==================================================
+
+Purpose:
+Show a curated weekend roundup for the current hub or metro.
+This should feel like: "What should I do this weekend?"
+
+Template key:
+- this_weekend
+
+Primary use cases:
+- all venue screens
+- metro screens
+- micro hub screens
+
+Data source priority:
+1. events in the current micro hub happening Friday/Saturday/Sunday
+2. if not enough, use metro-wide weekend events
+3. if still not enough, fallback CTA slide
+
+Content rules:
+- Show up to 4 events max
+- Each item should include:
+  - title
+  - day label (Fri / Sat / Sun)
+  - time
+  - short area/location
+- Headline:
+  - "This Weekend"
+- Subline:
+  - "Plans around you"
+- Optional QR goes to filtered weekend events page
+- If event count is low, make layout more spacious
+- If no events:
+  - show fallback with:
+    - "This Weekend"
+    - "Scan to discover local events"
+    - QR to hub events page
+
+Visual requirements:
+- big readable headline
+- clean grid or stacked cards
+- use day tags with strong contrast
+- no long descriptions
+- subtle "Powered by Charlotte Metro Hub" footer
+
+Backend/data requirements:
+- Add a builder function that fetches weekend events using local timezone
+- Weekend definition:
+  - Friday 5:00 PM through Sunday 11:59 PM
+- Prefer current hub first, then metro
+- Sort by day/time ascending
+- Normalize output for template rendering
+
+==================================================
+C) PLAYLIST / ROTATION INTEGRATION
+==================================================
+
+Add both templates into the TV playlist generator.
+
+Rules:
+- If locationSlug exists:
+  - include "Tonight Around You" at least once every 1–2 loops
+- Include "This Weekend" at least once per loop on Thu/Fri/Sat/Sun
+- On Mon/Tue/Wed:
+  - "This Weekend" can appear less frequently, but still be eligible
+- If there are no events, use graceful fallback CTA version instead of skipping entirely
+
+Add scheduler intelligence:
+- after 4 PM local time, increase priority of tonight_around_you
+- from Thursday morning onward, increase priority of this_weekend
+
+==================================================
+D) ADMIN / BACK OFFICE
+==================================================
+
+Update /admin/tv content/template management so these new templates can be:
+- previewed
+- manually created if desired
+- auto-generated from existing events data
+
+Add preview cards for:
+- Tonight Around You
+- This Weekend
+
+If there is already a template registry, register both new templates there.
+
+==================================================
+E) ROUTES / API SUPPORT
+==================================================
+
+If needed, add helper endpoints or internal services to support:
+- getTonightAroundYouData(...)
+- getThisWeekendData(...)
+
+Do not duplicate the events table.
+Use existing events data and existing hub scoping if already available.
+
+==================================================
+F) OUTPUT REQUIRED
+==================================================
+
+1. Implement both new TV templates
+2. Wire them into the playlist generator
+3. Add any data-fetch helpers needed
+4. Register them in admin preview/template selection
+5. Seed dev/demo data if needed so previews work immediately
+
+Before coding, inspect the existing TV template system and match its current architecture, naming, and style conventions.
+Use the existing design language already present in Hub Screens.

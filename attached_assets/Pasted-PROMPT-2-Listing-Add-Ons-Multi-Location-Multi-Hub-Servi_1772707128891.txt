@@ -1,0 +1,187 @@
+PROMPT 2 — Listing Add-Ons: Multi-Location, Multi-Hub, Service-Area, Metro Coverage, Franchise/Enterprise
+
+CONTEXT
+You are working inside the CLT City Hub codebase. There is already a base listing subscription system (Hub Presence / Expanded Hub Presence) with auto-renew billing. We already created/verified an Admin → Ad Management module for add-on programs.
+
+Now we need LISTING-SPECIFIC ADD-ONS that change what a single business listing covers:
+- additional physical locations (up to 5)
+- additional hub visibility (extra hubs without extra locations)
+- service-area “non-physical” hub coverage
+- metro-wide regional coverage
+- >5 physical locations routes to franchise/enterprise workflow
+
+Do NOT remove existing listing logic. Extend it.
+
+LOCKED BUSINESS RULES
+1) Base listing subscription auto-renews; renewals create new payouts.
+2) A business can have:
+   - physical locations (addresses)
+   - service-area coverage (no extra address)
+   - hub visibility (which hubs they appear in)
+3) Pricing (ANNUAL FLAT RATE):
+   A) Physical Locations Add-On:
+      - Up to 5 physical locations max in self-serve
+      - Each additional physical location = $99/year flat
+      - The $99 covers BOTH: (a) the physical location record and (b) hub visibility for the hub the location belongs to.
+   B) Extra Hub Visibility (without adding a location):
+      - If they simply want to be visible in another hub (same business) = $50/year per additional hub
+   C) Service Businesses (no extra physical location):
+      - Service-area visibility = $50/year per hub
+   D) Metro-Wide Coverage:
+      - Regional metro-wide visibility across the entire metro = $2,500/year
+      - Metro coverage should override hub-by-hub selection for visibility (but still track which metro).
+   E) More Than 5 Physical Locations:
+      - Must route to “Franchise/Enterprise Pricing” workflow (manual contact), no self-serve checkout.
+
+4) This is LISTING management (not “Ad Management”), but it should still appear in back office under Listings → Add-ons, and also be selectable during checkout / upgrade flows.
+
+GOAL
+Add a listing add-ons system:
+- data model
+- admin back office management
+- customer-facing upgrade UI
+- enforcement rules in listing visibility queries
+
+IMPLEMENTATION
+
+A) DATA MODEL (create only if missing; otherwise extend)
+1) business_locations
+- id (pk)
+- business_id (fk)
+- label (string) e.g. "South End", "Uptown"
+- address fields (street, city, state, zip)
+- hub_id (fk)  // the hub this physical location belongs to
+- is_primary (bool)
+- status (enum) [ACTIVE, INACTIVE]
+- created_at, updated_at
+
+2) business_coverage
+Tracks non-physical coverage and hub visibility.
+- id (pk)
+- business_id (fk)
+- coverage_type (enum) [HUB_VISIBILITY, SERVICE_AREA_HUB, METRO_WIDE]
+- metro_id (fk, nullable)
+- hub_id (fk, nullable)      // used for HUB_VISIBILITY and SERVICE_AREA_HUB
+- status (enum) [ACTIVE, INACTIVE]
+- created_at, updated_at
+
+3) listing_addon_subscriptions
+Stores purchased add-ons tied to Stripe or internal billing references.
+- id (pk)
+- business_id (fk)
+- addon_type (enum) [PHYSICAL_LOCATION, EXTRA_HUB_VISIBILITY, SERVICE_AREA_HUB, METRO_WIDE, ENTERPRISE_INQUIRY]
+- unit_price_cents (int)
+- quantity (int default 1)
+- term (enum) [ANNUAL]
+- start_date (date)
+- end_date (date)
+- status (enum) [ACTIVE, PENDING_PAYMENT, CANCELED, EXPIRED]
+- stripe_subscription_id / stripe_invoice_item_id / stripe_payment_link_id (nullable, depending on existing billing pattern)
+- notes_internal (text, nullable)
+- created_at, updated_at
+
+4) enterprise_inquiries (if not already exists)
+- id (pk)
+- business_id (fk)
+- inquiry_type (enum) [FRANCHISE, ENTERPRISE]
+- locations_count (int)
+- notes
+- status (enum) [NEW, CONTACTED, PROPOSAL_SENT, WON, LOST]
+- created_at, updated_at
+
+B) PRICING CONSTANTS (locked)
+- ADDON_LOCATION_ANNUAL = $99/year per additional physical location (up to 5 total)
+- ADDON_EXTRA_HUB_ANNUAL = $50/year per hub visibility add-on (no new location)
+- ADDON_SERVICE_HUB_ANNUAL = $50/year per hub for service-area businesses
+- ADDON_METRO_WIDE_ANNUAL = $2,500/year metro-wide coverage
+- >5 physical locations => enterprise_inquiry only
+
+C) BACK OFFICE UI (Admin)
+Add section: Admin → Listings → Add-ons
+Route: /admin/listings/addons
+
+Features:
+1) View a business listing and its coverage:
+- Primary hub + primary location
+- Additional physical locations (count, hubs)
+- Extra hub visibility (count)
+- Service-area hubs (count)
+- Metro-wide coverage status
+
+2) Add-on management actions:
+- Add physical location (only if total locations <= 5; else show “Enterprise required” and create inquiry)
+- Add extra hub visibility ($50/year)
+- Add service hub coverage ($50/year)
+- Add metro-wide coverage ($2,500/year)
+- Cancel/expire add-ons
+
+3) Reporting:
+- businesses with >1 location
+- businesses with metro-wide coverage
+- add-ons revenue summary (if billing refs exist)
+
+D) CUSTOMER-FACING UI (Business Portal)
+Wherever a business manages its listing:
+Add “Coverage & Locations” tab with upgrade CTAs.
+
+Flows:
+1) Add another physical location
+- Show count: “You have X of 5 locations.”
+- If X < 5:
+  - collect address + select hub
+  - checkout for $99/year
+- If X >= 5:
+  - show “Franchise/Enterprise pricing required” + form submission
+  - create enterprise_inquiry
+
+2) Add another hub (no new location)
+- Select additional hubs
+- $50/year per hub
+- Creates business_coverage rows with coverage_type=HUB_VISIBILITY
+
+3) Service-area coverage
+- For service businesses: select hubs to cover
+- $50/year per hub
+- Creates business_coverage rows with coverage_type=SERVICE_AREA_HUB
+
+4) Metro-wide coverage
+- Toggle “Metro-wide coverage”
+- $2,500/year
+- Creates business_coverage row with coverage_type=METRO_WIDE and metro_id
+- When active, ignore hub-by-hub limitations for visibility across the metro (but still respect category filters).
+
+E) ENFORCEMENT IN LISTING VISIBILITY QUERIES
+Update the listing query/resolver used by hub pages:
+Given (metroId, hubId):
+Return a business as visible if ANY of the following is true:
+1) It has an ACTIVE physical location with hub_id = hubId
+2) It has an ACTIVE business_coverage row:
+   - HUB_VISIBILITY with hub_id = hubId
+   - SERVICE_AREA_HUB with hub_id = hubId
+3) It has ACTIVE METRO_WIDE coverage with metro_id = metroId
+
+Ordering:
+- Prefer businesses with physical location in hub (most relevant)
+- Then hub visibility/service area coverage
+- Metro-wide can appear but may be ranked after local unless a “metro sponsor” context is requested.
+
+F) BILLING INTEGRATION
+Use existing Stripe patterns in the codebase.
+- Add-ons are annual recurring (or annual invoice item if that’s how you do yearly).
+- Ensure automatic renewal.
+- On renewal, keep addon_subscriptions ACTIVE and extend end_date.
+
+If billing integration is not ready, stub as “manual invoice” but still store the intended price and create PENDING_PAYMENT; admin can mark as ACTIVE after payment.
+
+G) ACCEPTANCE CHECKLIST
+1) Admin and business can add up to 5 physical locations; each additional location triggers $99/year.
+2) $99 physical add-on automatically includes hub visibility for that location’s hub (because it sets hub_id on the location).
+3) Extra hub visibility adds $50/year per hub without requiring a new location.
+4) Service-area businesses can add $50/year per hub coverage.
+5) Metro-wide coverage is $2,500/year and makes business visible in all hubs under that metro.
+6) Attempting to add a 6th location triggers enterprise inquiry flow.
+7) Visibility queries respect the above rules and do not break existing listings.
+
+DELIVERABLE
+Implement migrations + admin UI + business portal UI + updated listing visibility queries.
+Keep existing listing subscription logic intact and extend safely.

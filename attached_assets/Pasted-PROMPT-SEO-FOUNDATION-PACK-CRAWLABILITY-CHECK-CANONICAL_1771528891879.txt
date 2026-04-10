@@ -1,0 +1,107 @@
+PROMPT — SEO FOUNDATION PACK (CRAWLABILITY CHECK + CANONICALS + SCHEMA + SITEMAP/ROBOTS) — NO FEATURE CHANGES
+
+CONTEXT (LOCKED):
+- Same CityCoreHub project (Express backend, React/Vite frontend).
+- Do NOT touch Stripe/entitlements/ranking/customer ops logic.
+- No refactors. Implement in-place.
+- Goal: make CityCoreHub indexable and “AI-search friendly” by adding technical SEO essentials.
+- No new DB tables.
+
+OBJECTIVE:
+Implement a technical SEO foundation that improves discoverability in Google and AI crawlers:
+1) Verify whether public pages are crawlable without JS (diagnostic)
+2) Add canonical URLs + strong meta titles/descriptions
+3) Add JSON-LD schema for Organization, LocalBusiness, Event, Article where applicable
+4) Add robots.txt and sitemap.xml endpoints (city + category + zone + business URLs)
+
+SCOPE:
+
+A) DIAGNOSTIC: Crawlability / JS-Off Check (Internal-only)
+Add an internal route (admin-only or secret token) that:
+- Fetches a sample set of public pages (home, directory, one business page, one category page, one zone page)
+- Reports:
+  - HTTP status
+  - whether essential content exists in raw HTML response (e.g., business name present)
+  - whether JSON-LD script tags are present
+This is a simple server-side fetch + string checks (no headless browser required).
+
+B) CANONICALS + META (Public pages)
+Ensure these exist on public pages:
+- <link rel="canonical" href="...">
+- <title> meaningful and location-aware
+- <meta name="description"> meaningful, not blank
+
+Rules:
+- Business page title example: "{Business Name} | {Category} | {City Hub Name}"
+- Category page title example: "{Category} in {City}"
+- Zone page title example: "{Category} in {Zone}, {City}" (when filtered)
+- Description should include city + value proposition; avoid duplicates as much as possible.
+
+Implementation approach:
+- Use whatever head/meta system already exists (React Helmet / Vite index injection / server template). Choose the least invasive method.
+
+C) JSON-LD SCHEMA (Public pages)
+Add JSON-LD <script type="application/ld+json"> to:
+
+1) Site-wide: Organization + WebSite schema on home page (or globally if easy)
+2) Business detail page: LocalBusiness schema
+   Include:
+   - name
+   - address (structured)
+   - telephone
+   - url (canonical)
+   - openingHoursSpecification (if you store hours)
+   - geo (if available)
+   - sameAs (if you store website/social links)
+   - aggregateRating only if you have credible rating data (otherwise omit)
+   Pick subtype when possible:
+   - Restaurant for restaurant category
+   - HairSalon/BarberShop for salon/barber categories
+   If subtype inference is uncertain, use LocalBusiness.
+
+3) Event pages/cards (if there is an event detail page): Event schema
+4) Article pages (if article detail pages exist): Article schema
+
+D) SITEMAP + ROBOTS (Express routes)
+Add:
+- GET /robots.txt
+  - Allow all
+  - Link to sitemap location
+  - (If you have an admin area, disallow /admin paths)
+
+- GET /sitemap.xml
+  Include URLs for:
+  - Home pages for each city hub (or city slug routes)
+  - Directory root per city
+  - Category hub pages per city
+  - Zone pages per city
+  - Business detail pages per city (claimed + unclaimed)
+  - Article pages (if public)
+  - Event pages (if public)
+
+Rules:
+- Generate dynamically from DB with city scoping
+- Use absolute URLs based on your configured public base URL (existing env/base logic)
+- Ensure it does not time out; paginate DB reads if needed
+- lastmod should be included when you have updated_at
+
+E) BREADCRUMBS (Optional but preferred if low effort)
+Add simple BreadcrumbList JSON-LD on:
+- Category pages
+- Business pages
+
+FORENSIC RULES:
+- No new features.
+- No UI redesign.
+- Do not break existing routes.
+- Do not remove any existing meta tags; only improve/extend.
+
+ACCEPTANCE CHECKS:
+1) /robots.txt loads and references /sitemap.xml
+2) /sitemap.xml loads with valid XML and includes business URLs
+3) Business pages include canonical + title + description + LocalBusiness JSON-LD
+4) Diagnostic route reports whether key pages contain content + JSON-LD in raw HTML response
+5) No regressions in existing pages
+
+DELIVERABLE:
+Implement SEO foundation (canonicals/meta, schema, sitemap, robots, diagnostic) as described.
